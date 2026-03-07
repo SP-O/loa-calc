@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아비도스 실시간 시세 & 제작 계산기</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: "Noto Sans KR", sans-serif; background-color: #1e1e1e; color: #e0e0e0; margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { box-sizing: inherit; }
+
+        .container { max-width: 1100px; width: 95%; margin: 30px auto 50px; zoom: 1.1; }
+        .main-wrapper { display: flex; gap: 20px; align-items: flex-start; }
+        .left-panel, .right-panel { flex: 1; padding: 20px; background-color: #2b2b2b; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; }
+        
+        @media (max-width: 850px) { .main-wrapper { flex-direction: column; } }
+
+        h1 { font-size: 1.8em; color: #ffffff; border-bottom: 2px solid #3a3a3a; padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; }
+        h2 { font-size: 1.3em; color: #ffffff; margin-bottom: 15px; border-left: 4px solid #ffd700; padding-left: 10px; }
+
+        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #3a3a3a; }
+        .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; background-color: #2b2b2b; color: #b0b0b0; border: none; transition: background-color 0.3s ease, color 0.3s ease; }
+        .tab.active { background-color: #3a3a3a; color: #e0e0e0; }
+        .tab:hover { background-color: #4a4a4a; color: #ffffff; }
+        .hidden-radio { display: none; }
+
+        .input-group { margin-top: 15px; }
+        .input-group label { 
+            display: flex; align-items: center; font-size: 0.95em; 
+            color: #b0b0b0; margin-bottom: 5px; justify-content: space-between; 
+            flex-wrap: wrap; gap: 6px; 
+        }
+        /* 기본 인풋창 설정 (이 설정이 미니 인풋창을 덮어씌우지 못하게 분리) */
+        .input-group > input { width: 100%; padding: 10px; font-size: 1em; border: 1px solid #3a3a3a; border-radius: 4px; background-color: #1e1e1e; color: #e0e0e0; }
+        .input-group > input:focus { border-color: #5a5a5a; outline: none; }
+
+        button { width: 100%; margin-top: 20px; padding: 15px 10px; font-size: 1em; border: none; border-radius: 4px; background-color: #3a3a3a; color: #ffffff; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #5a5a5a; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-api { background-color: #113d5d; margin-top: 8px; }
+.btn-api:hover { background-color: #1a5a8a; }
+        
+        /* 수동 입력 버튼 디자인 */
+        .btn-manual { background-color: transparent; border: 1px dashed #5a5a5a; color: #b0b0b0; margin-top: 10px; padding: 10px; font-size: 0.9em; }
+        .btn-manual:hover { background-color: #3a3a3a; color: #ffffff; border-color: #ffd700; }
+
+        /* API 발급 링크 버튼 디자인 추가 */
+        .api-link-btn {
+            background-color: #3a3a3a; color: #ffd700; text-decoration: none;
+            padding: 3px 8px; border-radius: 4px; font-size: 0.85em; border: 1px solid #5a5a5a;
+            transition: background-color 0.2s, border-color 0.2s, color 0.2s; white-space: nowrap;
+        }
+        .api-link-btn:hover { background-color: #4a4a4a; border-color: #ffd700; color: #ffffff; }
+
+        .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; }
+        .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; }
+        .resource-icon { width: 16px; height: 16px; object-fit: cover; }
+        
+        .resource-A, .resource-P { color: rgb(159, 159, 159); }
+        .resource-A .resource-icon-wrap, .resource-P .resource-icon-wrap { background: linear-gradient(135deg, rgb(49, 49, 49), rgb(88, 88, 88)); }
+        .resource-B { color: rgb(120, 187, 39); }
+        .resource-B .resource-icon-wrap { background: linear-gradient(135deg, rgb(30, 45, 11), rgb(48, 73, 17)); }
+        .resource-S, .resource-C { color: rgb(25, 124, 197); }
+        .resource-S .resource-icon-wrap, .resource-C .resource-icon-wrap { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)); }
+        .final-product { color: #ce43fc; }
+        .final-product .resource-icon-wrap { background: linear-gradient(135deg, #321142, #541973); }
+        .normal-product { color: rgb(25, 124, 197); }
+        .normal-product .resource-icon-wrap { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)); }
+
+        .result { margin-top: 20px; padding: 15px; background-color: #1e1e1e; border-radius: 4px; border: 1px solid #3a3a3a; overflow-x: auto; }
+        .result-title { font-size: 1.1em; color: #ffffff; margin: 5px 0 15px 0; text-align: center; border-left: none; padding-left: 0; }
+        .result-divider { border: 0; border-top: 2px dashed #4a4a4a; margin: 25px 0; }
+        .conversion-grid { display: grid; grid-template-columns: auto auto auto 120px; align-items: center; gap: 10px; }
+        .conversion-row { display: contents; }
+        .label-wrap { display: flex; justify-content: center; align-items: center; width: 100%; }
+        .arrow { text-align: center; color: #e0e0e0; font-size: 1.2em; }
+        .count { text-align: center; font-size: 0.95em; color: #d0d0d0; }
+        .num-point { color: #ffd700; font-weight: bold; text-shadow: 0 0 5px rgba(255, 215, 0, 0.8); }
+
+        .final-row { grid-column: span 4; display: grid; grid-template-columns: auto 120px; align-items: center; border-top: 1px solid #3a3a3a; margin-top: 10px; padding-top: 10px; }
+        .final-product-label { flex: 1 1 auto; font-weight: bold; text-align: center; }
+        .no-production { color: #ff6666; text-align: center; font-size: 1.1em; font-weight: bold; margin: 15px 0; }
+        .desc { font-size: 11px; color: #b0b0b0; }
+
+        .market-box { background-color: #1e1e1e; border: 1px solid #3a3a3a; border-radius: 6px; padding: 15px; margin-top: 15px; }
+        .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #3a3a3a; padding-bottom: 8px; }
+        .market-header h3 { margin: 0; font-size: 1.1em; }
+        .market-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95em; gap: 10px; word-break: keep-all; }
+        .market-row.highlight { margin-top: 10px; padding-top: 10px; border-top: 1px dotted #4a4a4a; font-weight: bold; }
+        .profit-plus { color: #ffd700; }
+        .profit-minus { color: #ff6666; }
+        .api-notice { font-size: 0.8em; color: #888; margin-top: 5px; text-align: center; }
+        
+        .mat-price-tag { 
+            background: #3a3a3a; padding: 2px 6px; border-radius: 4px; 
+            font-size: 0.75em; color: #ffd700; display: flex; align-items: center; 
+            white-space: nowrap;
+        }
+        
+        /* CSS 우선순위 충돌 방지 및 4자리 숫자(9999)에 맞춘 초소형 사이즈 강제 적용 */
+        input.price-input-small {
+            width: 45px !important; 
+            height: 22px !important; 
+            padding: 0 4px !important;
+            background-color: #1e1e1e !important; color: #ffd700 !important;
+            border: 1px solid #5a5a5a !important; border-radius: 3px !important;
+            text-align: right !important; margin: 0 4px !important; 
+            font-size: 1.1em !important; font-weight: bold !important;
+        }
+        input.price-input-right {
+            width: 55px !important; 
+            height: 24px !important;
+            padding: 0 4px !important;
+            background-color: #1e1e1e !important; color: #ffd700 !important;
+            border: 1px solid #5a5a5a !important; border-radius: 3px !important;
+            text-align: right !important; margin: 0 4px !important; 
+            font-size: 1.1em !important; font-weight: bold !important;
+        }
+        input.price-input-small:focus, input.price-input-right:focus { border-color: #ffd700 !important; outline: none !important;}
+        input.price-input-small::-webkit-inner-spin-button, input.price-input-small::-webkit-outer-spin-button,
+        input.price-input-right::-webkit-inner-spin-button, input.price-input-right::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .loading-spinner { width: 50px; height: 50px; border: 5px solid #3a3a3a; border-top: 5px solid #ffd700; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+<div id="app" class="container">
+    <div class="main-wrapper">
+        
+        <div class="left-panel wrap-cal">
+            <h1>아비도스 제작 계산기 ({{ currentMaterialName }})</h1>
+
+            <div class="tabs">
+                <label v-for="material in materials" :key="material.code" class="tab" :class="{ active: selectedMaterial === material.code }">
+                    <input type="radio" :value="material.code" v-model="selectedMaterial" class="hidden-radio" />
+                    {{ material.name }}
+                </label>
+            </div>
+
+            <template v-for="(resInfo, key) in selectedResources" :key="key">
+                <div class="input-group" v-if="resInfo">
+                    <label>
+                        <span :class="'resource-label resource-' + key">
+                            <div class="resource-icon-wrap"><img :src="resInfo.imgUrl" class="resource-icon" alt="icon"></div>
+                            {{ resInfo.name }}
+                            <span class="desc" v-if="key === 'S'">- 3티어 </span>
+                            <span class="desc" v-if="key === 'C'">- 4티어 </span>
+                        </span>
+                        
+                        <span class="mat-price-tag" v-if="showMarketUi && (key === 'A' || key === 'B' || key === 'S' || key === 'C')">
+                            단가: <input type="number" v-model.number="market.materials[key].price" class="price-input-small"> G 
+                            <span style="font-size:0.9em; color:#bbb; margin-left: 2px;">/ 100개</span>
+                        </span>
+                    </label>
+                    <input type="number" v-model.number="resources[key]" placeholder="0">
+                </div>
+            </template>
+
+            <button :disabled="isDisabled || loading" @click="calculate">
+                {{ loading ? "계산중..." : "계산하기" }}
+            </button>
+
+            <div v-if="result" class="result">
+                <h2 class="result-title"> 일반 아비도스 융화 재료 </h2>
+                <template v-if="result.normal.totalO === 0">
+                    <div class="no-production">제작이 불가능합니다.</div>
+                </template>
+                <template v-else>
+                    <div class="conversion-grid">
+                        <template v-for="(count, key) in result.normal.logs" :key="'norm-'+key">
+                            <div class="conversion-row">
+                                <div class="label-wrap">
+                                    <div :class="'resource-label resource-' + transformationMap[key].from">
+                                        <div class="resource-icon-wrap"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
+                                        {{ selectedResources[transformationMap[key].from].name }}
+                                    </div>
+                                </div>
+                                <div class="arrow">→</div>
+                                <div class="label-wrap">
+                                    <div :class="'resource-label resource-' + transformationMap[key].to">
+                                        <div class="resource-icon-wrap"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
+                                        {{ selectedResources[transformationMap[key].to].name }}
+                                    </div>
+                                </div>
+                                <div class="count"><span class="num-point">{{ count }}</span>회 교환</div>
+                            </div>
+                        </template>
+                        <div class="conversion-row final-row">
+                            <div class="final-product-label">
+                                <span class="resource-label normal-product">
+                                    <div class="resource-icon-wrap"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
+                                    아비도스 융화 재료
+                                </span>
+                            </div>
+                            <div class="count"><span class="num-point">{{ result.normal.totalO }}</span>회 제작</div>
+                        </div>
+                    </div>
+                </template>
+
+                <hr class="result-divider">
+
+                <h2 class="result-title"> 상급 아비도스 융화 재료 </h2>
+                <template v-if="result.advanced.totalO === 0">
+                    <div class="no-production">제작이 불가능합니다.</div>
+                </template>
+                <template v-else>
+                    <div class="conversion-grid">
+                        <template v-for="(count, key) in result.advanced.logs" :key="'adv-'+key">
+                            <div class="conversion-row">
+                                <div class="label-wrap">
+                                    <div :class="'resource-label resource-' + transformationMap[key].from">
+                                        <div class="resource-icon-wrap"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
+                                        {{ selectedResources[transformationMap[key].from].name }}
+                                    </div>
+                                </div>
+                                <div class="arrow">→</div>
+                                <div class="label-wrap">
+                                    <div :class="'resource-label resource-' + transformationMap[key].to">
+                                        <div class="resource-icon-wrap"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
+                                        {{ selectedResources[transformationMap[key].to].name }}
+                                    </div>
+                                </div>
+                                <div class="count"><span class="num-point">{{ count }}</span>회 교환</div>
+                            </div>
+                        </template>
+                        <div class="conversion-row final-row">
+                            <div class="final-product-label">
+                                <span class="resource-label final-product">
+                                    <div class="resource-icon-wrap"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
+                                    상급 아비도스 융화 재료
+                                </span>
+                            </div>
+                            <div class="count"><span class="num-point">{{ result.advanced.totalO }}</span>회 제작</div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <div class="right-panel wrap-cal">
+            <h2>영지 효과 세팅</h2>
+            <div class="input-group">
+                <label>대성공 확률 증가 (%)</label>
+                <input type="number" v-model.number="stronghold.greatSuccess" placeholder="0">
+            </div>
+            <div class="input-group">
+                <label>제작 수수료 감소 (%)</label>
+                <input type="number" v-model.number="stronghold.feeDiscount" placeholder="0">
+            </div>
+
+            <hr class="result-divider">
+
+            <h2>실시간 시세 연동</h2>
+            <div class="input-group">
+                <label>
+                    <span>LOSTARK API KEY</span>
+                    <a href="https://developer-lostark.game.onstove.com/" target="_blank" class="api-link-btn">API 키 발급받기</a>
+                </label>
+                <input type="text" v-model="apiKey" placeholder="API 키를 입력해 주세요">
+                <div class="api-notice">
+                  ※ 입력하신 API 키는 사용자 PC(로컬 스토리지)에만 안전하게 저장됩니다.<br>
+                  ※ API 키 없이 단가를 직접 입력하여 계산할 수도 있습니다.</div>
+            </div>
+            <button class="btn-api" @click="fetchMarketData" :disabled="fetching">
+                {{ fetching ? "시세 불러오는 중..." : "경매장 실시간 시세 조회" }}
+            </button>
+            
+            <button v-if="!showMarketUi" class="btn-manual" @click="enableManualInput">
+                단가 수동 입력창 열기 (선택사항)
+            </button>
+
+            <div v-if="showMarketUi" style="margin-top: 15px;">
+                
+                <div class="market-box">
+                    <div class="market-header">
+                        <h3 class="normal-product">아비도스 융화 재료</h3>
+                        <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
+                    </div>
+                    <div class="market-row">
+                        <span>현재 최저가 (1개)</span>
+                        <span>
+                            <input type="number" v-model.number="market.normal.price" class="price-input-right"> G
+                        </span>
+                    </div>
+                    
+                    <div class="market-row highlight">
+                        <span style="display:flex; flex-direction:column;">
+                            1회 제작 순수익
+                            <span class="desc" style="margin-left:0;">(자급자족 / 재료값 0G)</span>
+                        </span>
+                        <span :class="{'profit-plus': profitPerCraft.normal.zeroCost > 0, 'profit-minus': profitPerCraft.normal.zeroCost <= 0}">
+                            {{ profitPerCraft.normal.zeroCost.toLocaleString() }} G
+                        </span>
+                    </div>
+                    <div class="market-row highlight" style="border-top: none; margin-top: 0; padding-top: 0;">
+                        <span style="display:flex; flex-direction:column;">
+                            1회 제작 순수익
+                            <span class="desc" style="margin-left:0;">(시장구매 / 재료값 반영)</span>
+                        </span>
+                        <span :class="{'profit-plus': profitPerCraft.normal.fullCost > 0, 'profit-minus': profitPerCraft.normal.fullCost <= 0}">
+                            {{ profitPerCraft.normal.fullCost.toLocaleString() }} G
+                        </span>
+                    </div>
+
+                    <div v-if="result && result.normal.totalO > 0" style="border-top: 1px solid #3a3a3a; padding-top: 8px; margin-top: 8px;">
+                        <div class="market-row" style="color: #ffd700;">
+                            <span>총 예상 수익 <span class="desc" style="color:#aa9000;">(자급자족)</span></span>
+                            <span>{{ (profitPerCraft.normal.zeroCost * result.normal.totalO).toLocaleString() }} G</span>
+                        </div>
+                        <div class="market-row" style="color: #ffd700;">
+                            <span>총 예상 수익 <span class="desc" style="color:#aa9000;">(시장구매)</span></span>
+                            <span>{{ (profitPerCraft.normal.fullCost * result.normal.totalO).toLocaleString() }} G</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="market-box">
+                    <div class="market-header">
+                        <h3 class="final-product">상급 아비도스 융화 재료</h3>
+                        <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
+                    </div>
+                    <div class="market-row">
+                        <span>현재 최저가 (1개)</span>
+                        <span>
+                            <input type="number" v-model.number="market.advanced.price" class="price-input-right"> G
+                        </span>
+                    </div>
+                    
+                    <div class="market-row highlight">
+                        <span style="display:flex; flex-direction:column;">
+                            1회 제작 순수익
+                            <span class="desc" style="margin-left:0;">(자급자족 / 재료값 0G)</span>
+                        </span>
+                        <span :class="{'profit-plus': profitPerCraft.advanced.zeroCost > 0, 'profit-minus': profitPerCraft.advanced.zeroCost <= 0}">
+                            {{ profitPerCraft.advanced.zeroCost.toLocaleString() }} G
+                        </span>
+                    </div>
+                    <div class="market-row highlight" style="border-top: none; margin-top: 0; padding-top: 0;">
+                        <span style="display:flex; flex-direction:column;">
+                            1회 제작 순수익
+                            <span class="desc" style="margin-left:0;">(시장구매 / 재료값 반영)</span>
+                        </span>
+                        <span :class="{'profit-plus': profitPerCraft.advanced.fullCost > 0, 'profit-minus': profitPerCraft.advanced.fullCost <= 0}">
+                            {{ profitPerCraft.advanced.fullCost.toLocaleString() }} G
+                        </span>
+                    </div>
+
+                    <div v-if="result && result.advanced.totalO > 0" style="border-top: 1px solid #3a3a3a; padding-top: 8px; margin-top: 8px;">
+                        <div class="market-row" style="color: #ffd700;">
+                            <span>총 예상 수익 <span class="desc" style="color:#aa9000;">(자급자족)</span></span>
+                            <span>{{ (profitPerCraft.advanced.zeroCost * result.advanced.totalO).toLocaleString() }} G</span>
+                        </div>
+                        <div class="market-row" style="color: #ffd700;">
+                            <span>총 예상 수익 <span class="desc" style="color:#aa9000;">(시장구매)</span></span>
+                            <span>{{ (profitPerCraft.advanced.fullCost * result.advanced.totalO).toLocaleString() }} G</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div v-if="loading || fetching" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+</div>
+
+<script>
+    const { createApp } = Vue;
+
+    createApp({
+        data() {
+            return {
+                loading: false, fetching: false, showMarketUi: false,
+                resources: { A: 0, B: 0, S: 0, C: 0, P: 0 },
+                selectedMaterial: "WL",
+                materials: [
+                    { code: "WL", name: "벌목", resources: { A: { name: "목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_252.png" }, B: { name: "부드러운 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_253.png" }, S: { name: "튼튼한 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_4.png" }, C: { name: "아비도스 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_48.png" }, P: { name: "벌목의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_37.png" } } },
+                    { code: "MN", name: "채광", resources: { A: { name: "철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_243.png" }, B: { name: "묵직한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_239.png" }, S: { name: "단단한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_76.png" }, C: { name: "아비도스 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_49.png" }, P: { name: "채광의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_36.png" } } },
+                    { code: "AR", name: "고고학", resources: { A: { name: "고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_3.png" }, B: { name: "희귀한 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_4.png" }, S: null, C: { name: "아비도스 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_55.png" }, P: { name: "고고학의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_40.png" } } },
+                    { code: "FS", name: "낚시", resources: { A: { name: "생선", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_142.png" }, B: { name: "붉은 살 생선", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_49.png" }, S: null, C: { name: "아비도스 태양 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_53.png" }, P: { name: "낚시의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_35.png" } } },
+                    { code: "HR", name: "수렵", resources: { A: { name: "두툼한 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_192.png" }, B: { name: "다듬은 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_196.png" }, S: null, C: { name: "아비도스 두툼한 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_51.png" }, P: { name: "수렵의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_39.png" } } },
+                    { code: "CL", name: "채집", resources: { A: { name: "들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_46.png" }, B: { name: "수줍은 들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_14.png" }, S: null, C: { name: "아비도스 들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_47.png" }, P: { name: "채집의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_38.png" } } }
+                ],
+                transformationMap: { StoA: { from: "S", to: "A" }, BtoA: { from: "B", to: "A" }, BtoP: { from: "B", to: "P" }, AtoP: { from: "A", to: "P" }, PtoC: { from: "P", to: "C" } },
+                result: null,
+                apiKey: "",
+                stronghold: { greatSuccess: 0, feeDiscount: 0 },
+                market: {
+                    normal: { price: 0 }, advanced: { price: 0 },
+                    materials: { A: { price: 0 }, B: { price: 0 }, S: { price: 0 }, C: { price: 0 } }
+                }
+            }
+        },
+        computed: {
+            selectedResources() { return this.materials.find(m => m.code === this.selectedMaterial)?.resources || {}; },
+            currentMaterialName() { return this.materials.find(m => m.code === this.selectedMaterial)?.name || ""; },
+            isDisabled() { return !Object.values(this.resources).some(v => v > 0); },
+            profitPerCraft() {
+                const baseFeeN = 400; const baseFeeA = 520; 
+                
+                const actualFeeN = Math.floor(baseFeeN * (1 - this.stronghold.feeDiscount / 100));
+                const actualFeeA = Math.floor(baseFeeA * (1 - this.stronghold.feeDiscount / 100));
+
+                const baseGsRate = 0.05;
+                const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
+                const expectedYield = 10 * (1 + finalGsRate);
+                
+                const pN = this.market.normal.price || 0;
+                const pA = this.market.advanced.price || 0;
+
+                const netPriceN = pN - Math.ceil(pN * 0.05);
+                const netPriceA = pA - Math.ceil(pA * 0.05);
+
+                const revN = netPriceN * expectedYield;
+                const revA = netPriceA * expectedYield;
+
+                const priceA = this.market.materials.A?.price || 0;
+                const priceB = this.market.materials.B?.price || 0;
+                const priceC = this.market.materials.C?.price || 0;
+
+                const costMatN = (86 * priceA / 100) + (45 * priceB / 100) + (33 * priceC / 100);
+                const costMatA = (112 * priceA / 100) + (59 * priceB / 100) + (43 * priceC / 100);
+
+                return {
+                    normal: { zeroCost: Math.floor(revN - actualFeeN), fullCost: Math.floor(revN - actualFeeN - costMatN) },
+                    advanced: { zeroCost: Math.floor(revA - actualFeeA), fullCost: Math.floor(revA - actualFeeA - costMatA) }
+                };
+            }
+        },
+        mounted() {
+            const savedKey = localStorage.getItem('loa_api_key');
+            if(savedKey) this.apiKey = savedKey;
+            const savedStronghold = localStorage.getItem('loa_stronghold');
+            if(savedStronghold) this.stronghold = JSON.parse(savedStronghold);
+        },
+        watch: {
+            selectedMaterial() {
+                this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
+                this.result = null;
+                this.showMarketUi = false;
+                this.market.materials = { A: { price: 0 }, B: { price: 0 }, S: { price: 0 }, C: { price: 0 } };
+            },
+            resources: {
+                handler(newResources) {
+                    for (const key in newResources) {
+                        if (newResources[key] === "" || newResources[key] === null || newResources[key] === undefined) {
+                            this.resources[key] = 0;
+                        }
+                    }
+                }, deep: true,
+            },
+            apiKey(newVal) { localStorage.setItem('loa_api_key', newVal); },
+            stronghold: { handler(newVal) { localStorage.setItem('loa_stronghold', JSON.stringify(newVal)); }, deep: true }
+        },
+        methods: {
+            enableManualInput() {
+                this.showMarketUi = true;
+            },
+            async fetchMarketData() {
+                if (!this.apiKey) return alert("API Key를 입력해주세요!\n\n※ API 키가 없다면 수동 입력창을 열어 단가를 직접 입력해 사용할 수 있습니다.");
+                const token = this.apiKey.includes("Bearer") ? this.apiKey : `Bearer ${this.apiKey}`;
+                this.fetching = true;
+
+                const url = "https://developer-lostark.game.onstove.com/markets/items";
+                const headers = { "accept": "application/json", "authorization": token, "content-type": "application/json" };
+
+                const fetchItemData = async (itemName, categoryCode) => {
+                    if (!itemName) return null;
+                    const res = await fetch(url, {
+                        method: "POST", headers,
+                        body: JSON.stringify({ Sort: "CURRENT_MIN_PRICE", CategoryCode: categoryCode, ItemName: itemName, PageNo: 1, SortCondition: "ASC" })
+                    });
+                    if (!res.ok) throw new Error("API 요청 실패");
+                    const data = await res.json();
+                    return data.Items && data.Items.length > 0 ? data.Items[0] : null;
+                };
+
+                try {
+                    const itemN = await fetchItemData("아비도스 융화 재료", 50000);
+                    const itemA = await fetchItemData("상급 아비도스 융화 재료", 50000);
+                    const matA = await fetchItemData(this.selectedResources.A?.name, 90000);
+                    const matB = await fetchItemData(this.selectedResources.B?.name, 90000);
+                    const matS = await fetchItemData(this.selectedResources.S?.name, 90000);
+                    const matC = await fetchItemData(this.selectedResources.C?.name, 90000);
+
+                    if (itemN) this.market.normal.price = itemN.CurrentMinPrice;
+                    if (itemA) this.market.advanced.price = itemA.CurrentMinPrice;
+                    if (matA) this.market.materials.A.price = matA.CurrentMinPrice;
+                    if (matB) this.market.materials.B.price = matB.CurrentMinPrice;
+                    if (matS) this.market.materials.S.price = matS.CurrentMinPrice;
+                    if (matC) this.market.materials.C.price = matC.CurrentMinPrice;
+
+                    this.showMarketUi = true;
+
+                } catch (error) {
+                    console.error("API Fetch Error:", error);
+                    alert("시세 불러오기 실패!\n\n1. API 키 확인\n2. 'Allow CORS' 확장 프로그램 활성화 여부 확인\n\n※ 오류가 지속되면 수동 입력을 이용해주세요.");
+                } finally {
+                    this.fetching = false;
+                }
+            },
+            async calculate() {
+                this.loading = true;
+                await new Promise(resolve => setTimeout(resolve, 200));
+
+                const rates = { StoA: { in: 5, out: 50 }, BtoA: { in: 25, out: 50 }, BtoP: { in: 50, out: 80 }, AtoP: { in: 100, out: 80 }, PtoC: { in: 100, out: 10 } };
+
+                const recipeAdv = { A: 112, B: 59, C: 43 };
+                let maxAdv = 0; let bestLogsAdv = {};
+                let baseA_adv = this.resources.A; let sToALog_adv = 0;
+                
+                if (this.selectedResources.S && this.resources.S > 0) {
+                    sToALog_adv = Math.floor(this.resources.S / rates.StoA.in);
+                    baseA_adv += sToALog_adv * rates.StoA.out;
+                }
+
+                for (let b2p = 0; b2p <= Math.floor(this.resources.B / rates.BtoP.in); b2p++) {
+                    let finalB = this.resources.B - (b2p * rates.BtoP.in);
+                    let curP_fromB = this.resources.P + (b2p * rates.BtoP.out);
+
+                    for (let a2p = 0; a2p <= Math.floor(baseA_adv / rates.AtoP.in); a2p++) {
+                        let finalA = baseA_adv - (a2p * rates.AtoP.in);
+                        let finalP = curP_fromB + (a2p * rates.AtoP.out);
+                        let p2c = Math.floor(finalP / rates.PtoC.in);
+                        let finalC = this.resources.C + (p2c * rates.PtoC.out);
+
+                        let canCraft = Math.min(Math.floor(finalA / recipeAdv.A), Math.floor(finalB / recipeAdv.B), Math.floor(finalC / recipeAdv.C));
+
+                        if (canCraft > maxAdv) {
+                            maxAdv = canCraft;
+                            bestLogsAdv = { StoA: sToALog_adv, BtoP: b2p, AtoP: a2p, PtoC: p2c };
+                        }
+                    }
+                }
+
+                const recipeNorm = { A: 86, B: 45, C: 33 };
+                let normResources = { ...this.resources };
+                let sToALog_norm = 0;
+
+                if (this.selectedResources.S && normResources.S > 0) {
+                    sToALog_norm = Math.floor(normResources.S / rates.StoA.in);
+                    normResources.A += sToALog_norm * rates.StoA.out;
+                    normResources.S -= sToALog_norm * rates.StoA.in;
+                }
+
+                let maxNorm = 0; let bestLogsNorm = { StoA: sToALog_norm, BtoA: 0, BtoP: 0, AtoP: 0, PtoC: 0 };
+                const maxBtoA = Math.floor(normResources.B / rates.BtoA.in);
+
+                for (let b2a = 0; b2a <= maxBtoA; b2a++) {
+                    let tempA = normResources.A + (b2a * rates.BtoA.out);
+                    let tempB = normResources.B - (b2a * rates.BtoA.in);
+                    let tempC = normResources.C; let tempP = normResources.P;
+
+                    let currentMax = Math.min(Math.floor(tempA / recipeNorm.A), Math.floor(tempB / recipeNorm.B), Math.floor(tempC / recipeNorm.C));
+                    let remA = tempA - currentMax * recipeNorm.A;
+                    let remB = tempB - currentMax * recipeNorm.B;
+                    let remC = tempC - currentMax * recipeNorm.C;
+                    let remP = tempP;
+
+                    const maxAtoP = Math.floor(remA / rates.AtoP.in);
+                    const maxBtoP = Math.floor(remB / rates.BtoP.in);
+
+                    for (let a2p = 0; a2p <= maxAtoP; a2p++) {
+                        let curA = remA - a2p * rates.AtoP.in;
+                        let totP = remP + a2p * rates.AtoP.out;
+
+                        for (let b2p = 0; b2p <= maxBtoP; b2p++) {
+                            let curB = remB - b2p * rates.BtoP.in;
+                            let curP = totP + b2p * rates.BtoP.out;
+                            let p2c = Math.floor(curP / rates.PtoC.in);
+                            let curC = remC + p2c * rates.PtoC.out;
+
+                            let producedO = currentMax + Math.min(Math.floor(curA / recipeNorm.A), Math.floor(curB / recipeNorm.B), Math.floor(curC / recipeNorm.C));
+
+                            if (producedO > maxNorm) {
+                                maxNorm = producedO;
+                                bestLogsNorm = { StoA: sToALog_norm, BtoA: b2a, AtoP: a2p, BtoP: b2p, PtoC: p2c };
+                            }
+                        }
+                    }
+                }
+                
+                if (maxNorm === 0) bestLogsNorm = {};
+
+                const printOrder = ["StoA", "AtoP", "BtoA", "BtoP", "PtoC"];
+                const sortLogs = (logs) => {
+                    let orderedLogs = {};
+                    printOrder.forEach(key => { if (logs[key] > 0) orderedLogs[key] = logs[key]; });
+                    return orderedLogs;
+                };
+
+                this.result = { advanced: { totalO: maxAdv, logs: sortLogs(bestLogsAdv) }, normal: { totalO: maxNorm, logs: sortLogs(bestLogsNorm) } };
+                this.loading = false;
+            }
+        }
+    }).mount('#app');
+</script>
+
+</body>
+</html>
