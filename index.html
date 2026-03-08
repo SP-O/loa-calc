@@ -12,12 +12,51 @@
 
         .container { max-width: 1100px; width: 95%; margin: 30px auto 50px; zoom: 1.1; }
         .main-wrapper { display: flex; gap: 20px; align-items: flex-start; }
-        .left-panel, .right-panel { flex: 1; padding: 20px; background-color: #2b2b2b; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; }
+        
+        .left-panel, .right-panel { padding: 20px; background-color: #2b2b2b; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; }
+        .left-panel { flex: 1; }
+        .right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; }
         
         @media (max-width: 850px) { .main-wrapper { flex-direction: column; } }
 
         h1 { font-size: 1.8em; color: #ffffff; border-bottom: 2px solid #3a3a3a; padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; }
-        h2 { font-size: 1.3em; color: #ffffff; margin-bottom: 15px; border-left: 4px solid #ffd700; padding-left: 10px; }
+        
+        h2 { font-size: 1.3em; color: #ffffff; margin: 0 0 12px 0; border-left: 4px solid #ffd700; padding-left: 10px; }
+
+        .section-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 12px; 
+            border-left: 4px solid #ffd700; 
+            padding-left: 10px; 
+        }
+        .section-header h2 { margin: 0; border-left: none; padding-left: 0; }
+
+        .update-timestamp { 
+            font-size: 0.75em; 
+            color: #888; 
+            font-weight: normal; 
+            display: flex;
+            align-items: center;
+        }
+
+        .live-dot { 
+            display: inline-block;
+            width: 6px; 
+            height: 6px; 
+            background-color: #ffd700; 
+            border-radius: 50%; 
+            margin-right: 6px; 
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.6);
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow { 
+            0% { transform: scale(1); opacity: 1; } 
+            50% { transform: scale(1.3); opacity: 0.6; } 
+            100% { transform: scale(1); opacity: 1; } 
+        }
 
         .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #3a3a3a; }
         .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; background-color: #2b2b2b; color: #b0b0b0; border: none; transition: background-color 0.3s ease, color 0.3s ease; }
@@ -25,27 +64,25 @@
         .tab:hover { background-color: #4a4a4a; color: #ffffff; }
         .hidden-radio { display: none; }
 
-        .input-group { margin-top: 15px; }
+        .input-group { margin-top: 10px; }
         .input-group label { 
             display: flex; align-items: center; font-size: 0.95em; 
             color: #b0b0b0; margin-bottom: 5px; justify-content: space-between; 
             flex-wrap: wrap; gap: 6px; 
         }
-        /* 기본 인풋창 설정 (이 설정이 미니 인풋창을 덮어씌우지 못하게 분리) */
         .input-group > input { width: 100%; padding: 10px; font-size: 1em; border: 1px solid #3a3a3a; border-radius: 4px; background-color: #1e1e1e; color: #e0e0e0; }
         .input-group > input:focus { border-color: #5a5a5a; outline: none; }
 
-        button { width: 100%; margin-top: 20px; padding: 15px 10px; font-size: 1em; border: none; border-radius: 4px; background-color: #3a3a3a; color: #ffffff; cursor: pointer; font-weight: bold; }
+        button { width: 100%; margin-top: 15px; padding: 15px 10px; font-size: 1em; border: none; border-radius: 4px; background-color: #3a3a3a; color: #ffffff; cursor: pointer; font-weight: bold; }
         button:hover { background-color: #5a5a5a; }
         button:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-api { background-color: #113d5d; margin-top: 8px; }
-.btn-api:hover { background-color: #1a5a8a; }
+        .btn-api { background-color: #113d5d; margin-top: 8px; transition: background-color 0.2s; }
+        .btn-api:hover { background-color: #1a5a8a; }
+        .btn-api:disabled { background-color: #222; }
         
-        /* 수동 입력 버튼 디자인 */
-        .btn-manual { background-color: transparent; border: 1px dashed #5a5a5a; color: #b0b0b0; margin-top: 10px; padding: 10px; font-size: 0.9em; }
+        .btn-manual { background-color: transparent; border: 1px dashed #5a5a5a; color: #b0b0b0; margin-top: 8px; padding: 10px; font-size: 0.9em; }
         .btn-manual:hover { background-color: #3a3a3a; color: #ffffff; border-color: #ffd700; }
 
-        /* API 발급 링크 버튼 디자인 추가 */
         .api-link-btn {
             background-color: #3a3a3a; color: #ffd700; text-decoration: none;
             padding: 3px 8px; border-radius: 4px; font-size: 0.85em; border: 1px solid #5a5a5a;
@@ -70,7 +107,9 @@
 
         .result { margin-top: 20px; padding: 15px; background-color: #1e1e1e; border-radius: 4px; border: 1px solid #3a3a3a; overflow-x: auto; }
         .result-title { font-size: 1.1em; color: #ffffff; margin: 5px 0 15px 0; text-align: center; border-left: none; padding-left: 0; }
-        .result-divider { border: 0; border-top: 2px dashed #4a4a4a; margin: 25px 0; }
+        
+        .result-divider { border: 0; border-top: 2px dashed #4a4a4a; margin: 22px 0; }
+        
         .conversion-grid { display: grid; grid-template-columns: auto auto auto 120px; align-items: center; gap: 10px; }
         .conversion-row { display: contents; }
         .label-wrap { display: flex; justify-content: center; align-items: center; width: 100%; }
@@ -87,9 +126,9 @@
         .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #3a3a3a; padding-bottom: 8px; }
         .market-header h3 { margin: 0; font-size: 1.1em; }
         .market-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95em; gap: 10px; word-break: keep-all; }
-        .market-row.highlight { margin-top: 10px; padding-top: 10px; border-top: 1px dotted #4a4a4a; font-weight: bold; }
-        .profit-plus { color: #ffd700; }
-        .profit-minus { color: #ff6666; }
+        
+        .profit-plus { color: #ffd700; font-weight: bold; }
+        .profit-minus { color: #ff6666; font-weight: bold; }
         .api-notice { font-size: 0.8em; color: #888; margin-top: 5px; text-align: center; }
         
         .mat-price-tag { 
@@ -98,39 +137,77 @@
             white-space: nowrap;
         }
         
-        /* CSS 우선순위 충돌 방지 및 4자리 숫자(9999)에 맞춘 초소형 사이즈 강제 적용 */
         input.price-input-small {
-            width: 45px !important; 
-            height: 22px !important; 
-            padding: 0 4px !important;
+            width: 45px !important; height: 22px !important; padding: 0 4px !important;
             background-color: #1e1e1e !important; color: #ffd700 !important;
             border: 1px solid #5a5a5a !important; border-radius: 3px !important;
-            text-align: right !important; margin: 0 4px !important; 
-            font-size: 1.1em !important; font-weight: bold !important;
+            text-align: right !important; margin: 0 4px !important; font-size: 1.1em !important; font-weight: bold !important;
         }
         input.price-input-right {
-            width: 55px !important; 
-            height: 24px !important;
-            padding: 0 4px !important;
+            width: 55px !important; height: 24px !important; padding: 0 4px !important;
             background-color: #1e1e1e !important; color: #ffd700 !important;
             border: 1px solid #5a5a5a !important; border-radius: 3px !important;
-            text-align: right !important; margin: 0 4px !important; 
-            font-size: 1.1em !important; font-weight: bold !important;
+            text-align: right !important; margin: 0 4px !important; font-size: 1.1em !important; font-weight: bold !important;
         }
         input.price-input-small:focus, input.price-input-right:focus { border-color: #ffd700 !important; outline: none !important;}
         input.price-input-small::-webkit-inner-spin-button, input.price-input-small::-webkit-outer-spin-button,
         input.price-input-right::-webkit-inner-spin-button, input.price-input-right::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
+        .scenario-section {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            padding: 12px 14px;
+            margin-top: 12px;
+        }
+        .scenario-section.self-craft {
+            border-left: 3px solid #ffd700;
+        }
+        .scenario-section.market-buy {
+            border-left: 3px solid #888;
+        }
+        .scenario-title {
+            display: block;
+            font-size: 0.85em;
+            color: #b0b0b0;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed #4a4a4a;
+        }
+        .scenario-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+        .scenario-row:last-child {
+            margin-bottom: 0;
+        }
+        .total-profit-row {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px dotted #4a4a4a;
+            font-weight: bold;
+        }
+
         .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .loading-spinner { width: 50px; height: 50px; border: 5px solid #3a3a3a; border-top: 5px solid #ffd700; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .update { text-align: right; font-size: 12px; color: #666; margin-top: 8px; padding-right: 5px; }
+
+        /* 하이브리드 모드 알림 UI */
+        .approx-warning {
+            color: #ff6666; font-size: 0.85em; text-align: center; margin-top: 10px; font-weight: bold;
+            background: rgba(255, 102, 102, 0.1); padding: 8px; border-radius: 4px; border: 1px dashed #ff6666;
+        }
     </style>
 </head>
 <body>
 
 <div id="app" class="container">
     <div class="main-wrapper">
-        
         <div class="left-panel wrap-cal">
             <h1>아비도스 제작 계산기 ({{ currentMaterialName }})</h1>
 
@@ -156,13 +233,17 @@
                             <span style="font-size:0.9em; color:#bbb; margin-left: 2px;">/ 100개</span>
                         </span>
                     </label>
-                    <input type="number" v-model.number="resources[key]" placeholder="0">
+                    <input type="number" v-model.number="resources[key]" placeholder="0" max="999999">
                 </div>
             </template>
 
             <button :disabled="isDisabled || loading" @click="calculate">
                 {{ loading ? "계산중..." : "계산하기" }}
             </button>
+            
+            <div v-if="isApproximation && result" class="approx-warning">
+                재료 총합이 50만 개를 초과하여 브라우저 멈춤 방지를 위해 '고속 근사치 모드'로 계산되었습니다.<br>(최적값과 미세한 오차가 발생할 수 있습니다)
+            </div>
 
             <div v-if="result" class="result">
                 <h2 class="result-title"> 일반 아비도스 융화 재료 </h2>
@@ -241,127 +322,147 @@
             </div>
         </div>
 
-        <div class="right-panel wrap-cal">
-            <h2>영지 효과 세팅</h2>
-            <div class="input-group">
-                <label>대성공 확률 증가 (%)</label>
-                <input type="number" v-model.number="stronghold.greatSuccess" placeholder="0">
-            </div>
-            <div class="input-group">
-                <label>제작 수수료 감소 (%)</label>
-                <input type="number" v-model.number="stronghold.feeDiscount" placeholder="0">
-            </div>
+        <div class="right-column">
+            <div class="right-panel wrap-cal">
+                <h2>영지 효과 세팅</h2>
+                <div class="input-group">
+                    <label>대성공 확률 증가 (%)</label>
+                    <input type="number" v-model.number="stronghold.greatSuccess" placeholder="0" min="0">
+                </div>
+                <div class="input-group">
+                    <label>제작 수수료 감소 (%)</label>
+                    <input type="number" v-model.number="stronghold.feeDiscount" placeholder="0" min="0">
+                </div>
 
-            <hr class="result-divider">
+                <hr class="result-divider">
 
-            <h2>실시간 시세 연동</h2>
-            <div class="input-group">
-                <label>
-                    <span>LOSTARK API KEY</span>
-                    <a href="https://developer-lostark.game.onstove.com/" target="_blank" class="api-link-btn">API 키 발급받기</a>
-                </label>
-                <input type="text" v-model="apiKey" placeholder="API 키를 입력해 주세요">
-                <div class="api-notice">
-                  ※ 입력하신 API 키는 사용자 PC(로컬 스토리지)에만 안전하게 저장됩니다.<br>
-                  ※ API 키 없이 단가를 직접 입력하여 계산할 수도 있습니다.</div>
-            </div>
-            <button class="btn-api" @click="fetchMarketData" :disabled="fetching">
-                {{ fetching ? "시세 불러오는 중..." : "경매장 실시간 시세 조회" }}
-            </button>
-            
-            <button v-if="!showMarketUi" class="btn-manual" @click="enableManualInput">
-                단가 수동 입력창 열기 (선택사항)
-            </button>
+                <div class="section-header">
+                    <h2>실시간 시세 연동</h2>
+                    <span v-if="lastMarketUpdate" class="update-timestamp">
+                        <i class="live-dot"></i> 갱신: {{ lastMarketUpdate }}
+                    </span>
+                </div>
 
-            <div v-if="showMarketUi" style="margin-top: 15px;">
+                <div class="input-group">
+                    <label>
+                        <span>LOSTARK API KEY</span>
+                        <a href="https://developer-lostark.game.onstove.com/" target="_blank" class="api-link-btn">API 키 발급받기</a>
+                    </label>
+                    <input type="text" v-model="apiKey" placeholder="API 키를 입력해 주세요">
+                    <div class="api-notice">
+                      ※ 입력하신 API 키는 사용자 PC(로컬 스토리지)에만 안전하게 저장됩니다.<br>
+                      ※ API 키 없이 단가를 직접 입력하여 계산할 수도 있습니다.</div>
+                </div>
                 
-                <div class="market-box">
-                    <div class="market-header">
-                        <h3 class="normal-product">아비도스 융화 재료</h3>
-                        <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
-                    </div>
-                    <div class="market-row">
-                        <span>현재 최저가 (1개)</span>
-                        <span>
-                            <input type="number" v-model.number="market.normal.price" class="price-input-right"> G
-                        </span>
-                    </div>
+                <button class="btn-api" @click="fetchMarketData" :disabled="fetching || isCooldown">
+                    {{ fetching ? "시세 불러오는 중..." : (isCooldown ? "경매장 실시간 시세 조회" : "경매장 실시간 시세 조회") }}
+                </button>
+                
+                <button v-if="!showMarketUi" class="btn-manual" @click="enableManualInput">
+                    단가 수동 입력창 열기 (선택사항)
+                </button>
+
+                <div v-if="showMarketUi" style="margin-top: 10px;">
                     
-                    <div class="market-row highlight">
-                        <span style="display:flex; flex-direction:column;">
-                            1회 제작 순수익
-                            <span class="desc" style="margin-left:0;">(자급자족 / 재료값 0G)</span>
-                        </span>
-                        <span :class="{'profit-plus': profitPerCraft.normal.zeroCost > 0, 'profit-minus': profitPerCraft.normal.zeroCost <= 0}">
-                            {{ profitPerCraft.normal.zeroCost.toLocaleString() }} G
-                        </span>
-                    </div>
-                    <div class="market-row highlight" style="border-top: none; margin-top: 0; padding-top: 0;">
-                        <span style="display:flex; flex-direction:column;">
-                            1회 제작 순수익
-                            <span class="desc" style="margin-left:0;">(시장구매 / 재료값 반영)</span>
-                        </span>
-                        <span :class="{'profit-plus': profitPerCraft.normal.fullCost > 0, 'profit-minus': profitPerCraft.normal.fullCost <= 0}">
-                            {{ profitPerCraft.normal.fullCost.toLocaleString() }} G
-                        </span>
+                    <div class="market-box">
+                        <div class="market-header">
+                            <span class="resource-label normal-product">
+                                <div class="resource-icon-wrap"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
+                                <h3 class="normal-product" style="display:inline; margin-left:5px;">아비도스 융화 재료</h3>
+                            </span>
+                            <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
+                        </div>
+                        <div class="market-row" style="margin-bottom: 0;">
+                            <span>현재 최저가 (1개)</span>
+                            <span>
+                                <input type="number" v-model.number="market.normal.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span>
+                            </span>
+                        </div>
+                        
+                        <div class="scenario-section self-craft">
+                            <span class="scenario-title">자급자족 (재료값 0G)</span>
+                            <div class="scenario-row">
+                                <span>1회 제작 순수익</span>
+                                <span :class="{'profit-plus': profitPerCraft.normal.zeroCost > 0, 'profit-minus': profitPerCraft.normal.zeroCost <= 0}">
+                                    {{ profitPerCraft.normal.zeroCost.toLocaleString() }} G
+                                </span>
+                            </div>
+                            <div v-if="result && result.normal.totalO > 0" class="scenario-row total-profit-row">
+                                <span style="color: #ffd700;">총 예상 수익</span>
+                                <span :class="{'num-point': profitPerCraft.normal.zeroCost > 0, 'profit-minus': profitPerCraft.normal.zeroCost <= 0}">
+                                    {{ (profitPerCraft.normal.zeroCost * result.normal.totalO).toLocaleString() }} G
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="scenario-section market-buy">
+                            <span class="scenario-title">경매장 구매 (재료값 반영)</span>
+                            <div class="scenario-row">
+                                <span>1회 제작 순수익</span>
+                                <span :class="{'profit-plus': profitPerCraft.normal.fullCost > 0, 'profit-minus': profitPerCraft.normal.fullCost <= 0}">
+                                    {{ profitPerCraft.normal.fullCost.toLocaleString() }} G
+                                </span>
+                            </div>
+                            <div v-if="result && result.normal.totalO > 0" class="scenario-row total-profit-row">
+                                <span style="color: #ffd700;">총 예상 수익</span>
+                                <span :class="{'num-point': profitPerCraft.normal.fullCost > 0, 'profit-minus': profitPerCraft.normal.fullCost <= 0}">
+                                    {{ (profitPerCraft.normal.fullCost * result.normal.totalO).toLocaleString() }} G
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div v-if="result && result.normal.totalO > 0" style="border-top: 1px solid #3a3a3a; padding-top: 8px; margin-top: 8px;">
-                        <div class="market-row" style="color: #ffd700;">
-                            <span>총 예상 수익 <span class="desc" style="color:#aa9000;">(자급자족)</span></span>
-                            <span>{{ (profitPerCraft.normal.zeroCost * result.normal.totalO).toLocaleString() }} G</span>
+                    <div class="market-box">
+                        <div class="market-header">
+                            <span class="resource-label final-product">
+                                <div class="resource-icon-wrap"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
+                                <h3 class="final-product" style="display:inline; margin-left:5px;">상급 아비도스 융화 재료</h3>
+                            </span>
+                            <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
                         </div>
-                        <div class="market-row" style="color: #ffd700;">
-                            <span>총 예상 수익 <span class="desc" style="color:#aa9000;">(시장구매)</span></span>
-                            <span>{{ (profitPerCraft.normal.fullCost * result.normal.totalO).toLocaleString() }} G</span>
+                        <div class="market-row" style="margin-bottom: 0;">
+                            <span>현재 최저가 (1개)</span>
+                            <span>
+                                <input type="number" v-model.number="market.advanced.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span>
+                            </span>
+                        </div>
+                        
+                        <div class="scenario-section self-craft">
+                            <span class="scenario-title">자급자족 (재료값 0G)</span>
+                            <div class="scenario-row">
+                                <span>1회 제작 순수익</span>
+                                <span :class="{'profit-plus': profitPerCraft.advanced.zeroCost > 0, 'profit-minus': profitPerCraft.advanced.zeroCost <= 0}">
+                                    {{ profitPerCraft.advanced.zeroCost.toLocaleString() }} G
+                                </span>
+                            </div>
+                            <div v-if="result && result.advanced.totalO > 0" class="scenario-row total-profit-row">
+                                <span style="color: #ffd700;">총 예상 수익</span>
+                                <span :class="{'num-point': profitPerCraft.advanced.zeroCost > 0, 'profit-minus': profitPerCraft.advanced.zeroCost <= 0}">
+                                    {{ (profitPerCraft.advanced.zeroCost * result.advanced.totalO).toLocaleString() }} G
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="scenario-section market-buy">
+                            <span class="scenario-title">경매장 구매 (재료값 반영)</span>
+                            <div class="scenario-row">
+                                <span>1회 제작 순수익</span>
+                                <span :class="{'profit-plus': profitPerCraft.advanced.fullCost > 0, 'profit-minus': profitPerCraft.advanced.fullCost <= 0}">
+                                    {{ profitPerCraft.advanced.fullCost.toLocaleString() }} G
+                                </span>
+                            </div>
+                            <div v-if="result && result.advanced.totalO > 0" class="scenario-row total-profit-row">
+                                <span style="color: #ffd700;">총 예상 수익</span>
+                                <span :class="{'num-point': profitPerCraft.advanced.fullCost > 0, 'profit-minus': profitPerCraft.advanced.fullCost <= 0}">
+                                    {{ (profitPerCraft.advanced.fullCost * result.advanced.totalO).toLocaleString() }} G
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="market-box">
-                    <div class="market-header">
-                        <h3 class="final-product">상급 아비도스 융화 재료</h3>
-                        <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
-                    </div>
-                    <div class="market-row">
-                        <span>현재 최저가 (1개)</span>
-                        <span>
-                            <input type="number" v-model.number="market.advanced.price" class="price-input-right"> G
-                        </span>
-                    </div>
-                    
-                    <div class="market-row highlight">
-                        <span style="display:flex; flex-direction:column;">
-                            1회 제작 순수익
-                            <span class="desc" style="margin-left:0;">(자급자족 / 재료값 0G)</span>
-                        </span>
-                        <span :class="{'profit-plus': profitPerCraft.advanced.zeroCost > 0, 'profit-minus': profitPerCraft.advanced.zeroCost <= 0}">
-                            {{ profitPerCraft.advanced.zeroCost.toLocaleString() }} G
-                        </span>
-                    </div>
-                    <div class="market-row highlight" style="border-top: none; margin-top: 0; padding-top: 0;">
-                        <span style="display:flex; flex-direction:column;">
-                            1회 제작 순수익
-                            <span class="desc" style="margin-left:0;">(시장구매 / 재료값 반영)</span>
-                        </span>
-                        <span :class="{'profit-plus': profitPerCraft.advanced.fullCost > 0, 'profit-minus': profitPerCraft.advanced.fullCost <= 0}">
-                            {{ profitPerCraft.advanced.fullCost.toLocaleString() }} G
-                        </span>
-                    </div>
-
-                    <div v-if="result && result.advanced.totalO > 0" style="border-top: 1px solid #3a3a3a; padding-top: 8px; margin-top: 8px;">
-                        <div class="market-row" style="color: #ffd700;">
-                            <span>총 예상 수익 <span class="desc" style="color:#aa9000;">(자급자족)</span></span>
-                            <span>{{ (profitPerCraft.advanced.zeroCost * result.advanced.totalO).toLocaleString() }} G</span>
-                        </div>
-                        <div class="market-row" style="color: #ffd700;">
-                            <span>총 예상 수익 <span class="desc" style="color:#aa9000;">(시장구매)</span></span>
-                            <span>{{ (profitPerCraft.advanced.fullCost * result.advanced.totalO).toLocaleString() }} G</span>
-                        </div>
-                    </div>
-                </div>
             </div>
-
+            <p class="update">update: 2026.03.07</p>
         </div>
     </div>
 
@@ -376,7 +477,9 @@
     createApp({
         data() {
             return {
-                loading: false, fetching: false, showMarketUi: false,
+                loading: false, fetching: false, isCooldown: false, showMarketUi: false,
+                isApproximation: false,
+                lastMarketUpdate: "",
                 resources: { A: 0, B: 0, S: 0, C: 0, P: 0 },
                 selectedMaterial: "WL",
                 materials: [
@@ -403,30 +506,25 @@
             isDisabled() { return !Object.values(this.resources).some(v => v > 0); },
             profitPerCraft() {
                 const baseFeeN = 400; const baseFeeA = 520; 
-                
                 const actualFeeN = Math.floor(baseFeeN * (1 - this.stronghold.feeDiscount / 100));
                 const actualFeeA = Math.floor(baseFeeA * (1 - this.stronghold.feeDiscount / 100));
-
                 const baseGsRate = 0.05;
                 const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
                 const expectedYield = 10 * (1 + finalGsRate);
-                
                 const pN = this.market.normal.price || 0;
                 const pA = this.market.advanced.price || 0;
-
+                
+                // 수수료 로직 원복 완료 (1개당 5% 수수료 계산 후 올림 차감 -> 이후 예상 수량 곱하기)
                 const netPriceN = pN - Math.ceil(pN * 0.05);
                 const netPriceA = pA - Math.ceil(pA * 0.05);
-
                 const revN = netPriceN * expectedYield;
                 const revA = netPriceA * expectedYield;
-
+                
                 const priceA = this.market.materials.A?.price || 0;
                 const priceB = this.market.materials.B?.price || 0;
                 const priceC = this.market.materials.C?.price || 0;
-
                 const costMatN = (86 * priceA / 100) + (45 * priceB / 100) + (33 * priceC / 100);
                 const costMatA = (112 * priceA / 100) + (59 * priceB / 100) + (43 * priceC / 100);
-
                 return {
                     normal: { zeroCost: Math.floor(revN - actualFeeN), fullCost: Math.floor(revN - actualFeeN - costMatN) },
                     advanced: { zeroCost: Math.floor(revA - actualFeeA), fullCost: Math.floor(revA - actualFeeA - costMatA) }
@@ -444,6 +542,8 @@
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
                 this.showMarketUi = false;
+                this.isApproximation = false;
+                this.lastMarketUpdate = ""; 
                 this.market.materials = { A: { price: 0 }, B: { price: 0 }, S: { price: 0 }, C: { price: 0 } };
             },
             resources: {
@@ -451,21 +551,40 @@
                     for (const key in newResources) {
                         if (newResources[key] === "" || newResources[key] === null || newResources[key] === undefined) {
                             this.resources[key] = 0;
+                        } else if (newResources[key] > 999999) { // 999,999개 강제 제한 안전장치 스텔스 적용 유지
+                            this.resources[key] = 999999;
                         }
                     }
                 }, deep: true,
             },
             apiKey(newVal) { localStorage.setItem('loa_api_key', newVal); },
-            stronghold: { handler(newVal) { localStorage.setItem('loa_stronghold', JSON.stringify(newVal)); }, deep: true }
+            stronghold: { 
+                handler(newVal) { 
+                    if (newVal.greatSuccess === "" || newVal.greatSuccess === null || newVal.greatSuccess === undefined) {
+                        this.stronghold.greatSuccess = 0;
+                    }
+                    if (newVal.feeDiscount === "" || newVal.feeDiscount === null || newVal.feeDiscount === undefined) {
+                        this.stronghold.feeDiscount = 0;
+                    }
+                    if (newVal.greatSuccess < 0) this.stronghold.greatSuccess = 0;
+                    if (newVal.feeDiscount < 0) this.stronghold.feeDiscount = 0;
+                    localStorage.setItem('loa_stronghold', JSON.stringify(newVal)); 
+                }, 
+                deep: true 
+            }
         },
         methods: {
-            enableManualInput() {
-                this.showMarketUi = true;
+            enableManualInput() { 
+                this.showMarketUi = true; 
+                this.lastMarketUpdate = ""; 
             },
             async fetchMarketData() {
-                if (!this.apiKey) return alert("API Key를 입력해주세요!\n\n※ API 키가 없다면 수동 입력창을 열어 단가를 직접 입력해 사용할 수 있습니다.");
+                if (!this.apiKey) return alert("API Key를 입력해주세요!");
+                if (this.isCooldown) return;
+
                 const token = this.apiKey.includes("Bearer") ? this.apiKey : `Bearer ${this.apiKey}`;
                 this.fetching = true;
+                this.isCooldown = true;
 
                 const url = "https://developer-lostark.game.onstove.com/markets/items";
                 const headers = { "accept": "application/json", "authorization": token, "content-type": "application/json" };
@@ -476,41 +595,54 @@
                         method: "POST", headers,
                         body: JSON.stringify({ Sort: "CURRENT_MIN_PRICE", CategoryCode: categoryCode, ItemName: itemName, PageNo: 1, SortCondition: "ASC" })
                     });
+                    if (res.status === 429) throw new Error("RATE_LIMIT");
                     if (!res.ok) throw new Error("API 요청 실패");
+
                     const data = await res.json();
                     return data.Items && data.Items.length > 0 ? data.Items[0] : null;
                 };
 
                 try {
-                    const itemN = await fetchItemData("아비도스 융화 재료", 50000);
-                    const itemA = await fetchItemData("상급 아비도스 융화 재료", 50000);
-                    const matA = await fetchItemData(this.selectedResources.A?.name, 90000);
-                    const matB = await fetchItemData(this.selectedResources.B?.name, 90000);
-                    const matS = await fetchItemData(this.selectedResources.S?.name, 90000);
-                    const matC = await fetchItemData(this.selectedResources.C?.name, 90000);
-
+                    const [itemN, itemA, matA, matB, matS, matC] = await Promise.all([
+                        fetchItemData("아비도스 융화 재료", 50000),
+                        fetchItemData("상급 아비도스 융화 재료", 50000),
+                        fetchItemData(this.selectedResources.A?.name, 90000),
+                        fetchItemData(this.selectedResources.B?.name, 90000),
+                        fetchItemData(this.selectedResources.S?.name, 90000),
+                        fetchItemData(this.selectedResources.C?.name, 90000)
+                    ]);
                     if (itemN) this.market.normal.price = itemN.CurrentMinPrice;
                     if (itemA) this.market.advanced.price = itemA.CurrentMinPrice;
                     if (matA) this.market.materials.A.price = matA.CurrentMinPrice;
                     if (matB) this.market.materials.B.price = matB.CurrentMinPrice;
                     if (matS) this.market.materials.S.price = matS.CurrentMinPrice;
                     if (matC) this.market.materials.C.price = matC.CurrentMinPrice;
-
+                    
+                    const now = new Date();
+                    this.lastMarketUpdate = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
                     this.showMarketUi = true;
-
                 } catch (error) {
-                    console.error("API Fetch Error:", error);
-                    alert("시세 불러오기 실패!\n\n1. API 키 확인\n2. 'Allow CORS' 확장 프로그램 활성화 여부 확인\n\n※ 오류가 지속되면 수동 입력을 이용해주세요.");
-                } finally {
-                    this.fetching = false;
+                    if (error.message === "RATE_LIMIT") {
+                        alert("⚠️ API 호출 제한(분당 100회)을 초과했습니다!\n약 1분 뒤에 다시 시도해 주세요.");
+                    } else {
+                        alert("시세 불러오기 실패! API 키나 네트워크를 확인해 주세요.");
+                    }
+                } finally { 
+                    this.fetching = false; 
+                    setTimeout(() => { this.isCooldown = false; }, 1000);
                 }
             },
             async calculate() {
                 this.loading = true;
-                await new Promise(resolve => setTimeout(resolve, 200));
-
+                await new Promise(resolve => setTimeout(resolve, 200)); 
+                
+                // 총합이 50만 개를 초과하면 브라우저 보호를 위해 근사치 모드 활성화 유지
+                const totalInput = Object.values(this.resources).reduce((sum, val) => sum + (val || 0), 0);
+                this.isApproximation = totalInput > 500000;
+                
                 const rates = { StoA: { in: 5, out: 50 }, BtoA: { in: 25, out: 50 }, BtoP: { in: 50, out: 80 }, AtoP: { in: 100, out: 80 }, PtoC: { in: 100, out: 10 } };
-
+                
+                // ===== [1] 상급 아비도스 계산 =====
                 const recipeAdv = { A: 112, B: 59, C: 43 };
                 let maxAdv = 0; let bestLogsAdv = {};
                 let baseA_adv = this.resources.A; let sToALog_adv = 0;
@@ -519,65 +651,75 @@
                     sToALog_adv = Math.floor(this.resources.S / rates.StoA.in);
                     baseA_adv += sToALog_adv * rates.StoA.out;
                 }
-
-                for (let b2p = 0; b2p <= Math.floor(this.resources.B / rates.BtoP.in); b2p++) {
+                
+                const maxBtoP_adv = Math.floor(this.resources.B / rates.BtoP.in);
+                const stepBtoP_adv = this.isApproximation ? Math.max(1, Math.floor(maxBtoP_adv / 40)) : 1;
+                
+                for (let b2p = 0; b2p <= maxBtoP_adv; b2p += stepBtoP_adv) {
                     let finalB = this.resources.B - (b2p * rates.BtoP.in);
                     let curP_fromB = this.resources.P + (b2p * rates.BtoP.out);
-
-                    for (let a2p = 0; a2p <= Math.floor(baseA_adv / rates.AtoP.in); a2p++) {
+                    
+                    const maxAtoP_adv = Math.floor(baseA_adv / rates.AtoP.in);
+                    const stepAtoP_adv = this.isApproximation ? Math.max(1, Math.floor(maxAtoP_adv / 40)) : 1;
+                    
+                    for (let a2p = 0; a2p <= maxAtoP_adv; a2p += stepAtoP_adv) {
                         let finalA = baseA_adv - (a2p * rates.AtoP.in);
                         let finalP = curP_fromB + (a2p * rates.AtoP.out);
                         let p2c = Math.floor(finalP / rates.PtoC.in);
                         let finalC = this.resources.C + (p2c * rates.PtoC.out);
-
+                        
                         let canCraft = Math.min(Math.floor(finalA / recipeAdv.A), Math.floor(finalB / recipeAdv.B), Math.floor(finalC / recipeAdv.C));
-
                         if (canCraft > maxAdv) {
                             maxAdv = canCraft;
                             bestLogsAdv = { StoA: sToALog_adv, BtoP: b2p, AtoP: a2p, PtoC: p2c };
                         }
                     }
                 }
-
+                
+                // ===== [2] 일반 아비도스 계산 =====
                 const recipeNorm = { A: 86, B: 45, C: 33 };
                 let normResources = { ...this.resources };
                 let sToALog_norm = 0;
-
+                
                 if (this.selectedResources.S && normResources.S > 0) {
                     sToALog_norm = Math.floor(normResources.S / rates.StoA.in);
                     normResources.A += sToALog_norm * rates.StoA.out;
                     normResources.S -= sToALog_norm * rates.StoA.in;
                 }
-
+                
                 let maxNorm = 0; let bestLogsNorm = { StoA: sToALog_norm, BtoA: 0, BtoP: 0, AtoP: 0, PtoC: 0 };
+                
                 const maxBtoA = Math.floor(normResources.B / rates.BtoA.in);
-
-                for (let b2a = 0; b2a <= maxBtoA; b2a++) {
+                const stepBtoA = this.isApproximation ? Math.max(1, Math.floor(maxBtoA / 40)) : 1;
+                
+                for (let b2a = 0; b2a <= maxBtoA; b2a += stepBtoA) {
                     let tempA = normResources.A + (b2a * rates.BtoA.out);
                     let tempB = normResources.B - (b2a * rates.BtoA.in);
                     let tempC = normResources.C; let tempP = normResources.P;
-
+                    
                     let currentMax = Math.min(Math.floor(tempA / recipeNorm.A), Math.floor(tempB / recipeNorm.B), Math.floor(tempC / recipeNorm.C));
                     let remA = tempA - currentMax * recipeNorm.A;
                     let remB = tempB - currentMax * recipeNorm.B;
                     let remC = tempC - currentMax * recipeNorm.C;
                     let remP = tempP;
-
+                    
                     const maxAtoP = Math.floor(remA / rates.AtoP.in);
                     const maxBtoP = Math.floor(remB / rates.BtoP.in);
-
-                    for (let a2p = 0; a2p <= maxAtoP; a2p++) {
+                    
+                    const stepAtoP = this.isApproximation ? Math.max(1, Math.floor(maxAtoP / 40)) : 1;
+                    const stepBtoP = this.isApproximation ? Math.max(1, Math.floor(maxBtoP / 40)) : 1;
+                    
+                    for (let a2p = 0; a2p <= maxAtoP; a2p += stepAtoP) {
                         let curA = remA - a2p * rates.AtoP.in;
                         let totP = remP + a2p * rates.AtoP.out;
-
-                        for (let b2p = 0; b2p <= maxBtoP; b2p++) {
+                        
+                        for (let b2p = 0; b2p <= maxBtoP; b2p += stepBtoP) {
                             let curB = remB - b2p * rates.BtoP.in;
                             let curP = totP + b2p * rates.BtoP.out;
                             let p2c = Math.floor(curP / rates.PtoC.in);
                             let curC = remC + p2c * rates.PtoC.out;
-
+                            
                             let producedO = currentMax + Math.min(Math.floor(curA / recipeNorm.A), Math.floor(curB / recipeNorm.B), Math.floor(curC / recipeNorm.C));
-
                             if (producedO > maxNorm) {
                                 maxNorm = producedO;
                                 bestLogsNorm = { StoA: sToALog_norm, BtoA: b2a, AtoP: a2p, BtoP: b2p, PtoC: p2c };
@@ -587,14 +729,13 @@
                 }
                 
                 if (maxNorm === 0) bestLogsNorm = {};
-
+                
                 const printOrder = ["StoA", "AtoP", "BtoA", "BtoP", "PtoC"];
                 const sortLogs = (logs) => {
                     let orderedLogs = {};
                     printOrder.forEach(key => { if (logs[key] > 0) orderedLogs[key] = logs[key]; });
                     return orderedLogs;
                 };
-
                 this.result = { advanced: { totalO: maxAdv, logs: sortLogs(bestLogsAdv) }, normal: { totalO: maxNorm, logs: sortLogs(bestLogsNorm) } };
                 this.loading = false;
             }
