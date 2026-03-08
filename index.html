@@ -246,7 +246,7 @@
             </div>
 
             <div v-if="result" class="result">
-                <h2 class="result-title"> 일반 아비도스 융화 재료 </h2>
+                <h2 class="result-title"> 아비도스 융화 재료 </h2>
                 <template v-if="result.normal.totalO === 0">
                     <div class="no-production">제작이 불가능합니다.</div>
                 </template>
@@ -462,7 +462,7 @@
                 </div>
 
             </div>
-            <p class="update">update: 2026.03.07</p>
+            <p class="update">update: 2026.03.08</p>
         </div>
     </div>
 
@@ -644,39 +644,61 @@
                 
                 // ===== [1] 상급 아비도스 계산 =====
                 const recipeAdv = { A: 112, B: 59, C: 43 };
-                let maxAdv = 0; let bestLogsAdv = {};
-                let baseA_adv = this.resources.A; let sToALog_adv = 0;
+                let advResources = { ...this.resources };
+                let sToALog_adv = 0;
                 
-                if (this.selectedResources.S && this.resources.S > 0) {
-                    sToALog_adv = Math.floor(this.resources.S / rates.StoA.in);
-                    baseA_adv += sToALog_adv * rates.StoA.out;
+                if (this.selectedResources.S && advResources.S > 0) {
+                    sToALog_adv = Math.floor(advResources.S / rates.StoA.in);
+                    advResources.A += sToALog_adv * rates.StoA.out;
+                    advResources.S -= sToALog_adv * rates.StoA.in;
                 }
                 
-                const maxBtoP_adv = Math.floor(this.resources.B / rates.BtoP.in);
-                const stepBtoP_adv = this.isApproximation ? Math.max(1, Math.floor(maxBtoP_adv / 40)) : 1;
+                let maxAdv = 0; let bestLogsAdv = { StoA: sToALog_adv, BtoA: 0, BtoP: 0, AtoP: 0, PtoC: 0 };
                 
-                for (let b2p = 0; b2p <= maxBtoP_adv; b2p += stepBtoP_adv) {
-                    let finalB = this.resources.B - (b2p * rates.BtoP.in);
-                    let curP_fromB = this.resources.P + (b2p * rates.BtoP.out);
+                // 🔥 벌목/채광 한정 교환 예외처리 로직 추가
+                const canBtoA = (this.selectedMaterial === "WL" || this.selectedMaterial === "MN");
+                const maxBtoA_adv = canBtoA ? Math.floor(advResources.B / rates.BtoA.in) : 0;
+                const stepBtoA_adv = this.isApproximation ? Math.max(1, Math.floor(maxBtoA_adv / 40)) : 1;
+                
+                for (let b2a = 0; b2a <= maxBtoA_adv; b2a += stepBtoA_adv) {
+                    let tempA = advResources.A + (b2a * rates.BtoA.out);
+                    let tempB = advResources.B - (b2a * rates.BtoA.in);
+                    let tempC = advResources.C; let tempP = advResources.P;
                     
-                    const maxAtoP_adv = Math.floor(baseA_adv / rates.AtoP.in);
+                    let currentMax = Math.min(Math.floor(tempA / recipeAdv.A), Math.floor(tempB / recipeAdv.B), Math.floor(tempC / recipeAdv.C));
+                    let remA = tempA - currentMax * recipeAdv.A;
+                    let remB = tempB - currentMax * recipeAdv.B;
+                    let remC = tempC - currentMax * recipeAdv.C;
+                    let remP = tempP;
+                    
+                    const maxAtoP_adv = Math.floor(remA / rates.AtoP.in);
+                    const maxBtoP_adv = Math.floor(remB / rates.BtoP.in);
+                    
                     const stepAtoP_adv = this.isApproximation ? Math.max(1, Math.floor(maxAtoP_adv / 40)) : 1;
+                    const stepBtoP_adv = this.isApproximation ? Math.max(1, Math.floor(maxBtoP_adv / 40)) : 1;
                     
                     for (let a2p = 0; a2p <= maxAtoP_adv; a2p += stepAtoP_adv) {
-                        let finalA = baseA_adv - (a2p * rates.AtoP.in);
-                        let finalP = curP_fromB + (a2p * rates.AtoP.out);
-                        let p2c = Math.floor(finalP / rates.PtoC.in);
-                        let finalC = this.resources.C + (p2c * rates.PtoC.out);
+                        let curA = remA - a2p * rates.AtoP.in;
+                        let totP = remP + a2p * rates.AtoP.out;
                         
-                        let canCraft = Math.min(Math.floor(finalA / recipeAdv.A), Math.floor(finalB / recipeAdv.B), Math.floor(finalC / recipeAdv.C));
-                        if (canCraft > maxAdv) {
-                            maxAdv = canCraft;
-                            bestLogsAdv = { StoA: sToALog_adv, BtoP: b2p, AtoP: a2p, PtoC: p2c };
+                        for (let b2p = 0; b2p <= maxBtoP_adv; b2p += stepBtoP_adv) {
+                            let curB = remB - b2p * rates.BtoP.in;
+                            let curP = totP + b2p * rates.BtoP.out;
+                            let p2c = Math.floor(curP / rates.PtoC.in);
+                            let curC = remC + p2c * rates.PtoC.out;
+                            
+                            let producedO = currentMax + Math.min(Math.floor(curA / recipeAdv.A), Math.floor(curB / recipeAdv.B), Math.floor(curC / recipeAdv.C));
+                            if (producedO > maxAdv) {
+                                maxAdv = producedO;
+                                bestLogsAdv = { StoA: sToALog_adv, BtoA: b2a, AtoP: a2p, BtoP: b2p, PtoC: p2c };
+                            }
                         }
                     }
                 }
                 
-                // ===== [2] 일반 아비도스 계산 =====
+                if (maxAdv === 0) bestLogsAdv = {};
+                
+                // ===== [2] 아비도스 융화 재료 계산 =====
                 const recipeNorm = { A: 86, B: 45, C: 33 };
                 let normResources = { ...this.resources };
                 let sToALog_norm = 0;
@@ -689,7 +711,8 @@
                 
                 let maxNorm = 0; let bestLogsNorm = { StoA: sToALog_norm, BtoA: 0, BtoP: 0, AtoP: 0, PtoC: 0 };
                 
-                const maxBtoA = Math.floor(normResources.B / rates.BtoA.in);
+                // 🔥 벌목/채광 한정 교환 예외처리
+                const maxBtoA = canBtoA ? Math.floor(normResources.B / rates.BtoA.in) : 0;
                 const stepBtoA = this.isApproximation ? Math.max(1, Math.floor(maxBtoA / 40)) : 1;
                 
                 for (let b2a = 0; b2a <= maxBtoA; b2a += stepBtoA) {
