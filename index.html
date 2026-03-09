@@ -544,7 +544,7 @@
                                     <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.totalFee).toLocaleString() }} G</span>
                                 </div>
                                 <div class="scenario-row" v-if="includeSurplus && deficitCosts.normal.surplusProfit > 0">
-                                    <span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위, 수수료 제외)</span></span>
+                                    <span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span>
                                     <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.surplusProfit).toLocaleString() }} G</span>
                                 </div>
                                 <div v-if="result && result.normal.totalO > 0" class="scenario-row total-profit-row">
@@ -667,7 +667,7 @@
                                     <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.totalFee).toLocaleString() }} G</span>
                                 </div>
                                 <div class="scenario-row" v-if="includeSurplus && deficitCosts.advanced.surplusProfit > 0">
-                                    <span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위, 수수료 제외)</span></span>
+                                    <span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span>
                                     <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.surplusProfit).toLocaleString() }} G</span>
                                 </div>
                                 <div v-if="result && result.advanced.totalO > 0" class="scenario-row total-profit-row">
