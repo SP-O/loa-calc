@@ -230,7 +230,7 @@
                 </div>
             </template>
 
-            <button :disabled="isDisabled || loading" @click="calculate">
+            <button class="btn-calc" :disabled="isDisabled || loading" @click="calculate">
                 {{ loading ? "계산중..." : "계산하기" }}
             </button>
 
@@ -1225,4 +1225,5 @@
 
 </body>
 </html>
+
 
