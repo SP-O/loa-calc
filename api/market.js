@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     // 프론트에서 ?force=true 로 요청하면 강제 새로고침으로 간주
     const isForceRefresh = req.query.force === 'true';
     const now = Date.now();
-    const CACHE_DURATION = 5 * 60 * 1000; // 5분 (밀리초)
+    const CACHE_DURATION = 4 * 60 * 1000; // 4.5분 (밀리초)
 
     // 1. 강제 새로고침이 아니고, 5분이 지나지 않았다면 캐시된 데이터 반환
     if (!isForceRefresh && cachedData && (now - lastFetchTime < CACHE_DURATION)) {
