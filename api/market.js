@@ -90,3 +90,4 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: "시세 데이터를 가져오는데 실패했습니다." });
     }
 }
+ 
