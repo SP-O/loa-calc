@@ -249,7 +249,7 @@
         .sync-info { display: flex; align-items: center; margin-right: 8px; padding-right: 8px; border-right: 1px solid #4a4a4a; white-space: nowrap; }
         .live-dot.is-syncing { background-color: #4ade80; box-shadow: 0 0 5px rgba(74, 222, 128, 0.6); animation: fast-pulse 1s infinite ease-in-out; }
         @keyframes fast-pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .btn-sync-icon { background: transparent; border: none; color: #b0b0b0; padding: 0; margin: 0; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s, transform 0.3s ease; width: auto; }
+        .btn-sync-icon { background: transparent; border: none; color: #b0b0b0; padding: 0; margin: 0; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s, transform 0.3s ease; width: 12px; }
         .btn-sync-icon:hover:not(:disabled) { color: #ffd700; transform: rotate(180deg); }
         .btn-sync-icon:disabled { color: #4a4a4a; cursor: not-allowed; transform: rotate(360deg); transition: transform 1s linear infinite; }
 
@@ -646,8 +646,11 @@
                             <span style="position: relative; top: -1px;">갱신: {{ fetching ? '데이터 동기화 중...' : (lastMarketUpdate ? lastMarketUpdate : '데이터 없음') }}</span>
                         </div>
                         <button class="btn-sync-icon" @click="fetchMarketData(true)" :disabled="fetching || isCooldown" title="시세 새로고침">
-                            ↻
-                        </button>
+    <span v-if="isCooldown" style="font-size: 0.85em; color: #b0b0b0; font-weight: bold;">
+        {{ cooldownTimer }}
+    </span>
+    <span v-else>↻</span>
+</button>
                     </div>
                 </div>
 
@@ -948,7 +951,7 @@
                 calcMode: 'optimize', 
                 forceConvert: false, 
                 includeSurplus: false, 
-                loading: false, fetching: false, isCooldown: false,
+                loading: false, fetching: false, isCooldown: false, cooldownTimer: 0,
                 showMarketUi: true,
                 isApproximation: false,
                 lastMarketUpdate: "",
@@ -1388,7 +1391,19 @@
             };
 
             startSyncedTimer();
+          const savedExpire = localStorage.getItem('market_cooldown_expire');
+            if (savedExpire) {
+                const expireTime = parseInt(savedExpire);
+                if (expireTime > Date.now()) {
+                    // 시간이 남았다면 타이머 다시 시작!
+                    this.startCooldownTimer(expireTime);
+                } else {
+                    // 지났다면 창고에서 삭제
+                    localStorage.removeItem('market_cooldown_expire');
+                }
+            }
         },
+      
       
         watch: {
             favorites: {
@@ -1532,9 +1547,13 @@
                     this.fetching = false; 
                     
                     // 수동 새로고침 버튼을 눌러 요청했을 때만 1분(60000ms) 쿨타임을 적용합니다.
-                    if (isForce) {
-                        setTimeout(() => { this.isCooldown = false; }, 60000);
-                    }
+                   
+                 if (isForce) {
+                    const expireTime = Date.now() + 60000; 
+                    localStorage.setItem('market_cooldown_expire', expireTime);    
+                    this.startCooldownTimer(expireTime);
+                 }
+                  
                 }
             },
 
@@ -1729,8 +1748,26 @@
                 this.result = { mode: 'optimize', advanced: advResult, normal: normResult };
                 this.isApproximation = false; 
                 if (!skipDelay) this.loading = false;
-            }
+            },
+          startCooldownTimer(expireTime) {
+            this.isCooldown = true;
+            
+            const timer = setInterval(() => {
+                const now = Date.now();
+                const timeLeft = Math.ceil((expireTime - now) / 1000);
+
+                if (timeLeft <= 0) {
+                    this.isCooldown = false;
+                    this.cooldownTimer = 0;
+                    localStorage.removeItem('market_cooldown_expire');
+                    clearInterval(timer);
+                } else {
+                    this.cooldownTimer = timeLeft;
+                }
+            }, 1000);
         }
+        }
+      
     }).mount('#app');
 </script>
 
