@@ -1,5 +1,3 @@
-// api/market.js
-
 // Vercel 서버가 떠있는 동안 메모리에 유지될 캐시 변수들
 let cachedData = null;
 let lastFetchTime = 0;
