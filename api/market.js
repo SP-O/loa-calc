@@ -42,9 +42,12 @@ export default async function handler(req, res) {
         // 3. 22개 아이템 시세 병렬로 한 번에 조회
         const fetchPromises = ITEM_NAMES.map(async (itemName) => {
             const url = 'https://developer-lostark.game.onstove.com/markets/items';
+
+            const categoryCode = itemName.includes("융화 재료") ? 50000 : 90000;
+            
             const payload = {
                 Sort: "CURRENT_MIN_PRICE",
-                CategoryCode: 50000,
+                CategoryCode: categoryCode,
                 ItemName: itemName,
                 PageNo: 1,
                 SortCondition: "ASC"
