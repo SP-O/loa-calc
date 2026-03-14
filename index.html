@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <!-- Google Tag Manager --> 
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
-    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>아비도스 제작 계산기</title>
@@ -28,11 +26,50 @@
         @media (max-width: 850px) { .main-wrapper { flex-direction: column; } }
 
         h1 { font-size: 1.3em; color: #ffffff; border-bottom: 2px solid #3a3a3a; padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; }
+        /* --- 메인 탭 & 드롭다운 디자인 --- */
+        .mode-tabs { display: flex; margin-bottom: 15px; border-radius: 6px; border: 1px solid #3a3a3a; }
+        .mode-tab { flex: 1; text-align: center; padding: 8px 10px; cursor: pointer; background-color: #2b2b2b; color: #b0b0b0; font-weight: bold; transition: 0.2s; font-size: 0.9em; position: relative; }
         
-        .mode-tabs { display: flex; margin-bottom: 15px; border-radius: 6px; overflow: hidden; border: 1px solid #3a3a3a; }
-        .mode-tab { flex: 1; text-align: center; padding: 8px 10px; cursor: pointer; background-color: #2b2b2b; color: #b0b0b0; font-weight: bold; transition: 0.2s; font-size: 0.9em; }
+        /* 모서리 둥글게 복구 */
+        .mode-tab:first-child { border-radius: 5px 0 0 5px; }
+        .mode-tab:last-child { border-radius: 0 5px 5px 0; }
+        
         .mode-tab:hover { background-color: #4a4a4a; color: #ffffff; }
-        .mode-tab.active { background-color: #3a3a3a; color: #ffd700; border-bottom: 2px solid #ffd700; }
+        .mode-tab.active { background-color: #3a3a3a; color: #ffd700; border-bottom: 2px solid #ffd700; z-index: 10; }
+
+        /* 드롭다운 본체 */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%; 
+            left: -1px; 
+            width: calc(100% + 2px); 
+            background-color: #2b2b2b;
+            border: 1px solid #3a3a3a;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+            z-index: 100;
+            box-sizing: border-box;
+        }
+
+        .mode-tab.active:hover .dropdown-content { display: block; }
+
+        .dropdown-item { 
+            padding: 8px 10px; 
+            text-align: center; 
+            color: #b0b0b0; 
+            font-size: 0.9em;  
+            font-weight: bold; 
+            transition: 0.2s; 
+        }
+        
+        .dropdown-item:last-child {
+            border-radius: 0 0 5px 5px; 
+        }
+        .dropdown-item:hover { background-color: #4a4a4a; color: #ffffff; }
+        .dropdown-item.selected { color: #ffd700; background-color: #3a3a3a; }
+        
 
         h2 { font-size: 1.3em; color: #ffffff; margin: 0 0 12px 0; border-left: 4px solid #ffd700; padding-left: 10px; }
 
@@ -68,7 +105,7 @@
         .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; }
         .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; }
         .resource-icon { width: 16px; height: 16px; object-fit: cover; }
-        
+
         .resource-A, .resource-P { color: rgb(159, 159, 159); }
         .resource-A .resource-icon-wrap, .resource-P .resource-icon-wrap { background: linear-gradient(135deg, rgb(49, 49, 49), rgb(88, 88, 88)); }
         .resource-B { color: rgb(120, 187, 39); }
@@ -242,7 +279,7 @@
         .loading-spinner { width: 50px; height: 50px; border: 5px solid #3a3a3a; border-top: 5px solid #ffd700; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .update { text-align: right; font-size: 12px; color: #666; margin-top: 8px; padding-right: 5px; }
+        .update-box { text-align: right; font-size: 12px; color: #888; margin-top: -15px; margin-bottom: 0; padding-right: 5px; }
 
         .sync-pill { display: inline-flex; align-items: center; background-color: rgba(0, 0, 0, 0.25); border: 1px solid #3a3a3a; border-radius: 6px; padding: 4px 10px; font-size: 0.8em; color: #b0b0b0; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); transition: border-color 0.2s; position: relative; top: 8px; }
         .sync-pill:hover { border-color: #5a5a5a; }
@@ -301,12 +338,9 @@
     </style>
 </head>
 <body>
-    <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5S9NKGBL"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
-<div id="app" class="container">
+    <div id="app" class="container">
     <div class="main-wrapper">
         
         <div class="left-panel wrap-cal">
@@ -314,12 +348,33 @@
 
             <div class="mode-tabs">
                 <div class="mode-tab" :class="{ active: calcMode === 'optimize' }" @click="calcMode = 'optimize'">
-                    재료 교환 계산 (기본)
+                    
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <span>
+                            {{ exchangeType === 'farm' ? '재료 교환 계산 (영지 농장)' : '재료 교환 계산 (기본)' }} 
+                        </span>
+                        
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%);">
+                            <polyline points="7 13 12 18 17 13"></polyline>
+                            <polyline points="7 6 12 11 17 6"></polyline>
+                        </svg>
+                    </div>
+                    
+                    <div class="dropdown-content">
+                        <div class="dropdown-item" :class="{ selected: exchangeType === 'normal' }" @click.stop="exchangeType = 'normal'">
+                            재료 교환 계산 (기본)
+                        </div>
+                        <div class="dropdown-item" :class="{ selected: exchangeType === 'farm' }" @click.stop="exchangeType = 'farm'">
+                            재료 교환 계산 (영지 농장)
+                        </div>
+                    </div>
                 </div>
+
                 <div class="mode-tab" :class="{ active: calcMode === 'deficit' }" @click="calcMode = 'deficit'">
                     부족한 재료 계산 (짝 맞추기)
                 </div>
             </div>
+          
 
             <div class="tabs">
                 <label v-for="material in materials" :key="material.code" class="tab" :class="{ active: selectedMaterial === material.code }">
@@ -329,7 +384,7 @@
             </div>
 
             <template v-for="(resInfo, key) in selectedResources" :key="key">
-                <div class="input-group" v-if="resInfo && (calcMode === 'optimize' || (key !== 'S' && key !== 'P'))">
+                <div class="input-group" v-if="resInfo && (calcMode === 'optimize' ? !(exchangeType === 'farm' && key === 'S') : (key !== 'S' && key !== 'P'))">
                     <label>
                         <span :class="'resource-label resource-' + key">
                             <div class="resource-icon-wrap"><img :src="resInfo.imgUrl" class="resource-icon" alt="icon"></div>
@@ -340,8 +395,8 @@
                         </span>
                         
                         <div class="right-badges">
-                            <span class="mat-price-tag" v-if="showMarketUi && (key === 'A' || key === 'B' || key === 'S' || key === 'C')">
-                                단가: <input type="number" v-model.number="globalPrices[resInfo.name]" class="price-input-small"> G 
+                            <span class="mat-price-tag" v-if="showMarketUi && exchangeType !== 'farm' && (key === 'A' || key === 'B' || key === 'S' || key === 'C')">
+                                단가: <input type="number" v-model.number="globalPrices[resInfo.name]" class="price-input-small" tabindex="-1"> G 
                                 <span style="font-size:0.9em; color:#bbb; margin-left: 2px; position: relative; top: 1px; ">/ 100개</span>
                             </span>
                         </div>
@@ -370,7 +425,7 @@
                     <template v-else>
                         <div class="conversion-grid">
                             <template v-for="(count, key) in result.normal.logs" :key="'norm-'+key">
-                                <div class="conversion-row">
+                                <div class="conversion-row" v-if="count > 0 && transformationMap[key]">
                                     <div class="label-wrap">
                                         <div :class="'resource-label resource-' + transformationMap[key].from">
                                             <div class="resource-icon-wrap"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
@@ -408,7 +463,7 @@
                     <template v-else>
                         <div class="conversion-grid">
                             <template v-for="(count, key) in result.advanced.logs" :key="'adv-'+key">
-                                <div class="conversion-row">
+                                <div class="conversion-row" v-if="count > 0 && transformationMap[key]">
                                     <div class="label-wrap">
                                         <div :class="'resource-label resource-' + transformationMap[key].from">
                                             <div class="resource-icon-wrap"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
@@ -519,7 +574,7 @@
                 </template>
             </div>
 
-            <div v-if="selectedResources.S" class="guide-wrap">
+            <div v-if="selectedResources.S && calcMode === 'optimize' && exchangeType === 'normal'" class="guide-wrap">
                 <button class="guide-toggle-btn" :class="{'is-open': showExchangeGuide}" @click="showExchangeGuide = !showExchangeGuide">
                     <span>{{ shortSName }} 교환 제작 구매 가이드</span>
                     <span class="chevron">▼</span>
@@ -635,7 +690,7 @@
                 </div>
             </div>
 
-            <div class="right-panel wrap-cal">
+            <div class="right-panel wrap-cal" style="margin-bottom: 0;">
 
                 <div class="section-header" style="margin-top: 0; align-items: center;">
                     <h2>제작 수익 계산</h2>
@@ -932,10 +987,8 @@
                     </div>
                 </div>
 
-            </div>
-            <p class="update">update: 2026.03.14</p>
-        </div>
-    </div>
+            </div> <div class="update-box">update: 2026.03.14</div>
+        </div> </div>
 
     <div v-if="loading || fetching" class="loading-overlay">
         <div class="loading-spinner"></div>
@@ -948,12 +1001,12 @@
     createApp({
         data() {
             return {
+                exchangeType: 'normal',
                 calcMode: 'optimize', 
                 forceConvert: false, 
                 includeSurplus: false, 
                 loading: false, fetching: false, isCooldown: false, cooldownTimer: 0,
                 showMarketUi: true,
-                isApproximation: false,
                 lastMarketUpdate: "",
                 showAllRanks: false,
                 showExchangeGuide: false,
@@ -967,22 +1020,37 @@
                 sortKey: null,
                 sortDir: 0,
                 materials: [
-                    { code: "WL", name: "벌목", resources: { A: { name: "목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_252.png" }, B: { name: "부드러운 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_253.png" }, S: { name: "튼튼한 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_4.png" }, C: { name: "아비도스 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_48.png" }, P: { name: "벌목의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_37.png" } } },
-                    { code: "MN", name: "채광", resources: { A: { name: "철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_243.png" }, B: { name: "묵직한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_239.png" }, S: { name: "단단한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_76.png" }, C: { name: "아비도스 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_49.png" }, P: { name: "채광의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_36.png" } } },
-                    { code: "AR", name: "고고학", resources: { A: { name: "고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_3.png" }, B: { name: "희귀한 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_4.png" }, S: null, C: { name: "아비도스 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_55.png" }, P: { name: "고고학의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_40.png" } } },
-                    { code: "FS", name: "낚시", resources: { A: { name: "생선", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_142.png" }, B: { name: "붉은 살 생선", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_49.png" }, S: null, C: { name: "아비도스 태양 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_53.png" }, P: { name: "낚시의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_35.png" } } },
-                    { code: "HR", name: "수렵", resources: { A: { name: "두툼한 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_192.png" }, B: { name: "다듬은 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_196.png" }, S: null, C: { name: "아비도스 두툼한 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_51.png" }, P: { name: "수렵의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_39.png" } } },
-                    { code: "CL", name: "채집", resources: { A: { name: "들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_46.png" }, B: { name: "수줍은 들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_14.png" }, S: null, C: { name: "아비도스 들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_47.png" }, P: { name: "채집의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_38.png" } } }
+                    { 
+                        code: "WL", name: "벌목", 
+                        resources: { A: { name: "목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_252.png" }, B: { name: "부드러운 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_253.png" }, S: { name: "튼튼한 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_4.png" }, C: { name: "아비도스 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_48.png" }, P: { name: "벌목의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_37.png" } },
+                        farmResources: { A: { name: "원목", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_153.png" }, B: { name: "부드러운 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_154.png" }, S: { name: "단단한 원목", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_65.png" }, C: { name: "아비도스 원목", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_57.png" }, P: { name: "벌목의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_37.png" } }
+                    },
+                    { 
+                        code: "MN", name: "채광", 
+                        resources: { A: { name: "철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_243.png" }, B: { name: "묵직한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_239.png" }, S: { name: "단단한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_76.png" }, C: { name: "아비도스 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_49.png" }, P: { name: "채광의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_36.png" } },
+                        farmResources: { A: { name: "투박한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_188.png" }, B: { name: "천연 보석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_198.png" }, S: { name: "단단한 원석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_76.png" }, C: { name: "아비도스 원석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_58.png" }, P: { name: "채광의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_36.png" } }
+                    },
+                    { 
+                        code: "AR", name: "고고학", 
+                        resources: { A: { name: "고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_3.png" }, B: { name: "희귀한 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_4.png" }, S: null, C: { name: "아비도스 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_55.png" }, P: { name: "고고학의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_40.png" } },
+                        farmResources: { A: { name: "오래된 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_28.png" }, B: { name: "은은한 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_54.png" }, S: { name: "진귀한 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_62.png" }, C: { name: "아비도스 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_55.png" }, P: { name: "고고학의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_40.png" } }
+                    },
+                    { 
+                        code: "FS", name: "낚시", 
+                        resources: { A: { name: "생선", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_142.png" }, B: { name: "붉은 살 생선", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_49.png" }, S: null, C: { name: "아비도스 태양 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_53.png" }, P: { name: "낚시의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_35.png" } },
+                        farmResources: { A: { name: "싱싱한 피라미", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_03_184.png" }, B: { name: "튼튼한 붕어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_130.png" }, S: { name: "오레하 금빛 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_67.png" }, C: { name: "아비도스 금빛 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_53.png" }, P: { name: "낚시의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_35.png" } }
+                    },
+                    { 
+                        code: "HR", name: "수렵", 
+                        resources: { A: { name: "두툼한 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_192.png" }, B: { name: "다듬은 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_196.png" }, S: null, C: { name: "아비도스 두툼한 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_51.png" }, P: { name: "수렵의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_39.png" } },
+                        farmResources: { A: { name: "생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_02_128.png" }, B: { name: "고급 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_02_125.png" }, S: { name: "두툼한 가죽", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_59.png" }, C: { name: "아비도스 농장 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_60.png" }, P: { name: "수렵의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_39.png" } }
+                    },
+                    { 
+                        code: "CL", name: "채집", 
+                        resources: { A: { name: "들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_46.png" }, B: { name: "수줍은 들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_14.png" }, S: null, C: { name: "아비도스 들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_47.png" }, P: { name: "채집의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_38.png" } },
+                        farmResources: { A: { name: "소박한 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_219.png" }, B: { name: "귀여운 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_220.png" }, S: { name: "화려한 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_218.png" }, C: { name: "아비도스 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_56.png" }, P: { name: "채집의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_38.png" } }
+                    }
                 ],
-                transformationMap: { 
-                    StoA: { from: "S", to: "A" }, 
-                    BtoA: { from: "B", to: "A" }, 
-                    BtoP: { from: "B", to: "P" }, 
-                    AtoP: { from: "A", to: "P" }, 
-                    PtoC: { from: "P", to: "C" },
-                    PtoB: { from: "P", to: "B" }, 
-                    PtoA: { from: "P", to: "A" }  
-                },
                 result: null,
                 stronghold: { greatSuccess: 0, feeDiscount: 0 },
                 market: {
@@ -991,6 +1059,25 @@
             }
         },
         computed: {
+            transformationMap() {
+                if (this.exchangeType === 'farm') {
+                    return {
+                        AtoP: { from: "A", to: "P" },
+                        BtoP: { from: "B", to: "P" },
+                        PtoB: { from: "P", to: "B" },
+                        PtoC: { from: "P", to: "C" }
+                    };
+                }
+                return { 
+                    StoA: { from: "S", to: "A" }, 
+                    BtoA: { from: "B", to: "A" }, 
+                    BtoP: { from: "B", to: "P" }, 
+                    AtoP: { from: "A", to: "P" }, 
+                    PtoC: { from: "P", to: "C" },
+                    PtoB: { from: "P", to: "B" }, 
+                    PtoA: { from: "P", to: "A" }  
+                };
+            },
             guideTableData() {
                 const targets = [10, 20, 30, 40];
                 
@@ -1027,10 +1114,12 @@
                 return '';
             },
             shortSName() {
-                if (!this.selectedResources.S) return "";
-                const parts = this.selectedResources.S.name.split(" ");
+                const mat = this.materials.find(m => m.code === this.selectedMaterial);
+                const sRes = mat?.resources.S; // exchangeType에 상관없이 항상 일반 재료 참조
+                if (!sRes) return "";
+                const parts = sRes.name.split(" ");
                 if (parts.length >= 2) return parts[0][0] + parts[1][0];
-                return this.selectedResources.S.name.substring(0,2);
+                return sRes.name.substring(0,2);
             },
             rankingList() {
                 const ranks = [];
@@ -1050,10 +1139,12 @@
                 const revA = netPa * expectedYield; 
 
                 this.materials.forEach(mat => {
-                    const matA = this.globalPrices[mat.resources.A?.name] || 0;
-                    const matB = this.globalPrices[mat.resources.B?.name] || 0;
-                    const matC = this.globalPrices[mat.resources.C?.name] || 0;
-                    const matS = mat.resources.S ? (this.globalPrices[mat.resources.S.name] || 0) : null;
+                    const activeRes = mat.resources; 
+                    
+                    const matA = this.globalPrices[activeRes.A?.name] || 0;
+                    const matB = this.globalPrices[activeRes.B?.name] || 0;
+                    const matC = this.globalPrices[activeRes.C?.name] || 0;
+                    const matS = activeRes.S ? (this.globalPrices[activeRes.S.name] || 0) : null;
                     
                     const costMatN = (86 * matA / 100) + (45 * matB / 100) + (33 * matC / 100);
                     const costMatA = (112 * matA / 100) + (59 * matB / 100) + (43 * matC / 100);
@@ -1084,21 +1175,18 @@
                         profit: profitA
                     });
 
+                    // [수정점] 영지 농장 모드에서도 랭킹에서는 교환 항목을 볼 수 있도록 조건 변경
                     if (matS !== null) {
-                        let shortS = mat.resources.S.name.substring(0,2);
-                        const parts = mat.resources.S.name.split(" ");
+                        let shortS = activeRes.S.name.substring(0,2);
+                        const parts = activeRes.S.name.split(" ");
                         if (parts.length >= 2) shortS = parts[0][0] + parts[1][0];
                         const exName = shortS + "교환";
                         
-                        // 1. 일반 아비도스 (40회 기준)
                         const normB_bundles = 18; 
                         const normS_bundles = 20; 
-                        
-                        // 2. 상급 아비도스 (40회 기준)
                         const advB_bundles = 23.6;
                         const advS_bundles = 26;
 
-                        // 40회 제작에 필요한 총 구매 묶음 비용을 40으로 나누어 1회 제작 비용으로 환산
                         const costExN = (normS_bundles * matS + normB_bundles * matB) / 40;
                         const costExA = (advS_bundles * matS + advB_bundles * matB) / 40;
 
@@ -1176,116 +1264,114 @@
             displayedRankingList() {
                 return this.showAllRanks ? this.sortedRankingList : this.sortedRankingList.slice(0, 3);
             },
-            selectedResources() { return this.materials.find(m => m.code === this.selectedMaterial)?.resources || {}; },
+            selectedResources() { 
+                const mat = this.materials.find(m => m.code === this.selectedMaterial);
+                // 부족한 재료 계산 탭일 때는 강제로 일반(resources)을 반환하도록 방어 로직 추가
+                return (this.exchangeType === 'farm' && this.calcMode === 'optimize') ? (mat?.farmResources || {}) : (mat?.resources || {}); 
+            },
             currentMaterialName() { return this.materials.find(m => m.code === this.selectedMaterial)?.name || ""; },
             isDisabled() { return !Object.values(this.resources).some(v => v > 0); },
             
             profitPerCraft() {
-                const baseFeeN = 400; const baseFeeA = 520; 
-                const actualFeeN = Math.floor(baseFeeN * (1 - this.stronghold.feeDiscount / 100));
-                const actualFeeA = Math.floor(baseFeeA * (1 - this.stronghold.feeDiscount / 100));
-                
-                const baseGsRate = 0.05;
-                const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
-                const expectedYield = 10 * (1 + finalGsRate);
-                
-                const pN = this.market.normal.price || 0;
-                const pA = this.market.advanced.price || 0;
-                
-                const netPn = pN - Math.ceil(pN * 0.05);
-                const netPa = pA - Math.ceil(pA * 0.05);
-                
-                const revN = netPn * expectedYield;
-                const revA = netPa * expectedYield; 
-                
-                const priceA = this.globalPrices[this.selectedResources.A?.name] || 0;
-                const priceB = this.globalPrices[this.selectedResources.B?.name] || 0;
-                const priceC = this.globalPrices[this.selectedResources.C?.name] || 0;
-                const priceS = this.selectedResources.S ? (this.globalPrices[this.selectedResources.S.name] || 0) : 0;
+        const baseFeeN = 400; const baseFeeA = 520; 
+        const actualFeeN = Math.floor(baseFeeN * (1 - this.stronghold.feeDiscount / 100));
+        const actualFeeA = Math.floor(baseFeeA * (1 - this.stronghold.feeDiscount / 100));
+        
+        const baseGsRate = 0.05;
+        const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
+        const expectedYield = 10 * (1 + finalGsRate);
+        
+        const pN = this.market.normal.price || 0;
+        const pA = this.market.advanced.price || 0;
+        const netPn = pN - Math.ceil(pN * 0.05);
+        const netPa = pA - Math.ceil(pA * 0.05);
+        const revN = netPn * expectedYield;
+        const revA = netPa * expectedYield; 
+        
+        const mat = this.materials.find(m => m.code === this.selectedMaterial);
+        const baseRes = mat.resources; // 영지 탭이어도 일반 재료 시세 사용
+        const priceA = this.globalPrices[baseRes.A?.name] || 0;
+        const priceB = this.globalPrices[baseRes.B?.name] || 0;
+        const priceC = this.globalPrices[baseRes.C?.name] || 0;
+        const priceS = baseRes.S ? (this.globalPrices[baseRes.S.name] || 0) : 0;
 
-                const costMatN = (86 * priceA / 100) + (45 * priceB / 100) + (33 * priceC / 100);
-                const costMatA = (112 * priceA / 100) + (59 * priceB / 100) + (43 * priceC / 100);
-                
-                let bestCostN = costMatN;
-                let bestCostA = costMatA;
-                let isExchangeN = false;
-                let isExchangeA = false;
+        const costMatN = (86 * priceA / 100) + (45 * priceB / 100) + (33 * priceC / 100);
+        const costMatA = (112 * priceA / 100) + (59 * priceB / 100) + (43 * priceC / 100);
+        
+        let bestCostN = costMatN;
+        let bestCostA = costMatA;
+        let isExchangeN = false;
+        let isExchangeA = false;
 
-                if (this.selectedResources.S) {
-                    const normB_bundles = 18; 
-                    const normS_bundles = 20; 
-                    const advB_bundles = 23.6;
-                    const advS_bundles = 26;
+        // [수정 핵심] exchangeType 조건을 제거하여 탭 이동과 상관없이 추천 로직 작동
+        if (baseRes.S) { 
+            const normB_bundles = 18; 
+            const normS_bundles = 20; 
+            const advB_bundles = 23.6;
+            const advS_bundles = 26;
+            const costExN = (normS_bundles * priceS + normB_bundles * priceB) / 40;
+            const costExA = (advS_bundles * priceS + advB_bundles * priceB) / 40;
+            if (costExN < costMatN) { bestCostN = costExN; isExchangeN = true; }
+            if (costExA < costMatA) { bestCostA = costExA; isExchangeA = true; }
+        }
 
-                    const costExN = (normS_bundles * priceS + normB_bundles * priceB) / 40;
-                    const costExA = (advS_bundles * priceS + advB_bundles * priceB) / 40;
+        return {
+            normal: { zeroCost: revN - actualFeeN, fullCost: revN - actualFeeN - bestCostN, isExchange: isExchangeN },
+            advanced: { zeroCost: revA - actualFeeA, fullCost: revA - actualFeeA - bestCostA, isExchange: isExchangeA }
+        };
+    },
 
-                    if (costExN < costMatN) { bestCostN = costExN; isExchangeN = true; }
-                    if (costExA < costMatA) { bestCostA = costExA; isExchangeA = true; }
-                }
+    // 3. 우측 시나리오 총수익 계산 로직에서도 탭 조건 제거
+    batchProfits() {
+        const getBatchRev = (totalO, itemPrice) => {
+            if (totalO === 0) return 0;
+            const baseGsRate = 0.05;
+            const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
+            const totalYield = 10 * totalO * (1 + finalGsRate);
+            const netItemPrice = itemPrice - Math.ceil(itemPrice * 0.05);
+            return totalYield * netItemPrice;
+        };
 
-                return {
-                    normal: { zeroCost: revN - actualFeeN, fullCost: revN - actualFeeN - bestCostN, isExchange: isExchangeN },
-                    advanced: { zeroCost: revA - actualFeeA, fullCost: revA - actualFeeA - bestCostA, isExchange: isExchangeA }
-                };
-            },
+        const calc = (type, feePerCraft, recipe) => {
+            const res = this.result && this.result[type];
+            const totalO = res ? res.totalO : 0;
+            if (totalO === 0) return { revenue: 0, totalFee: 0, opportunityCost: 0, zeroCost: 0, fullCost: 0 };
+            
+            const itemPrice = type === 'normal' ? (this.market.normal.price || 0) : (this.market.advanced.price || 0);
+            const rev = getBatchRev(totalO, itemPrice);
+            const actualFee = Math.floor(feePerCraft * (1 - this.stronghold.feeDiscount / 100));
+            const totalFee = actualFee * totalO;
+            
+            const mat = this.materials.find(m => m.code === this.selectedMaterial);
+            const baseRes = mat.resources;
+            const pA = this.globalPrices[baseRes.A?.name] || 0;
+            const pB = this.globalPrices[baseRes.B?.name] || 0;
+            const pC = this.globalPrices[baseRes.C?.name] || 0;
+            const pS = baseRes.S ? (this.globalPrices[baseRes.S.name] || 0) : 0;
+            
+            const costMat = totalO * ((recipe.A * pA / 100) + (recipe.B * pB / 100) + (recipe.C * pC / 100));
+            let bestCost = costMat;
 
-            batchProfits() {
-                const getBatchRev = (totalO, itemPrice) => {
-                    if (totalO === 0) return 0;
-                    const baseGsRate = 0.05;
-                    const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
-                    const totalYield = 10 * totalO * (1 + finalGsRate);
-                    const netItemPrice = itemPrice - Math.ceil(itemPrice * 0.05);
-                    return totalYield * netItemPrice;
-                };
-
-                const calc = (type, feePerCraft, recipe) => {
-                    const res = this.result && this.result[type];
-                    const totalO = res ? res.totalO : 0;
-                    if (totalO === 0) return { revenue: 0, totalFee: 0, opportunityCost: 0, zeroCost: 0, fullCost: 0 };
-                    
-                    const itemPrice = type === 'normal' ? (this.market.normal.price || 0) : (this.market.advanced.price || 0);
-                    const rev = getBatchRev(totalO, itemPrice);
-                    
-                    const actualFee = Math.floor(feePerCraft * (1 - this.stronghold.feeDiscount / 100));
-                    const totalFee = actualFee * totalO;
-                    
-                    const pA = this.globalPrices[this.selectedResources.A?.name] || 0;
-                    const pB = this.globalPrices[this.selectedResources.B?.name] || 0;
-                    const pC = this.globalPrices[this.selectedResources.C?.name] || 0;
-                    const pS = this.selectedResources.S ? (this.globalPrices[this.selectedResources.S.name] || 0) : 0;
-                    
-                    const costMat = totalO * ((recipe.A * pA / 100) + (recipe.B * pB / 100) + (recipe.C * pC / 100));
-                    let bestCost = costMat;
-
-                    if (this.selectedResources.S) {
-                        const normB_bundles = 18; 
-                        const normS_bundles = 20; 
-                        const advB_bundles = 23.6;
-                        const advS_bundles = 26;
-
-                        const costExN_per_craft = (normS_bundles * pS + normB_bundles * pB) / 40;
-                        const costExA_per_craft = (advS_bundles * pS + advB_bundles * pB) / 40;
-
-                        const costEx = totalO * (type === 'normal' ? costExN_per_craft : costExA_per_craft);
-                        if (costEx < costMat) { bestCost = costEx; }
-                    }
-                    
-                    return {
-                        revenue: rev,
-                        totalFee: totalFee,
-                        opportunityCost: bestCost,
-                        zeroCost: rev - totalFee,
-                        fullCost: rev - totalFee - bestCost
-                    };
-                };
-                
-                return {
-                    normal: calc('normal', 400, {A: 86, B: 45, C: 33}),
-                    advanced: calc('advanced', 520, {A: 112, B: 59, C: 43})
-                };
-            },
+            // [수정 핵심] exchangeType 조건을 제거하여 탭 이동과 상관없이 기회비용 계산 유지
+            if (baseRes.S) {
+                const normB_bundles = 18; 
+                const normS_bundles = 20; 
+                const advB_bundles = 23.6;
+                const advS_bundles = 26;
+                const costExN_per_craft = (normS_bundles * pS + normB_bundles * pB) / 40;
+                const costExA_per_craft = (advS_bundles * pS + advB_bundles * pB) / 40;
+                const costEx = totalO * (type === 'normal' ? costExN_per_craft : costExA_per_craft);
+                if (costEx < costMat) { bestCost = costEx; }
+            }
+            
+            return { revenue: rev, totalFee, opportunityCost: bestCost, zeroCost: rev - totalFee, fullCost: rev - totalFee - bestCost };
+        };
+        
+        return {
+            normal: calc('normal', 400, {A: 86, B: 45, C: 33}),
+            advanced: calc('advanced', 520, {A: 112, B: 59, C: 43})
+        };
+    },
 
             deficitCosts() {
                 const result = { 
@@ -1295,9 +1381,11 @@
 
                 if (!this.result || this.result.mode !== 'deficit') return result;
 
-                const pA = this.globalPrices[this.selectedResources.A?.name] || 0;
-                const pB = this.globalPrices[this.selectedResources.B?.name] || 0;
-                const pC = this.globalPrices[this.selectedResources.C?.name] || 0;
+                const mat = this.materials.find(m => m.code === this.selectedMaterial);
+                const baseRes = mat.resources;
+                const pA = this.globalPrices[baseRes.A?.name] || 0;
+                const pB = this.globalPrices[baseRes.B?.name] || 0;
+                const pC = this.globalPrices[baseRes.C?.name] || 0;
                 
                 const baseGsRate = 0.05;
                 const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
@@ -1352,37 +1440,33 @@
             }
         },
         mounted() {
-            // 1. 초기 렌더링 시점에 UI에 빈 값이 들어가지 않도록 globalPrices 기본값 세팅
             this.materials.forEach(mat => {
                 Object.values(mat.resources).forEach(res => {
                     if (res) this.globalPrices[res.name] = 0;
                 });
+                Object.values(mat.farmResources).forEach(res => {
+                    if (res) this.globalPrices[res.name] = 0;
+                });
             });
 
-            // 2. 저장된 데이터(영지, 즐겨찾기) 불러오기
             const savedStronghold = localStorage.getItem('loa_stronghold');
             if(savedStronghold) this.stronghold = JSON.parse(savedStronghold);
             
             const savedFavs = localStorage.getItem('loa_favs');
             if(savedFavs) this.favorites = JSON.parse(savedFavs);
 
-            // 3. 앱 로드 시 최초 1회 시세 불러오기 (로딩 스피너 보임)
             this.fetchMarketData(false);
 
-            // 4. 실제 시계의 5분 단위(0, 5, 10...)에 맞춘 자동 동기화 타이머
             const startSyncedTimer = () => {
                 const now = new Date();
                 const minutes = now.getMinutes();
                 const seconds = now.getSeconds();
                 
-                // 다음 5분 단위 정각까지 남은 밀리초 계산
                 const delay = ((5 - (minutes % 5)) * 60 - seconds) * 1000;
 
                 setTimeout(() => {
-                    // 실제 시계가 5분 단위 정각이 되었을 때 첫 조용한 업데이트 실행
                     this.fetchMarketData(false, true);
                     
-                    // 그 이후부터는 정확히 5분(300,000ms)마다 반복 실행
                     this.refreshTimer = setInterval(() => {
                         console.log("정시 시세 동기화 중...");
                         this.fetchMarketData(false, true);
@@ -1395,10 +1479,8 @@
             if (savedExpire) {
                 const expireTime = parseInt(savedExpire);
                 if (expireTime > Date.now()) {
-                    // 시간이 남았다면 타이머 다시 시작!
                     this.startCooldownTimer(expireTime);
                 } else {
-                    // 지났다면 창고에서 삭제
                     localStorage.removeItem('market_cooldown_expire');
                 }
             }
@@ -1406,6 +1488,12 @@
       
       
         watch: {
+            exchangeType() {
+                this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
+                this.result = null;
+                this.forceConvert = false;
+                this.isApproximation = false;
+            },
             favorites: {
                 handler(newVal) {
                     localStorage.setItem('loa_favs', JSON.stringify(newVal));
@@ -1419,10 +1507,14 @@
                 this.forceConvert = false;
                 this.showExchangeGuide = false;
             },
-            calcMode() {
+            calcMode(newVal) {
                 this.result = null; 
                 this.isApproximation = false;
                 this.forceConvert = false;
+                // 추가된 방어 로직: 짝맞추기 탭으로 넘어가면 강제로 영지교환 모드를 해제하여 상태 꼬임 방지
+                if (newVal === 'deficit' && this.exchangeType === 'farm') {
+                    this.exchangeType = 'normal';
+                }
             },
             resources: {
                 handler(newResources) {
@@ -1497,7 +1589,6 @@
             },
 
             async fetchMarketData(isForce = false, isSilent = false) {
-                // 강제 새로고침 시에만 쿨타임을 체크합니다 (초기 로드는 통과)
                 if (isForce && this.isCooldown) return;
 
                 if (!isSilent) {
@@ -1509,7 +1600,6 @@
                 }
 
                 try {
-                    // 백엔드 URL 설정 (강제 새로고침이면 ?force=true 추가)
                     const url = isForce ? '/api/market?force=true' : '/api/market';
                     const response = await fetch(url);
                     
@@ -1520,7 +1610,6 @@
                     const data = await response.json();
                     const fetchedPrices = data.prices;
 
-                    // 받아온 데이터를 프론트 상태 변수에 업데이트
                     if (fetchedPrices) {
                         for (const [k, v] of Object.entries(fetchedPrices)) {
                             this.globalPrices[k] = v;
@@ -1529,7 +1618,6 @@
                         this.market.advanced.price = this.globalPrices["상급 아비도스 융화 재료"] || 0;
                     }
 
-                    // 서버에서 내려준 lastUpdated 값 기준으로 UI 업데이트 시간 표기
                     const updateTime = data.lastUpdated ? new Date(data.lastUpdated) : new Date();
                     this.lastMarketUpdate = new Intl.DateTimeFormat('ko-KR', { 
                         year: 'numeric', month: 'numeric', day: 'numeric', 
@@ -1546,8 +1634,6 @@
                 } finally { 
                     this.fetching = false; 
                     
-                    // 수동 새로고침 버튼을 눌러 요청했을 때만 1분(60000ms) 쿨타임을 적용합니다.
-                   
                  if (isForce) {
                     const expireTime = Date.now() + 60000; 
                     localStorage.setItem('market_cooldown_expire', expireTime);    
@@ -1575,7 +1661,7 @@
                     return;
                 }
 
-                const rates = { 
+                const normalRates = { 
                     StoA: { from: "S", to: "A", in: 5, out: 50 }, 
                     BtoA: { from: "B", to: "A", in: 25, out: 50 }, 
                     BtoP: { from: "B", to: "P", in: 50, out: 80 }, 
@@ -1585,62 +1671,145 @@
                     PtoA: { from: "P", to: "A", in: 100, out: 100 }  
                 };
 
+                const farmRates = {
+                    AtoP: { from: "A", to: "P", in: 100, out: 80 },
+                    BtoP: { from: "B", to: "P", in: 50, out: 80 },
+                    PtoB: { from: "P", to: "B", in: 100, out: 50 },
+                    PtoC: { from: "P", to: "C", in: 100, out: 10 }
+                };
+
                 const getOptimalForTarget = (target, forceConvert, resData, recipe, currentPrices) => {
                     let S = resData.S || 0;
                     let A = resData.A || 0;
                     let B = resData.B || 0;
                     let C = resData.C || 0;
                     let P = resData.P || 0;
+
+                    if (this.exchangeType === 'farm') {
+                        let logs = { AtoP: 0, BtoP: 0, PtoB: 0, PtoC: 0 };
+                        
+                        let reqA = target * recipe.A;
+                        if (A < reqA) return null; // 농장에서는 가루로 하위(A) 재료 제작 불가
+
+                        let reqC = target * recipe.C;
+                        if (C < reqC) {
+                            let neededC = reqC - C;
+                            let excPtoC = Math.ceil(neededC / farmRates.PtoC.out);
+                            logs.PtoC += excPtoC;
+                            P -= excPtoC * farmRates.PtoC.in;
+                            C += excPtoC * farmRates.PtoC.out;
+                        }
+                        
+                        let reqB = target * recipe.B;
+                        if (B < reqB) {
+                            if (!forceConvert) return null;
+                            let neededB = reqB - B;
+                            let excPtoB = Math.ceil(neededB / farmRates.PtoB.out);
+                            logs.PtoB += excPtoB;
+                            P -= excPtoB * farmRates.PtoB.in;
+                            B += excPtoB * farmRates.PtoB.out;
+                        }
+                        
+                        if (P < 0) {
+                            let neededP = -P;
+                            let surplusA = Math.max(0, A - reqA);
+                            let surplusB = Math.max(0, B - reqB);
+
+                            // 전량 소모 루프 (목표치 도달 시 즉시 중단)
+                            while (neededP > 0) {
+                                let canConvertA = surplusA >= farmRates.AtoP.in; // 100
+                                let canConvertB = surplusB >= farmRates.BtoP.in; // 50
+
+                                if (!canConvertA && !canConvertB) {
+                                    break; // 더 이상 교환할 재료가 없음
+                                }
+
+                                if (canConvertA && canConvertB) {
+                                    // 재고량이 더 많은 것을 우선적으로 소모
+                                    if (surplusA >= surplusB) {
+                                        logs.AtoP++;
+                                        surplusA -= farmRates.AtoP.in;
+                                        neededP -= farmRates.AtoP.out;
+                                        P += farmRates.AtoP.out;
+                                        A -= farmRates.AtoP.in;
+                                    } else {
+                                        logs.BtoP++;
+                                        surplusB -= farmRates.BtoP.in;
+                                        neededP -= farmRates.BtoP.out;
+                                        P += farmRates.BtoP.out;
+                                        B -= farmRates.BtoP.in;
+                                    }
+                                } else if (canConvertA) {
+                                    logs.AtoP++;
+                                    surplusA -= farmRates.AtoP.in;
+                                    neededP -= farmRates.AtoP.out;
+                                    P += farmRates.AtoP.out;
+                                    A -= farmRates.AtoP.in;
+                                } else {
+                                    logs.BtoP++;
+                                    surplusB -= farmRates.BtoP.in;
+                                    neededP -= farmRates.BtoP.out;
+                                    P += farmRates.BtoP.out;
+                                    B -= farmRates.BtoP.in;
+                                }
+                            }
+
+                            if (neededP > 0) return null; // 여전히 가루가 부족하면 제작 불가
+                        }
+                        
+                        return logs;
+                    }
                     
+                    // --- 기본(Normal) 로직 ---
                     let logs = { StoA: 0, BtoA: 0, AtoP: 0, BtoP: 0, PtoB: 0, PtoA: 0, PtoC: 0 };
                     
-                    let excStoA = Math.floor(S / rates.StoA.in);
+                    let excStoA = Math.floor(S / normalRates.StoA.in);
                     if (excStoA > 0) {
                         logs.StoA += excStoA;
-                        A += excStoA * rates.StoA.out;
-                        S -= excStoA * rates.StoA.in;
+                        A += excStoA * normalRates.StoA.out;
+                        S -= excStoA * normalRates.StoA.in;
                     }
                     
                     let reqC = target * recipe.C;
                     if (C < reqC) {
                         let neededC = reqC - C;
-                        let excPtoC = Math.ceil(neededC / rates.PtoC.out);
+                        let excPtoC = Math.ceil(neededC / normalRates.PtoC.out);
                         logs.PtoC += excPtoC;
-                        P -= excPtoC * rates.PtoC.in;
-                        C += excPtoC * rates.PtoC.out;
+                        P -= excPtoC * normalRates.PtoC.in;
+                        C += excPtoC * normalRates.PtoC.out;
                     }
                     
                     let reqB = target * recipe.B;
                     if (B < reqB) {
                         if (!forceConvert) return null;
                         let neededB = reqB - B;
-                        let excPtoB = Math.ceil(neededB / rates.PtoB.out);
+                        let excPtoB = Math.ceil(neededB / normalRates.PtoB.out);
                         logs.PtoB += excPtoB;
-                        P -= excPtoB * rates.PtoB.in;
-                        B += excPtoB * rates.PtoB.out;
+                        P -= excPtoB * normalRates.PtoB.in;
+                        B += excPtoB * normalRates.PtoB.out;
                     }
                     
                     let reqA = target * recipe.A;
                     if (A < reqA) {
                         let neededA = reqA - A;
                         let surplusB = Math.max(0, B - reqB);
-                        let possibleBtoA = Math.floor(surplusB / rates.BtoA.in);
-                        let neededBtoA = Math.ceil(neededA / rates.BtoA.out);
+                        let possibleBtoA = Math.floor(surplusB / normalRates.BtoA.in);
+                        let neededBtoA = Math.ceil(neededA / normalRates.BtoA.out);
                         let excBtoA = Math.min(possibleBtoA, neededBtoA);
                         
                         if (excBtoA > 0) {
                             logs.BtoA += excBtoA;
-                            B -= excBtoA * rates.BtoA.in;
-                            A += excBtoA * rates.BtoA.out;
+                            B -= excBtoA * normalRates.BtoA.in;
+                            A += excBtoA * normalRates.BtoA.out;
                             neededA = Math.max(0, reqA - A);
                         }
                         
                         if (neededA > 0) {
                             if (!forceConvert) return null;
-                            let excPtoA = Math.ceil(neededA / rates.PtoA.out);
+                            let excPtoA = Math.ceil(neededA / normalRates.PtoA.out);
                             logs.PtoA += excPtoA;
-                            P -= excPtoA * rates.PtoA.in;
-                            A += excPtoA * rates.PtoA.out;
+                            P -= excPtoA * normalRates.PtoA.in;
+                            A += excPtoA * normalRates.PtoA.out;
                         }
                     }
                     
@@ -1652,28 +1821,28 @@
 
                         const useSurplusA = () => {
                             let surplusA = Math.max(0, A - reqA);
-                            let possibleAtoP = Math.floor(surplusA / rates.AtoP.in);
-                            let neededAtoP = Math.ceil(neededP / rates.AtoP.out);
+                            let possibleAtoP = Math.floor(surplusA / normalRates.AtoP.in);
+                            let neededAtoP = Math.ceil(neededP / normalRates.AtoP.out);
                             let excAtoP = Math.min(possibleAtoP, neededAtoP);
                             
                             if (excAtoP > 0) {
                                 logs.AtoP += excAtoP;
-                                A -= excAtoP * rates.AtoP.in;
-                                P += excAtoP * rates.AtoP.out;
+                                A -= excAtoP * normalRates.AtoP.in;
+                                P += excAtoP * normalRates.AtoP.out;
                                 neededP = Math.max(0, -P);
                             }
                         };
 
                         const useSurplusB = () => {
                             let surplusB = Math.max(0, B - reqB);
-                            let possibleBtoP = Math.floor(surplusB / rates.BtoP.in);
-                            let neededBtoP = Math.ceil(neededP / rates.BtoP.out);
+                            let possibleBtoP = Math.floor(surplusB / normalRates.BtoP.in);
+                            let neededBtoP = Math.ceil(neededP / normalRates.BtoP.out);
                             let excBtoP = Math.min(possibleBtoP, neededBtoP);
                             
                             if (excBtoP > 0) {
                                 logs.BtoP += excBtoP;
-                                B -= excBtoP * rates.BtoP.in;
-                                P += excBtoP * rates.BtoP.out;
+                                B -= excBtoP * normalRates.BtoP.in;
+                                P += excBtoP * normalRates.BtoP.out;
                                 neededP = Math.max(0, -P);
                             }
                         };
@@ -1688,11 +1857,11 @@
                         
                         if (neededP > 0) {
                             let surplusB = Math.max(0, B - reqB);
-                            let possibleBtoA = Math.floor(surplusB / rates.BtoA.in);
+                            let possibleBtoA = Math.floor(surplusB / normalRates.BtoA.in);
                             if (possibleBtoA > 0) {
                                 logs.BtoA += possibleBtoA;
-                                B -= possibleBtoA * rates.BtoA.in;
-                                A += possibleBtoA * rates.BtoA.out;
+                                B -= possibleBtoA * normalRates.BtoA.in;
+                                A += possibleBtoA * normalRates.BtoA.out;
                                 useSurplusA();
                             }
                         }
@@ -1727,7 +1896,10 @@
                         }
                     }
                     
-                    const printOrder = ["StoA", "BtoA", "AtoP", "BtoP", "PtoB", "PtoA", "PtoC"];
+                    const printOrder = this.exchangeType === 'farm' 
+                        ? ["AtoP", "BtoP", "PtoB", "PtoC"]
+                        : ["StoA", "BtoA", "AtoP", "BtoP", "PtoB", "PtoA", "PtoC"];
+
                     let orderedLogs = {};
                     if (bestLogs) {
                         printOrder.forEach(key => { 
@@ -1735,8 +1907,8 @@
                                 orderedLogs[key] = bestLogs[key]; 
                             } 
                         });
-                    } else if (resData.S > 0) {
-                        orderedLogs.StoA = Math.floor(resData.S / rates.StoA.in);
+                    } else if (resData.S > 0 && this.exchangeType === 'normal') {
+                        orderedLogs.StoA = Math.floor(resData.S / normalRates.StoA.in);
                     }
                     
                     return { totalO: maxCrafts, logs: orderedLogs, approximated: false };
