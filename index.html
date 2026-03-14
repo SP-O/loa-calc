@@ -101,6 +101,18 @@
 
         .btn-force { position: absolute; right: 15px; top: 15px; width: auto; margin: 0; padding: 3px 8px; background: rgba(255, 102, 102, 0.08); border: 1px solid rgba(255, 102, 102, 0.3); color: #ff8585; border-radius: 4px; font-size: 0.7em; font-weight: normal; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
         .btn-force:hover { background: rgba(255, 102, 102, 0.2); border-color: rgba(255, 102, 102, 0.6); color: #ffffff; }
+      /* 농장 모드 전용 푸른색 스타일 */
+        .btn-force.btn-farm {
+             background: rgba(59, 130, 246, 0.1); /* 연한 파란색 배경 */
+             border: 1px solid rgba(59, 130, 246, 0.4);
+             color: #60a5fa; /* 밝은 파란색 글자 */
+}
+
+        .btn-force.btn-farm:hover {
+            background: rgba(59, 130, 246, 0.25);
+            border-color: #60a5fa;
+            color: #ffffff;
+}
 
         .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; }
         .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; }
@@ -411,10 +423,11 @@
 
             <div v-if="result" class="result">
                 
-                <button v-if="result.mode === 'optimize' && (result.normal.totalO === 0 || result.advanced.totalO === 0) && !forceConvert" 
+                <button v-if="result.mode === 'optimize' && !forceConvert && (exchangeType === 'farm' || result.normal.totalO === 0 || result.advanced.totalO === 0)" 
                         @click="doForceConvert" 
-                        class="btn-force">
-                    재료 전량 소모
+                        class="btn-force" 
+                        :class="{ 'btn-farm': exchangeType === 'farm' }">
+                  {{ exchangeType === 'farm' ? '농장 재료 전량 소모' : '재료 전량 소모' }}
                 </button>
 
                 <template v-if="result.mode === 'optimize'">
