@@ -423,11 +423,10 @@
 
             <div v-if="result" class="result">
                 
-                <button v-if="result.mode === 'optimize' && !forceConvert && (exchangeType === 'farm' || result.normal.totalO === 0 || result.advanced.totalO === 0)" 
+                <button v-if="result.mode === 'optimize' && exchangeType === 'farm' && !forceConvert" 
                         @click="doForceConvert" 
-                        class="btn-force" 
-                        :class="{ 'btn-farm': exchangeType === 'farm' }">
-                  {{ exchangeType === 'farm' ? '농장 재료 전량 소모' : '재료 전량 소모' }}
+                        class="btn-force btn-farm">
+                      농장 재료 전량 소모
                 </button>
 
                 <template v-if="result.mode === 'optimize'">
@@ -1505,7 +1504,6 @@
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
                 this.forceConvert = false;
-                this.isApproximation = false;
             },
             favorites: {
                 handler(newVal) {
@@ -1516,13 +1514,11 @@
             selectedMaterial() {
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
-                this.isApproximation = false;
                 this.forceConvert = false;
                 this.showExchangeGuide = false;
             },
             calcMode(newVal) {
                 this.result = null; 
-                this.isApproximation = false;
                 this.forceConvert = false;
                 // 추가된 방어 로직: 짝맞추기 탭으로 넘어가면 강제로 영지교환 모드를 해제하여 상태 꼬임 방지
                 if (newVal === 'deficit' && this.exchangeType === 'farm') {
@@ -1806,6 +1802,9 @@
                     if (A < reqA) {
                         let neededA = reqA - A;
                         let surplusB = Math.max(0, B - reqB);
+                      
+                        let canBtoA = (this.selectedMaterial === 'WL' || this.selectedMaterial === 'MN');
+                      
                         let possibleBtoA = Math.floor(surplusB / normalRates.BtoA.in);
                         let neededBtoA = Math.ceil(neededA / normalRates.BtoA.out);
                         let excBtoA = Math.min(possibleBtoA, neededBtoA);
@@ -1870,7 +1869,10 @@
                         
                         if (neededP > 0) {
                             let surplusB = Math.max(0, B - reqB);
-                            let possibleBtoA = Math.floor(surplusB / normalRates.BtoA.in);
+                          
+                            let canBtoA = (this.selectedMaterial === 'WL' || this.selectedMaterial === 'MN');
+                            let possibleBtoA = canBtoA ? Math.floor(surplusB / normalRates.BtoA.in) : 0;
+                          
                             if (possibleBtoA > 0) {
                                 logs.BtoA += possibleBtoA;
                                 B -= possibleBtoA * normalRates.BtoA.in;
@@ -1890,7 +1892,7 @@
                     B: this.globalPrices[this.selectedResources.B?.name] || 0
                 };
 
-                const getOptimal = (resData, recipe) => {
+                const getOptimal = (resData, recipe, forceFlag) => {
                     let low = 0;
                     let high = 200000; 
                     let bestLogs = null;
@@ -1898,7 +1900,7 @@
 
                     while (low <= high) {
                         let mid = Math.floor((low + high) / 2);
-                        let logs = getOptimalForTarget(mid, this.forceConvert, resData, recipe, currentPrices);
+                        let logs = getOptimalForTarget(mid, forceFlag, resData, recipe, currentPrices);
                         
                         if (logs !== null) {
                             maxCrafts = mid;
@@ -1927,11 +1929,17 @@
                     return { totalO: maxCrafts, logs: orderedLogs, approximated: false };
                 };
 
-                let advResult = getOptimal(this.resources, { A: 112, B: 59, C: 43 });
-                let normResult = getOptimal(this.resources, { A: 86, B: 45, C: 33 });
+                let advResult = getOptimal(this.resources, { A: 112, B: 59, C: 43 }, this.forceConvert);
+                if (this.exchangeType === 'normal' && advResult.totalO === 0) {
+                    advResult = getOptimal(this.resources, { A: 112, B: 59, C: 43 }, true);
+                }
+
+                let normResult = getOptimal(this.resources, { A: 86, B: 45, C: 33 }, this.forceConvert);
+                if (this.exchangeType === 'normal' && normResult.totalO === 0) {
+                    normResult = getOptimal(this.resources, { A: 86, B: 45, C: 33 }, true);
+                }
 
                 this.result = { mode: 'optimize', advanced: advResult, normal: normResult };
-                this.isApproximation = false; 
                 if (!skipDelay) this.loading = false;
             },
           startCooldownTimer(expireTime) {
