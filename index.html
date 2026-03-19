@@ -13,24 +13,25 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: "Noto Sans KR", sans-serif; background-color: #1e1e1e; color: #e0e0e0; margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Noto Sans KR", sans-serif; background-color: #1e1e1e; color: #e0e0e0; margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; }
         *, *::before, *::after { box-sizing: inherit; }
         
         .container { max-width: 1100px; width: 95%; margin: 30px auto 50px; zoom: 1.1; }
         .main-wrapper { display: flex; gap: 20px; align-items: flex-start; }
         
-        .left-panel { flex: 1; padding: 20px; background-color: #2b2b2b; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; }
+        /* 다크모드/라이트모드 공통 12px 둥근 테두리 적용 */
+        .left-panel { flex: 1; padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
         .right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 20px; }
-        .right-panel { padding: 20px; background-color: #2b2b2b; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; }
+        .right-panel { padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
         
         @media (max-width: 850px) { .main-wrapper { flex-direction: column; } }
 
-        h1 { font-size: 1.3em; color: #ffffff; border-bottom: 2px solid #3a3a3a; padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; }
-        /* --- 메인 탭 & 드롭다운 디자인 --- */
-        .mode-tabs { display: flex; margin-bottom: 15px; border-radius: 6px; border: 1px solid #3a3a3a; }
-        .mode-tab { flex: 1; text-align: center; padding: 8px 10px; cursor: pointer; background-color: #2b2b2b; color: #b0b0b0; font-weight: bold; transition: 0.2s; font-size: 0.9em; position: relative; }
+        h1 { font-size: 1.3em; color: #ffffff; border-bottom: 2px solid #3a3a3a; padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; transition: color 0.3s ease, border-color 0.3s ease; }
         
-        /* 모서리 둥글게 복구 */
+        /* --- 메인 탭 & 드롭다운 디자인 --- */
+        .mode-tabs { display: flex; margin-bottom: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s ease, background-color 0.3s ease; }
+        .mode-tab { flex: 1; text-align: center; padding: 8px 10px; cursor: pointer; background-color: #2b2b2b; color: #b0b0b0; font-weight: bold; transition: 0.2s; font-size: 0.9em; position: relative; border-bottom: 2px solid transparent; }
+        
         .mode-tab:first-child { border-radius: 5px 0 0 5px; }
         .mode-tab:last-child { border-radius: 0 5px 5px 0; }
         
@@ -39,82 +40,78 @@
 
         /* 드롭다운 본체 */
         .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 100%; 
-            left: -1px; 
-            width: calc(100% + 2px); 
-            background-color: #2b2b2b;
-            border: 1px solid #3a3a3a;
-            border-top: none;
-            border-radius: 0 0 6px 6px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.6);
-            z-index: 100;
-            box-sizing: border-box;
+            display: none; position: absolute; top: 100%; left: -1px; width: calc(100% + 2px); 
+            background-color: #2b2b2b; border: 1px solid #3a3a3a; border-top: none; border-radius: 0 0 12px 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.6); z-index: 100; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease;
         }
-
         .mode-tab.active:hover .dropdown-content { display: block; }
 
-        .dropdown-item { 
-            padding: 8px 10px; 
-            text-align: center; 
-            color: #b0b0b0; 
-            font-size: 0.9em;  
-            font-weight: bold; 
-            transition: 0.2s; 
-        }
-        
-        .dropdown-item:last-child {
-            border-radius: 0 0 5px 5px; 
-        }
+        .dropdown-item { padding: 8px 10px; text-align: center; color: #b0b0b0; font-size: 0.9em; font-weight: bold; transition: 0.2s; }
+        .dropdown-item:last-child { border-radius: 0 0 12px 12px; }
         .dropdown-item:hover { background-color: #4a4a4a; color: #ffffff; }
         .dropdown-item.selected { color: #ffd700; background-color: #3a3a3a; }
         
+        h2 { font-size: 1.3em; color: #ffffff; margin: 0 0 12px 0; border-left: 4px solid #ffd700; padding-left: 10px; transition: color 0.3s ease, border-color 0.3s ease; }
 
-        h2 { font-size: 1.3em; color: #ffffff; margin: 0 0 12px 0; border-left: 4px solid #ffd700; padding-left: 10px; }
-
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-left: 4px solid #ffd700; padding-left: 10px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-left: 4px solid #ffd700; padding-left: 10px; transition: border-color 0.3s ease; }
         .section-header h2 { margin: 0; border-left: none; padding-left: 0; }
 
-        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #3a3a3a; }
-        .tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; background-color: #2b2b2b; color: #b0b0b0; border: none; transition: background-color 0.3s ease, color 0.3s ease; }
-        .tab.active { background-color: #3a3a3a; color: #e0e0e0; }
-        .tab:hover { background-color: #4a4a4a; color: #ffffff; }
+        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #3a3a3a; transition: border-color 0.3s ease; }
+        /* 생활 탭 크기 축소 및 테두리 점핑 방지 설정 */
+        .tab { flex: 1; text-align: center; padding: 8px 5px; font-size: 0.95em; cursor: pointer; background-color: transparent; color: #b0b0b0; border: 1px solid transparent; border-bottom: 2px solid transparent; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease; }
+        
+        /* 다크모드 3D 액티브 탭 적용 - 밑줄 두께 2px로 축소 */
+        .tab.active { background-color: #3a3a3a; color: #ffd700; font-weight: bold; border-color: rgba(255, 255, 255, 0.05); border-bottom: 2px solid #ffd700; border-radius: 6px 6px 0 0; }
+        .tab:hover:not(.active) { background-color: #4a4a4a; color: #ffffff; border-radius: 6px 6px 0 0; }
         .hidden-radio { display: none; }
 
         .input-group { margin-top: 10px; }
-        .input-group label { display: flex; align-items: center; font-size: 0.95em; color: #b0b0b0; margin-bottom: 5px; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
-        .input-group > input { width: 100%; padding: 10px; font-size: 1em; border: 1px solid #3a3a3a; border-radius: 4px; background-color: #1e1e1e; color: #e0e0e0; }
-        .input-group > input:focus { border-color: #5a5a5a; outline: none; }
+        .input-group label { display: flex; align-items: center; font-size: 0.95em; color: #b0b0b0; margin-bottom: 5px; justify-content: space-between; flex-wrap: wrap; gap: 6px; transition: color 0.3s ease; }
+        .input-group > input { width: 100%; padding: 10px; font-size: 1em; border: 1px solid #3a3a3a; border-radius: 4px; background-color: #1e1e1e; color: #e0e0e0; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        
+        /* 다크모드 입력창 포커스 아우라 (골드빛) */
+        .input-group > input:focus, input.price-input-small:focus, input.price-input-right:focus, input.input-in-table:focus, input.tiny-input:focus { 
+            border-color: #ffd700 !important; 
+            outline: none !important; 
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15) !important; 
+        }
 
         .right-badges { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-        .mark-target { color: #ffd700; font-size: 0.8em; font-weight: normal; border: 1px dashed #ffd700; padding: 2px 5px; border-radius: 4px; margin-left: 6px; display: inline-block; vertical-align: middle; }
-        .mat-price-tag { background: #3a3a3a; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; color: #ffd700; display: flex; align-items: center; white-space: nowrap; }
+        .mark-target { color: #ffd700; font-size: 0.8em; font-weight: normal; border: 1px dashed #ffd700; padding: 2px 5px; border-radius: 4px; margin-left: 6px; display: inline-block; vertical-align: middle; transition: color 0.3s ease, border-color 0.3s ease; }
+        /* 단가 태그 크기 틀어짐 방지 (투명 테두리 추가) */
+        .mat-price-tag { background: #3a3a3a; padding: 2px 6px; border: 1px solid transparent; border-radius: 4px; font-size: 0.75em; color: #ffd700; display: flex; align-items: center; white-space: nowrap; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
 
-        .deficit-info { text-align: center; font-size: 0.95em; color: #b0b0b0; margin-top: -8px; margin-bottom: 12px; }
+        .deficit-info { text-align: center; font-size: 0.95em; color: #b0b0b0; margin-top: -8px; margin-bottom: 12px; transition: color 0.3s ease; }
         .text-deficit { color: #ff6666; font-weight: bold; }
         .text-surplus { color: #4ade80; font-weight: bold; }
 
-        button { width: 100%; margin-top: 15px; padding: 15px 10px; font-size: 1em; border: none; border-radius: 4px; background-color: #3a3a3a; color: #ffffff; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
-        button:hover { background-color: #5a5a5a; }
-        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        /* 버튼 호버 3D 떠오르는 효과 추가 */
+        button { width: 100%; margin-top: 15px; padding: 15px 10px; font-size: 1em; border: none; border-radius: 4px; background-color: #3a3a3a; color: #ffffff; cursor: pointer; font-weight: bold; transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s; }
+        button:hover { background-color: #5a5a5a; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        /* 다크 모드 계산하기 버튼 전용 호버 효과 */
+        button.btn-calc {
+            border-radius: 8px; /* 라이트 모드와 동일한 둥근 모서리 적용 */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
 
+        button.btn-calc:active:not(:disabled) {
+            transform: translateY(1px) scale(0.99); /* 클릭 시 꾹 눌리는 손맛 추가 */
+            box-shadow: 0 2px 5px rgba(255, 215, 0, 0.1);
+        }
+      /* 라이트 모드 계산하기 버튼 클릭(active) 효과 */
+        body.light-mode button.btn-calc:active:not(:disabled) {
+            transform: translateY(1px) scale(0.99); /* 꾹 눌리는 손맛 */
+            box-shadow: 0 2px 5px rgba(0, 102, 255, 0.15); /* 파란색 톤에 맞춘 얕은 그림자 */
+        }
         .btn-force { position: absolute; right: 15px; top: 15px; width: auto; margin: 0; padding: 3px 8px; background: rgba(255, 102, 102, 0.08); border: 1px solid rgba(255, 102, 102, 0.3); color: #ff8585; border-radius: 4px; font-size: 0.7em; font-weight: normal; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
         .btn-force:hover { background: rgba(255, 102, 102, 0.2); border-color: rgba(255, 102, 102, 0.6); color: #ffffff; }
-      /* 농장 모드 전용 푸른색 스타일 */
-        .btn-force.btn-farm {
-             background: rgba(59, 130, 246, 0.1); /* 연한 파란색 배경 */
-             border: 1px solid rgba(59, 130, 246, 0.4);
-             color: #60a5fa; /* 밝은 파란색 글자 */
-}
+        
+        .btn-force.btn-farm { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; }
+        .btn-force.btn-farm:hover { background: rgba(59, 130, 246, 0.25); border-color: #60a5fa; color: #ffffff; }
 
-        .btn-force.btn-farm:hover {
-            background: rgba(59, 130, 246, 0.25);
-            border-color: #60a5fa;
-            color: #ffffff;
-}
-
-        .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; }
+        .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; transition: color 0.3s ease; }
         .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; }
         .resource-icon { width: 16px; height: 16px; object-fit: cover; }
 
@@ -130,82 +127,63 @@
         .normal-product { color: rgb(25, 124, 197); }
         .normal-product .resource-icon-wrap, .resource-icon-wrap.normal-product { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)); }
 
-        .result { margin-top: 20px; padding: 15px; background-color: #1e1e1e; border-radius: 4px; border: 1px solid #3a3a3a; overflow-x: auto; position: relative; }
+        .result { margin-top: 20px; padding: 15px; background-color: #1e1e1e; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); overflow-x: auto; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .result-title { font-size: 1.1em; color: #ffffff; margin: 5px 0 15px 0; text-align: center; border-left: none; padding-left: 0; }
         
-        .result-divider { border: 0; border-top: 2px dashed #4a4a4a; margin: 25px 0; }
+        .result-divider { border: 0; border-top: 2px dashed #4a4a4a; margin: 25px 0; transition: border-color 0.3s ease; }
         
         .conversion-grid { display: grid; grid-template-columns: auto auto auto 120px; align-items: center; gap: 10px; }
         .conversion-row { display: contents; }
         .label-wrap { display: flex; justify-content: center; align-items: center; width: 100%; }
-        .arrow { text-align: center; color: #e0e0e0; font-size: 1.2em; }
-        .count { text-align: center; font-size: 0.95em; color: #d0d0d0; }
+        .arrow { text-align: center; color: #e0e0e0; font-size: 1.2em; transition: color 0.3s ease; }
+        .count { text-align: center; font-size: 0.95em; color: #d0d0d0; transition: color 0.3s ease; }
         .num-point { color: #ffd700; font-weight: bold; text-shadow: 0 0 5px rgba(255, 215, 0, 0.8); }
 
-        .final-row { grid-column: span 4; display: grid; grid-template-columns: auto 120px; align-items: center; border-top: 1px solid #3a3a3a; margin-top: 10px; padding-top: 10px; }
+        .final-row { grid-column: span 4; display: grid; grid-template-columns: auto 120px; align-items: center; border-top: 1px solid #3a3a3a; margin-top: 10px; padding-top: 10px; transition: border-color 0.3s ease; }
         .final-product-label { flex: 1 1 auto; font-weight: bold; text-align: center; }
         .no-production { color: #ff6666; text-align: center; font-size: 1.1em; font-weight: bold; margin: 15px 0; }
-        .desc { font-size: 11px; color: #b0b0b0; }
+        .desc { font-size: 11px; color: #b0b0b0; transition: color 0.3s ease; }
 
-        .market-box { background-color: #1e1e1e; border: 1px solid #3a3a3a; border-radius: 6px; padding: 15px; margin-top: 15px; }
-        .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #3a3a3a; padding-bottom: 8px; }
+        .market-box { background-color: #1e1e1e; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 15px; margin-top: 15px; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #3a3a3a; padding-bottom: 8px; transition: border-color 0.3s ease; }
         .market-header h3 { margin: 0; font-size: 1.1em; }
         .market-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95em; gap: 10px; word-break: keep-all; }
         
         .profit-plus { color: #ffd700; font-weight: bold; }
         .profit-minus { color: #ff6666; font-weight: bold; }
         
-        input.price-input-small, input.price-input-right { background-color: #1e1e1e !important; color: #ffd700 !important; border: 1px solid #5a5a5a !important; border-radius: 5px !important; text-align: right !important; margin: 0 4px !important; font-size: 1.1em !important; font-weight: bold !important; }
+        input.price-input-small, input.price-input-right { background-color: #1e1e1e !important; color: #ffd700 !important; border: 1px solid #5a5a5a !important; border-radius: 5px !important; text-align: right !important; margin: 0 4px !important; font-size: 1.1em !important; font-weight: bold !important; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         input.price-input-small { width: 45px !important; height: 22px !important; padding: 0 4px !important; }
         input.price-input-right { width: 55px !important; height: 24px !important; padding: 0 4px !important; }
-        input.price-input-small:focus, input.price-input-right:focus { border-color: #ffd700 !important; outline: none !important;}
         input.price-input-small::-webkit-inner-spin-button, input.price-input-small::-webkit-outer-spin-button, input.price-input-right::-webkit-inner-spin-button, input.price-input-right::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-        .scenario-section { background-color: rgba(255, 255, 255, 0.03); border: 1px solid #3a3a3a; border-radius: 6px; padding: 12px 14px; margin-top: 12px; }
+        .scenario-section { background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px 14px; margin-top: 12px; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .scenario-section.self-craft { border-left: 3px solid #ffd700; }
         .scenario-section.market-buy { border-left: 3px solid #888; }
         .scenario-section.deficit-craft { border-left: 3px solid #4ade80; }
         
-        .scenario-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #4a4a4a; margin-bottom: 8px; padding-bottom: 5px; }
-        .scenario-title { font-size: 0.85em; color: #b0b0b0; }
+        .scenario-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #4a4a4a; margin-bottom: 8px; padding-bottom: 5px; transition: border-color 0.3s ease; }
+        .scenario-title { font-size: 0.85em; color: #b0b0b0; transition: color 0.3s ease; }
         .scenario-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; margin-bottom: 6px; }
         .scenario-row:last-child { margin-bottom: 0; }
-        .total-profit-row { margin-top: 6px; padding-top: 6px; border-top: 1px dotted #4a4a4a; font-weight: bold; font-size: 0.95em; }
+        .total-profit-row { margin-top: 6px; padding-top: 6px; border-top: 1px dotted #4a4a4a; font-weight: bold; font-size: 0.95em; transition: border-color 0.3s ease; }
 
         .toggle-btn { width: auto !important; margin: 0 !important; padding: 4px 10px !important; background: transparent; border: 1px solid #5a5a5a; color: #b0b0b0; border-radius: 4px; font-size: 0.8em !important; font-weight: normal !important; cursor: pointer; transition: 0.2s; height: auto !important; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1.2; }
         .toggle-btn.active { background: #4ade80; color: #1e1e1e; border-color: #4ade80; font-weight: bold !important; }
-        .toggle-btn:hover:not(.active) { border-color: #4ade80; color: #4ade80; }
+        .toggle-btn:hover:not(.active) { border-color: #4ade80; color: #4ade80; transform: translateY(-1px); }
 
         /* --- 랭킹 보드 리스트 UI --- */
         .ranking-board-wrap { 
-            position: relative; 
-            margin-bottom: 0px; 
-            background-color: rgba(0, 0, 0, 0.15);
-            border: 1px solid #3a3a3a;
-            border-radius: 8px;
-            padding: 4px; 
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            position: relative; margin-bottom: 0px; background-color: rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 4px; overflow: hidden;
+            display: flex; flex-direction: column; transition: background-color 0.3s ease, border-color 0.3s ease;
         }
-        .ranking-board { 
-            width: 100%; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 0; 
-            padding-top: 0px;
-            overflow-x: hidden;
-        }
+        .ranking-board { width: 100%; display: flex; flex-direction: column; gap: 0; padding-top: 0px; overflow-x: hidden; }
         
         .ranking-row { 
-            display: grid; 
-            grid-template-columns: 1fr 65px 65px 65px; 
-            align-items: center; 
-            padding: 8px; 
-            border-bottom: 1px solid #3a3a3a; 
-            gap: 6px; 
-            font-size: 0.85em; 
-            transition: background-color 0.2s ease;
+            display: grid; grid-template-columns: 1fr 65px 65px 65px; align-items: center; 
+            padding: 8px; border-bottom: 1px solid #3a3a3a; gap: 6px; font-size: 0.85em; 
+            transition: background-color 0.2s ease, border-color 0.3s ease;
             animation: fadeSlideDown 0.3s ease-out forwards;
         }
         @keyframes fadeSlideDown {
@@ -219,7 +197,7 @@
         .ranking-row.is-profit { background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.04) 85%); }
         .ranking-row.is-loss { background: linear-gradient(90deg, transparent, rgba(255, 102, 102, 0.03) 85%); }
 
-        .ranking-header { border-bottom: 1px solid #5a5a5a; color: #b0b0b0; font-weight: bold; background: none !important; animation: none; }
+        .ranking-header { border-bottom: 1px solid #5a5a5a; color: #b0b0b0; font-weight: bold; background: none !important; animation: none; transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease; }
         
         .sortable-header {
             display: flex; align-items: center; justify-content: center; justify-self: center;
@@ -250,13 +228,13 @@
             background-color: #1a1a1a !important; color: #ffd700 !important; 
             border: 1px solid #555 !important; border-radius: 5px !important; 
             text-align: center !important; font-size: 0.9em !important; font-weight: bold !important; 
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .input-in-table:focus { border-color: #ffd700 !important; outline: none !important; }
         .input-in-table::-webkit-inner-spin-button, .input-in-table::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
         .modern-expand-btn {
             position: relative; width: 100%; background-color: rgba(0, 0, 0, 0.1); 
-            color: #666; border: none; border-top: 1px solid #3a3a3a; border-radius: 0 0 8px 8px; 
+            color: #666; border: none; border-top: 1px solid #3a3a3a; border-radius: 0 0 12px 12px; 
             padding: 0; height: 14px; cursor: pointer; transition: all 0.2s ease;
             display: flex; align-items: center; justify-content: center; margin-top: auto; 
         }
@@ -268,17 +246,16 @@
         }
         .modern-expand-btn .chevron.is-open { transform: translateY(-3px); }
 
-        .control-panel-box { background-color: rgba(0, 0, 0, 0.15); border: 1px solid #3a3a3a; border-radius: 8px; padding: 15px; margin-top: 5px; }
+        .control-panel-box { background-color: rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 15px; margin-top: 5px; transition: background-color 0.3s ease, border-color 0.3s ease; }
 
-        .stronghold-setting-box { display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px; padding-bottom: 12px; border-bottom: 1px dashed #4a4a4a; margin-bottom: 12px; overflow-x: auto;}
+        .stronghold-setting-box { display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px; padding-bottom: 12px; border-bottom: 1px dashed #4a4a4a; margin-bottom: 12px; overflow-x: auto; transition: border-color 0.3s ease;}
         .stronghold-setting-box > div { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
-        .stronghold-setting-box .setting-title { font-weight: bold; color: #b0b0b0; font-size: 0.85em; white-space: nowrap; flex-shrink: 0; }
+        .stronghold-setting-box .setting-title { font-weight: bold; color: #b0b0b0; font-size: 0.85em; white-space: nowrap; flex-shrink: 0; transition: color 0.3s ease; }
         .stronghold-setting-box .inputs-wrap { display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; margin-left: auto; }
         .stronghold-setting-box .input-group { margin: 0; display: flex; align-items: center; gap: 6px; }
         .stronghold-setting-box label { margin: 0; font-size: 0.8em; color: #888; white-space: nowrap; }
         
-        input.tiny-input { width: 28px !important; height: 18px !important; padding: 0 !important; background-color: #1e1e1e !important; color: #e0e0e0 !important; border: 1px solid #555 !important; border-radius: 4px !important; text-align: center !important; font-size: 0.8em !important; }
-        input.tiny-input:focus { border-color: #ffd700 !important; outline: none; }
+        input.tiny-input { width: 28px !important; height: 18px !important; padding: 0 !important; background-color: #1e1e1e !important; color: #e0e0e0 !important; border: 1px solid #555 !important; border-radius: 4px !important; text-align: center !important; font-size: 0.8em !important; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; }
         input.tiny-input::-webkit-inner-spin-button, input.tiny-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
         @keyframes gentle-glow-gold { 0% { text-shadow: 0 0 2px rgba(255, 215, 0, 0.4); color: #ffd700; } 50% { text-shadow: 0 0 7px rgba(255, 215, 0, 0.9); color: #ffd700; } 100% { text-shadow: 0 0 2px rgba(255, 215, 0, 0.4); color: #ffd700; } }
@@ -291,11 +268,11 @@
         .loading-spinner { width: 50px; height: 50px; border: 5px solid #3a3a3a; border-top: 5px solid #ffd700; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .update-box { text-align: right; font-size: 12px; color: #888; margin-top: -15px; margin-bottom: 0; padding-right: 5px; }
+        .update-box { text-align: right; font-size: 12px; color: #888; margin-top: -15px; margin-bottom: 0; padding-right: 5px; transition: color 0.3s ease; }
 
-        .sync-pill { display: inline-flex; align-items: center; background-color: rgba(0, 0, 0, 0.25); border: 1px solid #3a3a3a; border-radius: 6px; padding: 4px 10px; font-size: 0.8em; color: #b0b0b0; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); transition: border-color 0.2s; position: relative; top: 8px; }
+        .sync-pill { display: inline-flex; align-items: center; background-color: rgba(0, 0, 0, 0.25); border: 1px solid #3a3a3a; border-radius: 6px; padding: 4px 10px; font-size: 0.8em; color: #b0b0b0; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease; position: relative; top: 8px; }
         .sync-pill:hover { border-color: #5a5a5a; }
-        .sync-info { display: flex; align-items: center; margin-right: 8px; padding-right: 8px; border-right: 1px solid #4a4a4a; white-space: nowrap; }
+        .sync-info { display: flex; align-items: center; margin-right: 8px; padding-right: 8px; border-right: 1px solid #4a4a4a; white-space: nowrap; transition: border-color 0.3s ease; }
         .live-dot.is-syncing { background-color: #4ade80; box-shadow: 0 0 5px rgba(74, 222, 128, 0.6); animation: fast-pulse 1s infinite ease-in-out; }
         @keyframes fast-pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .btn-sync-icon { background: transparent; border: none; color: #b0b0b0; padding: 0; margin: 0; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s, transform 0.3s ease; width: 12px; }
@@ -306,35 +283,14 @@
 
         /* 가이드 테이블 UI/UX 개편 */
         .guide-wrap { margin-top: 20px; }
-        .guide-toggle-btn {
-            width: 100%; margin: 0;
-            background-color: transparent;
-            border: 1px dashed #4a4a4a;
-            color: #b0b0b0;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.85em;
-            font-weight: normal;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .guide-toggle-btn { width: 100%; margin: 0; background-color: transparent; border: 1px dashed #4a4a4a; color: #b0b0b0; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-size: 0.85em; font-weight: normal; display: flex; justify-content: space-between; align-items: center; }
         .guide-toggle-btn:hover { border-color: #ffd700; color: #ffd700; background-color: rgba(255, 215, 0, 0.05); }
         .guide-toggle-btn .chevron { font-size: 0.85em; transition: transform 0.3s ease; }
         .guide-toggle-btn.is-open .chevron { transform: rotate(180deg); }
         
-        .guide-content {
-            margin-top: 8px;
-            background-color: #1a1a1a;
-            border-radius: 6px;
-            padding: 12px;
-            border: 1px solid #3a3a3a;
-            animation: fadeSlideDown 0.2s ease-out forwards;
-        }
-        .guide-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #3a3a3a; border-radius: 6px; overflow: hidden; font-size: 0.85em; text-align: center; }
-        .guide-table th, .guide-table td { padding: 8px 4px; border-bottom: 1px solid #3a3a3a; word-break: keep-all; background-color: #1e1e1e; }
+        .guide-content { margin-top: 8px; background-color: #1a1a1a; border-radius: 12px; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.05); animation: fadeSlideDown 0.2s ease-out forwards; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .guide-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #3a3a3a; border-radius: 6px; overflow: hidden; font-size: 0.85em; text-align: center; transition: border-color 0.3s ease; }
+        .guide-table th, .guide-table td { padding: 8px 4px; border-bottom: 1px solid #3a3a3a; word-break: keep-all; background-color: #1e1e1e; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .guide-table th { color: #b0b0b0; font-weight: bold; background-color: #252525; }
         .guide-table thead tr:first-child th { border-bottom: 1px solid #4a4a4a; }
         .guide-table tbody tr:last-child td { border-bottom: none; }
@@ -343,16 +299,245 @@
         .guide-table td.hovered-group { background-color: #3a3a3a !important; color: #ffd700; font-weight: bold; }
         
         .guide-desc { font-size: 0.8em; color: #888; padding: 8px 0 0 0; text-align: right; margin: 0; }
-        
         .th-normal { color: rgb(25, 124, 197) !important; }
         .th-advanced { color: #ce43fc !important; }
-        
+
+/* -------------------------------------------
+    라이트 모드 
+------------------------------------------- */
+
+/* 아이템 고유 색상 100% 보존 - 강제성 부여 */
+body.light-mode .resource-A, body.light-mode .resource-P { color: rgb(159, 159, 159) !important; }
+body.light-mode .resource-B { color: rgb(120, 187, 39) !important; }
+body.light-mode .resource-S, body.light-mode .resource-C { color: rgb(25, 124, 197) !important; }
+body.light-mode .final-product { color: #ce43fc !important; }
+body.light-mode .normal-product { color: rgb(25, 124, 197) !important; }
+
+body.light-mode .resource-A .resource-icon-wrap, body.light-mode .resource-P .resource-icon-wrap { background: linear-gradient(135deg, rgb(49, 49, 49), rgb(88, 88, 88)) !important; }
+body.light-mode .resource-B .resource-icon-wrap { background: linear-gradient(135deg, rgb(30, 45, 11), rgb(48, 73, 17)) !important; }
+body.light-mode .resource-S .resource-icon-wrap, body.light-mode .resource-C .resource-icon-wrap { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)) !important; }
+body.light-mode .final-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.final-product { background: linear-gradient(135deg, #321142, #541973) !important; }
+body.light-mode .normal-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.normal-product { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)) !important; }
+
+body.light-mode { background-color: #f2f5f9; color: #222222; }
+
+body.light-mode .left-panel,
+body.light-mode .right-panel,
+body.light-mode .result,
+body.light-mode .market-box,
+body.light-mode .scenario-section,
+body.light-mode .control-panel-box,
+body.light-mode .ranking-board-wrap,
+body.light-mode .dropdown-content,
+body.light-mode .guide-content {
+    background-color: #ffffff !important;
+    border: 1px solid #e3e7ed;
+    box-shadow: 0 4px 16px rgba(0, 30, 80, 0.04);
+    border-radius: 12px;
+}
+
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode .result-title { color: #111111; border-bottom-color: #e3e7ed; }
+body.light-mode h2 { border-left-color: #187ef5; } 
+
+body.light-mode .section-header { border-left-color: #187ef5; }
+/* input-group label 의 폰트 굵기를 다크모드와 동일하게 유지하기 위해 분리 */
+body.light-mode .arrow,
+body.light-mode .count,
+body.light-mode .desc,
+body.light-mode .setting-title,
+body.light-mode .scenario-title { color: #555555; font-weight: 500; }
+body.light-mode .input-group label { color: #555555; }
+body.light-mode .update-box { color: #888888; }
+
+/* [3]  디자인 테마 */
+body.light-mode .mode-tabs { border: 1px solid #e3e7ed; background-color: #f8fafc; border-radius: 8px; }
+body.light-mode .mode-tab { background-color: transparent; color: #666666; border-bottom: 2px solid transparent; }
+body.light-mode .mode-tab:hover { background-color: #f0f4f8; color: #187ef5; }
+body.light-mode .mode-tab.active { background-color: #ffffff; color: #187ef5; border-bottom: 2px solid #187ef5; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+
+body.light-mode .dropdown-item { background-color: #ffffff; color: #555555; border-bottom: 1px solid #f0f4f8; }
+body.light-mode .dropdown-item:hover { background-color: #f5f9ff; color: #187ef5; }
+body.light-mode .dropdown-item.selected { background-color: #eef5ff; color: #187ef5; font-weight: bold; }
+
+body.light-mode .tabs { border-bottom: 1px solid #e3e7ed; }
+body.light-mode .tab { background-color: transparent; color: #777777; }
+/* 라이트 모드 탭 액티브 라인 두께 2px로 축소 */
+body.light-mode .tab.active { background-color: transparent; color: #187ef5; border-bottom: 2px solid #187ef5; font-weight: bold; border-radius: 6px 6px 0 0; }
+body.light-mode .tab:hover:not(.active) { color: #187ef5; background-color: #f5f9ff; border-radius: 6px 6px 0 0; }
+
+body.light-mode .input-group > input { background-color: #f9fbfc !important; color: #222222 !important; border: 1px solid #d2d8e0 !important; border-radius: 6px !important; }
+
+/* 라이트 모드 텍스트 및 입력창 색상 수정 (블루 & 다크 그레이 톤) */
+body.light-mode input.price-input-small,
+body.light-mode input.price-input-right,
+body.light-mode input.input-in-table,
+body.light-mode input.tiny-input { 
+    background-color: #f9fbfc !important; 
+    color: #111111 !important; /* 선명한 다크 그레이로 숫자 가독성 상승 */
+    border: 1px solid #d2d8e0 !important; 
+    border-radius: 6px !important; 
+}
+
+body.light-mode .input-group > input:focus,
+body.light-mode input.price-input-small:focus,
+body.light-mode input.price-input-right:focus,
+body.light-mode input.input-in-table:focus,
+body.light-mode input.tiny-input:focus { 
+    border-color: #187ef5 !important; 
+    box-shadow: 0 0 0 3px rgba(24, 126, 245, 0.15) !important; 
+    background-color: #ffffff !important;
+}
+
+body.light-mode .num-point, 
+body.light-mode .mark-target { color: #187ef5 !important; text-shadow: none; border-color: #187ef5; } /* 강조 포인트를 블루로 통일 */
+body.light-mode span[style*="color: #ffd700"] { color: #187ef5 !important; text-shadow: none; }
+
+/* 수익/손실 텍스트 색상 확실한 구분 */
+body.light-mode .profit-plus { color: #16a34a !important; font-weight: bold; text-shadow: none; } /* 수익은 그린 */
+body.light-mode .text-deficit, 
+body.light-mode .profit-minus, 
+body.light-mode .no-production { color: #f05656 !important; text-shadow: none; }
+body.light-mode span[style*="color: #ff6666"] { color: #f05656 !important; text-shadow: none; }
+
+body.light-mode .text-surplus { color: #16a34a !important; text-shadow: none; }
+body.light-mode span[style*="color: #4ade80"] { color: #16a34a !important; text-shadow: none; }
+
+/* 메인 버튼 (그라데이션 블루 적용) */
+body.light-mode button.btn-calc { background: linear-gradient(135deg, #2b8cff, #0066ff); color: #ffffff; border: none; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25); border-radius: 8px; }
+body.light-mode button.btn-calc:hover { background: linear-gradient(135deg, #187ef5, #005ce6); transform: translateY(-1px); box-shadow: 0 6px 15px rgba(0, 102, 255, 0.3); }
+body.light-mode .btn-force { background: rgba(24, 126, 245, 0.1); border-color: #187ef5; color: #187ef5; }
+body.light-mode .btn-force:hover { background: rgba(24, 126, 245, 0.2); color: #0066ff; }
+body.light-mode .btn-force.btn-farm { background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9; color: #0284c7; }
+body.light-mode .btn-force.btn-farm:hover { background: #0ea5e9; color: #ffffff; }
+
+body.light-mode .mat-price-tag { background-color: #eef5ff; color: #187ef5; border: 1px solid #d2d8e0; }
+
+body.light-mode .toggle-btn { border-color: #d2d8e0; color: #666666; background-color: #ffffff; }
+body.light-mode .toggle-btn.active { background: #eef5ff; color: #187ef5; border-color: #187ef5; font-weight: bold !important; }
+body.light-mode .toggle-btn:hover:not(.active) { border-color: #187ef5; color: #187ef5; background: #f9fbfc; }
+
+/* 랭킹 테이블 UI (직관성 개선: 배경 그라데이션 삭제) */
+body.light-mode .ranking-row { border-bottom-color: #e3e7ed; }
+body.light-mode .ranking-row:not(.ranking-header):hover { background-color: #f5f9ff; }
+body.light-mode .ranking-row.is-profit { background: none; } /* 그라데이션 제거로 깔끔함 극대화 */
+body.light-mode .ranking-row.is-loss { background: none; }
+body.light-mode .ranking-header { border-bottom: 1px solid #d2d8e0; color: #444444; background-color: #f8fafc !important; border-radius: 12px 12px 0 0; }
+body.light-mode .sortable-header:hover { background-color: #e3e7ed; color: #111111; }
+body.light-mode .modern-expand-btn { background-color: #f8fafc; border-top-color: #e3e7ed; color: #777777; border-radius: 0 0 12px 12px; }
+body.light-mode .modern-expand-btn:hover { background-color: #eef5ff; color: #187ef5; }
+
+/* 가이드 테이블 UI */
+body.light-mode .guide-toggle-btn { border-color: #d2d8e0; color: #444444; background-color: #ffffff; }
+body.light-mode .guide-toggle-btn:hover { border-color: #187ef5; color: #187ef5; background-color: #eef5ff; }
+body.light-mode .guide-table { border: 1px solid #d2d8e0; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02); border-radius: 8px; }
+body.light-mode .guide-table th, 
+body.light-mode .guide-table td { background-color: #ffffff; border-color: #e3e7ed; color: #222222; }
+body.light-mode .guide-table th { background-color: #f8fafc; border-bottom-color: #d2d8e0; color: #444444; }
+body.light-mode .guide-table td.hovered-group { background-color: #eef5ff !important; color: #187ef5 !important; font-weight: bold; }
+
+/* 테두리 및 디바이더 통합 */
+body.light-mode .result-divider,
+body.light-mode .scenario-header,
+body.light-mode .total-profit-row,
+body.light-mode .stronghold-setting-box,
+body.light-mode .market-header,
+body.light-mode .final-row { border-color: #e3e7ed; }
+
+body.light-mode .scenario-section.self-craft { border-left: 3px solid #187ef5; background-color: #fdfdfe; }
+body.light-mode .scenario-section.market-buy { border-left: 3px solid #94a3b8; background-color: #fdfdfe; }
+body.light-mode .scenario-section.deficit-craft { border-left: 3px solid #10b981; background-color: #fdfdfe; }
+
+/* 동기화 배지 */
+body.light-mode .sync-pill { background-color: #ffffff; border-color: #d2d8e0; color: #555555; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+body.light-mode .sync-info { border-right-color: #d2d8e0; }
+body.light-mode .btn-sync-icon { color: #888888; }
+body.light-mode .btn-sync-icon:hover:not(:disabled) { color: #187ef5; }
+body.light-mode .live-dot.is-syncing { background-color: #10b981; box-shadow: 0 0 5px rgba(16, 185, 129, 0.6); }
+
+/* 라이트 모드 전용 네온 키프레임 (눈부심 방지 & 가독성 확보) */
+body.light-mode .profit-neon-gold { animation: light-glow-green 2.5s infinite ease-in-out; color: #16a34a; font-weight: bold; }
+@keyframes light-glow-green {
+    0% { text-shadow: 0 0 2px rgba(22, 163, 74, 0.1); color: #16a34a; }
+    50% { text-shadow: 0 0 6px rgba(22, 163, 74, 0.4); color: #15803d; }
+    100% { text-shadow: 0 0 2px rgba(22, 163, 74, 0.1); color: #16a34a; }
+}
+
+body.light-mode .profit-neon-red { animation: light-glow-red 2.5s infinite ease-in-out; color: #dc2626; font-weight: bold; }
+@keyframes light-glow-red {
+    0% { text-shadow: 0 0 2px rgba(220, 38, 38, 0.1); color: #dc2626; }
+    50% { text-shadow: 0 0 6px rgba(220, 38, 38, 0.4); color: #b91c1c; }
+    100% { text-shadow: 0 0 2px rgba(220, 38, 38, 0.1); color: #dc2626; }
+}
+
+/* 1. 'n회 제작 판매 수입' 딱 하나만 타겟팅 (기존 인라인 스타일 #e0e0e0 / rgb(224) 덮어쓰기) */
+body.light-mode .scenario-row span[style*="#e0e0e0"],
+body.light-mode .scenario-row span[style*="rgb(224, 224, 224)"],
+body.light-mode .scenario-row span[style*="rgb(224,224,224)"] { 
+    color: #555555 !important; 
+    font-weight: 800 !important; 
+}
+
+/* 2. '최종 예상 수익' 딱 하나만 타겟팅 (해당 줄의 첫 번째 요소) */
+body.light-mode .total-profit-row > span:first-child { 
+    color: #D4A017 !important; 
+    font-weight: 900 !important; 
+}
+      
+body.light-mode .scenario-row span[style*="color: #888"] { color: #777777 !important; }
+body.light-mode span[style*="color:#bbb"] { color: #888888 !important; }
+
+/* 테마 스위치 버튼 */
+body.light-mode .theme-switch-btn {
+    background-color: #ffffff;
+    color: #187ef5;
+    border: 2px solid #e3e7ed;
+    box-shadow: 0 4px 16px rgba(24, 126, 245, 0.15);
+}
+body.light-mode .theme-switch-btn:hover {
+    background-color: #eef5ff;
+    border-color: #187ef5;
+    transform: scale(1.1);
+}
+
+/* ------------------------------------------- */
+
+        /* 기본 테마 스위치 플로팅 버튼 (베이스 스타일 유지) */
+        .theme-switch-btn {
+            position: fixed; bottom: 30px; right: 30px; width: 52px; height: 52px;
+            border-radius: 50%; background-color: #3a3a3a; color: #ffd700;
+            border: 2px solid #5a5a5a; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000;
+        }
+        .theme-switch-btn:hover { transform: scale(1.1) translateY(-2px); background-color: #4a4a4a; }
+        .theme-switch-btn svg { width: 26px; height: 26px; }
+      
     </style>
 </head>
 <body>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5S9NKGBL"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    
     <div id="app" class="container">
+    
+    <button class="theme-switch-btn" @click="toggleTheme" :title="isLightMode ? '다크 모드로 전환' : '라이트 모드로 전환'">
+        <svg v-if="isLightMode" class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <svg v-else class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+    </button>
+
     <div class="main-wrapper">
         
         <div class="left-panel wrap-cal">
@@ -409,7 +594,7 @@
                         <div class="right-badges">
                             <span class="mat-price-tag" v-if="showMarketUi && exchangeType !== 'farm' && (key === 'A' || key === 'B' || key === 'S' || key === 'C')">
                                 단가: <input type="number" v-model.number="globalPrices[resInfo.name]" class="price-input-small" tabindex="-1"> G 
-                                <span style="font-size:0.9em; color:#bbb; margin-left: 2px; position: relative; top: 1px; ">/ 100개</span>
+                                <span style="font-size:0.9em; margin-left: 2px; position: relative; top: 1px; color:#bbb;">/ 100개</span>
                             </span>
                         </div>
                     </label>
@@ -612,7 +797,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="row in guideTableData" :key="row.target">
-                                <td style="border-right: 1px solid #3a3a3a; font-weight:bold; color:#e0e0e0;">{{ row.target }}회</td>
+                                <td style="border-right: 1px solid #3a3a3a; font-weight:bold;">{{ row.target }}회</td>
                                 
                                 <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
                                     {{ row.normS }}개
@@ -713,11 +898,11 @@
                             <span style="position: relative; top: -1px;">갱신: {{ fetching ? '데이터 동기화 중...' : (lastMarketUpdate ? lastMarketUpdate : '데이터 없음') }}</span>
                         </div>
                         <button class="btn-sync-icon" @click="fetchMarketData(true)" :disabled="fetching || isCooldown" title="시세 새로고침">
-    <span v-if="isCooldown" style="font-size: 0.85em; color: #b0b0b0; font-weight: bold;">
-        {{ cooldownTimer }}
-    </span>
-    <span v-else>↻</span>
-</button>
+                            <span v-if="isCooldown" style="font-size: 0.85em; color: #b0b0b0; font-weight: bold;">
+                                {{ cooldownTimer }}
+                            </span>
+                            <span v-else>↻</span>
+                        </button>
                     </div>
                 </div>
 
@@ -999,7 +1184,7 @@
                     </div>
                 </div>
 
-            </div> <div class="update-box">update: 2026.03.14</div>
+            </div> <div class="update-box">update: 2026.03.19</div>
         </div> </div>
 
     <div v-if="loading || fetching" class="loading-overlay">
@@ -1013,6 +1198,7 @@
     createApp({
         data() {
             return {
+                isLightMode: false,
                 exchangeType: 'normal',
                 calcMode: 'optimize', 
                 forceConvert: false, 
@@ -1187,7 +1373,7 @@
                         profit: profitA
                     });
 
-                    // [수정점] 영지 농장 모드에서도 랭킹에서는 교환 항목을 볼 수 있도록 조건 변경
+                    // 영지 농장 모드에서도 랭킹에서는 교환 항목을 볼 수 있도록 조건 변경
                     if (matS !== null) {
                         let shortS = activeRes.S.name.substring(0,2);
                         const parts = activeRes.S.name.split(" ");
@@ -1315,7 +1501,7 @@
         let isExchangeN = false;
         let isExchangeA = false;
 
-        // [수정 핵심] exchangeType 조건을 제거하여 탭 이동과 상관없이 추천 로직 작동
+        // exchangeType 조건을 제거하여 탭 이동과 상관없이 추천 로직 작동
         if (baseRes.S) { 
             const normB_bundles = 18; 
             const normS_bundles = 20; 
@@ -1333,7 +1519,7 @@
         };
     },
 
-    // 3. 우측 시나리오 총수익 계산 로직에서도 탭 조건 제거
+    // 우측 시나리오 총수익 계산 로직에서도 탭 조건 제거
     batchProfits() {
         const getBatchRev = (totalO, itemPrice) => {
             if (totalO === 0) return 0;
@@ -1364,7 +1550,7 @@
             const costMat = totalO * ((recipe.A * pA / 100) + (recipe.B * pB / 100) + (recipe.C * pC / 100));
             let bestCost = costMat;
 
-            // [수정 핵심] exchangeType 조건을 제거하여 탭 이동과 상관없이 기회비용 계산 유지
+            // exchangeType 조건을 제거하여 탭 이동과 상관없이 기회비용 계산 유지
             if (baseRes.S) {
                 const normB_bundles = 18; 
                 const normS_bundles = 20; 
@@ -1452,6 +1638,13 @@
             }
         },
         mounted() {
+            // 테마 로드
+            const savedTheme = localStorage.getItem('loa_theme');
+            if (savedTheme === 'light') {
+                this.isLightMode = true;
+                document.body.classList.add('light-mode');
+            }
+
             this.materials.forEach(mat => {
                 Object.values(mat.resources).forEach(res => {
                     if (res) this.globalPrices[res.name] = 0;
@@ -1504,6 +1697,7 @@
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
                 this.forceConvert = false;
+                this.isApproximation = false;
             },
             favorites: {
                 handler(newVal) {
@@ -1514,11 +1708,13 @@
             selectedMaterial() {
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
+                this.isApproximation = false;
                 this.forceConvert = false;
                 this.showExchangeGuide = false;
             },
             calcMode(newVal) {
                 this.result = null; 
+                this.isApproximation = false;
                 this.forceConvert = false;
                 // 추가된 방어 로직: 짝맞추기 탭으로 넘어가면 강제로 영지교환 모드를 해제하여 상태 꼬임 방지
                 if (newVal === 'deficit' && this.exchangeType === 'farm') {
@@ -1551,6 +1747,16 @@
             }
         },
         methods: {
+            toggleTheme() {
+                this.isLightMode = !this.isLightMode;
+                if (this.isLightMode) {
+                    document.body.classList.add('light-mode');
+                    localStorage.setItem('loa_theme', 'light');
+                } else {
+                    document.body.classList.remove('light-mode');
+                    localStorage.setItem('loa_theme', 'dark');
+                }
+            },
             applyGuideValues(type, row) {
                 this.calcMode = 'optimize';
                 
@@ -1802,9 +2008,6 @@
                     if (A < reqA) {
                         let neededA = reqA - A;
                         let surplusB = Math.max(0, B - reqB);
-                      
-                        let canBtoA = (this.selectedMaterial === 'WL' || this.selectedMaterial === 'MN');
-                      
                         let possibleBtoA = Math.floor(surplusB / normalRates.BtoA.in);
                         let neededBtoA = Math.ceil(neededA / normalRates.BtoA.out);
                         let excBtoA = Math.min(possibleBtoA, neededBtoA);
@@ -1869,10 +2072,7 @@
                         
                         if (neededP > 0) {
                             let surplusB = Math.max(0, B - reqB);
-                          
-                            let canBtoA = (this.selectedMaterial === 'WL' || this.selectedMaterial === 'MN');
-                            let possibleBtoA = canBtoA ? Math.floor(surplusB / normalRates.BtoA.in) : 0;
-                          
+                            let possibleBtoA = Math.floor(surplusB / normalRates.BtoA.in);
                             if (possibleBtoA > 0) {
                                 logs.BtoA += possibleBtoA;
                                 B -= possibleBtoA * normalRates.BtoA.in;
@@ -1940,6 +2140,7 @@
                 }
 
                 this.result = { mode: 'optimize', advanced: advResult, normal: normResult };
+                this.isApproximation = false; 
                 if (!skipDelay) this.loading = false;
             },
           startCooldownTimer(expireTime) {
