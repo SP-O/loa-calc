@@ -105,6 +105,12 @@
             transform: translateY(1px) scale(0.99); /* 꾹 눌리는 손맛 */
             box-shadow: 0 2px 5px rgba(0, 102, 255, 0.15); /* 파란색 톤에 맞춘 얕은 그림자 */
         }
+        
+        body.light-mode .rank-cost-col { 
+            color: #444444 !important; 
+            font-weight: 500 !important;
+        }
+      
         .btn-force { position: absolute; right: 15px; top: 15px; width: auto; margin: 0; padding: 3px 8px; background: rgba(255, 102, 102, 0.08); border: 1px solid rgba(255, 102, 102, 0.3); color: #ff8585; border-radius: 4px; font-size: 0.7em; font-weight: normal; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
         .btn-force:hover { background: rgba(255, 102, 102, 0.2); border-color: rgba(255, 102, 102, 0.6); color: #ffffff; }
         
@@ -303,10 +309,10 @@
         .th-advanced { color: #ce43fc !important; }
 
 /* -------------------------------------------
-    라이트 모드 
+    [테마 적용] 라이트 모드 (STOVE 이벤트 스타일)
 ------------------------------------------- */
 
-/* 아이템 고유 색상 100% 보존 - 강제성 부여 */
+/* [1] 🚨 절대 변경 금지 (아이템 고유 색상 100% 보존 - 강제성 부여) */
 body.light-mode .resource-A, body.light-mode .resource-P { color: rgb(159, 159, 159) !important; }
 body.light-mode .resource-B { color: rgb(120, 187, 39) !important; }
 body.light-mode .resource-S, body.light-mode .resource-C { color: rgb(25, 124, 197) !important; }
@@ -351,7 +357,7 @@ body.light-mode .scenario-title { color: #555555; font-weight: 500; }
 body.light-mode .input-group label { color: #555555; }
 body.light-mode .update-box { color: #888888; }
 
-/* [3]  디자인 테마 */
+/* [3]  디자인 테마 (STOVE Flake 블루 포인트) */
 body.light-mode .mode-tabs { border: 1px solid #e3e7ed; background-color: #f8fafc; border-radius: 8px; }
 body.light-mode .mode-tab { background-color: transparent; color: #666666; border-bottom: 2px solid transparent; }
 body.light-mode .mode-tab:hover { background-color: #f0f4f8; color: #187ef5; }
@@ -404,7 +410,7 @@ body.light-mode span[style*="color: #ff6666"] { color: #f05656 !important; text-
 body.light-mode .text-surplus { color: #16a34a !important; text-shadow: none; }
 body.light-mode span[style*="color: #4ade80"] { color: #16a34a !important; text-shadow: none; }
 
-/* 메인 버튼 (그라데이션 블루 적용) */
+/* 메인 버튼 (FlakeShop 그라데이션 블루 적용) */
 body.light-mode button.btn-calc { background: linear-gradient(135deg, #2b8cff, #0066ff); color: #ffffff; border: none; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25); border-radius: 8px; }
 body.light-mode button.btn-calc:hover { background: linear-gradient(135deg, #187ef5, #005ce6); transform: translateY(-1px); box-shadow: 0 6px 15px rgba(0, 102, 255, 0.3); }
 body.light-mode .btn-force { background: rgba(24, 126, 245, 0.1); border-color: #187ef5; color: #187ef5; }
