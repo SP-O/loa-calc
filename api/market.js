@@ -17,13 +17,16 @@ export default async function handler(req, res) {
     // 프론트에서 ?force=true 로 요청하면 강제 새로고침으로 간주
     const isForceRefresh = req.query.force === 'true';
     const now = Date.now();
-    const CACHE_DURATION = 4 * 60 * 1000; // 4.5분 (밀리초)
+    
+    // 현재 시간을 5분(300,000ms) 단위의 고정 블록으로 계산 (예: 45분~49분은 같은 블록)
+    const currentBlock = Math.floor(now / (5 * 60 * 1000));
+    const cachedBlock = Math.floor(lastFetchTime / (5 * 60 * 1000));
 
-    // 1. 강제 새로고침이 아니고, 5분이 지나지 않았다면 캐시된 데이터 반환
-    if (!isForceRefresh && cachedData && (now - lastFetchTime < CACHE_DURATION)) {
+    // 1. 강제 새로고침이 아니고, 동일한 5분 정각 구간 내에 있다면 캐시 반환
+    if (!isForceRefresh && cachedData && (currentBlock === cachedBlock)) {
         return res.status(200).json({
             prices: cachedData,
-            lastUpdated: lastFetchTime // 캐시가 갱신되었던 시간
+            lastUpdated: lastFetchTime 
         });
     }
 
