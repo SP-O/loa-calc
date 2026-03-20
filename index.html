@@ -1564,20 +1564,28 @@
             this.fetchMarketData(false);
 
             const startSyncedTimer = () => {
-                const now = new Date();
-                const minutes = now.getMinutes();
-                const seconds = now.getSeconds();
-                
-                const delay = ((5 - (minutes % 5)) * 60 - seconds) * 1000;
+                const scheduleNext = () => {
+                    const now = new Date();
+                    const minutes = now.getMinutes();
+                    const seconds = now.getSeconds();
+                    const milliseconds = now.getMilliseconds();
 
-                setTimeout(() => {
-                    this.fetchMarketData(false, true);
-                    
-                    this.refreshTimer = setInterval(() => {
+                    // 5분 정각(0분, 5분, 10분...)까지 남은 정확한 시간(ms) 계산
+                    let delay = (5 * 60 * 1000) - ((minutes % 5) * 60 * 1000 + seconds * 1000 + milliseconds);
+
+                    // 로아 API 서버 갱신 딜레이를 고려해 정각에서 1초(1000ms) 늦게 호출
+                    delay += 1000; 
+
+                    this.refreshTimer = setTimeout(() => {
                         console.log("정시 시세 동기화 중...");
                         this.fetchMarketData(false, true);
-                    }, 5 * 60 * 1000);
-                }, delay);
+                        
+                        // 실행 직후 다음 5분 타이머의 남은 시간을 다시 정밀 계산
+                        scheduleNext(); 
+                    }, delay);
+                };
+
+                scheduleNext();
             };
 
             startSyncedTimer();
