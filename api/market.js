@@ -81,14 +81,12 @@ export default async function handler(req, res) {
         });
 
         // 5. 서버 캐시 및 시간 업데이트
-       if (!isForceRefresh) {
-            cachedData = newPrices;
-            lastFetchTime = Date.now();
-        }
+      cachedData = newPrices;
+        lastFetchTime = Date.now();
 
         return res.status(200).json({
-            prices: isForceRefresh ? newPrices : cachedData, // 수동일 땐 방금 긁어온 새 가격 즉시 반환
-            lastUpdated: isForceRefresh ? Date.now() : lastFetchTime
+            prices: cachedData,
+            lastUpdated: lastFetchTime
         });
         
     } catch (error) {
