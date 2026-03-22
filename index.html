@@ -7,24 +7,35 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1300, user-scalable=yes">
     <title>아비도스 제작 계산기</title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: "Noto Sans KR", sans-serif; background-color: #1e1e1e; color: #e0e0e0; margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; }
+        body { font-family: "Noto Sans KR", sans-serif; background-color: #1e1e1e; color: #e0e0e0; margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; color-scheme: dark; }
         *, *::before, *::after { box-sizing: inherit; }
         
         .container { max-width: 1100px; width: 95%; margin: 30px auto 50px; zoom: 1.1; }
-        .main-wrapper { display: flex; gap: 20px; align-items: flex-start; }
+        .main-wrapper { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
         
         /* 다크모드/라이트모드 공통 12px 둥근 테두리 적용 */
         .left-panel { flex: 1; padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
-        .right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 20px; }
-        .right-panel { padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
-        
-        @media (max-width: 850px) { .main-wrapper { flex-direction: column; } }
+.right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 20px; }
+.right-panel { padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
+
+@media (max-width: 1145px) { 
+    .main-wrapper { flex-direction: column; }
+    .left-panel, .right-column { max-width: 560px; width: 100%; margin: 0 auto; }
+}
+
+@media (max-width: 600px) {
+    /* 모바일 강제 확대 해제 및 랭킹 UI 겹침 방지 */
+    .container { zoom: 0.87; }
+    .mode-tab { word-break: keep-all; white-space: nowrap; font-size: 0.8em; padding: 8px 4px; }
+    .ranking-row { grid-template-columns: 1fr 50px 60px 55px; font-size: 0.75em; gap: 4px; padding: 8px 4px; }
+    .input-in-table { width: 34px !important; }
+}
 
         h1 { font-size: 1.3em; color: #ffffff; border-bottom: 2px solid #3a3a3a; padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; transition: color 0.3s ease, border-color 0.3s ease; }
         
@@ -152,7 +163,7 @@
         .ranking-board { width: 100%; display: flex; flex-direction: column; gap: 0; padding-top: 0px; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; max-height: max-content; }
         .ranking-board::-webkit-scrollbar { display: none; }
         
-        .ranking-row { display: grid; grid-template-columns: 1fr 65px 65px 65px; align-items: center; padding: 8px; border-bottom: 1px solid #3a3a3a; gap: 6px; font-size: 0.85em; transition: background-color 0.2s ease, border-color 0.3s ease; animation: fadeSlideDown 0.3s ease-out forwards; }
+        .ranking-row { display: grid; grid-template-columns: minmax(130px, 1fr) 65px 65px 65px; align-items: center; padding: 8px; border-bottom: 1px solid #3a3a3a; gap: 6px; font-size: 0.85em; transition: background-color 0.2s ease, border-color 0.3s ease; animation: fadeSlideDown 0.3s ease-out forwards; }
         @keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
         .ranking-row:last-child { border-bottom: none; }
@@ -256,7 +267,7 @@
         body.light-mode .final-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.final-product { background: linear-gradient(135deg, #321142, #541973) !important; }
         body.light-mode .normal-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.normal-product { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)) !important; }
 
-        body.light-mode { background-color: #f2f5f9; color: #222222; }
+        body.light-mode { background-color: #f2f5f9; color: #222222; color-scheme: light; }
 
         body.light-mode .left-panel, body.light-mode .right-panel, body.light-mode .result, body.light-mode .market-box, body.light-mode .scenario-section, body.light-mode .control-panel-box, body.light-mode .ranking-board-wrap, body.light-mode .dropdown-content, body.light-mode .guide-content { background-color: #ffffff !important; border: 1px solid #e3e7ed; box-shadow: 0 4px 16px rgba(0, 30, 80, 0.04); border-radius: 12px; }
 
@@ -346,7 +357,7 @@
         /* --- 누락된 엣지 케이스 보완 --- */
         body.light-mode .deficit-info,
         body.light-mode .guide-desc { color: #555555; }
-        body.light-mode span[style*="color:#ffd700"] { color: #187ef5 !important; text-shadow: none; } /* 띄어쓰기 없는 노란색 인라인 스타일 캡처 */
+        body.light-mode .guide-desc span:last-child {color: #0069d9 !important;text-shadow: none;}
         body.light-mode span[style*="color: #b0b0b0"] { color: #888888 !important; } /* 새로고침 쿨다운 텍스트 보정 */
 
         body.light-mode .theme-switch-btn { background-color: #ffffff; color: #187ef5; border: 2px solid #e3e7ed; box-shadow: 0 4px 16px rgba(24, 126, 245, 0.15); }
@@ -355,6 +366,10 @@
         .theme-switch-btn { position: fixed; bottom: 30px; right: 30px; width: 52px; height: 52px; border-radius: 50%; background-color: #3a3a3a; color: #ffd700; border: 2px solid #5a5a5a; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000; }
         .theme-switch-btn:hover { transform: scale(1.1) translateY(-2px); background-color: #4a4a4a; }
         .theme-switch-btn svg { width: 26px; height: 26px; }
+        .tab, .name-text-wrap span { 
+          word-break: break-all !important; 
+          white-space: normal !important; 
+        }
     </style>
 </head>
 <body>
@@ -388,7 +403,7 @@
                     <div class="mode-tab" :class="{ active: calcMode === 'optimize' }" @click="calcMode = 'optimize'">
                         <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
                             <span>{{ exchangeType === 'farm' ? '재료 교환 계산 (영지 농장)' : '재료 교환 계산 (기본)' }}</span>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); flex-shrink: 0;">
                                 <polyline points="7 13 12 18 17 13"></polyline>
                                 <polyline points="7 6 12 11 17 6"></polyline>
                             </svg>
@@ -647,8 +662,8 @@
                         </table>
                         <p class="guide-desc">
                             <span v-if="!guideExactMode">* 경매장 100개 단위 구매 기준입니다.</span>
-                            <span v-else>* 제작에 필요한 정확한 최소 재료 수치입니다.</span><br>
-                            <span style="color:#ffd700;">* 수치를 클릭하면 계산기에 자동 기입되어 교환이 계산됩니다.</span>
+                            <span v-else>* 제작에 필요한 최소 수량입니다.</span><br>
+                            <span style="color:#ffd700;">* 수치를 클릭하면 계산기에 자동 기입되어 계산됩니다.</span>
                         </p>
                     </div>
                 </div>
@@ -661,7 +676,7 @@
                     </div>
                     
                     <div class="ranking-board-wrap" :class="{'is-expanded': showAllRanks}">
-                        <div class="ranking-board" :style="customRankingHeight ? { height: customRankingHeight + 'px', overflowY: 'auto' } : {}">
+                        <div class="ranking-board" :style="customRankingHeight ? { height: customRankingHeight + 'px', overflowY: 'hidden' } : {}">
                             <div class="ranking-row ranking-header">
                                 <div class="sortable-header" @click="toggleSort('name')">
                                     제작 아이템<span class="sort-icon" v-if="sortKey === 'name'">{{ sortIconText }}</span>
@@ -686,7 +701,7 @@
                                         <img :src="rank.icon" class="resource-icon">
                                     </div>
                                     <div class="name-text-wrap">
-                                        <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">{{ rank.nameBase }}</span>
+                                        <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold; white-space: nowrap;">{{ rank.nameBase }}</span>
                                         <span style="color: #888; font-size: 0.85em; margin-left: 2px;">{{ rank.nameSub }}</span>
                                     </div>
                                 </div>
@@ -1010,7 +1025,7 @@
                         </div>
                     </div>
                 </div> 
-                <div class="update-box">update: 2026.03.19</div>
+                <div class="update-box">update: 2026.03.22</div>
             </div> 
         </div>
 
@@ -1042,6 +1057,7 @@
                 startY: 0,
                 startHeight: 0,
                 minBoardHeight: 135,
+                visibleRowsCount: 3,
                 showExchangeGuide: false,
                 guideExactMode: false, 
                 hoverTarget: null,
@@ -1598,6 +1614,7 @@
                     localStorage.removeItem('market_cooldown_expire');
                 }
             }
+            window.addEventListener('resize', this.handleResize);
         },
         watch: {
             exchangeType() {
@@ -1648,6 +1665,9 @@
                 }, 
                 deep: true 
             }
+        },
+        beforeUnmount() {
+            window.removeEventListener('resize', this.handleResize);
         },
         methods: {
             toggleTheme() {
@@ -1713,9 +1733,12 @@
 
                 const rows = board.querySelectorAll('.ranking-row');
                 this.headerH = rows[0] ? (rows[0].getBoundingClientRect().height / 1.1) : 0;
-                this.rowH = rows[1] ? (rows[1].getBoundingClientRect().height / 1.1) : 36; 
                 
-                this.minBoardHeight = this.headerH + (this.rowH * 3);
+                // 고정된 높이가 아닌, 현재 렌더링된 실제 상위 3개 행의 높이를 합산하여 최소 보장 높이 설정
+                this.minBoardHeight = this.headerH;
+                for (let i = 1; i <= 3 && i < rows.length; i++) {
+                    this.minBoardHeight += (rows[i].getBoundingClientRect().height / 1.1);
+                }
 
                 document.addEventListener('mousemove', this.onDrag);
                 document.addEventListener('mouseup', this.stopDrag);
@@ -1731,15 +1754,35 @@
             },
             stopDrag() {
                 if (this.isDraggingHandle && this.customRankingHeight) {
-                    let contentH = this.customRankingHeight - this.headerH;
-                    let targetRows = Math.round(contentH / this.rowH); 
+                    const rows = document.querySelectorAll('.ranking-board .ranking-row');
+                    let targetHeight = this.headerH;
+                    let visibleCount = 0;
                     
-                    targetRows = Math.max(3, targetRows);
-                    this.customRankingHeight = this.headerH + (targetRows * this.rowH);
+                    for (let i = 1; i < rows.length; i++) {
+                        const rowH = rows[i].getBoundingClientRect().height / 1.1;
+                        if (targetHeight + (rowH / 2) > this.customRankingHeight && visibleCount >= 3) break;
+                        targetHeight += rowH;
+                        visibleCount++;
+                    }
+                    this.customRankingHeight = targetHeight;
+                    this.visibleRowsCount = visibleCount; // 현재 렌더링된 줄 수 저장
                 }
 
                 document.removeEventListener('mousemove', this.onDrag);
                 document.removeEventListener('mouseup', this.stopDrag);
+            },
+            handleResize() {
+                if (this.showAllRanks && this.customRankingHeight && this.visibleRowsCount) {
+                    const rows = document.querySelectorAll('.ranking-board .ranking-row');
+                    if (!rows.length) return;
+                    
+                    // 현재 브라우저 너비 기준의 새 header 높이와 row 높이들을 누적 합산
+                    let newHeight = rows[0].getBoundingClientRect().height / 1.1; 
+                    for (let i = 1; i <= this.visibleRowsCount && i < rows.length; i++) {
+                        newHeight += rows[i].getBoundingClientRect().height / 1.1;
+                    }
+                    this.customRankingHeight = newHeight;
+                }
             },
             toggleRanks() {
                 if (this.isDraggingHandle) {
