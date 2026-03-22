@@ -1817,10 +1817,22 @@
 
                     if (fetchedPrices) {
                         for (const [k, v] of Object.entries(fetchedPrices)) {
-                            this.globalPrices[k] = v;
+                            // 가격이 존재하고 0보다 클 때만 업데이트 (기존 데이터 보호)
+                            if (v && v > 0) {
+                                this.globalPrices[k] = v;
+                            }
                         }
-                        this.market.normal.price = this.globalPrices["아비도스 융화 재료"] || 0;
-                        this.market.advanced.price = this.globalPrices["상급 아비도스 융화 재료"] || 0;
+                        
+                        // 융화 재료 가격 할당도 0보다 클 때만 수행
+                        const newNormalPrice = this.globalPrices["아비도스 융화 재료"];
+                        if (newNormalPrice > 0) {
+                            this.market.normal.price = newNormalPrice;
+                        }
+
+                        const newAdvancedPrice = this.globalPrices["상급 아비도스 융화 재료"];
+                        if (newAdvancedPrice > 0) {
+                            this.market.advanced.price = newAdvancedPrice;
+                        }
                     }
 
                     const updateTime = data.lastUpdated ? new Date(data.lastUpdated) : new Date();
