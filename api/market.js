@@ -43,9 +43,7 @@ export default async function handler(req, res) {
         // 3. 22개 아이템 시세 병렬로 한 번에 조회
         const fetchPromises = ITEM_NAMES.map(async (itemName) => {
             const url = 'https://developer-lostark.game.onstove.com/markets/items';
-
             const categoryCode = itemName.includes("융화 재료") ? 50000 : 90000;
-            
             const payload = {
                 Sort: "CURRENT_MIN_PRICE",
                 CategoryCode: categoryCode,
@@ -64,24 +62,26 @@ export default async function handler(req, res) {
                 body: JSON.stringify(payload)
             });
             
-            if (!response.ok) return { name: itemName, price: 0 };
+            // 변경점: 호출 실패 시 0 대신 null 반환
+            if (!response.ok) return { name: itemName, price: null };
             const data = await response.json();
             
-            // 정확한 아이템 이름 매칭
             const exactItem = data.Items?.find(i => i.Name === itemName);
-            return { name: itemName, price: exactItem ? exactItem.CurrentMinPrice : 0 };
+            return { name: itemName, price: exactItem ? exactItem.CurrentMinPrice : null };
         });
 
         const results = await Promise.all(fetchPromises);
         
-        // 4. 결과를 { "목재": 5, "철광석": 4 ... } 형태로 포맷팅
-        const newPrices = {};
+        // 변경점: 빈 객체 대신 기존 캐시를 복사한 뒤, 정상가(>0) 응답만 덮어쓰기
+        const newPrices = cachedData ? { ...cachedData } : {};
         results.forEach(item => {
-            newPrices[item.name] = item.price;
+            if (item.price !== null && item.price > 0) {
+                newPrices[item.name] = item.price;
+            }
         });
 
         // 5. 서버 캐시 및 시간 업데이트
-      cachedData = newPrices;
+        cachedData = newPrices;
         lastFetchTime = Date.now();
 
         return res.status(200).json({
@@ -94,4 +94,3 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: "시세 데이터를 가져오는데 실패했습니다." });
     }
 }
- 
