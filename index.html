@@ -23,27 +23,24 @@
         .left-panel { flex: 1; padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
 .right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 20px; }
 
-/* 화면 축소 시 바로 줄내림하지 않고 전체 비율을 단계별로 축소 */
+/* [1] PC & 태블릿: 단계별 비율 축소 */
 @media (max-width: 1400px) { .container { zoom: 1.1; } }
 @media (max-width: 1280px) { .container { zoom: 1.05; } }
 @media (max-width: 1180px) { .container { zoom: 1.0; } }
 @media (max-width: 1080px) { .container { zoom: 0.95; } }
 @media (max-width: 980px)  { .container { zoom: 0.9; } }
+@media (max-width: 850px)  { .container { zoom: 0.82; } }
 
-/* 더 이상 비율 유지가 어려운 최소 한계점(850px)에서 줄내림 적용 */
-@media (max-width: 930px) and (min-width: 601px) { 
-    .container { width: 98%; max-width: 900px; zoom: 1.1; } 
-    .main-wrapper { flex-direction: column; align-items: center; }
-    /* 패널 너비를 확장하여 빈 공간 제거 */
-    .left-panel, .right-column { max-width: 680px; width: 100%; margin: 0 auto; }
-}
+/* [2] 모바일 전용: 600px 이하 UI 최적화 */
 @media (max-width: 600px) {
-    .container { zoom: 0.87; }
+    .container { zoom: 0.85; width: 96%; margin: 10px auto; }
+    .main-wrapper { flex-direction: column; align-items: center; gap: 15px; }
+    .left-panel, .right-column { width: 100% !important; max-width: 100% !important; margin: 0 auto; padding: 15px; }
     .mode-tab { word-break: keep-all; white-space: nowrap; font-size: 0.8em; padding: 8px 4px; }
     .ranking-row { grid-template-columns: 1fr 50px 60px 55px; font-size: 0.75em; gap: 4px; padding: 8px 4px; }
     .input-in-table { width: 34px !important; }
+    .tab span { white-space: nowrap !important; font-size: 0.9em; }
 }
-
         h1 { font-size: 1.3em; color: #ffffff; border-bottom: 2px solid #3a3a3a; padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; transition: color 0.3s ease, border-color 0.3s ease; }
         
         /* --- 메인 탭 & 드롭다운 디자인 --- */
