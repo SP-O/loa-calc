@@ -16,14 +16,14 @@
         body { font-family: "Noto Sans KR", sans-serif; background-color: #1e1e1e; color: #e0e0e0; margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; color-scheme: dark; }
         *, *::before, *::after { box-sizing: inherit; }
         
-        .container { max-width: 1100px; width: 95%; margin: 30px auto 50px; zoom: 1.1; }
+        .container { max-width: 1100px; width: 95%; margin: 30px auto 0; zoom: 1.1; }
         .main-wrapper { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
         
         .right-panel { padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
         .left-panel { flex: 1; padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
 .right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 20px; }
 
-/*  PC & 태블릿: 단계별 비율 축소 및 겹침 방지 */
+/* PC & 태블릿: 단계별 비율 축소 및 겹침 방지 */
 @media (max-width: 1400px) { .container { zoom: 1.1; } }
 @media (max-width: 1280px) { .container { zoom: 1.05; } }
 @media (max-width: 1180px) { .container { zoom: 1.0; } }
@@ -69,7 +69,7 @@
     }
     .input-in-table { width: 32px !important; }
 }
-/*  텍스트가 삐져나가거나 겹치지 않게 처리 */
+/* 텍스트가 삐져나가거나 겹치지 않게 처리 */
 .mode-tab span, .name-text-wrap span {
     white-space: normal !important; /* nowrap 제거: 삐져나감 방지 */
     word-break: keep-all;          /* 단어 단위 줄바꿈으로 가독성 유지 */
@@ -82,19 +82,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 45px; /* 줄내림 시 UI 칸이 급격히 변하는 것 방지 */
+    
 }
-/*380PX 이하: 계산기 상단 탭 줄바꿈 */
+/* 380PX 이하: 계산기 상단 탭 줄바꿈 및 박스 비율 최적화 */
 @media (max-width: 380px) {
+    .mode-tab { 
+        min-height: auto; /* 불필요하게 큰 최소 높이 강제 해제 */
+        padding: 6px 4px; /* 작아진 텍스트 비율에 맞게 UI 박스 여백 축소 */
+    }
     .mode-tab .tab-content-wrap { 
         display: flex; 
         flex-direction: column; 
         align-items: center; 
+        justify-content: center !important; /* 텍스트가 상단으로 쏠리는 현상 완벽 방지 */
+        height: auto !important; /* flex-column 상태에서 100% 할당 시 발생하는 정렬 렌더링 버그 해결 */
         line-height: 1.2;
     }
-    .mode-tab .sub-text { display: block; font-size: 0.9em; }
+    .mode-tab .sub-text { 
+        display: block; 
+        font-size: 0.85em; 
+        margin-top: 2px; /* 줄바꿈 텍스트 간의 상하 간격 미세 조정 */
+    }
 }
-
 /* 365PX 이하: 랭킹 아이템 텍스트 줄바꿈 */
 @media (max-width: 365px) {
     .name-text-wrap { 
@@ -438,6 +447,48 @@
           word-break: break-all !important; 
           white-space: normal !important; 
         }
+      /* --- 소모된 재료 가치 툴팁 --- */
+        .tooltip-container { position: relative; display: inline-flex; align-items: center; cursor: help; border-bottom: 1px dotted #888; }
+       .tooltip-box { 
+    visibility: hidden; 
+    position: absolute; 
+    bottom: 120%; 
+    left: 0; 
+    background-color: #333; 
+    color: #fff; 
+    padding: 10px 14px 6px;
+    border-radius: 6px; 
+    font-size: 0.85em; 
+    z-index: 100; 
+    opacity: 0; 
+    transition: opacity 0.2s; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
+    border: 1px solid #555; 
+    pointer-events: none; 
+    
+    /* 텍스트 빠져나감 방지 속성 유지 */
+    white-space: nowrap;  
+    width: max-content; 
+    max-width: none;    
+    text-align: left;
+    line-height: 1.3;   
+}
+        .tooltip-container:hover .tooltip-box { visibility: visible; opacity: 1; }
+        body.light-mode .tooltip-box { background-color: #ffffff; color: #222222; border-color: #d2d8e0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+
+
+/* --- 푸터 UI --- */
+.app-footer { margin-top: 90px; padding: 20px 10px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s ease; }
+.app-footer .footer-disclaimer { color: #888; font-size: 11px; line-height: 1.4; word-break: keep-all; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-align: left; }
+.app-footer .privacy-link { color: #b0b0b0; font-weight: bold; text-decoration: none; margin: 0; transition: color 0.2s ease; white-space: nowrap; flex-shrink: 0; }
+.app-footer .privacy-link:hover { color: #ffffff; text-decoration: underline; }
+      
+      
+
+body.light-mode .app-footer { border-top-color: #e3e7ed; }
+body.light-mode .app-footer .footer-disclaimer { color: #888888; }
+body.light-mode .app-footer .privacy-link { color: #555555; }
+body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
     </style>
 </head>
 <body>
@@ -913,10 +964,12 @@
                                                     <span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span>
                                                     <span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span>
                                                 </div>
-                                                <div class="scenario-row" style="color: #888;">
-                                                    <span>소모된 재료 가치 <span style="font-size: 0.8em;">(구매비용)</span></span>
-                                                    <span class="profit-minus">- {{ Math.floor(batchProfits.normal.opportunityCost).toLocaleString() }} G</span>
-                                                </div>
+                                               <div class="scenario-row" style="color: #888;">
+    <span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span>
+    <div class="tooltip-box" v-html="batchProfits.normal.formulaHtml"></div>
+</span>
+    <span class="profit-minus">- {{ Math.floor(batchProfits.normal.opportunityCost).toLocaleString() }} G</span>
+</div>
                                                 <div class="scenario-row">
                                                     <span>영지 제작 수수료</span>
                                                     <span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span>
@@ -1040,9 +1093,11 @@
                                                     <span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span>
                                                 </div>
                                                 <div class="scenario-row" style="color: #888;">
-                                                    <span>소모된 재료 가치 <span style="font-size: 0.8em;">(구매비용)</span></span>
-                                                    <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.opportunityCost).toLocaleString() }} G</span>
-                                                </div>
+                                                  <span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span>
+    <div class="tooltip-box" v-html="batchProfits.advanced.formulaHtml"></div>
+</span>
+    <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.opportunityCost).toLocaleString() }} G</span>
+</div>
                                                 <div class="scenario-row">
                                                     <span>영지 제작 수수료</span>
                                                     <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span>
@@ -1098,9 +1153,16 @@
                         </div>
                     </div>
                 </div> 
-                <div class="update-box">update: 2026.03.25</div>
+                <div class="update-box">update: 2026.03.26</div>
             </div> 
         </div>
+
+        <footer class="app-footer">
+    <div class="footer-disclaimer">
+        <span>© 2026 아비도스 제작 계산기. All Rights Reserved. This site is not associated with Smilegate RPG & Smilegate Stove. Data based on Lostark Open API.</span>
+        <a href="/privacy" class="privacy-link">개인정보 처리방침</a>
+    </div>
+</footer>
 
         <div v-if="loading || fetching" class="loading-overlay">
             <div class="loading-spinner"></div>
@@ -1495,13 +1557,15 @@
                 let isExchangeN = false;
                 let isExchangeA = false;
 
-                if (baseRes.S) { 
+                // 계산 버튼을 누르기 전(!this.result) 초기 상태일 때만 튼목 교환 추천 로직 작동
+                if (baseRes.S && !this.result) { 
                     const normB_bundles = 18; 
                     const normS_bundles = 20; 
                     const advB_bundles = 23.6;
                     const advS_bundles = 26;
                     const costExN = (normS_bundles * priceS + normB_bundles * priceB) / 40;
                     const costExA = (advS_bundles * priceS + advB_bundles * priceB) / 40;
+                    
                     if (costExN < costMatN) { bestCostN = costExN; isExchangeN = true; }
                     if (costExA < costMatA) { bestCostA = costExA; isExchangeA = true; }
                 }
@@ -1525,7 +1589,7 @@
                 const calc = (type, feePerCraft, recipe) => {
                     const res = this.result && this.result[type];
                     const totalO = res ? res.totalO : 0;
-                    if (totalO === 0) return { revenue: 0, totalFee: 0, opportunityCost: 0, zeroCost: 0, fullCost: 0 };
+                    if (totalO === 0) return { revenue: 0, totalFee: 0, opportunityCost: 0, zeroCost: 0, fullCost: 0, formulaHtml: "" };
                     
                     const itemPrice = type === 'normal' ? (this.market.normal.price || 0) : (this.market.advanced.price || 0);
                     const rev = getBatchRev(totalO, itemPrice);
@@ -1539,21 +1603,33 @@
                     const pC = this.globalPrices[baseRes.C?.name] || 0;
                     const pS = baseRes.S ? (this.globalPrices[baseRes.S.name] || 0) : 0;
                     
-                    const costMat = totalO * ((recipe.A * pA / 100) + (recipe.B * pB / 100) + (recipe.C * pC / 100));
-                    let bestCost = costMat;
+                    let costMat = 0;
+                    let formulaStrArr = [];
+                    let formulaHtml = "소모된 재료 없음";
 
-                    if (baseRes.S) {
-                        const normB_bundles = 18; 
-                        const normS_bundles = 20; 
-                        const advB_bundles = 23.6;
-                        const advS_bundles = 26;
-                        const costExN_per_craft = (normS_bundles * pS + normB_bundles * pB) / 40;
-                        const costExA_per_craft = (advS_bundles * pS + advB_bundles * pB) / 40;
-                        const costEx = totalO * (type === 'normal' ? costExN_per_craft : costExA_per_craft);
-                        if (costEx < costMat) { bestCost = costEx; }
+                    // 영지 농장이면 가치를 0G로 고정하고 전용 문구 출력
+                    if (this.exchangeType === 'farm') {
+                        formulaHtml = "영지 농장 귀속 재료 (0G)";
+                    } else if (res.consumed) {
+                        const cA = Math.max(0, res.consumed.A || 0);
+                        const cB = Math.max(0, res.consumed.B || 0);
+                        const cC = Math.max(0, res.consumed.C || 0);
+                        const cS = Math.max(0, res.consumed.S || 0);
+                        
+                        costMat = (cA * pA / 100) + (cB * pB / 100) + (cC * pC / 100) + (cS * pS / 100);
+                        
+                        if (cA > 0 && baseRes.A) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.A.name} ${cA.toLocaleString()}개 × (${pA}G / 100개)</span><span>= ${Math.floor(cA * pA / 100).toLocaleString()}G</span></div>`);
+if (cB > 0 && baseRes.B) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.B.name} ${cB.toLocaleString()}개 × (${pB}G / 100개)</span><span>= ${Math.floor(cB * pB / 100).toLocaleString()}G</span></div>`);
+if (cC > 0 && baseRes.C) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.C.name} ${cC.toLocaleString()}개 × (${pC}G / 100개)</span><span>= ${Math.floor(cC * pC / 100).toLocaleString()}G</span></div>`);
+if (cS > 0 && baseRes.S) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.S.name} ${cS.toLocaleString()}개 × (${pS}G / 100개)</span><span>= ${Math.floor(cS * pS / 100).toLocaleString()}G</span></div>`);
+
+if (formulaStrArr.length > 0) {
+    // 빈 텍스트 노드 생성을 막기 위해 백틱 내부 줄바꿈 완전 제거 및 align-items 추가
+    formulaHtml = formulaStrArr.join("") + `<div style="border-top: 1px dashed #888; margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;"><span>총합:</span><span style="color: #ffd700;">${Math.floor(costMat).toLocaleString()} G</span></div>`;
+}
                     }
                     
-                    return { revenue: rev, totalFee, opportunityCost: bestCost, zeroCost: rev - totalFee, fullCost: rev - totalFee - bestCost };
+                    return { revenue: rev, totalFee, opportunityCost: costMat, zeroCost: rev - totalFee, fullCost: rev - totalFee - costMat, formulaHtml };
                 };
                 
                 return {
@@ -2041,7 +2117,7 @@
                             if (neededP > 0) return null;
                         }
                         
-                        return logs;
+                        return { logs, consumed: { A: (resData.A || 0) - (A - reqA), B: (resData.B || 0) - (B - reqB), C: (resData.C || 0) - (C - reqC), S: (resData.S || 0) - S } };
                     }
                     
                     let logs = { StoA: 0, BtoA: 0, AtoP: 0, BtoP: 0, PtoB: 0, PtoA: 0, PtoC: 0 };
@@ -2152,7 +2228,19 @@
                         if (P < 0) return null;
                     }
                     
-                    return logs;
+                    let leftoverA = A - reqA;
+                    if (leftoverA > 0 && logs.StoA > 0) {
+                        let revertibleA = Math.min(leftoverA, logs.StoA * normalRates.StoA.out);
+                        let revertCount = Math.floor(revertibleA / normalRates.StoA.out);
+                        if (revertCount > 0) {
+                            logs.StoA -= revertCount;
+                            A -= revertCount * normalRates.StoA.out;
+                            S += revertCount * normalRates.StoA.in;
+                        }
+                    }
+                    // =========================================================
+                    
+                    return { logs, consumed: { A: (resData.A || 0) - (A - reqA), B: (resData.B || 0) - (B - reqB), C: (resData.C || 0) - (C - reqC), S: (resData.S || 0) - S } };
                 };
 
                 const currentPrices = {
@@ -2164,15 +2252,17 @@
                     let low = 0;
                     let high = 200000; 
                     let bestLogs = null;
+                    let bestConsumed = null;
                     let maxCrafts = 0;
 
                     while (low <= high) {
                         let mid = Math.floor((low + high) / 2);
-                        let logs = getOptimalForTarget(mid, forceFlag, resData, recipe, currentPrices);
+                        let resultData = getOptimalForTarget(mid, forceFlag, resData, recipe, currentPrices);
                         
-                        if (logs !== null) {
+                        if (resultData !== null) {
                             maxCrafts = mid;
-                            bestLogs = logs;
+                            bestLogs = resultData.logs;
+                            bestConsumed = resultData.consumed;
                             low = mid + 1; 
                         } else {
                             high = mid - 1; 
@@ -2191,10 +2281,12 @@
                             } 
                         });
                     } else if (resData.S > 0 && this.exchangeType === 'normal') {
-                        orderedLogs.StoA = Math.floor(resData.S / normalRates.StoA.in);
+                        let stoaCount = Math.floor(resData.S / normalRates.StoA.in);
+                        orderedLogs.StoA = stoaCount;
+                        bestConsumed = { A: -(stoaCount * normalRates.StoA.out), B: 0, C: 0, S: stoaCount * normalRates.StoA.in };
                     }
                     
-                    return { totalO: maxCrafts, logs: orderedLogs, approximated: false };
+                    return { totalO: maxCrafts, logs: orderedLogs, consumed: bestConsumed || {A:0,B:0,C:0,S:0}, approximated: false };
                 };
 
                 let advResult = getOptimal(this.resources, { A: 112, B: 59, C: 43 }, this.forceConvert);
