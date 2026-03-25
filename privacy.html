@@ -19,19 +19,23 @@
         strong { color: var(--text); font-weight: 700; }
         .back-link { display: inline-block; margin-top: 40px; color: var(--point); text-decoration: none; font-weight: bold; border: 1px solid var(--point); padding: 10px 20px; border-radius: 6px; transition: 0.2s; }
         .back-link:hover { background: var(--point); color: var(--bg); }
+        .email-text { color: var(--point); font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>개인정보 처리방침</h1>
         
-        <p>아비도스 제작 계산기(이하 '본 서비스')는 이용자의 개인정보를 소중하게 다루며, 관련 법령을 준수하기 위해 노력하고 있습니다. 본 서비스를 이용함에 있어 어떠한 데이터가 처리되는지 투명하게 안내해 드립니다.</p>
+        <p>아비도스 제작 계산기(이하 '본 서비스')는 이용자의 개인정보를 소중하게 다루며, 관련 법령을 준수하기 위해 노력하고 있습니다.<br>
+        본 서비스를 이용함에 있어 어떠한 데이터가 처리되는지 투명하게 안내해 드립니다.</p>
 
         <h2>1. 개인정보 수집 및 이용</h2>
-        <p>본 서비스는 회원가입이나 로그인을 요구하지 않는 <strong>비로그인 서비스</strong>입니다. 이용자의 이름, 연락처, 이메일 등 개인을 식별할 수 있는 정보를 서버에 수집하거나 저장하지 않습니다.</p>
+        <p>본 서비스는 회원가입이나 로그인을 요구하지 않는 <strong>비로그인 서비스</strong>입니다.<br>
+        이용자의 이름, 연락처, 이메일 등 개인을 식별할 수 있는 정보를 서버에 수집하거나 저장하지 않습니다.</p>
 
         <h2>2. 데이터 저장 (Local Storage)</h2>
-        <p>이용자가 설정한 정보는 웹 브라우저의 로컬 저장소(Local Storage)에 보관됩니다. 이는 서버로 전송되지 않으며, 이용자의 기기에만 머뭅니다.</p>
+        <p>이용자가 설정한 정보는 웹 브라우저의 로컬 저장소(Local Storage)에 보관됩니다.<br>
+        이는 서버로 전송되지 않으며, 이용자의 기기에만 머뭅니다.</p>
         <ul>
             <li><strong>저장 항목:</strong> 영지 효과 설정(대성공 확률, 수수료 감소 등), 다크/라이트 모드 테마 설정</li>
             <li><strong>저장 목적:</strong> 페이지 재방문 시 이전 설정 상태를 유지하여 편의성 제공</li>
@@ -54,13 +58,12 @@
 
         <h2>5. 문의처</h2>
         <p>서비스 이용 중 궁금한 점이나 의견이 있으시면 아래로 연락 주시기 바랍니다.</p>
-        <p>Email: <a href="mailto:eternalgreat1@gmail.com" style="color: var(--point); text-decoration: none;">your-email@example.com</a></p>
+        <p>Email: <span class="email-text">eternalgreat1@gmail.com</span></p>
 
         <a href="/" class="back-link">← 계산기로 돌아가기</a>
     </div>
 
     <script>
-        // 메인 페이지의 테마 설정을 그대로 가져옴
         if (localStorage.getItem('loa_theme') === 'light') {
             document.body.classList.add('light-mode');
         }
