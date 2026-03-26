@@ -1108,7 +1108,7 @@
                         </div>
                     </div>
                 </div> 
-                <div class="update-box">update: 2026.03.26</div>
+                <div class="update-box">update: 2026.03.27</div>
             </div> 
         </div>
 
@@ -1850,36 +1850,36 @@
             showChartTooltip(event, itemName) {
                 // 영지 농장 탭에서는 시세 툴팁 비활성화
                 if (this.calcMode === 'optimize' && this.exchangeType === 'farm') return;
+                
+                // 1. 가루 류 아이템은 시세 정보 툴팁 표시 안함
+                if (!itemName || itemName.endsWith('가루')) return;
 
                 this.cancelHideTooltip(); // 열릴 때 기존 타이머 취소
-                if(!itemName) return;
                 this.hoveredMarketItem = itemName;
                 
-                const rect = event.target.getBoundingClientRect();
+                // 이벤트 버블링 문제를 방지하기 위해 currentTarget 사용
+                const rect = event.currentTarget.getBoundingClientRect();
                 
-                // 1. 뷰포트(화면) 기준으로 화면 이탈 방지 좌표 계산
+                const container = document.querySelector('.container');
+                const zoom = container ? (parseFloat(getComputedStyle(container).zoom) || 1) : 1;
+                
+                // 3. zoom 비율이 적용된 실제 툴팁 렌더링 너비 계산
+                const tooltipActualWidth = 580 * zoom;
+
                 let viewX = rect.right + 15;
                 let viewY = rect.top;
 
-                // 오른쪽 밖으로 넘어갈 경우 아이콘 왼쪽으로 배치
-                if (viewX + 580 > window.innerWidth) {
-                    viewX = rect.left - 595;
+                // 오른쪽 밖으로 넘어갈 경우 아이콘 왼쪽으로 배치 (실제 렌더링 너비 기준)
+                if (viewX + tooltipActualWidth > window.innerWidth) {
+                    viewX = rect.left - tooltipActualWidth - 15;
                 }
-                // 창 모드 등에서 왼쪽마저 밖으로 벗어나는 경우 화면 최좌측 밀착 및 아래로 이동
+                // 왼쪽마저 밖으로 벗어나는 경우 화면 최좌측 밀착 및 아래로 이동
                 if (viewX < 10) {
                     viewX = 10;
                     viewY = rect.bottom + 15;
                 }
-                // 아래쪽 밖으로 넘어갈 경우
-                if (viewY + 300 > window.innerHeight) {
-                    viewY = Math.max(10, window.innerHeight - 310);
-                }
 
-                // 2. CSS zoom 스케일 보정 (오차 역산)
-                const container = document.querySelector('.container');
-                const zoom = container ? (parseFloat(getComputedStyle(container).zoom) || 1) : 1;
-
-                // 3. 최종 좌표에 현재 스크롤 위치를 더해 absolute 문서 기준으로 변환 적용
+                // 좌표에 현재 스크롤 위치를 더해 absolute 문서 기준으로 변환 적용
                 this.tooltipStyle = { 
                     top: ((viewY + window.scrollY) / zoom) + 'px', 
                     left: ((viewX + window.scrollX) / zoom) + 'px' 
