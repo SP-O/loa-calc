@@ -1,5 +1,5 @@
 // Vercel 서버가 떠있는 동안 메모리에 유지될 캐시 변수들
-let cachedData = null;
+let cachedData = null; // { prices: {}, stats: {} } 형태로 저장됨
 let lastFetchTime = 0;
 
 // 검색할 아이템 22종
@@ -22,10 +22,11 @@ export default async function handler(req, res) {
     const currentBlock = Math.floor(now / (5 * 60 * 1000));
     const cachedBlock = Math.floor(lastFetchTime / (5 * 60 * 1000));
 
-    // 1. 강제 새로고침이 아니고, 동일한 5분 정각 구간 내에 있다면 캐시 반환
+    // 1. 캐시 반환부 (상단)
     if (!isForceRefresh && cachedData && (currentBlock === cachedBlock)) {
         return res.status(200).json({
-            prices: cachedData,
+            prices: cachedData.prices,
+            stats: cachedData.stats,
             lastUpdated: lastFetchTime 
         });
     }
@@ -40,13 +41,14 @@ export default async function handler(req, res) {
     }
 
     try {
-        // 3. 22개 아이템 시세 병렬로 한 번에 조회
+        // 3. 22개 아이템 시세 및 14일 통계 병렬 조회
         const fetchPromises = ITEM_NAMES.map(async (itemName) => {
             const url = 'https://developer-lostark.game.onstove.com/markets/items';
             const categoryCode = itemName.includes("융화 재료") ? 50000 : 90000;
             const payload = {
                 Sort: "CURRENT_MIN_PRICE",
                 CategoryCode: categoryCode,
+                ItemTier: 0,
                 ItemName: itemName,
                 PageNo: 1,
                 SortCondition: "ASC"
@@ -62,30 +64,70 @@ export default async function handler(req, res) {
                 body: JSON.stringify(payload)
             });
             
-            // 변경점: 호출 실패 시 0 대신 null 반환
-            if (!response.ok) return { name: itemName, price: null };
-            const data = await response.json();
+            if (!response.ok) return { name: itemName, price: null, stats: null };
             
+            const data = await response.json();
             const exactItem = data.Items?.find(i => i.Name === itemName);
-            return { name: itemName, price: exactItem ? exactItem.CurrentMinPrice : null };
+            if (!exactItem) return { name: itemName, price: null, stats: null };
+
+            // 14일 시세 데이터 추가 조회 및 정수화(Math.round) 처리
+            let stats = null;
+            try {
+                const statsRes = await fetch(`https://developer-lostark.game.onstove.com/markets/items/${exactItem.Id}`, {
+                    headers: { 'accept': 'application/json', 'authorization': `bearer ${API_KEY}` }
+                });
+                
+                if (statsRes.ok) {
+                    const statsData = await statsRes.json();
+                    if (Array.isArray(statsData) && statsData.length > 0) {
+                        const sorted = statsData.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+                        const history = sorted.slice(0, 14).map(s => {
+                            const d = new Date(s.Date);
+                            return { 
+                                date: `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`, 
+                                avgPrice: Math.round(s.AvgPrice), // 부동소수점 정수화
+                                volume: s.TradeCount 
+                            };
+                        });
+                        const validPrices = history.map(h => h.avgPrice);
+                        stats = {
+                            todayAvg: history[0].avgPrice,
+                            avg14d: Math.round(validPrices.reduce((a, b) => a + b, 0) / validPrices.length),
+                            high14d: Math.max(...validPrices),
+                            low14d: Math.min(...validPrices),
+                            history: history
+                        };
+                    }
+                }
+            } catch (e) {
+                console.error(`Stats fetch error for ${itemName}:`, e);
+            }
+
+            return { name: itemName, price: exactItem.CurrentMinPrice, stats };
         });
 
         const results = await Promise.all(fetchPromises);
         
-        // 변경점: 빈 객체 대신 기존 캐시를 복사한 뒤, 정상가(>0) 응답만 덮어쓰기
-        const newPrices = cachedData ? { ...cachedData } : {};
+        // 기존 캐시를 복사한 뒤, 정상 응답만 덮어쓰기
+        const newPrices = cachedData?.prices ? { ...cachedData.prices } : {};
+        const newStats = cachedData?.stats ? { ...cachedData.stats } : {};
+        
         results.forEach(item => {
             if (item.price !== null && item.price > 0) {
                 newPrices[item.name] = item.price;
             }
+            if (item.stats) {
+                newStats[item.name] = item.stats;
+            }
         });
 
         // 5. 서버 캐시 및 시간 업데이트
-        cachedData = newPrices;
+        cachedData = { prices: newPrices, stats: newStats };
         lastFetchTime = Date.now();
 
         return res.status(200).json({
-            prices: cachedData,
+            prices: cachedData.prices,
+            stats: cachedData.stats,
             lastUpdated: lastFetchTime
         });
         
