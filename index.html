@@ -11,7 +11,8 @@
     <title>아비도스 제작 계산기</title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: "Noto Sans KR", sans-serif; background-color: #1e1e1e; color: #e0e0e0; margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; color-scheme: dark; }
         *, *::before, *::after { box-sizing: inherit; }
@@ -21,122 +22,63 @@
         
         .right-panel { padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
         .left-panel { flex: 1; padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
-.right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 20px; }
+        .right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 20px; }
 
-/* PC & 태블릿: 단계별 비율 축소 및 겹침 방지 */
-@media (max-width: 1400px) { .container { zoom: 1.1; } }
-@media (max-width: 1280px) { .container { zoom: 1.05; } }
-@media (max-width: 1180px) { .container { zoom: 1.0; } }
-@media (max-width: 1080px) { .container { zoom: 0.95; } }
+        @media (max-width: 1400px) { .container { zoom: 1.1; } }
+        @media (max-width: 1280px) { .container { zoom: 1.05; } }
+        @media (max-width: 1180px) { .container { zoom: 1.0; } }
+        @media (max-width: 1080px) { .container { zoom: 0.95; } }
 
-/* 980px 미만: 가독성을 위해 줌 수치 조정 및 랭킹 레이아웃 미세 조정 */
-@media (max-width: 980px) {
-    .container { zoom: 0.95; }
-    .ranking-row { 
-        grid-template-columns: 1.2fr 55px 60px 60px; 
-        font-size: 0.8em; 
-        gap: 3px; 
-    }
-}
+        @media (max-width: 980px) {
+            .container { zoom: 0.95; }
+            .ranking-row { grid-template-columns: 1.2fr 55px 60px 60px; font-size: 0.8em; gap: 3px; }
+        }
 
-/* 925px 미만: PC 환경에서 텍스트 크기 유지를 위해 줄바꿈 강제 적용 */
-@media (max-width: 925px) {
-    .container { zoom: 1; width: 95%; } /* 줌 초기화 */
-    .main-wrapper { flex-direction: column; gap: 20px; }
-    .left-panel, .right-column { width: 100% !important; flex: none; }
-    .right-panel { width: 100%; }
-}
+        @media (max-width: 925px) {
+            .container { zoom: 1; width: 95%; } 
+            .main-wrapper { flex-direction: column; gap: 20px; }
+            .left-panel, .right-column { width: 100% !important; flex: none; }
+            .right-panel { width: 100%; }
+        }
 
-/* 600px 이하: 모바일 환경 패널 너비 완전 동기화 */
-@media (max-width: 600px) {
-    .container { zoom: 0.85; width: 96%; margin: 10px auto; }
-    .main-wrapper { flex-direction: column; gap: 15px; }
-    
-    /* 패널 너비 및 여백 일치화 (오차 원인 제거) */
-    .left-panel, .right-column { width: 100% !important; padding: 0 !important; margin: 0; }
-    .left-panel, .right-panel { 
-        width: 100% !important; 
-        padding: 15px !important; 
-        box-sizing: border-box; 
-        margin: 0 auto;
-    }
+        @media (max-width: 600px) {
+            .container { zoom: 0.85; width: 96%; margin: 10px auto; }
+            .main-wrapper { flex-direction: column; gap: 15px; }
+            .left-panel, .right-column { width: 100% !important; padding: 0 !important; margin: 0; }
+            .left-panel, .right-panel { width: 100% !important; padding: 15px !important; box-sizing: border-box; margin: 0 auto; }
+            .ranking-row { grid-template-columns: 1.6fr 45px 55px 55px !important; font-size: 0.75em; gap: 2px; }
+            .input-in-table { width: 32px !important; }
+        }
 
-    /* 랭킹 보드 모바일 최적화 */
-    .ranking-row { 
-        grid-template-columns: 1.6fr 45px 55px 55px !important; 
-        font-size: 0.75em; 
-        gap: 2px; 
-    }
-    .input-in-table { width: 32px !important; }
-}
-/* 텍스트가 삐져나가거나 겹치지 않게 처리 */
-.mode-tab span, .name-text-wrap span {
-    white-space: normal !important; /* nowrap 제거: 삐져나감 방지 */
-    word-break: keep-all;          /* 단어 단위 줄바꿈으로 가독성 유지 */
-    display: inline-block;
-    line-height: 1.2;
-}
+        .mode-tab span, .name-text-wrap span { white-space: normal !important; word-break: keep-all; display: inline-block; line-height: 1.2; }
+        .mode-tab { display: flex; align-items: center; justify-content: center; }
 
-/* 버튼/탭 내부 정렬 보정 */
-.mode-tab {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-}
-/* 380PX 이하: 계산기 상단 탭 줄바꿈 및 박스 비율 최적화 */
-@media (max-width: 380px) {
-    .mode-tab { 
-        min-height: auto; /* 불필요하게 큰 최소 높이 강제 해제 */
-        padding: 6px 4px; /* 작아진 텍스트 비율에 맞게 UI 박스 여백 축소 */
-    }
-    .mode-tab .tab-content-wrap { 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center !important; /* 텍스트가 상단으로 쏠리는 현상 완벽 방지 */
-        height: auto !important; /* flex-column 상태에서 100% 할당 시 발생하는 정렬 렌더링 버그 해결 */
-        line-height: 1.2;
-    }
-    .mode-tab .sub-text { 
-        display: block; 
-        font-size: 0.85em; 
-        margin-top: 2px; /* 줄바꿈 텍스트 간의 상하 간격 미세 조정 */
-    }
-}
-/* 365PX 이하: 랭킹 아이템 텍스트 줄바꿈 */
-@media (max-width: 365px) {
-    .name-text-wrap { 
-        display: flex !important;
-        flex-direction: column !important; 
-        align-items: flex-start !important; 
-        gap: 0 !important;
-    }
-}
-      
+        @media (max-width: 380px) {
+            .mode-tab { min-height: auto; padding: 6px 4px; }
+            .mode-tab .tab-content-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center !important; height: auto !important; line-height: 1.2; }
+            .mode-tab .sub-text { display: block; font-size: 0.85em; margin-top: 2px; }
+        }
+        @media (max-width: 365px) {
+            .name-text-wrap { display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 0 !important; }
+        }
+        
         h1 { font-size: 1.3em; color: #ffffff; border-bottom: 2px solid #3a3a3a; padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; transition: color 0.3s ease, border-color 0.3s ease; }
         
-        /* --- 메인 탭 & 드롭다운 디자인 --- */
         .mode-tabs { display: flex; margin-bottom: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s ease, background-color 0.3s ease; }
         .mode-tab { flex: 1; text-align: center; padding: 8px 10px; cursor: pointer; background-color: #2b2b2b; color: #b0b0b0; font-weight: bold; transition: 0.2s; font-size: 0.9em; position: relative; border-bottom: 2px solid transparent; }
-        
         .mode-tab:first-child { border-radius: 5px 0 0 5px; }
         .mode-tab:last-child { border-radius: 0 5px 5px 0; }
-        
         .mode-tab:hover { background-color: #4a4a4a; color: #ffffff; }
         .mode-tab.active { background-color: #3a3a3a; color: #ffd700; border-bottom: 2px solid #ffd700; z-index: 10; }
 
-        /* 드롭다운 본체 */
         .dropdown-content { display: none; position: absolute; top: 100%; left: -1px; width: calc(100% + 2px); background-color: #2b2b2b; border: 1px solid #3a3a3a; border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.6); z-index: 100; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .mode-tab.active:hover .dropdown-content { display: block; }
-
         .dropdown-item { padding: 8px 10px; text-align: center; color: #b0b0b0; font-size: 0.9em; font-weight: bold; transition: 0.2s; }
         .dropdown-item:last-child { border-radius: 0 0 12px 12px; }
         .dropdown-item:hover { background-color: #4a4a4a; color: #ffffff; }
         .dropdown-item.selected { color: #ffd700; background-color: #3a3a3a; }
         
         h2 { font-size: 1.3em; color: #ffffff; margin: 0 0 12px 0; border-left: 4px solid #ffd700; padding-left: 10px; transition: color 0.3s ease, border-color 0.3s ease; }
-
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-left: 4px solid #ffd700; padding-left: 10px; transition: border-color 0.3s ease; }
         .section-header h2 { margin: 0; border-left: none; padding-left: 0; }
 
@@ -166,7 +108,6 @@
         
         button.btn-calc { border-radius: 8px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
         button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px rgba(255, 215, 0, 0.1); }
-        
         body.light-mode button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px rgba(0, 102, 255, 0.15); }
         body.light-mode .rank-cost-col { color: #444444 !important; font-weight: 500 !important; }
         
@@ -176,8 +117,8 @@
         .btn-force.btn-farm:hover { background: rgba(59, 130, 246, 0.25); border-color: #60a5fa; color: #ffffff; }
 
         .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; transition: color 0.3s ease; }
-        .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; }
-        .resource-icon { width: 16px; height: 16px; object-fit: cover; }
+        .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; cursor: help; }
+        .resource-icon { width: 16px; height: 16px; object-fit: cover; pointer-events: none; }
 
         .resource-A, .resource-P { color: rgb(159, 159, 159); }
         .resource-A .resource-icon-wrap, .resource-P .resource-icon-wrap { background: linear-gradient(135deg, rgb(49, 49, 49), rgb(88, 88, 88)); }
@@ -235,7 +176,6 @@
         .toggle-btn.active { background: #4ade80; color: #1e1e1e; border-color: #4ade80; font-weight: bold !important; }
         .toggle-btn:hover:not(.active) { border-color: #4ade80; color: #4ade80; transform: translateY(-1px); }
 
-        /* --- 랭킹 보드 리스트 UI --- */
         .ranking-board-wrap { position: relative; margin-bottom: 0px; background-color: rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 4px; overflow: hidden; display: flex; flex-direction: column; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .ranking-board { width: 100%; display: flex; flex-direction: column; gap: 0; padding-top: 0px; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; max-height: max-content; }
         .ranking-board::-webkit-scrollbar { display: none; }
@@ -345,7 +285,6 @@
         body.light-mode .normal-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.normal-product { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)) !important; }
 
         body.light-mode { background-color: #f2f5f9; color: #222222; color-scheme: light; }
-
         body.light-mode .left-panel, body.light-mode .right-panel, body.light-mode .result, body.light-mode .market-box, body.light-mode .scenario-section, body.light-mode .control-panel-box, body.light-mode .ranking-board-wrap, body.light-mode .dropdown-content, body.light-mode .guide-content { background-color: #ffffff !important; border: 1px solid #e3e7ed; box-shadow: 0 4px 16px rgba(0, 30, 80, 0.04); border-radius: 12px; }
 
         body.light-mode h1, body.light-mode h2, body.light-mode .result-title { color: #111111; border-bottom-color: #e3e7ed; }
@@ -431,11 +370,10 @@
         body.light-mode .scenario-row span[style*="color: #888"] { color: #777777 !important; }
         body.light-mode span[style*="color:#bbb"] { color: #888888 !important; }
         
-        /* --- 누락된 엣지 케이스 보완 --- */
         body.light-mode .deficit-info,
         body.light-mode .guide-desc { color: #555555; }
         body.light-mode .guide-desc span:last-child {color: #0069d9 !important;text-shadow: none;}
-        body.light-mode span[style*="color: #b0b0b0"] { color: #888888 !important; } /* 새로고침 쿨다운 텍스트 보정 */
+        body.light-mode span[style*="color: #b0b0b0"] { color: #888888 !important; } 
 
         body.light-mode .theme-switch-btn { background-color: #ffffff; color: #187ef5; border: 2px solid #e3e7ed; box-shadow: 0 4px 16px rgba(24, 126, 245, 0.15); }
         body.light-mode .theme-switch-btn:hover { background-color: #eef5ff; border-color: #187ef5; transform: scale(1.1); }
@@ -443,52 +381,67 @@
         .theme-switch-btn { position: fixed; bottom: 30px; right: 30px; width: 52px; height: 52px; border-radius: 50%; background-color: #3a3a3a; color: #ffd700; border: 2px solid #5a5a5a; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000; }
         .theme-switch-btn:hover { transform: scale(1.1) translateY(-2px); background-color: #4a4a4a; }
         .theme-switch-btn svg { width: 26px; height: 26px; }
-        .tab span { 
-          word-break: break-all !important; 
-          white-space: normal !important; 
-        }
-      /* --- 소모된 재료 가치 툴팁 --- */
+        .tab span { word-break: break-all !important; white-space: normal !important; }
+
         .tooltip-container { position: relative; display: inline-flex; align-items: center; cursor: help; border-bottom: 1px dotted #888; }
-       .tooltip-box { 
-    visibility: hidden; 
-    position: absolute; 
-    bottom: 120%; 
-    left: 0; 
-    background-color: #333; 
-    color: #fff; 
-    padding: 10px 14px 6px;
-    border-radius: 6px; 
-    font-size: 0.85em; 
-    z-index: 100; 
-    opacity: 0; 
-    transition: opacity 0.2s; 
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
-    border: 1px solid #555; 
-    pointer-events: none; 
-    
-    /* 텍스트 빠져나감 방지 속성 유지 */
-    white-space: nowrap;  
-    width: max-content; 
-    max-width: none;    
-    text-align: left;
-    line-height: 1.3;   
-}
+        .tooltip-box { visibility: hidden; position: absolute; bottom: 120%; left: 0; background-color: #333; color: #fff; padding: 10px 14px 6px; border-radius: 6px; font-size: 0.85em; z-index: 100; opacity: 0; transition: opacity 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #555; pointer-events: none; white-space: nowrap; width: max-content; max-width: none; text-align: left; line-height: 1.3; }
         .tooltip-container:hover .tooltip-box { visibility: visible; opacity: 1; }
         body.light-mode .tooltip-box { background-color: #ffffff; color: #222222; border-color: #d2d8e0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
 
+        .app-footer { margin-top: 90px; padding: 20px 10px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s ease; }
+        .app-footer .footer-disclaimer { color: #888; font-size: 11px; line-height: 1.4; word-break: keep-all; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-align: left; }
+        .app-footer .privacy-link { color: #b0b0b0; font-weight: bold; text-decoration: none; margin: 0; transition: color 0.2s ease; white-space: nowrap; flex-shrink: 0; }
+        .app-footer .privacy-link:hover { color: #ffffff; text-decoration: underline; }
 
-/* --- 푸터 UI --- */
-.app-footer { margin-top: 90px; padding: 20px 10px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s ease; }
-.app-footer .footer-disclaimer { color: #888; font-size: 11px; line-height: 1.4; word-break: keep-all; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-align: left; }
-.app-footer .privacy-link { color: #b0b0b0; font-weight: bold; text-decoration: none; margin: 0; transition: color 0.2s ease; white-space: nowrap; flex-shrink: 0; }
-.app-footer .privacy-link:hover { color: #ffffff; text-decoration: underline; }
-      
-      
+        body.light-mode .app-footer { border-top-color: #e3e7ed; }
+        body.light-mode .app-footer .footer-disclaimer { color: #888888; }
+        body.light-mode .app-footer .privacy-link { color: #555555; }
+        body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
 
-body.light-mode .app-footer { border-top-color: #e3e7ed; }
-body.light-mode .app-footer .footer-disclaimer { color: #888888; }
-body.light-mode .app-footer .privacy-link { color: #555555; }
-body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
+        /* ================= 시세 차트 툴팁 UI CSS ================= */
+        .market-chart-tooltip {
+            position: absolute;
+            background: #121212;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            padding: 16px;
+            width: 580px;
+            z-index: 99999;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+            /* pointer-events: none; 삭제됨 - 마우스 호버 유지를 위해 */
+            color: #e0e0e0;
+            font-family: "Noto Sans KR", sans-serif;
+            transition: opacity 0.15s ease-in-out;
+        }
+        .mct-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+        .mct-title { font-size: 16px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 6px; }
+        .mct-date { font-size: 11px; color: #888; }
+        .mct-summary { display: flex; border: 1px solid #333; border-radius: 6px; margin-bottom: 12px; background: #1a1a1a; }
+        .mct-summary-item { flex: 1; padding: 10px; text-align: center; border-right: 1px solid #333; }
+        .mct-summary-item:last-child { border-right: none; }
+        .mct-label { display: block; font-size: 11px; color: #aaa; margin-bottom: 4px; word-break: keep-all; }
+        .mct-value { display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #ffd700; gap: 4px; }
+        .gold-icon { width: 14px; height: 14px; object-fit: contain; }
+        
+        .mct-body { display: flex; gap: 12px; height: 180px; }
+        .mct-chart-wrap { flex: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 8px; min-width: 0; }
+        .mct-table-wrap { width: 200px; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; overflow-y: auto; }
+        .mct-table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; }
+        .mct-table th { position: sticky; top: 0; background: #252525; color: #aaa; padding: 6px; border-bottom: 1px solid #333; z-index: 2; }
+        .mct-table td { padding: 6px; border-bottom: 1px solid #2a2a2a; }
+        .mct-table td:nth-child(2) { color: #ffd700; display: flex; justify-content: center; align-items: center; gap: 2px; }
+
+        /* 시세 툴팁 라이트 모드 */
+        body.light-mode .market-chart-tooltip { background: #ffffff; border-color: #e3e7ed; box-shadow: 0 8px 24px rgba(0,30,80,0.15); color: #222; }
+        body.light-mode .mct-header { border-bottom-color: #e3e7ed; }
+        body.light-mode .mct-title { color: #111; }
+        body.light-mode .mct-summary, body.light-mode .mct-chart-wrap, body.light-mode .mct-table-wrap { background: #f8fafc; border-color: #e3e7ed; }
+        body.light-mode .mct-summary-item { border-right-color: #e3e7ed; }
+        body.light-mode .mct-label { color: #666; }
+        body.light-mode .mct-value { color: #187ef5; }
+        body.light-mode .mct-table th { background: #f0f4f8; color: #555; border-bottom-color: #e3e7ed; }
+        body.light-mode .mct-table td { border-bottom-color: #eef5ff; }
+        body.light-mode .mct-table td:nth-child(2) { color: #187ef5; }
     </style>
 </head>
 <body>
@@ -553,7 +506,9 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                     <div class="input-group" v-if="resInfo && (calcMode === 'optimize' ? !(exchangeType === 'farm' && key === 'S') : (key !== 'S' && key !== 'P'))">
                         <label>
                             <span :class="'resource-label resource-' + key">
-                                <div class="resource-icon-wrap"><img :src="resInfo.imgUrl" class="resource-icon" alt="icon"></div>
+                                <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, resInfo.name)" @mouseleave="hideChartTooltip">
+                                    <img :src="resInfo.imgUrl" class="resource-icon" alt="icon">
+                                </div>
                                 {{ resInfo.name }}
                                 <span class="desc" v-if="key === 'S'">- 3티어 </span>
                                 <span class="desc" v-if="key === 'C'">- 4티어 </span>
@@ -591,14 +546,14 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                                     <div class="conversion-row" v-if="count > 0 && transformationMap[key]">
                                         <div class="label-wrap">
                                             <div :class="'resource-label resource-' + transformationMap[key].from">
-                                                <div class="resource-icon-wrap"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
+                                                <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].from].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
                                                 {{ selectedResources[transformationMap[key].from].name }}
                                             </div>
                                         </div>
                                         <div class="arrow">→</div>
                                         <div class="label-wrap">
                                             <div :class="'resource-label resource-' + transformationMap[key].to">
-                                                <div class="resource-icon-wrap"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
+                                                <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].to].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
                                                 {{ selectedResources[transformationMap[key].to].name }}
                                             </div>
                                         </div>
@@ -608,7 +563,7 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                                 <div class="conversion-row final-row">
                                     <div class="final-product-label">
                                         <span class="resource-label normal-product">
-                                            <div class="resource-icon-wrap"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
+                                            <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
                                             아비도스 융화 재료
                                         </span>
                                     </div>
@@ -629,14 +584,14 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                                     <div class="conversion-row" v-if="count > 0 && transformationMap[key]">
                                         <div class="label-wrap">
                                             <div :class="'resource-label resource-' + transformationMap[key].from">
-                                                <div class="resource-icon-wrap"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
+                                                <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].from].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
                                                 {{ selectedResources[transformationMap[key].from].name }}
                                             </div>
                                         </div>
                                         <div class="arrow">→</div>
                                         <div class="label-wrap">
                                             <div :class="'resource-label resource-' + transformationMap[key].to">
-                                                <div class="resource-icon-wrap"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
+                                                <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].to].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
                                                 {{ selectedResources[transformationMap[key].to].name }}
                                             </div>
                                         </div>
@@ -646,7 +601,7 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                                 <div class="conversion-row final-row">
                                     <div class="final-product-label">
                                         <span class="resource-label final-product">
-                                            <div class="resource-icon-wrap"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
+                                            <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
                                             상급 아비도스 융화 재료
                                         </span>
                                     </div>
@@ -666,7 +621,7 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                             
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
                                 <div class="resource-label resource-A">
-                                    <div class="resource-icon-wrap"><img :src="selectedResources.A.imgUrl" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources.A.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.A.imgUrl" class="resource-icon"></div>
                                     {{ selectedResources.A.name }}
                                 </div>
                                 <div class="count">
@@ -677,7 +632,7 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                             
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
                                 <div class="resource-label resource-B">
-                                    <div class="resource-icon-wrap"><img :src="selectedResources.B.imgUrl" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources.B.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.B.imgUrl" class="resource-icon"></div>
                                     {{ selectedResources.B.name }}
                                 </div>
                                 <div class="count">
@@ -688,7 +643,7 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
 
                             <div class="final-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 12px 10px 0;">
                                 <span class="resource-label normal-product">
-                                    <div class="resource-icon-wrap"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
                                     예상 제작 결과
                                 </span>
                                 <div class="count"><span class="num-point">{{ result.normal.totalO }}</span>회 제작</div>
@@ -706,7 +661,7 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                             
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
                                 <div class="resource-label resource-A">
-                                    <div class="resource-icon-wrap"><img :src="selectedResources.A.imgUrl" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources.A.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.A.imgUrl" class="resource-icon"></div>
                                     {{ selectedResources.A.name }}
                                 </div>
                                 <div class="count">
@@ -717,7 +672,7 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                             
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
                                 <div class="resource-label resource-B">
-                                    <div class="resource-icon-wrap"><img :src="selectedResources.B.imgUrl" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources.B.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.B.imgUrl" class="resource-icon"></div>
                                     {{ selectedResources.B.name }}
                                 </div>
                                 <div class="count">
@@ -728,7 +683,7 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
 
                             <div class="final-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 12px 10px 0;">
                                 <span class="resource-label final-product">
-                                    <div class="resource-icon-wrap"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
                                     예상 제작 결과
                                 </span>
                                 <div class="count"><span class="num-point">{{ result.advanced.totalO }}</span>회 제작</div>
@@ -898,7 +853,7 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                             <div class="market-box" style="margin-top: 0; background-color: #1a1a1a;">
                                 <div class="market-header">
                                     <span class="resource-label normal-product">
-                                        <div class="resource-icon-wrap"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
+                                        <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
                                         <h3 class="normal-product" style="display:inline; margin-left:5px;">아비도스 융화 재료</h3>
                                     </span>
                                     <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
@@ -1026,7 +981,7 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                             <div class="market-box" style="background-color: #1a1a1a;">
                                 <div class="market-header">
                                     <span class="resource-label final-product">
-                                        <div class="resource-icon-wrap"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
+                                        <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
                                         <h3 class="final-product" style="display:inline; margin-left:5px;">상급 아비도스 융화 재료</h3>
                                     </span>
                                     <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
@@ -1167,6 +1122,63 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
         <div v-if="loading || fetching" class="loading-overlay">
             <div class="loading-spinner"></div>
         </div>
+
+        <!-- 영지 농장 탭일 때는 시세 툴팁을 표시하지 않음 -->
+        <div v-show="hoveredMarketItem && !(calcMode === 'optimize' && exchangeType === 'farm')" class="market-chart-tooltip" :style="tooltipStyle" @mouseenter="cancelHideTooltip" @mouseleave="hideChartTooltip">
+            <div class="mct-header">
+                <span class="mct-title" :class="hoveredItemDetails ? hoveredItemDetails.class : ''">
+                    <div class="resource-icon-wrap" v-if="hoveredItemDetails">
+                        <img :src="hoveredItemDetails.imgUrl" class="resource-icon">
+                    </div>
+                    {{ hoveredMarketItem }} 
+                    <span style="font-size:12px; font-weight:normal; color:#aaa; margin-left:4px;">최근 거래 정보</span>
+                </span>
+                <span class="mct-date">{{ lastMarketUpdate }} 기준</span>
+            </div>
+            <template v-if="currentHoveredStats">
+                <div class="mct-summary">
+                    <div class="mct-summary-item">
+                        <span class="mct-label">오늘의 평균 거래가</span>
+                        <span class="mct-value">{{ currentHoveredStats.todayAvg }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+                    </div>
+                    <div class="mct-summary-item">
+                        <span class="mct-label">14일간 평균 거래가</span>
+                        <span class="mct-value">{{ currentHoveredStats.avg14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+                    </div>
+                    <div class="mct-summary-item">
+                        <span class="mct-label">14일간 최고 거래가</span>
+                        <span class="mct-value">{{ currentHoveredStats.high14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+                    </div>
+                    <div class="mct-summary-item">
+                        <span class="mct-label">14일간 최저 거래가</span>
+                        <span class="mct-value">{{ currentHoveredStats.low14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+                    </div>
+                </div>
+                <div class="mct-body">
+                    <div class="mct-chart-wrap">
+                        <canvas id="marketChartCanvas"></canvas>
+                    </div>
+                    <div class="mct-table-wrap">
+                        <table class="mct-table">
+                            <thead>
+                                <tr><th>거래 일자</th><th>평균 거래가</th><th>판매 건수</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="row in currentHoveredStats.history" :key="row.date">
+                                    <td>{{ row.date }}</td>
+                                    <td>{{ row.avgPrice }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></td>
+                                    <td>{{ row.volume.toLocaleString() }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </template>
+            <div v-else style="padding: 30px; text-align: center; color: #888; font-size: 13px;">
+                시세 데이터를 불러오는 중이거나 기록이 없습니다.
+            </div>
+        </div>
+
     </div>
 
 <script>
@@ -1202,6 +1214,11 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                 selectedMaterial: "WL",
                 sortKey: null,
                 sortDir: 0,
+                // 차트 툴팁용 상태
+                hoveredMarketItem: null,
+                tooltipTimer: null, // 툴팁 딜레이 타이머
+                tooltipStyle: { top: '0px', left: '0px' },
+                marketStats: {},
                 materials: [
                     { 
                         code: "WL", name: "벌목", 
@@ -1315,6 +1332,20 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
             }
         },
         computed: {
+            currentHoveredStats() {
+                if (!this.hoveredMarketItem || !this.marketStats) return null;
+                return this.marketStats[this.hoveredMarketItem] || null;
+            },
+            hoveredItemDetails() {
+                if (!this.hoveredMarketItem) return null;
+                if (this.hoveredMarketItem.includes('상급 아비도스 융화 재료')) return { class: 'final-product', imgUrl: 'https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png' };
+                if (this.hoveredMarketItem.includes('아비도스 융화 재료')) return { class: 'normal-product', imgUrl: 'https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png' };
+                
+                for (const [key, res] of Object.entries(this.selectedResources)) {
+                    if (res && res.name === this.hoveredMarketItem) return { class: 'resource-' + key, imgUrl: res.imgUrl };
+                }
+                return null;
+            },
             transformationMap() {
                 if (this.exchangeType === 'farm') {
                     return {
@@ -1557,7 +1588,6 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                 let isExchangeN = false;
                 let isExchangeA = false;
 
-                // 계산 버튼을 누르기 전(!this.result) 초기 상태일 때만 튼목 교환 추천 로직 작동
                 if (baseRes.S && !this.result) { 
                     const normB_bundles = 18; 
                     const normS_bundles = 20; 
@@ -1607,7 +1637,6 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                     let formulaStrArr = [];
                     let formulaHtml = "소모된 재료 없음";
 
-                    // 영지 농장이면 가치를 0G로 고정하고 전용 문구 출력
                     if (this.exchangeType === 'farm') {
                         formulaHtml = "영지 농장 귀속 재료 (0G)";
                     } else if (res.consumed) {
@@ -1619,14 +1648,13 @@ body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
                         costMat = (cA * pA / 100) + (cB * pB / 100) + (cC * pC / 100) + (cS * pS / 100);
                         
                         if (cA > 0 && baseRes.A) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.A.name} ${cA.toLocaleString()}개 × (${pA}G / 100개)</span><span>= ${Math.floor(cA * pA / 100).toLocaleString()}G</span></div>`);
-if (cB > 0 && baseRes.B) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.B.name} ${cB.toLocaleString()}개 × (${pB}G / 100개)</span><span>= ${Math.floor(cB * pB / 100).toLocaleString()}G</span></div>`);
-if (cC > 0 && baseRes.C) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.C.name} ${cC.toLocaleString()}개 × (${pC}G / 100개)</span><span>= ${Math.floor(cC * pC / 100).toLocaleString()}G</span></div>`);
-if (cS > 0 && baseRes.S) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.S.name} ${cS.toLocaleString()}개 × (${pS}G / 100개)</span><span>= ${Math.floor(cS * pS / 100).toLocaleString()}G</span></div>`);
+                        if (cB > 0 && baseRes.B) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.B.name} ${cB.toLocaleString()}개 × (${pB}G / 100개)</span><span>= ${Math.floor(cB * pB / 100).toLocaleString()}G</span></div>`);
+                        if (cC > 0 && baseRes.C) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.C.name} ${cC.toLocaleString()}개 × (${pC}G / 100개)</span><span>= ${Math.floor(cC * pC / 100).toLocaleString()}G</span></div>`);
+                        if (cS > 0 && baseRes.S) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.S.name} ${cS.toLocaleString()}개 × (${pS}G / 100개)</span><span>= ${Math.floor(cS * pS / 100).toLocaleString()}G</span></div>`);
 
-if (formulaStrArr.length > 0) {
-    // 빈 텍스트 노드 생성을 막기 위해 백틱 내부 줄바꿈 완전 제거 및 align-items 추가
-    formulaHtml = formulaStrArr.join("") + `<div style="border-top: 1px dashed #888; margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;"><span>총합:</span><span style="color: #ffd700;">${Math.floor(costMat).toLocaleString()} G</span></div>`;
-}
+                        if (formulaStrArr.length > 0) {
+                            formulaHtml = formulaStrArr.join("") + `<div style="border-top: 1px dashed #888; margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;"><span>총합:</span><span style="color: #ffd700;">${Math.floor(costMat).toLocaleString()} G</span></div>`;
+                        }
                     }
                     
                     return { revenue: rev, totalFee, opportunityCost: costMat, zeroCost: rev - totalFee, fullCost: rev - totalFee - costMat, formulaHtml };
@@ -1735,21 +1763,15 @@ if (formulaStrArr.length > 0) {
                     const seconds = now.getSeconds();
                     const milliseconds = now.getMilliseconds();
 
-                    // 5분 정각(0분, 5분, 10분...)까지 남은 정확한 시간(ms) 계산
                     let delay = (5 * 60 * 1000) - ((minutes % 5) * 60 * 1000 + seconds * 1000 + milliseconds);
-
-                    // 로아 API 서버 갱신 딜레이를 고려해 정각에서 1초(1000ms) 늦게 호출
                     delay += 1000; 
 
                     this.refreshTimer = setTimeout(() => {
                         console.log("정시 시세 동기화 중...");
                         this.fetchMarketData(false, true);
-                        
-                        // 실행 직후 다음 5분 타이머의 남은 시간을 다시 정밀 계산
                         scheduleNext(); 
                     }, delay);
                 };
-
                 scheduleNext();
             };
 
@@ -1770,6 +1792,11 @@ if (formulaStrArr.length > 0) {
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
                 this.forceConvert = false;
+                // 영지 농장 탭으로 변경 시 열려있는 툴팁 즉시 닫기
+                if (this.exchangeType === 'farm') {
+                    this.cancelHideTooltip();
+                    this.hoveredMarketItem = null;
+                }
             },
             favorites: {
                 handler(newVal) {
@@ -1819,6 +1846,140 @@ if (formulaStrArr.length > 0) {
             window.removeEventListener('resize', this.handleResize);
         },
         methods: {
+            // 차트 툴팁 표시 및 위치 계산
+            showChartTooltip(event, itemName) {
+                // 영지 농장 탭에서는 시세 툴팁 비활성화
+                if (this.calcMode === 'optimize' && this.exchangeType === 'farm') return;
+
+                this.cancelHideTooltip(); // 열릴 때 기존 타이머 취소
+                if(!itemName) return;
+                this.hoveredMarketItem = itemName;
+                
+                const rect = event.target.getBoundingClientRect();
+                
+                // 1. 뷰포트(화면) 기준으로 화면 이탈 방지 좌표 계산
+                let viewX = rect.right + 15;
+                let viewY = rect.top;
+
+                // 오른쪽 밖으로 넘어갈 경우 아이콘 왼쪽으로 배치
+                if (viewX + 580 > window.innerWidth) {
+                    viewX = rect.left - 595;
+                }
+                // 창 모드 등에서 왼쪽마저 밖으로 벗어나는 경우 화면 최좌측 밀착 및 아래로 이동
+                if (viewX < 10) {
+                    viewX = 10;
+                    viewY = rect.bottom + 15;
+                }
+                // 아래쪽 밖으로 넘어갈 경우
+                if (viewY + 300 > window.innerHeight) {
+                    viewY = Math.max(10, window.innerHeight - 310);
+                }
+
+                // 2. CSS zoom 스케일 보정 (오차 역산)
+                const container = document.querySelector('.container');
+                const zoom = container ? (parseFloat(getComputedStyle(container).zoom) || 1) : 1;
+
+                // 3. 최종 좌표에 현재 스크롤 위치를 더해 absolute 문서 기준으로 변환 적용
+                this.tooltipStyle = { 
+                    top: ((viewY + window.scrollY) / zoom) + 'px', 
+                    left: ((viewX + window.scrollX) / zoom) + 'px' 
+                };
+
+                this.$nextTick(() => {
+                    this.renderMarketChart();
+                });
+            },
+            hideChartTooltip() {
+                // 커서를 이동할 시간을 주기 위해 0.15초 딜레이
+                this.tooltipTimer = setTimeout(() => {
+                    this.hoveredMarketItem = null;
+                }, 150);
+            },
+            cancelHideTooltip() {
+                // 툴팁 위로 마우스가 올라가면 닫기 취소
+                if (this.tooltipTimer) {
+                    clearTimeout(this.tooltipTimer);
+                    this.tooltipTimer = null;
+                }
+            },
+            // Chart.js 렌더링
+            renderMarketChart() {
+                const canvas = document.getElementById('marketChartCanvas');
+                if (!canvas) return;
+                if (window.marketChartInstance) {
+                    window.marketChartInstance.destroy();
+                }
+
+                const isLight = this.isLightMode;
+                const textColor = isLight ? '#555' : '#aaa';
+                const gridColor = isLight ? '#e3e7ed' : '#333';
+              
+                const container = document.querySelector('.container');
+                const zoom = container ? (parseFloat(getComputedStyle(container).zoom) || 1) : 1;
+
+                if (!this.currentHoveredStats || !this.currentHoveredStats.history) return;
+                const chartData = [...this.currentHoveredStats.history].reverse();
+                const labels = chartData.map(d => d.date);
+                const priceData = chartData.map(d => d.avgPrice);
+                const volumeData = chartData.map(d => d.volume);
+
+                window.marketChartInstance = new Chart(canvas, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                type: 'line',
+                                label: '평균 거래가',
+                                data: priceData,
+                                borderColor: '#3b82f6',
+                                backgroundColor: '#3b82f6',
+                                borderWidth: 2,
+                                yAxisID: 'y',
+                                tension: 0.1,
+                                pointRadius: 2,
+                                order: 1
+                            },
+                            {
+                                type: 'bar',
+                                label: '판매 건수',
+                                data: volumeData,
+                                backgroundColor: isLight ? 'rgba(245, 158, 11, 0.5)' : 'rgba(253, 224, 71, 0.4)',
+                                yAxisID: 'y1',
+                                barPercentage: 0.6,
+                                order: 2
+                            }
+                        ]
+                    },
+                    options: {
+                        devicePixelRatio: window.devicePixelRatio * zoom,
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: { color: textColor, boxWidth: 10, font: { size: 10 } }
+                            }
+                        },
+                        scales: {
+                            x: { ticks: { color: textColor, font: { size: 10 }, autoSkip: false }, grid: { display: false } },
+                            y: {
+                                type: 'linear', display: true, position: 'left',
+                                ticks: { color: textColor, font: { size: 10 } },
+                                grid: { color: gridColor }
+                            },
+                            y1: {
+                                type: 'linear', display: true, position: 'right',
+                                ticks: { color: textColor, font: { size: 10 }, callback: (v) => v/10000 + '만' },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            },
+
             toggleTheme() {
                 this.isLightMode = !this.isLightMode;
                 if (this.isLightMode) {
@@ -1883,7 +2044,6 @@ if (formulaStrArr.length > 0) {
                 const rows = board.querySelectorAll('.ranking-row');
                 this.headerH = rows[0] ? (rows[0].getBoundingClientRect().height / 1.1) : 0;
                 
-                // 고정된 높이가 아닌, 현재 렌더링된 실제 상위 3개 행의 높이를 합산하여 최소 보장 높이 설정
                 this.minBoardHeight = this.headerH;
                 for (let i = 1; i <= 3 && i < rows.length; i++) {
                     this.minBoardHeight += (rows[i].getBoundingClientRect().height / 1.1);
@@ -1914,7 +2074,7 @@ if (formulaStrArr.length > 0) {
                         visibleCount++;
                     }
                     this.customRankingHeight = targetHeight;
-                    this.visibleRowsCount = visibleCount; // 현재 렌더링된 줄 수 저장
+                    this.visibleRowsCount = visibleCount;
                 }
 
                 document.removeEventListener('mousemove', this.onDrag);
@@ -1925,7 +2085,6 @@ if (formulaStrArr.length > 0) {
                     const rows = document.querySelectorAll('.ranking-board .ranking-row');
                     if (!rows.length) return;
                     
-                    // 현재 브라우저 너비 기준의 새 header 높이와 row 높이들을 누적 합산
                     let newHeight = rows[0].getBoundingClientRect().height / 1.1; 
                     for (let i = 1; i <= this.visibleRowsCount && i < rows.length; i++) {
                         newHeight += rows[i].getBoundingClientRect().height / 1.1;
@@ -1963,16 +2122,19 @@ if (formulaStrArr.length > 0) {
                     
                     const data = await response.json();
                     const fetchedPrices = data.prices;
+                    const fetchedStats = data.stats; 
+
+                    if (fetchedStats) {
+                        this.marketStats = fetchedStats;
+                    }
 
                     if (fetchedPrices) {
                         for (const [k, v] of Object.entries(fetchedPrices)) {
-                            // 가격이 존재하고 0보다 클 때만 업데이트 (기존 데이터 보호)
                             if (v && v > 0) {
                                 this.globalPrices[k] = v;
                             }
                         }
                         
-                        // 융화 재료 가격 할당도 0보다 클 때만 수행
                         const newNormalPrice = this.globalPrices["아비도스 융화 재료"];
                         if (newNormalPrice > 0) {
                             this.market.normal.price = newNormalPrice;
@@ -2238,7 +2400,6 @@ if (formulaStrArr.length > 0) {
                             S += revertCount * normalRates.StoA.in;
                         }
                     }
-                    // =========================================================
                     
                     return { logs, consumed: { A: (resData.A || 0) - (A - reqA), B: (resData.B || 0) - (B - reqB), C: (resData.C || 0) - (C - reqC), S: (resData.S || 0) - S } };
                 };
