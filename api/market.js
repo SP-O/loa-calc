@@ -1,5 +1,5 @@
 // Vercel 서버가 떠있는 동안 메모리에 유지될 캐시 변수들
-let cachedData = null; // { prices: {}, stats: {} } 형태로 저장됨
+let cachedData = null;
 let lastFetchTime = 0;
 
 // 검색할 아이템 22종
@@ -22,11 +22,10 @@ export default async function handler(req, res) {
     const currentBlock = Math.floor(now / (5 * 60 * 1000));
     const cachedBlock = Math.floor(lastFetchTime / (5 * 60 * 1000));
 
-    // 1. 캐시 반환부 (상단)
+    // 1. 강제 새로고침이 아니고, 동일한 5분 정각 구간 내에 있다면 캐시 반환
     if (!isForceRefresh && cachedData && (currentBlock === cachedBlock)) {
         return res.status(200).json({
-            prices: cachedData.prices,
-            stats: cachedData.stats,
+            prices: cachedData,
             lastUpdated: lastFetchTime 
         });
     }
@@ -41,72 +40,84 @@ export default async function handler(req, res) {
     }
 
     try {
-        // 3. 22개 아이템 시세 및 14일 통계 병렬 조회
-        const fetchPromises = ITEM_NAMES.map(async (itemName) => {
-            const url = 'https://developer-lostark.game.onstove.com/markets/items';
-            const categoryCode = itemName.includes("융화 재료") ? 50000 : 90000;
-            const payload = {
-                Sort: "CURRENT_MIN_PRICE",
-                CategoryCode: categoryCode,
-                ItemTier: 0,
-                ItemName: itemName,
-                PageNo: 1,
-                SortCondition: "ASC"
-            };
+        // 2. Vercel 환경에서 동시 호출로 인한 로스트아크 API Rate Limit (429 에러) 방지용 청크 분할 및 지연 처리
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        const results = [];
+        const chunkSize = 4; // 한 번에 4개씩 병렬 조회
+        
+        for (let i = 0; i < ITEM_NAMES.length; i += chunkSize) {
+            const chunk = ITEM_NAMES.slice(i, i + chunkSize);
+            const fetchPromises = chunk.map(async (itemName) => {
+                const url = 'https://developer-lostark.game.onstove.com/markets/items';
+                const categoryCode = itemName.includes("융화 재료") ? 50000 : 90000;
+                const payload = {
+                    Sort: "CURRENT_MIN_PRICE",
+                    CategoryCode: categoryCode,
+                    ItemTier: 0,
+                    ItemName: itemName,
+                    PageNo: 1,
+                    SortCondition: "ASC"
+                };
 
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'accept': 'application/json',
-                    'authorization': `bearer ${API_KEY}`,
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-            
-            if (!response.ok) return { name: itemName, price: null, stats: null };
-            
-            const data = await response.json();
-            const exactItem = data.Items?.find(i => i.Name === itemName);
-            if (!exactItem) return { name: itemName, price: null, stats: null };
-
-            // 14일 시세 데이터 추가 조회 및 정수화(Math.round) 처리
-            let stats = null;
-            try {
-                const statsRes = await fetch(`https://developer-lostark.game.onstove.com/markets/items/${exactItem.Id}`, {
-                    headers: { 'accept': 'application/json', 'authorization': `bearer ${API_KEY}` }
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'accept': 'application/json',
+                        'authorization': `bearer ${API_KEY}`,
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
                 });
                 
-                if (statsRes.ok) {
-                    const statsData = await statsRes.json();
-                    if (Array.isArray(statsData) && statsData.length > 0) {
-                        const sorted = statsData.sort((a, b) => new Date(b.Date) - new Date(a.Date));
-                        const history = sorted.slice(0, 14).map(s => {
-                            const d = new Date(s.Date);
-                            return { 
-                                date: `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`, 
-                                avgPrice: Math.round(s.AvgPrice), // 부동소수점 정수화
-                                volume: s.TradeCount 
+                if (!response.ok) return { name: itemName, price: null, stats: null };
+                
+                const data = await response.json();
+                const exactItem = data.Items?.find(i => i.Name === itemName);
+                if (!exactItem) return { name: itemName, price: null, stats: null };
+
+                let stats = null;
+                try {
+                    const statsRes = await fetch(`https://developer-lostark.game.onstove.com/markets/items/${exactItem.Id}`, {
+                        headers: { 'accept': 'application/json', 'authorization': `bearer ${API_KEY}` }
+                    });
+                    
+                    if (statsRes.ok) {
+                        const statsData = await statsRes.json();
+                        if (Array.isArray(statsData) && statsData.length > 0) {
+                            const sorted = statsData.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+                            const history = sorted.slice(0, 14).map(s => {
+                                const d = new Date(s.Date);
+                                return { 
+                                    date: `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`, 
+                                    avgPrice: Math.round(s.AvgPrice),
+                                    volume: s.TradeCount 
+                                };
+                            });
+                            const validPrices = history.map(h => h.avgPrice);
+                            stats = {
+                                todayAvg: history[0].avgPrice,
+                                avg14d: Math.round(validPrices.reduce((a, b) => a + b, 0) / validPrices.length),
+                                high14d: Math.max(...validPrices),
+                                low14d: Math.min(...validPrices),
+                                history: history
                             };
-                        });
-                        const validPrices = history.map(h => h.avgPrice);
-                        stats = {
-                            todayAvg: history[0].avgPrice,
-                            avg14d: Math.round(validPrices.reduce((a, b) => a + b, 0) / validPrices.length),
-                            high14d: Math.max(...validPrices),
-                            low14d: Math.min(...validPrices),
-                            history: history
-                        };
+                        }
                     }
+                } catch (e) {
+                    console.error(`Stats fetch error for ${itemName}:`, e);
                 }
-            } catch (e) {
-                console.error(`Stats fetch error for ${itemName}:`, e);
+
+                return { name: itemName, price: exactItem.CurrentMinPrice, stats };
+            });
+
+            const chunkResults = await Promise.all(fetchPromises);
+            results.push(...chunkResults);
+            
+            // 마지막 청크가 아니면 API 과부하를 피하기 위해 250ms 대기
+            if (i + chunkSize < ITEM_NAMES.length) {
+                await delay(250); 
             }
-
-            return { name: itemName, price: exactItem.CurrentMinPrice, stats };
-        });
-
-        const results = await Promise.all(fetchPromises);
+        }
         
         // 기존 캐시를 복사한 뒤, 정상 응답만 덮어쓰기
         const newPrices = cachedData?.prices ? { ...cachedData.prices } : {};
