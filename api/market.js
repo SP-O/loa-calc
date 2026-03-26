@@ -40,105 +40,52 @@ export default async function handler(req, res) {
     }
 
     try {
-        // 2. Vercel 환경에서 동시 호출로 인한 로스트아크 API Rate Limit (429 에러) 방지용 청크 분할 및 지연 처리
-        const delay = ms => new Promise(res => setTimeout(res, ms));
-        const results = [];
-        const chunkSize = 4; // 한 번에 4개씩 병렬 조회
-        
-        for (let i = 0; i < ITEM_NAMES.length; i += chunkSize) {
-            const chunk = ITEM_NAMES.slice(i, i + chunkSize);
-            const fetchPromises = chunk.map(async (itemName) => {
-                const url = 'https://developer-lostark.game.onstove.com/markets/items';
-                const categoryCode = itemName.includes("융화 재료") ? 50000 : 90000;
-                const payload = {
-                    Sort: "CURRENT_MIN_PRICE",
-                    CategoryCode: categoryCode,
-                    ItemTier: 0,
-                    ItemName: itemName,
-                    PageNo: 1,
-                    SortCondition: "ASC"
-                };
+        // 3. 22개 아이템 시세 병렬로 한 번에 조회
+        const fetchPromises = ITEM_NAMES.map(async (itemName) => {
+            const url = 'https://developer-lostark.game.onstove.com/markets/items';
+            const categoryCode = itemName.includes("융화 재료") ? 50000 : 90000;
+            const payload = {
+                Sort: "CURRENT_MIN_PRICE",
+                CategoryCode: categoryCode,
+                ItemName: itemName,
+                PageNo: 1,
+                SortCondition: "ASC"
+            };
 
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'accept': 'application/json',
-                        'authorization': `bearer ${API_KEY}`,
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                
-                if (!response.ok) return { name: itemName, price: null, stats: null };
-                
-                const data = await response.json();
-                const exactItem = data.Items?.find(i => i.Name === itemName);
-                if (!exactItem) return { name: itemName, price: null, stats: null };
-
-                let stats = null;
-                try {
-                    const statsRes = await fetch(`https://developer-lostark.game.onstove.com/markets/items/${exactItem.Id}`, {
-                        headers: { 'accept': 'application/json', 'authorization': `bearer ${API_KEY}` }
-                    });
-                    
-                    if (statsRes.ok) {
-                        const statsData = await statsRes.json();
-                        if (Array.isArray(statsData) && statsData.length > 0) {
-                            const sorted = statsData.sort((a, b) => new Date(b.Date) - new Date(a.Date));
-                            const history = sorted.slice(0, 14).map(s => {
-                                const d = new Date(s.Date);
-                                return { 
-                                    date: `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`, 
-                                    avgPrice: Math.round(s.AvgPrice),
-                                    volume: s.TradeCount 
-                                };
-                            });
-                            const validPrices = history.map(h => h.avgPrice);
-                            stats = {
-                                todayAvg: history[0].avgPrice,
-                                avg14d: Math.round(validPrices.reduce((a, b) => a + b, 0) / validPrices.length),
-                                high14d: Math.max(...validPrices),
-                                low14d: Math.min(...validPrices),
-                                history: history
-                            };
-                        }
-                    }
-                } catch (e) {
-                    console.error(`Stats fetch error for ${itemName}:`, e);
-                }
-
-                return { name: itemName, price: exactItem.CurrentMinPrice, stats };
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'authorization': `bearer ${API_KEY}`,
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(payload)
             });
-
-            const chunkResults = await Promise.all(fetchPromises);
-            results.push(...chunkResults);
             
-            // 마지막 청크가 아니면 API 과부하를 피하기 위해 250ms 대기
-            if (i + chunkSize < ITEM_NAMES.length) {
-                await delay(250); 
-            }
-        }
+            // 변경점: 호출 실패 시 0 대신 null 반환
+            if (!response.ok) return { name: itemName, price: null };
+            const data = await response.json();
+            
+            const exactItem = data.Items?.find(i => i.Name === itemName);
+            return { name: itemName, price: exactItem ? exactItem.CurrentMinPrice : null };
+        });
+
+        const results = await Promise.all(fetchPromises);
         
-        // 기존 캐시를 복사한 뒤, 정상 응답만 덮어쓰기
-        const newPrices = cachedData?.prices ? { ...cachedData.prices } : {};
-        const newStats = cachedData?.stats ? { ...cachedData.stats } : {};
-        
+        // 변경점: 빈 객체 대신 기존 캐시를 복사한 뒤, 정상가(>0) 응답만 덮어쓰기
+        const newPrices = cachedData ? { ...cachedData } : {};
         results.forEach(item => {
             if (item.price !== null && item.price > 0) {
                 newPrices[item.name] = item.price;
             }
-            if (item.stats) {
-                newStats[item.name] = item.stats;
-            }
         });
 
         // 5. 서버 캐시 및 시간 업데이트
-        cachedData = { prices: newPrices, stats: newStats };
+        cachedData = newPrices;
         lastFetchTime = Date.now();
 
         return res.status(200).json({
-            prices: cachedData.prices,
-            stats: cachedData.stats,
+            prices: cachedData,
             lastUpdated: lastFetchTime
         });
         
