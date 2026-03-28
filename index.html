@@ -1004,7 +1004,7 @@
                                 <tr v-for="row in currentHoveredStats.history" :key="row.date">
                                     <td>{{ row.date }}</td>
                                     <td>{{ row.avgPrice }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></td>
-                                    <td>{{ row.volume.toLocaleString() }}</td>
+                                    <td>{{ (row.volume ?? 0).toLocaleString() }}</td>
                                 </tr>
                             </tbody>
                         </table>
