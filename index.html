@@ -1157,7 +1157,7 @@
             <div class="mct-summary-item">
                 <span class="mct-label">14일간 최저 거래가</span>
                 <span class="mct-value">{{ Math.round(currentHoveredStats.low14d) }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
-        </div>
+            </div>
         </div>
         <div class="mct-body">
             <div class="mct-chart-wrap">
@@ -1887,8 +1887,11 @@
                     viewX = Math.max(10, window.innerWidth - tooltipActualWidth - 10);
                 }
                 const tooltipEstimatedHeight = 420;
-                if (viewY + tooltipEstimatedHeight > window.innerHeight - 10) {
-                        viewY = Math.max(10, window.innerHeight - tooltipEstimatedHeight - 10);
+                const bottomMargin = 40; // 창을 줄였을 때 바닥에서 띄울 여백 (필요에 따라 숫자를 조절하세요!)
+                
+                // 툴팁 하단이 줄어든 창의 바닥(bottomMargin 포함)을 벗어나는 경우 위치 보정
+                if (viewY + tooltipEstimatedHeight > window.innerHeight - bottomMargin) {
+                    viewY = Math.max(10, window.innerHeight - tooltipEstimatedHeight - bottomMargin);
                 }
                 // 좌표에 현재 스크롤 위치를 더해 absolute 문서 기준으로 변환 적용
                 this.tooltipStyle = { 
@@ -2000,29 +2003,29 @@
                                 min: 0,
                                 border: { display: false },
                                 afterBuildTicks: (axis) => {
-    const yAxis = axis.chart.scales['y'];
-    const tickCount = yAxis ? yAxis.ticks.length : 5;
-    const intervals = Math.max(1, tickCount - 1);
-
-    const rawStep = maxVol / intervals;
-    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
-    const normalized = rawStep / magnitude;
-    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
-                     (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
-    let stepSize = niceStep * magnitude;
-
-    // 눈금 수가 너무 적으면(3개 이하) 단위를 절반으로 줄여 촘촘하게
-    let intervals2 = Math.ceil(maxVol / stepSize);
-    if (intervals2 <= 4) {
-        stepSize = stepSize / 2;
-        intervals2 = Math.ceil(maxVol / stepSize);
-    }
-
-    axis.max = stepSize * intervals2;
-    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
-        value: stepSize * i
-    }));
-},
+                                    const yAxis = axis.chart.scales['y'];
+                                    const tickCount = yAxis ? yAxis.ticks.length : 5;
+                                    const intervals = Math.max(1, tickCount - 1);
+                                    
+                                    const rawStep = maxVol / intervals;
+                                    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
+                                    const normalized = rawStep / magnitude;
+                                    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
+                                    (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
+                                    let stepSize = niceStep * magnitude;
+                                    
+                                    // 눈금 수가 너무 적으면(3개 이하) 단위를 절반으로 줄여 촘촘하게
+                                    let intervals2 = Math.ceil(maxVol / stepSize);
+                                    if (intervals2 <= 4) {
+                                        stepSize = stepSize / 2;
+                                        intervals2 = Math.ceil(maxVol / stepSize);
+                                    }
+                                    
+                                    axis.max = stepSize * intervals2;
+                                    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
+                                        value: stepSize * i
+                                    }));
+                                },
                                 ticks: {
                                     color: textColor,
                                     font: { size: 10 },
@@ -2162,53 +2165,53 @@
                 this.customRankingHeight = null; 
             },
             async fetchMarketData(isForce = false, isSilent = false) {
-    if (isForce && this.isCooldown) return;
-    if (!isSilent) this.fetching = true;
-    if (isForce) this.isCooldown = true;
-    
-    try {
-        // 1. 강제 갱신 여부에 따라 API 엔드포인트 변경 (?force=true 추가)
-        const url = isForce ? '/api/market?force=true' : '/api/market';
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            throw new Error(`백엔드 API 호출 실패: ${response.status}`);
-        }
-        
-        const data = await response.json();
-
-        // 2. market.js가 보내주는 키 이름(prices, stats)에 정확히 맞춤!
-        this.globalPrices = data.prices; 
-        this.marketStats = data.stats;
-
-        // 3. UI 업데이트용 가격 맵핑
-        if (this.globalPrices["아비도스 융화 재료"]) {
-            this.market.normal.price = this.globalPrices["아비도스 융화 재료"];
-        }
-        if (this.globalPrices["상급 아비도스 융화 재료"]) {
-            this.market.advanced.price = this.globalPrices["상급 아비도스 융화 재료"];
-        }
-
-        // 4. 백엔드에서 보내준 lastUpdated 시간을 활용해 업데이트 시간 표시
-        const updateTime = data.lastUpdated ? new Date(data.lastUpdated) : new Date();
-        this.lastMarketUpdate = new Intl.DateTimeFormat('ko-KR', {
-            year: 'numeric', month: 'numeric', day: 'numeric',
-            hour: 'numeric', minute: 'numeric', second: 'numeric'
-        }).format(updateTime);
-        
-        this.showMarketUi = true;
-        
-    } catch (error) {
-        console.error("API 연동 실패:", error);
-    } finally {
-        this.fetching = false;
-        if (isForce) {
-            const expireTime = Date.now() + 60000; // 1분 쿨다운
-            localStorage.setItem('market_cooldown_expire', expireTime);
-            this.startCooldownTimer(expireTime);
-        }
-    }
-},
+                if (isForce && this.isCooldown) return;
+                if (!isSilent) this.fetching = true;
+                if (isForce) this.isCooldown = true;
+                
+                try {
+                    // 1. 강제 갱신 여부에 따라 API 엔드포인트 변경 (?force=true 추가)
+                    const url = isForce ? '/api/market?force=true' : '/api/market';
+                    const response = await fetch(url);
+                    
+                    if (!response.ok) {
+                        throw new Error(`백엔드 API 호출 실패: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // 2. market.js가 보내주는 키 이름(prices, stats)에 정확히 맞춤!
+                    this.globalPrices = data.prices; 
+                    this.marketStats = data.stats;
+                    
+                    // 3. UI 업데이트용 가격 맵핑
+                    if (this.globalPrices["아비도스 융화 재료"]) {
+                        this.market.normal.price = this.globalPrices["아비도스 융화 재료"];
+                    }
+                    if (this.globalPrices["상급 아비도스 융화 재료"]) {
+                        this.market.advanced.price = this.globalPrices["상급 아비도스 융화 재료"];
+                    }
+                    
+                    // 4. 백엔드에서 보내준 lastUpdated 시간을 활용해 업데이트 시간 표시
+                    const updateTime = data.lastUpdated ? new Date(data.lastUpdated) : new Date();
+                    this.lastMarketUpdate = new Intl.DateTimeFormat('ko-KR', {
+                        year: 'numeric', month: 'numeric', day: 'numeric',
+                        hour: 'numeric', minute: 'numeric', second: 'numeric'
+                    }).format(updateTime);
+                    
+                    this.showMarketUi = true;
+                    
+                } catch (error) {
+                    console.error("API 연동 실패:", error);
+                } finally {
+                    this.fetching = false;
+                    if (isForce) {
+                        const expireTime = Date.now() + 60000; // 1분 쿨다운
+                        localStorage.setItem('market_cooldown_expire', expireTime);
+                        this.startCooldownTimer(expireTime);
+                    }
+                }
+            },
             async calculate(skipDelay = false) {
                 if (!skipDelay) this.loading = true;
                 if (!skipDelay) await new Promise(resolve => setTimeout(resolve, 50)); 
