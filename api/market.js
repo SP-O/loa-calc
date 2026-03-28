@@ -83,7 +83,8 @@ export default async function handler(req, res) {
                     });
 
                     if (statsRes.ok) {
-                        const statsData = await statsRes.json();
+                        const rawData = await statsRes.json();
+                        const statsData = rawData[0]?.Stats || [];
                         if (Array.isArray(statsData) && statsData.length > 0) {
                             const sorted = statsData.sort((a, b) => new Date(b.Date) - new Date(a.Date));
                             const history = sorted.slice(0, 14).map(s => {
