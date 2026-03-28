@@ -986,8 +986,8 @@
             </div>
             <template v-if="currentHoveredStats">
                 <div class="mct-summary">
-                    <div class="mct-summary-item"><span class="mct-label">오늘의 평균 거래가</span><span class="mct-value">{{ currentHoveredStats.todayAvg }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
-                    <div class="mct-summary-item"><span class="mct-label">14일간 평균 거래가</span><span class="mct-value">{{ currentHoveredStats.avg14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
+                    <div class="mct-summary-item"><span class="mct-label">오늘의 평균 거래가</span><span class="mct-value">{{ fmtDecimal(currentHoveredStats.todayAvg) }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
+                    <div class="mct-summary-item"><span class="mct-label">14일간 평균 거래가</span><span class="mct-value">{{ fmtDecimal(currentHoveredStats.avg14d) }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
                     <div class="mct-summary-item"><span class="mct-label">14일간 최고 거래가</span><span class="mct-value">{{ currentHoveredStats.high14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
                     <div class="mct-summary-item"><span class="mct-label">14일간 최저 거래가</span><span class="mct-value">{{ currentHoveredStats.low14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
                 </div>
@@ -1536,6 +1536,10 @@
             window.removeEventListener('resize', this.handleResize);
         },
         methods: {
+            fmtDecimal(v) {
+                const n = Number(v);
+                if (v == null || isNaN(n)) return '-';
+                return n.toFixed(2);
             // ===== 시세 차트 툴팁 =====
             showChartTooltip(event, itemName) {
                 if (this.calcMode === 'optimize' && this.exchangeType === 'farm') return;
@@ -1566,6 +1570,11 @@
                 // 최종 오른쪽 overflow 방지
                 if (viewX + tooltipActualWidth > window.innerWidth) {
                     viewX = Math.max(10, window.innerWidth - tooltipActualWidth - 10);
+                }
+
+                const tooltipEstimatedHeight = 420;
+                if (viewY + tooltipEstimatedHeight > window.innerHeight - 10) {
+                    viewY = Math.max(10, window.innerHeight - tooltipEstimatedHeight - 10);
                 }
 
                 // 스크롤 위치를 더해 absolute 문서 기준으로 변환
