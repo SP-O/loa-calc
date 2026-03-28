@@ -135,6 +135,10 @@
         .result { margin-top: 20px; padding: 15px; background-color: #1e1e1e; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); overflow-x: auto; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .result-title { font-size: 1.1em; color: #ffffff; margin: 5px 0 15px 0; text-align: center; border-left: none; padding-left: 0; }
         .result-divider { border: 0; border-top: 2px dashed #4a4a4a; margin: 25px 0; transition: border-color 0.3s ease; }
+        /* 계산 결과창 내부에 있는 아이콘의 툴팁 이벤트 원천 차단 */
+        .result .resource-icon-wrap {
+            pointer-events: none !important;
+        }
         
         .conversion-grid { display: grid; grid-template-columns: auto auto auto 120px; align-items: center; gap: 10px; }
         .conversion-row { display: contents; }
@@ -405,36 +409,36 @@
             border: 1px solid #3a3a3a;
             border-radius: 8px;
             padding: 16px;
-            width: 580px;
+            width: 680px;
             z-index: 99999;
             box-shadow: 0 8px 24px rgba(0,0,0,0.8);
-            /* pointer-events: none; 삭제됨 - 마우스 호버 유지를 위해 */
             color: #e0e0e0;
             font-family: "Noto Sans KR", sans-serif;
             transition: opacity 0.15s ease-in-out;
         }
         .mct-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 8px; }
-        .mct-title { font-size: 16px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 6px; }
+        .mct-title { font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
         .mct-date { font-size: 11px; color: #888; }
         .mct-summary { display: flex; border: 1px solid #333; border-radius: 6px; margin-bottom: 12px; background: #1a1a1a; }
         .mct-summary-item { flex: 1; padding: 10px; text-align: center; border-right: 1px solid #333; }
         .mct-summary-item:last-child { border-right: none; }
         .mct-label { display: block; font-size: 11px; color: #aaa; margin-bottom: 4px; word-break: keep-all; }
         .mct-value { display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #ffd700; gap: 4px; }
-        .gold-icon { width: 14px; height: 14px; object-fit: contain; }
-        
-        .mct-body { display: flex; gap: 12px; height: 180px; }
+        .gold-icon { width: 14px; height: 14px; object-fit: contain; vertical-align: middle; position: relative; top: -1px; margin-left: 2px; }
+
+        .mct-body { display: flex; gap: 12px; height: 240px; }
         .mct-chart-wrap { flex: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 8px; min-width: 0; }
-        .mct-table-wrap { width: 200px; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; overflow-y: auto; }
-        .mct-table { width: 100%; border-collapse: collapse; font-size: 11px; text-align: center; }
-        .mct-table th { position: sticky; top: 0; background: #252525; color: #aaa; padding: 6px; border-bottom: 1px solid #333; z-index: 2; }
-        .mct-table td { padding: 6px; border-bottom: 1px solid #2a2a2a; }
-        .mct-table td:nth-child(2) { color: #ffd700; display: flex; justify-content: center; align-items: center; gap: 2px; }
+        .mct-table-wrap { width: 250px; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; overflow-y: auto; }
+        .mct-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; table-layout: auto; }
+        .mct-table th { position: sticky; top: 0; background: #252525; color: #aaa; padding: 8px 6px; border-bottom: 2px solid #333; z-index: 2; white-space: nowrap; font-size: 12px; }
+        .mct-table td { padding: 5px 4px; border-bottom: 1px solid #2a2a2a; white-space: nowrap; vertical-align: middle; line-height: 1.4; }
+        .mct-table td:nth-child(2) { color: #ffd700; }
+        .mct-table td:nth-child(3) { text-align: right; padding-right: 12px; font-variant-numeric: tabular-nums; letter-spacing: -0.2px; }
 
         /* 시세 툴팁 라이트 모드 */
         body.light-mode .market-chart-tooltip { background: #ffffff; border-color: #e3e7ed; box-shadow: 0 8px 24px rgba(0,30,80,0.15); color: #222; }
         body.light-mode .mct-header { border-bottom-color: #e3e7ed; }
-        body.light-mode .mct-title { color: #111; }
+        body.light-mode .mct-title { color: inherit; }
         body.light-mode .mct-summary, body.light-mode .mct-chart-wrap, body.light-mode .mct-table-wrap { background: #f8fafc; border-color: #e3e7ed; }
         body.light-mode .mct-summary-item { border-right-color: #e3e7ed; }
         body.light-mode .mct-label { color: #666; }
@@ -472,28 +476,28 @@
                 <h1>아비도스 제작 계산기 ({{ currentMaterialName }})</h1>
                 
                 <div class="mode-tabs">
-    <div class="mode-tab" :class="{ active: calcMode === 'optimize' }" @click="calcMode = 'optimize'">
-        <div class="tab-content-wrap" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-            <span>재료 교환 계산</span>
-            <span class="sub-text">{{ exchangeType === 'farm' ? ' (영지 농장)' : ' (기본)' }}</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); flex-shrink: 0;">
-                <polyline points="7 13 12 18 17 13"></polyline>
-                <polyline points="7 6 12 11 17 6"></polyline>
-            </svg>
-        </div>
-        <div class="dropdown-content">
-            <div class="dropdown-item" :class="{ selected: exchangeType === 'normal' }" @click.stop="exchangeType = 'normal'">재료 교환 계산 (기본)</div>
-            <div class="dropdown-item" :class="{ selected: exchangeType === 'farm' }" @click.stop="exchangeType = 'farm'">재료 교환 계산 (영지 농장)</div>
-        </div>
-    </div>
+                    <div class="mode-tab" :class="{ active: calcMode === 'optimize' }" @click="calcMode = 'optimize'">
+                        <div class="tab-content-wrap" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                            <span>재료 교환 계산</span>
+                            <span class="sub-text">{{ exchangeType === 'farm' ? ' (영지 농장)' : ' (기본)' }}</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); flex-shrink: 0;">
+                                <polyline points="7 13 12 18 17 13"></polyline>
+                                <polyline points="7 6 12 11 17 6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="dropdown-content">
+                            <div class="dropdown-item" :class="{ selected: exchangeType === 'normal' }" @click.stop="exchangeType = 'normal'">재료 교환 계산 (기본)</div>
+                            <div class="dropdown-item" :class="{ selected: exchangeType === 'farm' }" @click.stop="exchangeType = 'farm'">재료 교환 계산 (영지 농장)</div>
+                        </div>
+                    </div>
 
-    <div class="mode-tab" :class="{ active: calcMode === 'deficit' }" @click="calcMode = 'deficit'">
-        <div class="tab-content-wrap" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-            <span>부족한 재료 계산</span>
-            <span class="sub-text"> (짝 맞추기)</span>
-        </div>
-    </div>
-</div>
+                    <div class="mode-tab" :class="{ active: calcMode === 'deficit' }" @click="calcMode = 'deficit'">
+                        <div class="tab-content-wrap" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                            <span>부족한 재료 계산</span>
+                            <span class="sub-text"> (짝 맞추기)</span>
+                        </div>
+                    </div>
+                </div>
             
                 <div class="tabs">
                     <label v-for="material in materials" :key="material.code" class="tab" :class="{ active: selectedMaterial === material.code }">
@@ -719,18 +723,10 @@
                             <tbody>
                                 <tr v-for="row in guideTableData" :key="row.target">
                                     <td style="border-right: 1px solid #3a3a3a; font-weight:bold;">{{ row.target }}회</td>
-                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
-                                        {{ row.normS }}개
-                                    </td>
-                                    <td class="clickable-td" style="border-right: 1px solid #3a3a3a;" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
-                                        {{ row.normB }}개
-                                    </td>
-                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'adv-' + row.target}" @mouseenter="hoverTarget = 'adv-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('advanced', row)">
-                                        {{ row.advS }}개
-                                    </td>
-                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'adv-' + row.target}" @mouseenter="hoverTarget = 'adv-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('advanced', row)">
-                                        {{ row.advB }}개
-                                    </td>
+                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">{{ row.normS }}개</td>
+                                    <td class="clickable-td" style="border-right: 1px solid #3a3a3a;" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">{{ row.normB }}개</td>
+                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'adv-' + row.target}" @mouseenter="hoverTarget = 'adv-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('advanced', row)">{{ row.advS }}개</td>
+                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'adv-' + row.target}" @mouseenter="hoverTarget = 'adv-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('advanced', row)">{{ row.advB }}개</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -752,18 +748,10 @@
                     <div class="ranking-board-wrap" :class="{'is-expanded': showAllRanks}">
                         <div class="ranking-board" :style="customRankingHeight ? { height: customRankingHeight + 'px', overflowY: 'hidden' } : {}">
                             <div class="ranking-row ranking-header">
-                                <div class="sortable-header" @click="toggleSort('name')">
-                                    제작 아이템<span class="sort-icon" v-if="sortKey === 'name'">{{ sortIconText }}</span>
-                                </div>
-                                <div class="sortable-header" @click="toggleSort('price')">
-                                    시세<span class="sort-icon" v-if="sortKey === 'price'">{{ sortIconText }}</span>
-                                </div>
-                                <div class="sortable-header" @click="toggleSort('cost')">
-                                    제작비용<span class="sort-icon" v-if="sortKey === 'cost'">{{ sortIconText }}</span>
-                                </div>
-                                <div class="sortable-header" @click="toggleSort('profit')">
-                                    판매손익<span class="sort-icon" v-if="sortKey === 'profit'">{{ sortIconText }}</span>
-                                </div>
+                                <div class="sortable-header" @click="toggleSort('name')">제작 아이템<span class="sort-icon" v-if="sortKey === 'name'">{{ sortIconText }}</span></div>
+                                <div class="sortable-header" @click="toggleSort('price')">시세<span class="sort-icon" v-if="sortKey === 'price'">{{ sortIconText }}</span></div>
+                                <div class="sortable-header" @click="toggleSort('cost')">제작비용<span class="sort-icon" v-if="sortKey === 'cost'">{{ sortIconText }}</span></div>
+                                <div class="sortable-header" @click="toggleSort('profit')">판매손익<span class="sort-icon" v-if="sortKey === 'profit'">{{ sortIconText }}</span></div>
                             </div>
                             
                             <div v-for="rank in displayedRankingList" :key="rank.id" class="ranking-row" :class="{'is-profit': rank.profit > 0, 'is-loss': rank.profit <= 0}">
@@ -775,37 +763,24 @@
                                         <img :src="rank.icon" class="resource-icon">
                                     </div>
                                     <div class="name-text-wrap">
-    <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">
-        {{ rank.nameBase.replace(' 융화 재료', '') }}
-    </span>
-    <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">
-        융화 재료
-    </span>
-    <span style="color: #888; font-size: 0.85em; margin-left: 2px;">{{ rank.nameSub }}</span>
-</div>
+                                        <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">{{ rank.nameBase.replace(' 융화 재료', '') }}</span>
+                                        <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">융화 재료</span>
+                                        <span style="color: #888; font-size: 0.85em; margin-left: 2px;">{{ rank.nameSub }}</span>
+                                    </div>
                                 </div>
                                 <div class="rank-price-col">
                                     <input type="number" v-model.number="market[rank.priceKey].price" class="input-in-table">
                                     <span style="color: #ffd700; font-size: 0.85em; font-weight: bold;">G</span>
                                 </div>
-                                <div class="rank-cost-col">
-                                    {{ Math.floor(rank.cost).toLocaleString() }} G
-                                </div>
+                                <div class="rank-cost-col">{{ Math.floor(rank.cost).toLocaleString() }} G</div>
                                 <div class="rank-profit-col" :class="{'profit-plus': rank.profit > 0, 'profit-minus': rank.profit <= 0}">
                                     {{ rank.profit > 0 ? '+' : '' }}{{ Math.floor(rank.profit).toLocaleString() }} G
                                 </div>
                             </div>
                         </div>
                         
-                        <button v-if="rankingList.length > 3" 
-                                class="modern-expand-btn" 
-                                @mousedown.prevent="initDrag"
-                                @click="toggleRanks"
-                                style="cursor: ns-resize;"
-                                :title="showAllRanks ? '랭킹 접기' : '전체 랭킹 펼치기 (드래그하여 크기 조절)'">
-                            <span class="chevron" :class="{ 'is-open': showAllRanks }">
-                                {{ showAllRanks ? '︿' : '﹀' }}
-                            </span>
+                        <button v-if="rankingList.length > 3" class="modern-expand-btn" @mousedown.prevent="initDrag" @click="toggleRanks" style="cursor: ns-resize;" :title="showAllRanks ? '랭킹 접기' : '전체 랭킹 펼치기 (드래그하여 크기 조절)'">
+                            <span class="chevron" :class="{ 'is-open': showAllRanks }">{{ showAllRanks ? '︿' : '﹀' }}</span>
                         </button>
                     </div>
                 </div>
@@ -816,13 +791,11 @@
                         
                         <div class="sync-pill">
                             <div class="sync-info">
-                                <i class="live-dot" :class="{'is-syncing': fetching}" style="position: relative; top: -0.5px;" ></i>
+                                <i class="live-dot" :class="{'is-syncing': fetching}" style="position: relative; top: -0.5px;"></i>
                                 <span style="position: relative; top: -1px;">갱신: {{ fetching ? '데이터 동기화 중...' : (lastMarketUpdate ? lastMarketUpdate : '데이터 없음') }}</span>
                             </div>
                             <button class="btn-sync-icon" @click="fetchMarketData(true)" :disabled="fetching || isCooldown" title="시세 새로고침">
-                                <span v-if="isCooldown" style="font-size: 0.85em; color: #b0b0b0; font-weight: bold;">
-                                    {{ cooldownTimer }}
-                                </span>
+                                <span v-if="isCooldown" style="font-size: 0.85em; color: #b0b0b0; font-weight: bold;">{{ cooldownTimer }}</span>
                                 <span v-else>↻</span>
                             </button>
                         </div>
@@ -860,42 +833,22 @@
                                 </div>
                                 <div class="market-row" style="margin-bottom: 0;">
                                     <span>현재 최저가 (1개)</span>
-                                    <span>
-                                        <input type="number" v-model.number="market.normal.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span>
-                                    </span>
+                                    <span><input type="number" v-model.number="market.normal.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span></span>
                                 </div>
                                 
                                 <template v-if="calcMode === 'optimize'">
                                     <div class="scenario-section self-craft">
-                                        <div class="scenario-header">
-                                            <span class="scenario-title" style="border:none; margin:0; padding:0;">자급자족 (재료값 0G)</span>
-                                        </div>
+                                        <div class="scenario-header"><span class="scenario-title" style="border:none; margin:0; padding:0;">자급자족 (재료값 0G)</span></div>
                                         <div class="scenario-row">
                                             <span>1회 제작 순수익</span>
-                                            <span :class="{'profit-plus': profitPerCraft.normal.zeroCost > 0, 'profit-minus': profitPerCraft.normal.zeroCost <= 0}">
-                                                {{ profitPerCraft.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.normal.zeroCost).toLocaleString() }} G
-                                            </span>
+                                            <span :class="{'profit-plus': profitPerCraft.normal.zeroCost > 0, 'profit-minus': profitPerCraft.normal.zeroCost <= 0}">{{ profitPerCraft.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.normal.zeroCost).toLocaleString() }} G</span>
                                         </div>
                                         <template v-if="result && result.normal.totalO > 0">
                                             <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
-                                                <div class="scenario-row">
-                                                    <span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span>
-                                                    <span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span>
-                                                </div>
-                                                <div class="scenario-row" style="color: #666;">
-                                                    <span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span>
-                                                    <span>- 0 G</span>
-                                                </div>
-                                                <div class="scenario-row">
-                                                    <span>영지 제작 수수료</span>
-                                                    <span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span>
-                                                </div>
-                                                <div class="scenario-row total-profit-row">
-                                                    <span style="color: #ffd700;">최종 예상 수익</span>
-                                                    <span :class="batchProfits.normal.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
-                                                        {{ batchProfits.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.zeroCost).toLocaleString() }} G
-                                                    </span>
-                                                </div>
+                                                <div class="scenario-row"><span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row" style="color: #666;"><span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span><span>- 0 G</span></div>
+                                                <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="batchProfits.normal.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ batchProfits.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.zeroCost).toLocaleString() }} G</span></div>
                                             </div>
                                         </template>
                                     </div>
@@ -903,38 +856,18 @@
                                     <div class="scenario-section market-buy">
                                         <div class="scenario-header">
                                             <span class="scenario-title" style="border:none; margin:0; padding:0;">경매장 구매 (재료값 반영)</span>
-                                            <span v-if="profitPerCraft.normal.isExchange" class="badge-exchange">
-                                                {{ shortSName }} 교환 제작 추천
-                                            </span>
+                                            <span v-if="profitPerCraft.normal.isExchange" class="badge-exchange">{{ shortSName }} 교환 제작 추천</span>
                                         </div>
                                         <div class="scenario-row">
                                             <span>1회 제작 순수익</span>
-                                            <span :class="{'profit-plus': profitPerCraft.normal.fullCost > 0, 'profit-minus': profitPerCraft.normal.fullCost <= 0}">
-                                                {{ profitPerCraft.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.normal.fullCost).toLocaleString() }} G
-                                            </span>
+                                            <span :class="{'profit-plus': profitPerCraft.normal.fullCost > 0, 'profit-minus': profitPerCraft.normal.fullCost <= 0}">{{ profitPerCraft.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.normal.fullCost).toLocaleString() }} G</span>
                                         </div>
                                         <template v-if="result && result.normal.totalO > 0">
                                             <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
-                                                <div class="scenario-row">
-                                                    <span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span>
-                                                    <span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span>
-                                                </div>
-                                               <div class="scenario-row" style="color: #888;">
-    <span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span>
-    <div class="tooltip-box" v-html="batchProfits.normal.formulaHtml"></div>
-</span>
-    <span class="profit-minus">- {{ Math.floor(batchProfits.normal.opportunityCost).toLocaleString() }} G</span>
-</div>
-                                                <div class="scenario-row">
-                                                    <span>영지 제작 수수료</span>
-                                                    <span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span>
-                                                </div>
-                                                <div class="scenario-row total-profit-row">
-                                                    <span style="color: #ffd700;">최종 예상 수익</span>
-                                                    <span :class="batchProfits.normal.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
-                                                        {{ batchProfits.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.fullCost).toLocaleString() }} G
-                                                    </span>
-                                                </div>
+                                                <div class="scenario-row"><span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row" style="color: #888;"><span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span><div class="tooltip-box" v-html="batchProfits.normal.formulaHtml"></div></span><span class="profit-minus">- {{ Math.floor(batchProfits.normal.opportunityCost).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="batchProfits.normal.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ batchProfits.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.fullCost).toLocaleString() }} G</span></div>
                                             </div>
                                         </template>
                                     </div>
@@ -944,36 +877,14 @@
                                     <div class="scenario-section deficit-craft">
                                         <div class="scenario-header">
                                             <span class="scenario-title" style="border:none; margin:0; padding:0;">현재 보유 재료 기반 총수익</span>
-                                            <button @click="includeSurplus = !includeSurplus" class="toggle-btn" :class="{ 'active': includeSurplus }">
-                                                남는 재료 판매 {{ includeSurplus ? 'ON' : 'OFF' }}
-                                            </button>
+                                            <button @click="includeSurplus = !includeSurplus" class="toggle-btn" :class="{ 'active': includeSurplus }">남는 재료 판매 {{ includeSurplus ? 'ON' : 'OFF' }}</button>
                                         </div>
-                                        <div class="scenario-row" v-if="result && result.normal.totalO > 0">
-                                            <span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span>
-                                            <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.totalRevenue).toLocaleString() }} G</span>
-                                        </div>
-                                        <div class="scenario-row" style="color: #888;">
-                                            <span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span>
-                                            <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.opportunityCost).toLocaleString() }} G</span>
-                                        </div>
-                                        <div class="scenario-row">
-                                            <span>부족한 재료 구매 비용</span>
-                                            <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.missingMatCost).toLocaleString() }} G</span>
-                                        </div>
-                                        <div class="scenario-row">
-                                            <span>영지 제작 수수료</span>
-                                            <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.totalFee).toLocaleString() }} G</span>
-                                        </div>
-                                        <div class="scenario-row" v-if="includeSurplus && deficitCosts.normal.surplusProfit > 0">
-                                            <span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span>
-                                            <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.surplusProfit).toLocaleString() }} G</span>
-                                        </div>
-                                        <div v-if="result && result.normal.totalO > 0" class="scenario-row total-profit-row">
-                                            <span style="color: #ffd700;">최종 예상 수익</span>
-                                            <span :class="deficitCosts.normal.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
-                                                {{ deficitCosts.normal.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.normal.totalProfit).toLocaleString() }} G
-                                            </span>
-                                        </div>
+                                        <div class="scenario-row" v-if="result && result.normal.totalO > 0"><span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.totalRevenue).toLocaleString() }} G</span></div>
+                                        <div class="scenario-row" style="color: #888;"><span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span><span class="profit-minus">- {{ Math.floor(deficitCosts.normal.opportunityCost).toLocaleString() }} G</span></div>
+                                        <div class="scenario-row"><span>부족한 재료 구매 비용</span><span class="profit-minus">- {{ Math.floor(deficitCosts.normal.missingMatCost).toLocaleString() }} G</span></div>
+                                        <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(deficitCosts.normal.totalFee).toLocaleString() }} G</span></div>
+                                        <div class="scenario-row" v-if="includeSurplus && deficitCosts.normal.surplusProfit > 0"><span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span><span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.surplusProfit).toLocaleString() }} G</span></div>
+                                        <div v-if="result && result.normal.totalO > 0" class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="deficitCosts.normal.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ deficitCosts.normal.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.normal.totalProfit).toLocaleString() }} G</span></div>
                                     </div>
                                 </template>
                             </div>
@@ -988,42 +899,22 @@
                                 </div>
                                 <div class="market-row" style="margin-bottom: 0;">
                                     <span>현재 최저가 (1개)</span>
-                                    <span>
-                                        <input type="number" v-model.number="market.advanced.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span>
-                                    </span>
+                                    <span><input type="number" v-model.number="market.advanced.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span></span>
                                 </div>
                                 
                                 <template v-if="calcMode === 'optimize'">
                                     <div class="scenario-section self-craft">
-                                        <div class="scenario-header">
-                                            <span class="scenario-title" style="border:none; margin:0; padding:0;">자급자족 (재료값 0G)</span>
-                                        </div>
+                                        <div class="scenario-header"><span class="scenario-title" style="border:none; margin:0; padding:0;">자급자족 (재료값 0G)</span></div>
                                         <div class="scenario-row">
                                             <span>1회 제작 순수익</span>
-                                            <span :class="{'profit-plus': profitPerCraft.advanced.zeroCost > 0, 'profit-minus': profitPerCraft.advanced.zeroCost <= 0}">
-                                                {{ profitPerCraft.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.advanced.zeroCost).toLocaleString() }} G
-                                            </span>
+                                            <span :class="{'profit-plus': profitPerCraft.advanced.zeroCost > 0, 'profit-minus': profitPerCraft.advanced.zeroCost <= 0}">{{ profitPerCraft.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.advanced.zeroCost).toLocaleString() }} G</span>
                                         </div>
                                         <template v-if="result && result.advanced.totalO > 0">
                                             <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
-                                                <div class="scenario-row">
-                                                    <span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span>
-                                                    <span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span>
-                                                </div>
-                                                <div class="scenario-row" style="color: #666;">
-                                                    <span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span>
-                                                    <span>- 0 G</span>
-                                                </div>
-                                                <div class="scenario-row">
-                                                    <span>영지 제작 수수료</span>
-                                                    <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span>
-                                                </div>
-                                                <div class="scenario-row total-profit-row">
-                                                    <span style="color: #ffd700;">최종 예상 수익</span>
-                                                    <span :class="batchProfits.advanced.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
-                                                        {{ batchProfits.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.zeroCost).toLocaleString() }} G
-                                                    </span>
-                                                </div>
+                                                <div class="scenario-row"><span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row" style="color: #666;"><span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span><span>- 0 G</span></div>
+                                                <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="batchProfits.advanced.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ batchProfits.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.zeroCost).toLocaleString() }} G</span></div>
                                             </div>
                                         </template>
                                     </div>
@@ -1031,38 +922,18 @@
                                     <div class="scenario-section market-buy">
                                         <div class="scenario-header">
                                             <span class="scenario-title" style="border:none; margin:0; padding:0;">경매장 구매 (재료값 반영)</span>
-                                            <span v-if="profitPerCraft.advanced.isExchange" class="badge-exchange">
-                                                {{ shortSName }} 교환 제작 추천
-                                            </span>
+                                            <span v-if="profitPerCraft.advanced.isExchange" class="badge-exchange">{{ shortSName }} 교환 제작 추천</span>
                                         </div>
                                         <div class="scenario-row">
                                             <span>1회 제작 순수익</span>
-                                            <span :class="{'profit-plus': profitPerCraft.advanced.fullCost > 0, 'profit-minus': profitPerCraft.advanced.fullCost <= 0}">
-                                                {{ profitPerCraft.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.advanced.fullCost).toLocaleString() }} G
-                                            </span>
+                                            <span :class="{'profit-plus': profitPerCraft.advanced.fullCost > 0, 'profit-minus': profitPerCraft.advanced.fullCost <= 0}">{{ profitPerCraft.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.advanced.fullCost).toLocaleString() }} G</span>
                                         </div>
                                         <template v-if="result && result.advanced.totalO > 0">
                                             <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
-                                                <div class="scenario-row">
-                                                    <span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span>
-                                                    <span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span>
-                                                </div>
-                                                <div class="scenario-row" style="color: #888;">
-                                                  <span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span>
-    <div class="tooltip-box" v-html="batchProfits.advanced.formulaHtml"></div>
-</span>
-    <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.opportunityCost).toLocaleString() }} G</span>
-</div>
-                                                <div class="scenario-row">
-                                                    <span>영지 제작 수수료</span>
-                                                    <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span>
-                                                </div>
-                                                <div class="scenario-row total-profit-row">
-                                                    <span style="color: #ffd700;">최종 예상 수익</span>
-                                                    <span :class="batchProfits.advanced.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
-                                                        {{ batchProfits.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.fullCost).toLocaleString() }} G
-                                                    </span>
-                                                </div>
+                                                <div class="scenario-row"><span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row" style="color: #888;"><span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span><div class="tooltip-box" v-html="batchProfits.advanced.formulaHtml"></div></span><span class="profit-minus">- {{ Math.floor(batchProfits.advanced.opportunityCost).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="batchProfits.advanced.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ batchProfits.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.fullCost).toLocaleString() }} G</span></div>
                                             </div>
                                         </template>
                                     </div>
@@ -1072,52 +943,30 @@
                                     <div class="scenario-section deficit-craft">
                                         <div class="scenario-header">
                                             <span class="scenario-title" style="border:none; margin:0; padding:0;">현재 보유 재료 기반 총수익</span>
-                                            <button @click="includeSurplus = !includeSurplus" class="toggle-btn" :class="{ 'active': includeSurplus }">
-                                                남는 재료 판매 {{ includeSurplus ? 'ON' : 'OFF' }}
-                                            </button>
+                                            <button @click="includeSurplus = !includeSurplus" class="toggle-btn" :class="{ 'active': includeSurplus }">남는 재료 판매 {{ includeSurplus ? 'ON' : 'OFF' }}</button>
                                         </div>
-                                        <div class="scenario-row" v-if="result && result.advanced.totalO > 0">
-                                            <span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span>
-                                            <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.totalRevenue).toLocaleString() }} G</span>
-                                        </div>
-                                        <div class="scenario-row" style="color: #888;">
-                                            <span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span>
-                                            <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.opportunityCost).toLocaleString() }} G</span>
-                                        </div>
-                                        <div class="scenario-row">
-                                            <span>부족한 재료 구매 비용</span>
-                                            <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.missingMatCost).toLocaleString() }} G</span>
-                                        </div>
-                                        <div class="scenario-row">
-                                            <span>영지 제작 수수료</span>
-                                            <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.totalFee).toLocaleString() }} G</span>
-                                        </div>
-                                        <div class="scenario-row" v-if="includeSurplus && deficitCosts.advanced.surplusProfit > 0">
-                                            <span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span>
-                                            <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.surplusProfit).toLocaleString() }} G</span>
-                                        </div>
-                                        <div v-if="result && result.advanced.totalO > 0" class="scenario-row total-profit-row">
-                                            <span style="color: #ffd700;">최종 예상 수익</span>
-                                            <span :class="deficitCosts.advanced.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
-                                                {{ deficitCosts.advanced.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.advanced.totalProfit).toLocaleString() }} G
-                                            </span>
-                                        </div>
+                                        <div class="scenario-row" v-if="result && result.advanced.totalO > 0"><span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.totalRevenue).toLocaleString() }} G</span></div>
+                                        <div class="scenario-row" style="color: #888;"><span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span><span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.opportunityCost).toLocaleString() }} G</span></div>
+                                        <div class="scenario-row"><span>부족한 재료 구매 비용</span><span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.missingMatCost).toLocaleString() }} G</span></div>
+                                        <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.totalFee).toLocaleString() }} G</span></div>
+                                        <div class="scenario-row" v-if="includeSurplus && deficitCosts.advanced.surplusProfit > 0"><span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span><span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.surplusProfit).toLocaleString() }} G</span></div>
+                                        <div v-if="result && result.advanced.totalO > 0" class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="deficitCosts.advanced.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ deficitCosts.advanced.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.advanced.totalProfit).toLocaleString() }} G</span></div>
                                     </div>
                                 </template>
                             </div>
                         </div>
                     </div>
                 </div> 
-                <div class="update-box">update: 2026.03.27</div>
+                <div class="update-box">update: 2026.03.29</div>
             </div> 
         </div>
 
         <footer class="app-footer">
-    <div class="footer-disclaimer">
-        <span>© 2026 아비도스 제작 계산기. All Rights Reserved. This site is not associated with Smilegate RPG & Smilegate Stove. Data based on Lostark Open API.</span>
-        <a href="/privacy" class="privacy-link">개인정보 처리방침</a>
-    </div>
-</footer>
+            <div class="footer-disclaimer">
+                <span>© 2026 아비도스 제작 계산기. All Rights Reserved. This site is not associated with Smilegate RPG & Smilegate Stove. Data based on Lostark Open API.</span>
+                <a href="/privacy" class="privacy-link">개인정보 처리방침</a>
+            </div>
+        </footer>
 
         <div v-if="loading || fetching" class="loading-overlay">
             <div class="loading-spinner"></div>
@@ -1137,22 +986,10 @@
             </div>
             <template v-if="currentHoveredStats">
                 <div class="mct-summary">
-                    <div class="mct-summary-item">
-                        <span class="mct-label">오늘의 평균 거래가</span>
-                        <span class="mct-value">{{ currentHoveredStats.todayAvg }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
-                    </div>
-                    <div class="mct-summary-item">
-                        <span class="mct-label">14일간 평균 거래가</span>
-                        <span class="mct-value">{{ currentHoveredStats.avg14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
-                    </div>
-                    <div class="mct-summary-item">
-                        <span class="mct-label">14일간 최고 거래가</span>
-                        <span class="mct-value">{{ currentHoveredStats.high14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
-                    </div>
-                    <div class="mct-summary-item">
-                        <span class="mct-label">14일간 최저 거래가</span>
-                        <span class="mct-value">{{ currentHoveredStats.low14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
-                    </div>
+                    <div class="mct-summary-item"><span class="mct-label">오늘의 평균 거래가</span><span class="mct-value">{{ currentHoveredStats.todayAvg }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
+                    <div class="mct-summary-item"><span class="mct-label">14일간 평균 거래가</span><span class="mct-value">{{ currentHoveredStats.avg14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
+                    <div class="mct-summary-item"><span class="mct-label">14일간 최고 거래가</span><span class="mct-value">{{ currentHoveredStats.high14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
+                    <div class="mct-summary-item"><span class="mct-label">14일간 최저 거래가</span><span class="mct-value">{{ currentHoveredStats.low14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
                 </div>
                 <div class="mct-body">
                     <div class="mct-chart-wrap">
@@ -1214,9 +1051,8 @@
                 selectedMaterial: "WL",
                 sortKey: null,
                 sortDir: 0,
-                // 차트 툴팁용 상태
                 hoveredMarketItem: null,
-                tooltipTimer: null, // 툴팁 딜레이 타이머
+                tooltipTimer: null,
                 tooltipStyle: { top: '0px', left: '0px' },
                 marketStats: {},
                 materials: [
@@ -1340,7 +1176,6 @@
                 if (!this.hoveredMarketItem) return null;
                 if (this.hoveredMarketItem.includes('상급 아비도스 융화 재료')) return { class: 'final-product', imgUrl: 'https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png' };
                 if (this.hoveredMarketItem.includes('아비도스 융화 재료')) return { class: 'normal-product', imgUrl: 'https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png' };
-                
                 for (const [key, res] of Object.entries(this.selectedResources)) {
                     if (res && res.name === this.hoveredMarketItem) return { class: 'resource-' + key, imgUrl: res.imgUrl };
                 }
@@ -1348,26 +1183,12 @@
             },
             transformationMap() {
                 if (this.exchangeType === 'farm') {
-                    return {
-                        AtoP: { from: "A", to: "P" },
-                        BtoP: { from: "B", to: "P" },
-                        PtoB: { from: "P", to: "B" },
-                        PtoC: { from: "P", to: "C" }
-                    };
+                    return { AtoP: { from: "A", to: "P" }, BtoP: { from: "B", to: "P" }, PtoB: { from: "P", to: "B" }, PtoC: { from: "P", to: "C" } };
                 }
-                return { 
-                    StoA: { from: "S", to: "A" }, 
-                    BtoA: { from: "B", to: "A" }, 
-                    BtoP: { from: "B", to: "P" }, 
-                    AtoP: { from: "A", to: "P" }, 
-                    PtoC: { from: "P", to: "C" },
-                    PtoB: { from: "P", to: "B" }, 
-                    PtoA: { from: "P", to: "A" }  
-                };
+                return { StoA: { from: "S", to: "A" }, BtoA: { from: "B", to: "A" }, BtoP: { from: "B", to: "P" }, AtoP: { from: "A", to: "P" }, PtoC: { from: "P", to: "C" }, PtoB: { from: "P", to: "B" }, PtoA: { from: "P", to: "A" } };
             },
             guideTableData() {
                 const targets = [10, 20, 30, 40];
-                
                 const getExactS = (t, recA, recC) => {
                     const reqC = t * recC;
                     const excPtoC = Math.ceil(reqC / 10);
@@ -1377,17 +1198,14 @@
                     const excStoA = Math.ceil(reqA / 50);
                     return excStoA * 5;
                 };
-
                 return targets.map(t => {
                     const nS_exact = getExactS(t, 86, 33);
                     const aS_exact = getExactS(t, 112, 43);
                     const nB_exact = t * 45;
                     const aB_exact = t * 59;
-                    
                     return {
                         target: t,
-                        normC: Math.ceil(t * 33), 
-                        advC: Math.ceil(t * 43),  
+                        normC: Math.ceil(t * 33), advC: Math.ceil(t * 43),  
                         normS: this.guideExactMode ? nS_exact : Math.ceil(nS_exact / 100) * 100,
                         normB: this.guideExactMode ? nB_exact : Math.ceil(nB_exact / 100) * 100,
                         advS: this.guideExactMode ? aS_exact : Math.ceil(aS_exact / 100) * 100,
@@ -1412,125 +1230,57 @@
                 const ranks = [];
                 const pN = this.market.normal.price || 0;
                 const pA = this.market.advanced.price || 0;
-                
                 const actualFeeN = Math.floor(400 * (1 - this.stronghold.feeDiscount / 100));
                 const actualFeeA = Math.floor(520 * (1 - this.stronghold.feeDiscount / 100));
-                
                 const finalGsRate = 0.05 * (1 + (this.stronghold.greatSuccess / 100));
                 const expectedYield = 10 * (1 + finalGsRate);
-                
                 const netPn = pN - Math.ceil(pN * 0.05);
                 const netPa = pA - Math.ceil(pA * 0.05);
-                
                 const revN = netPn * expectedYield;
                 const revA = netPa * expectedYield; 
 
                 this.materials.forEach(mat => {
                     const activeRes = mat.resources; 
-                    
                     const matA = this.globalPrices[activeRes.A?.name] || 0;
                     const matB = this.globalPrices[activeRes.B?.name] || 0;
                     const matC = this.globalPrices[activeRes.C?.name] || 0;
                     const matS = activeRes.S ? (this.globalPrices[activeRes.S.name] || 0) : null;
-                    
                     const costMatN = (86 * matA / 100) + (45 * matB / 100) + (33 * matC / 100);
                     const costMatA = (112 * matA / 100) + (59 * matB / 100) + (43 * matC / 100);
-                    
                     const profitN = revN - actualFeeN - costMatN;
                     const profitA = revA - actualFeeA - costMatA;
-                    
-                    ranks.push({ 
-                        id: `norm-${mat.code}`,
-                        type: 'normal',
-                        craftName: `아비도스 융화 재료(${mat.name})`,
-                        nameBase: `아비도스 융화 재료`,
-                        nameSub: `(${mat.name})`,
-                        icon: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png",
-                        priceKey: 'normal',
-                        cost: costMatN + actualFeeN,
-                        profit: profitN
-                    });
-                    ranks.push({ 
-                        id: `adv-${mat.code}`,
-                        type: 'advanced',
-                        craftName: `상급 아비도스 융화 재료(${mat.name})`,
-                        nameBase: `상급 아비도스 융화 재료`,
-                        nameSub: `(${mat.name})`,
-                        icon: "https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png",
-                        priceKey: 'advanced',
-                        cost: costMatA + actualFeeA,
-                        profit: profitA
-                    });
+
+                    ranks.push({ id: `norm-${mat.code}`, type: 'normal', craftName: `아비도스 융화 재료(${mat.name})`, nameBase: `아비도스 융화 재료`, nameSub: `(${mat.name})`, icon: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png", priceKey: 'normal', cost: costMatN + actualFeeN, profit: profitN });
+                    ranks.push({ id: `adv-${mat.code}`, type: 'advanced', craftName: `상급 아비도스 융화 재료(${mat.name})`, nameBase: `상급 아비도스 융화 재료`, nameSub: `(${mat.name})`, icon: "https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png", priceKey: 'advanced', cost: costMatA + actualFeeA, profit: profitA });
 
                     if (matS !== null) {
                         let shortS = activeRes.S.name.substring(0,2);
                         const parts = activeRes.S.name.split(" ");
                         if (parts.length >= 2) shortS = parts[0][0] + parts[1][0];
                         const exName = shortS + "교환";
-                        
-                        const normB_bundles = 18; 
-                        const normS_bundles = 20; 
-                        const advB_bundles = 23.6;
-                        const advS_bundles = 26;
-
+                        const normB_bundles = 18; const normS_bundles = 20; 
+                        const advB_bundles = 23.6; const advS_bundles = 26;
                         const costExN = (normS_bundles * matS + normB_bundles * matB) / 40;
                         const costExA = (advS_bundles * matS + advB_bundles * matB) / 40;
-
-                        const profitExN = revN - actualFeeN - costExN;
-                        const profitExA = revA - actualFeeA - costExA;
-
-                        ranks.push({
-                            id: `norm-ex-${mat.code}`,
-                            type: 'normal',
-                            craftName: `아비도스 융화 재료(${exName})`,
-                            nameBase: `아비도스 융화 재료`,
-                            nameSub: `(${exName})`,
-                            icon: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png",
-                            priceKey: 'normal',
-                            cost: costExN + actualFeeN,
-                            profit: profitExN
-                        });
-                        ranks.push({
-                            id: `adv-ex-${mat.code}`,
-                            type: 'advanced',
-                            craftName: `상급 아비도스 융화 재료(${exName})`,
-                            nameBase: `상급 아비도스 융화 재료`,
-                            nameSub: `(${exName})`,
-                            icon: "https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png",
-                            priceKey: 'advanced',
-                            cost: costExA + actualFeeA,
-                            profit: profitExA
-                        });
+                        ranks.push({ id: `norm-ex-${mat.code}`, type: 'normal', craftName: `아비도스 융화 재료(${exName})`, nameBase: `아비도스 융화 재료`, nameSub: `(${exName})`, icon: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png", priceKey: 'normal', cost: costExN + actualFeeN, profit: revN - actualFeeN - costExN });
+                        ranks.push({ id: `adv-ex-${mat.code}`, type: 'advanced', craftName: `상급 아비도스 융화 재료(${exName})`, nameBase: `상급 아비도스 융화 재료`, nameSub: `(${exName})`, icon: "https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png", priceKey: 'advanced', cost: costExA + actualFeeA, profit: revA - actualFeeA - costExA });
                     }
                 });
-                
                 return ranks;
             },
             sortedRankingList() {
                 let list = [...this.rankingList];
-                
                 if (this.sortKey && this.sortDir !== 0) {
                     list.sort((a, b) => {
                         const aFav = this.favorites.includes(a.id);
                         const bFav = this.favorites.includes(b.id);
                         if (aFav && !bFav) return -1;
                         if (!aFav && bFav) return 1;
-
                         let valA, valB;
-                        if (this.sortKey === 'name') {
-                            valA = a.craftName;
-                            valB = b.craftName;
-                        } else if (this.sortKey === 'price') {
-                            valA = this.market[a.priceKey].price || 0;
-                            valB = this.market[b.priceKey].price || 0;
-                        } else if (this.sortKey === 'cost') {
-                            valA = a.cost;
-                            valB = b.cost;
-                        } else if (this.sortKey === 'profit') {
-                            valA = a.profit;
-                            valB = b.profit;
-                        }
-
+                        if (this.sortKey === 'name') { valA = a.craftName; valB = b.craftName; }
+                        else if (this.sortKey === 'price') { valA = this.market[a.priceKey].price || 0; valB = this.market[b.priceKey].price || 0; }
+                        else if (this.sortKey === 'cost') { valA = a.cost; valB = b.cost; }
+                        else if (this.sortKey === 'profit') { valA = a.profit; valB = b.profit; }
                         if (valA < valB) return this.sortDir === 1 ? -1 : 1;
                         if (valA > valB) return this.sortDir === 1 ? 1 : -1;
                         return 0;
@@ -1544,7 +1294,6 @@
                         return b.profit - a.profit;
                     });
                 }
-                
                 return list;
             },
             displayedRankingList() {
@@ -1561,45 +1310,33 @@
                 const baseFeeN = 400; const baseFeeA = 520; 
                 const actualFeeN = Math.floor(baseFeeN * (1 - this.stronghold.feeDiscount / 100));
                 const actualFeeA = Math.floor(baseFeeA * (1 - this.stronghold.feeDiscount / 100));
-                
                 const baseGsRate = 0.05;
                 const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
                 const expectedYield = 10 * (1 + finalGsRate);
-                
                 const pN = this.market.normal.price || 0;
                 const pA = this.market.advanced.price || 0;
                 const netPn = pN - Math.ceil(pN * 0.05);
                 const netPa = pA - Math.ceil(pA * 0.05);
                 const revN = netPn * expectedYield;
                 const revA = netPa * expectedYield; 
-                
                 const mat = this.materials.find(m => m.code === this.selectedMaterial);
                 const baseRes = mat.resources; 
                 const priceA = this.globalPrices[baseRes.A?.name] || 0;
                 const priceB = this.globalPrices[baseRes.B?.name] || 0;
                 const priceC = this.globalPrices[baseRes.C?.name] || 0;
                 const priceS = baseRes.S ? (this.globalPrices[baseRes.S.name] || 0) : 0;
-
                 const costMatN = (86 * priceA / 100) + (45 * priceB / 100) + (33 * priceC / 100);
                 const costMatA = (112 * priceA / 100) + (59 * priceB / 100) + (43 * priceC / 100);
-                
-                let bestCostN = costMatN;
-                let bestCostA = costMatA;
-                let isExchangeN = false;
-                let isExchangeA = false;
-
+                let bestCostN = costMatN; let bestCostA = costMatA;
+                let isExchangeN = false; let isExchangeA = false;
                 if (baseRes.S && !this.result) { 
-                    const normB_bundles = 18; 
-                    const normS_bundles = 20; 
-                    const advB_bundles = 23.6;
-                    const advS_bundles = 26;
+                    const normB_bundles = 18; const normS_bundles = 20; 
+                    const advB_bundles = 23.6; const advS_bundles = 26;
                     const costExN = (normS_bundles * priceS + normB_bundles * priceB) / 40;
                     const costExA = (advS_bundles * priceS + advB_bundles * priceB) / 40;
-                    
                     if (costExN < costMatN) { bestCostN = costExN; isExchangeN = true; }
                     if (costExA < costMatA) { bestCostA = costExA; isExchangeA = true; }
                 }
-
                 return {
                     normal: { zeroCost: revN - actualFeeN, fullCost: revN - actualFeeN - bestCostN, isExchange: isExchangeN },
                     advanced: { zeroCost: revA - actualFeeA, fullCost: revA - actualFeeA - bestCostA, isExchange: isExchangeA }
@@ -1615,28 +1352,23 @@
                     const netItemPrice = itemPrice - Math.ceil(itemPrice * 0.05);
                     return totalYield * netItemPrice;
                 };
-
                 const calc = (type, feePerCraft, recipe) => {
                     const res = this.result && this.result[type];
                     const totalO = res ? res.totalO : 0;
                     if (totalO === 0) return { revenue: 0, totalFee: 0, opportunityCost: 0, zeroCost: 0, fullCost: 0, formulaHtml: "" };
-                    
                     const itemPrice = type === 'normal' ? (this.market.normal.price || 0) : (this.market.advanced.price || 0);
                     const rev = getBatchRev(totalO, itemPrice);
                     const actualFee = Math.floor(feePerCraft * (1 - this.stronghold.feeDiscount / 100));
                     const totalFee = actualFee * totalO;
-                    
                     const mat = this.materials.find(m => m.code === this.selectedMaterial);
                     const baseRes = mat.resources;
                     const pA = this.globalPrices[baseRes.A?.name] || 0;
                     const pB = this.globalPrices[baseRes.B?.name] || 0;
                     const pC = this.globalPrices[baseRes.C?.name] || 0;
                     const pS = baseRes.S ? (this.globalPrices[baseRes.S.name] || 0) : 0;
-                    
                     let costMat = 0;
                     let formulaStrArr = [];
                     let formulaHtml = "소모된 재료 없음";
-
                     if (this.exchangeType === 'farm') {
                         formulaHtml = "영지 농장 귀속 재료 (0G)";
                     } else if (res.consumed) {
@@ -1644,22 +1376,17 @@
                         const cB = Math.max(0, res.consumed.B || 0);
                         const cC = Math.max(0, res.consumed.C || 0);
                         const cS = Math.max(0, res.consumed.S || 0);
-                        
                         costMat = (cA * pA / 100) + (cB * pB / 100) + (cC * pC / 100) + (cS * pS / 100);
-                        
                         if (cA > 0 && baseRes.A) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.A.name} ${cA.toLocaleString()}개 × (${pA}G / 100개)</span><span>= ${Math.floor(cA * pA / 100).toLocaleString()}G</span></div>`);
                         if (cB > 0 && baseRes.B) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.B.name} ${cB.toLocaleString()}개 × (${pB}G / 100개)</span><span>= ${Math.floor(cB * pB / 100).toLocaleString()}G</span></div>`);
                         if (cC > 0 && baseRes.C) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.C.name} ${cC.toLocaleString()}개 × (${pC}G / 100개)</span><span>= ${Math.floor(cC * pC / 100).toLocaleString()}G</span></div>`);
                         if (cS > 0 && baseRes.S) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.S.name} ${cS.toLocaleString()}개 × (${pS}G / 100개)</span><span>= ${Math.floor(cS * pS / 100).toLocaleString()}G</span></div>`);
-
                         if (formulaStrArr.length > 0) {
                             formulaHtml = formulaStrArr.join("") + `<div style="border-top: 1px dashed #888; margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;"><span>총합:</span><span style="color: #ffd700;">${Math.floor(costMat).toLocaleString()} G</span></div>`;
                         }
                     }
-                    
                     return { revenue: rev, totalFee, opportunityCost: costMat, zeroCost: rev - totalFee, fullCost: rev - totalFee - costMat, formulaHtml };
                 };
-                
                 return {
                     normal: calc('normal', 400, {A: 86, B: 45, C: 33}),
                     advanced: calc('advanced', 520, {A: 112, B: 59, C: 43})
@@ -1671,62 +1398,47 @@
                     normal: { totalRevenue: 0, opportunityCost: 0, missingMatCost: 0, totalFee: 0, surplusProfit: 0, totalProfit: 0 }, 
                     advanced: { totalRevenue: 0, opportunityCost: 0, missingMatCost: 0, totalFee: 0, surplusProfit: 0, totalProfit: 0 } 
                 };
-
                 if (!this.result || this.result.mode !== 'deficit') return result;
-
                 const mat = this.materials.find(m => m.code === this.selectedMaterial);
                 const baseRes = mat.resources;
                 const pA = this.globalPrices[baseRes.A?.name] || 0;
                 const pB = this.globalPrices[baseRes.B?.name] || 0;
                 const pC = this.globalPrices[baseRes.C?.name] || 0;
-                
                 const baseGsRate = 0.05;
                 const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
-
                 const calcFor = (type, baseFee, itemPrice) => {
                     const res = this.result[type];
                     if (!res || res.totalO === 0) return { totalRevenue: 0, opportunityCost: 0, missingMatCost: 0, totalFee: 0, surplusProfit: 0, totalProfit: 0 };
-
                     const reqA = res.totalO * (type === 'normal' ? 86 : 112);
                     const reqB = res.totalO * (type === 'normal' ? 45 : 59);
                     const reqC = res.totalO * (type === 'normal' ? 33 : 43);
-
                     const missingA = Math.max(0, res.deficitA);
                     const missingB = Math.max(0, res.deficitB);
                     const costA = Math.ceil(missingA / 100) * pA;
                     const costB = Math.ceil(missingB / 100) * pB;
                     const missingMatCost = costA + costB;
-
                     const consumedA = reqA - missingA; 
                     const consumedB = reqB - missingB;
                     const consumedC = reqC;
-
                     const getNetVal = (qty, bundlePrice) => {
                         const netBundlePrice = bundlePrice - Math.ceil(bundlePrice * 0.05);
                         return (qty / 100) * netBundlePrice;
                     };
-
                     const opportunityCost = getNetVal(consumedA, pA) + getNetVal(consumedB, pB) + getNetVal(consumedC, pC);
-
                     let surplusProfit = 0;
                     if (this.includeSurplus) {
                         const surplusA = Math.max(0, -res.deficitA);
                         const surplusB = Math.max(0, -res.deficitB);
                         surplusProfit = getNetVal(Math.floor(surplusA / 100) * 100, pA) + getNetVal(Math.floor(surplusB / 100) * 100, pB);
                     }
-
                     const actualFee = Math.floor(baseFee * (1 - this.stronghold.feeDiscount / 100));
                     const totalFee = actualFee * res.totalO;
-
                     const totalYield = 10 * res.totalO * (1 + finalGsRate);
                     const netItemPrice = itemPrice - Math.ceil(itemPrice * 0.05);
                     const totalRevenue = totalYield * netItemPrice;
-
                     const totalProfit = totalRevenue - totalFee - missingMatCost - opportunityCost + surplusProfit;
-
                     return { totalRevenue, opportunityCost, missingMatCost, totalFee, surplusProfit, totalProfit };
                 };
-
                 result.normal = calcFor('normal', 400, this.market.normal.price || 0);
                 result.advanced = calcFor('advanced', 520, this.market.advanced.price || 0);
                 return result;
@@ -1738,34 +1450,23 @@
                 this.isLightMode = true;
                 document.body.classList.add('light-mode');
             }
-
             this.materials.forEach(mat => {
-                Object.values(mat.resources).forEach(res => {
-                    if (res) this.globalPrices[res.name] = 0;
-                });
-                Object.values(mat.farmResources).forEach(res => {
-                    if (res) this.globalPrices[res.name] = 0;
-                });
+                Object.values(mat.resources).forEach(res => { if (res) this.globalPrices[res.name] = 0; });
+                Object.values(mat.farmResources).forEach(res => { if (res) this.globalPrices[res.name] = 0; });
             });
-
             const savedStronghold = localStorage.getItem('loa_stronghold');
             if(savedStronghold) this.stronghold = JSON.parse(savedStronghold);
-            
             const savedFavs = localStorage.getItem('loa_favs');
             if(savedFavs) this.favorites = JSON.parse(savedFavs);
-
             this.fetchMarketData(false);
-
             const startSyncedTimer = () => {
                 const scheduleNext = () => {
                     const now = new Date();
                     const minutes = now.getMinutes();
                     const seconds = now.getSeconds();
                     const milliseconds = now.getMilliseconds();
-
                     let delay = (5 * 60 * 1000) - ((minutes % 5) * 60 * 1000 + seconds * 1000 + milliseconds);
                     delay += 1000; 
-
                     this.refreshTimer = setTimeout(() => {
                         console.log("정시 시세 동기화 중...");
                         this.fetchMarketData(false, true);
@@ -1774,7 +1475,6 @@
                 };
                 scheduleNext();
             };
-
             startSyncedTimer();
             const savedExpire = localStorage.getItem('market_cooldown_expire');
             if (savedExpire) {
@@ -1792,18 +1492,12 @@
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
                 this.forceConvert = false;
-                // 영지 농장 탭으로 변경 시 열려있는 툴팁 즉시 닫기
                 if (this.exchangeType === 'farm') {
                     this.cancelHideTooltip();
                     this.hoveredMarketItem = null;
                 }
             },
-            favorites: {
-                handler(newVal) {
-                    localStorage.setItem('loa_favs', JSON.stringify(newVal));
-                },
-                deep: true
-            },
+            favorites: { handler(newVal) { localStorage.setItem('loa_favs', JSON.stringify(newVal)); }, deep: true },
             selectedMaterial() {
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
@@ -1831,12 +1525,8 @@
             },
             stronghold: { 
                 handler(newVal) { 
-                    if (newVal.greatSuccess === "" || newVal.greatSuccess === null || newVal.greatSuccess === undefined) {
-                        this.stronghold.greatSuccess = 0;
-                    }
-                    if (newVal.feeDiscount === "" || newVal.feeDiscount === null || newVal.feeDiscount === undefined) {
-                        this.stronghold.feeDiscount = 0;
-                    }
+                    if (newVal.greatSuccess === "" || newVal.greatSuccess === null || newVal.greatSuccess === undefined) this.stronghold.greatSuccess = 0;
+                    if (newVal.feeDiscount === "" || newVal.feeDiscount === null || newVal.feeDiscount === undefined) this.stronghold.feeDiscount = 0;
                     localStorage.setItem('loa_stronghold', JSON.stringify(newVal)); 
                 }, 
                 deep: true 
@@ -1846,30 +1536,25 @@
             window.removeEventListener('resize', this.handleResize);
         },
         methods: {
-            // 차트 툴팁 표시 및 위치 계산
+            // ===== 시세 차트 툴팁 =====
             showChartTooltip(event, itemName) {
-                // 영지 농장 탭에서는 시세 툴팁 비활성화
                 if (this.calcMode === 'optimize' && this.exchangeType === 'farm') return;
-                
-                // 1. 가루 류 아이템은 시세 정보 툴팁 표시 안함
                 if (!itemName || itemName.endsWith('가루')) return;
 
-                this.cancelHideTooltip(); // 열릴 때 기존 타이머 취소
+                this.cancelHideTooltip();
                 this.hoveredMarketItem = itemName;
                 
-                // 이벤트 버블링 문제를 방지하기 위해 currentTarget 사용
                 const rect = event.currentTarget.getBoundingClientRect();
-                
                 const container = document.querySelector('.container');
                 const zoom = container ? (parseFloat(getComputedStyle(container).zoom) || 1) : 1;
                 
-                // 3. zoom 비율이 적용된 실제 툴팁 렌더링 너비 계산
-                const tooltipActualWidth = 580 * zoom;
+                // 툴팁 너비 680px 기준 (zoom 반영)
+                const tooltipActualWidth = 680 * zoom;
 
                 let viewX = rect.right + 15;
                 let viewY = rect.top;
 
-                // 오른쪽 밖으로 넘어갈 경우 아이콘 왼쪽으로 배치 (실제 렌더링 너비 기준)
+                // 오른쪽 밖으로 넘어갈 경우 아이콘 왼쪽으로 배치
                 if (viewX + tooltipActualWidth > window.innerWidth) {
                     viewX = rect.left - tooltipActualWidth - 15;
                 }
@@ -1878,8 +1563,12 @@
                     viewX = 10;
                     viewY = rect.bottom + 15;
                 }
+                // 최종 오른쪽 overflow 방지
+                if (viewX + tooltipActualWidth > window.innerWidth) {
+                    viewX = Math.max(10, window.innerWidth - tooltipActualWidth - 10);
+                }
 
-                // 좌표에 현재 스크롤 위치를 더해 absolute 문서 기준으로 변환 적용
+                // 스크롤 위치를 더해 absolute 문서 기준으로 변환
                 this.tooltipStyle = { 
                     top: ((viewY + window.scrollY) / zoom) + 'px', 
                     left: ((viewX + window.scrollX) / zoom) + 'px' 
@@ -1890,30 +1579,24 @@
                 });
             },
             hideChartTooltip() {
-                // 커서를 이동할 시간을 주기 위해 0.15초 딜레이
                 this.tooltipTimer = setTimeout(() => {
                     this.hoveredMarketItem = null;
                 }, 150);
             },
             cancelHideTooltip() {
-                // 툴팁 위로 마우스가 올라가면 닫기 취소
                 if (this.tooltipTimer) {
                     clearTimeout(this.tooltipTimer);
                     this.tooltipTimer = null;
                 }
             },
-            // Chart.js 렌더링
+            // ===== Chart.js 렌더링 (afterBuildTicks y1 축 최적화 적용) =====
             renderMarketChart() {
                 const canvas = document.getElementById('marketChartCanvas');
                 if (!canvas) return;
-                if (window.marketChartInstance) {
-                    window.marketChartInstance.destroy();
-                }
+                if (window.marketChartInstance) { window.marketChartInstance.destroy(); }
 
                 const isLight = this.isLightMode;
                 const textColor = isLight ? '#555' : '#aaa';
-                const gridColor = isLight ? '#e3e7ed' : '#333';
-              
                 const container = document.querySelector('.container');
                 const zoom = container ? (parseFloat(getComputedStyle(container).zoom) || 1) : 1;
 
@@ -1922,6 +1605,8 @@
                 const labels = chartData.map(d => d.date);
                 const priceData = chartData.map(d => d.avgPrice);
                 const volumeData = chartData.map(d => d.volume);
+
+                const maxVol = Math.max(...volumeData, 1);
 
                 window.marketChartInstance = new Chart(canvas, {
                     type: 'bar',
@@ -1966,14 +1651,50 @@
                         scales: {
                             x: { ticks: { color: textColor, font: { size: 10 }, autoSkip: false }, grid: { display: false } },
                             y: {
+                                border: { display: false },
                                 type: 'linear', display: true, position: 'left',
                                 ticks: { color: textColor, font: { size: 10 } },
-                                grid: { color: gridColor }
+                                grid: { display: false }
                             },
                             y1: {
                                 type: 'linear', display: true, position: 'right',
-                                ticks: { color: textColor, font: { size: 10 }, callback: (v) => v/10000 + '만' },
-                                grid: { display: false }
+                                min: 0,
+                                border: { display: false },
+                                afterBuildTicks: (axis) => {
+                                    const yAxis = axis.chart.scales['y'];
+                                    const tickCount = yAxis ? yAxis.ticks.length : 5;
+                                    const intervals = Math.max(1, tickCount - 1);
+
+                                    const rawStep = maxVol / intervals;
+                                    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
+                                    const normalized = rawStep / magnitude;
+                                    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
+                                                     (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
+                                    let stepSize = niceStep * magnitude;
+
+                                    // 눈금 수가 너무 적으면(4개 이하) 단위를 절반으로 줄여 촘촘하게
+                                    let intervals2 = Math.ceil(maxVol / stepSize);
+                                    if (intervals2 <= 4) {
+                                        stepSize = stepSize / 2;
+                                        intervals2 = Math.ceil(maxVol / stepSize);
+                                    }
+
+                                    axis.max = stepSize * intervals2;
+                                    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
+                                        value: stepSize * i
+                                    }));
+                                },
+                                ticks: {
+                                    color: textColor,
+                                    font: { size: 10 },
+                                    callback: (v) => v.toLocaleString()
+                                },
+                                grid: { 
+                                    display: true, 
+                                    color: isLight ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)',
+                                    drawOnChartArea: true,
+                                    drawTicks: false
+                                }
                             }
                         }
                     }
@@ -1992,32 +1713,16 @@
             },
             applyGuideValues(type, row) {
                 this.calcMode = 'optimize';
-                
-                let nextRes = { 
-                    A: this.resources.A, 
-                    B: 0, 
-                    S: 0, 
-                    C: this.resources.C, 
-                    P: this.resources.P 
-                };
-                
-                if (type === 'normal') {
-                    nextRes.S = row.normS;
-                    nextRes.B = row.normB;
-                } else {
-                    nextRes.S = row.advS;
-                    nextRes.B = row.advB;
-                }
-                
+                let nextRes = { A: this.resources.A, B: 0, S: 0, C: this.resources.C, P: this.resources.P };
+                if (type === 'normal') { nextRes.S = row.normS; nextRes.B = row.normB; }
+                else { nextRes.S = row.advS; nextRes.B = row.advB; }
                 this.resources = nextRes;
                 this.calculate(true);
             },
             toggleSort(key) {
                 if (this.sortKey === key) {
                     this.sortDir = (this.sortDir + 1) % 3;
-                    if (this.sortDir === 0) {
-                        this.sortKey = null; 
-                    }
+                    if (this.sortDir === 0) this.sortKey = null; 
                 } else {
                     this.sortKey = key;
                     this.sortDir = 1; 
@@ -2038,23 +1743,18 @@
                 this.isDraggingHandle = false;
                 this.startY = e.clientY;
                 const board = document.querySelector('.ranking-board');
-
                 this.startHeight = board.getBoundingClientRect().height / 1.1;
-
                 const rows = board.querySelectorAll('.ranking-row');
                 this.headerH = rows[0] ? (rows[0].getBoundingClientRect().height / 1.1) : 0;
-                
                 this.minBoardHeight = this.headerH;
                 for (let i = 1; i <= 3 && i < rows.length; i++) {
                     this.minBoardHeight += (rows[i].getBoundingClientRect().height / 1.1);
                 }
-
                 document.addEventListener('mousemove', this.onDrag);
                 document.addEventListener('mouseup', this.stopDrag);
             },
             onDrag(e) {
                 const dy = (e.clientY - this.startY) / 1.1; 
-                
                 if (Math.abs(dy) > 3) {
                     this.isDraggingHandle = true;
                     this.showAllRanks = true;
@@ -2066,7 +1766,6 @@
                     const rows = document.querySelectorAll('.ranking-board .ranking-row');
                     let targetHeight = this.headerH;
                     let visibleCount = 0;
-                    
                     for (let i = 1; i < rows.length; i++) {
                         const rowH = rows[i].getBoundingClientRect().height / 1.1;
                         if (targetHeight + (rowH / 2) > this.customRankingHeight && visibleCount >= 3) break;
@@ -2076,7 +1775,6 @@
                     this.customRankingHeight = targetHeight;
                     this.visibleRowsCount = visibleCount;
                 }
-
                 document.removeEventListener('mousemove', this.onDrag);
                 document.removeEventListener('mouseup', this.stopDrag);
             },
@@ -2084,7 +1782,6 @@
                 if (this.showAllRanks && this.customRankingHeight && this.visibleRowsCount) {
                     const rows = document.querySelectorAll('.ranking-board .ranking-row');
                     if (!rows.length) return;
-                    
                     let newHeight = rows[0].getBoundingClientRect().height / 1.1; 
                     for (let i = 1; i <= this.visibleRowsCount && i < rows.length; i++) {
                         newHeight += rows[i].getBoundingClientRect().height / 1.1;
@@ -2097,28 +1794,20 @@
                     setTimeout(() => { this.isDraggingHandle = false; }, 50);
                     return;
                 }
-                
                 this.showAllRanks = !this.showAllRanks;
                 this.customRankingHeight = null; 
             },
+            // ===== Vercel /api/market 호출 =====
             async fetchMarketData(isForce = false, isSilent = false) {
                 if (isForce && this.isCooldown) return;
-
-                if (!isSilent) {
-                    this.fetching = true;
-                }
-
-                if (isForce) {
-                    this.isCooldown = true;
-                }
+                if (!isSilent) this.fetching = true;
+                if (isForce) this.isCooldown = true;
 
                 try {
                     const url = isForce ? '/api/market?force=true' : '/api/market';
                     const response = await fetch(url);
                     
-                    if (!response.ok) {
-                        throw new Error("서버 응답 오류");
-                    }
+                    if (!response.ok) throw new Error("서버 응답 오류");
                     
                     const data = await response.json();
                     const fetchedPrices = data.prices;
@@ -2130,20 +1819,12 @@
 
                     if (fetchedPrices) {
                         for (const [k, v] of Object.entries(fetchedPrices)) {
-                            if (v && v > 0) {
-                                this.globalPrices[k] = v;
-                            }
+                            if (v && v > 0) this.globalPrices[k] = v;
                         }
-                        
                         const newNormalPrice = this.globalPrices["아비도스 융화 재료"];
-                        if (newNormalPrice > 0) {
-                            this.market.normal.price = newNormalPrice;
-                        }
-
+                        if (newNormalPrice > 0) this.market.normal.price = newNormalPrice;
                         const newAdvancedPrice = this.globalPrices["상급 아비도스 융화 재료"];
-                        if (newAdvancedPrice > 0) {
-                            this.market.advanced.price = newAdvancedPrice;
-                        }
+                        if (newAdvancedPrice > 0) this.market.advanced.price = newAdvancedPrice;
                     }
 
                     const updateTime = data.lastUpdated ? new Date(data.lastUpdated) : new Date();
@@ -2156,12 +1837,9 @@
 
                 } catch (error) {
                     console.error("API Error:", error);
-                    if (!isSilent) {
-                        alert("시세 데이터를 불러오는데 실패했습니다.");
-                    }
+                    if (!isSilent) alert("시세 데이터를 불러오는데 실패했습니다.");
                 } finally { 
                     this.fetching = false; 
-                    
                     if (isForce) {
                         const expireTime = Date.now() + 60000; 
                         localStorage.setItem('market_cooldown_expire', expireTime);    
@@ -2177,7 +1855,6 @@
                     const resC = this.resources.C || 0;
                     const resA = this.resources.A || 0;
                     const resB = this.resources.B || 0;
-
                     this.result = {
                         mode: 'deficit',
                         normal: { totalO: Math.floor(resC / 33), deficitA: (Math.floor(resC / 33) * 86) - resA, deficitB: (Math.floor(resC / 33) * 45) - resB },
@@ -2213,103 +1890,56 @@
 
                     if (this.exchangeType === 'farm') {
                         let logs = { AtoP: 0, BtoP: 0, PtoB: 0, PtoC: 0 };
-                        
                         let reqA = target * recipe.A;
                         if (A < reqA) return null;
-
                         let reqC = target * recipe.C;
                         if (C < reqC) {
                             let neededC = reqC - C;
                             let excPtoC = Math.ceil(neededC / farmRates.PtoC.out);
-                            logs.PtoC += excPtoC;
-                            P -= excPtoC * farmRates.PtoC.in;
-                            C += excPtoC * farmRates.PtoC.out;
+                            logs.PtoC += excPtoC; P -= excPtoC * farmRates.PtoC.in; C += excPtoC * farmRates.PtoC.out;
                         }
-                        
                         let reqB = target * recipe.B;
                         if (B < reqB) {
                             if (!forceConvert) return null;
                             let neededB = reqB - B;
                             let excPtoB = Math.ceil(neededB / farmRates.PtoB.out);
-                            logs.PtoB += excPtoB;
-                            P -= excPtoB * farmRates.PtoB.in;
-                            B += excPtoB * farmRates.PtoB.out;
+                            logs.PtoB += excPtoB; P -= excPtoB * farmRates.PtoB.in; B += excPtoB * farmRates.PtoB.out;
                         }
-                        
                         if (P < 0) {
                             let neededP = -P;
                             let surplusA = Math.max(0, A - reqA);
                             let surplusB = Math.max(0, B - reqB);
-
                             while (neededP > 0) {
                                 let canConvertA = surplusA >= farmRates.AtoP.in; 
                                 let canConvertB = surplusB >= farmRates.BtoP.in; 
-
                                 if (!canConvertA && !canConvertB) break; 
-
                                 if (canConvertA && canConvertB) {
-                                    if (surplusA >= surplusB) {
-                                        logs.AtoP++;
-                                        surplusA -= farmRates.AtoP.in;
-                                        neededP -= farmRates.AtoP.out;
-                                        P += farmRates.AtoP.out;
-                                        A -= farmRates.AtoP.in;
-                                    } else {
-                                        logs.BtoP++;
-                                        surplusB -= farmRates.BtoP.in;
-                                        neededP -= farmRates.BtoP.out;
-                                        P += farmRates.BtoP.out;
-                                        B -= farmRates.BtoP.in;
-                                    }
-                                } else if (canConvertA) {
-                                    logs.AtoP++;
-                                    surplusA -= farmRates.AtoP.in;
-                                    neededP -= farmRates.AtoP.out;
-                                    P += farmRates.AtoP.out;
-                                    A -= farmRates.AtoP.in;
-                                } else {
-                                    logs.BtoP++;
-                                    surplusB -= farmRates.BtoP.in;
-                                    neededP -= farmRates.BtoP.out;
-                                    P += farmRates.BtoP.out;
-                                    B -= farmRates.BtoP.in;
-                                }
+                                    if (surplusA >= surplusB) { logs.AtoP++; surplusA -= farmRates.AtoP.in; neededP -= farmRates.AtoP.out; P += farmRates.AtoP.out; A -= farmRates.AtoP.in; }
+                                    else { logs.BtoP++; surplusB -= farmRates.BtoP.in; neededP -= farmRates.BtoP.out; P += farmRates.BtoP.out; B -= farmRates.BtoP.in; }
+                                } else if (canConvertA) { logs.AtoP++; surplusA -= farmRates.AtoP.in; neededP -= farmRates.AtoP.out; P += farmRates.AtoP.out; A -= farmRates.AtoP.in; }
+                                else { logs.BtoP++; surplusB -= farmRates.BtoP.in; neededP -= farmRates.BtoP.out; P += farmRates.BtoP.out; B -= farmRates.BtoP.in; }
                             }
-
                             if (neededP > 0) return null;
                         }
-                        
                         return { logs, consumed: { A: (resData.A || 0) - (A - reqA), B: (resData.B || 0) - (B - reqB), C: (resData.C || 0) - (C - reqC), S: (resData.S || 0) - S } };
                     }
                     
                     let logs = { StoA: 0, BtoA: 0, AtoP: 0, BtoP: 0, PtoB: 0, PtoA: 0, PtoC: 0 };
-                    
                     let excStoA = Math.floor(S / normalRates.StoA.in);
-                    if (excStoA > 0) {
-                        logs.StoA += excStoA;
-                        A += excStoA * normalRates.StoA.out;
-                        S -= excStoA * normalRates.StoA.in;
-                    }
-                    
+                    if (excStoA > 0) { logs.StoA += excStoA; A += excStoA * normalRates.StoA.out; S -= excStoA * normalRates.StoA.in; }
                     let reqC = target * recipe.C;
                     if (C < reqC) {
                         let neededC = reqC - C;
                         let excPtoC = Math.ceil(neededC / normalRates.PtoC.out);
-                        logs.PtoC += excPtoC;
-                        P -= excPtoC * normalRates.PtoC.in;
-                        C += excPtoC * normalRates.PtoC.out;
+                        logs.PtoC += excPtoC; P -= excPtoC * normalRates.PtoC.in; C += excPtoC * normalRates.PtoC.out;
                     }
-                    
                     let reqB = target * recipe.B;
                     if (B < reqB) {
                         if (!forceConvert) return null;
                         let neededB = reqB - B;
                         let excPtoB = Math.ceil(neededB / normalRates.PtoB.out);
-                        logs.PtoB += excPtoB;
-                        P -= excPtoB * normalRates.PtoB.in;
-                        B += excPtoB * normalRates.PtoB.out;
+                        logs.PtoB += excPtoB; P -= excPtoB * normalRates.PtoB.in; B += excPtoB * normalRates.PtoB.out;
                     }
-                    
                     let reqA = target * recipe.A;
                     if (A < reqA) {
                         let neededA = reqA - A;
@@ -2317,90 +1947,47 @@
                         let possibleBtoA = Math.floor(surplusB / normalRates.BtoA.in);
                         let neededBtoA = Math.ceil(neededA / normalRates.BtoA.out);
                         let excBtoA = Math.min(possibleBtoA, neededBtoA);
-                        
-                        if (excBtoA > 0) {
-                            logs.BtoA += excBtoA;
-                            B -= excBtoA * normalRates.BtoA.in;
-                            A += excBtoA * normalRates.BtoA.out;
-                            neededA = Math.max(0, reqA - A);
-                        }
-                        
+                        if (excBtoA > 0) { logs.BtoA += excBtoA; B -= excBtoA * normalRates.BtoA.in; A += excBtoA * normalRates.BtoA.out; neededA = Math.max(0, reqA - A); }
                         if (neededA > 0) {
                             if (!forceConvert) return null;
                             let excPtoA = Math.ceil(neededA / normalRates.PtoA.out);
-                            logs.PtoA += excPtoA;
-                            P -= excPtoA * normalRates.PtoA.in;
-                            A += excPtoA * normalRates.PtoA.out;
+                            logs.PtoA += excPtoA; P -= excPtoA * normalRates.PtoA.in; A += excPtoA * normalRates.PtoA.out;
                         }
                     }
-                    
                     if (P < 0) {
                         let neededP = -P;
                         const pA = currentPrices.A; 
                         const pB = currentPrices.B;
                         const preferB = (pA > 0 && pB > 0) && ((pB / 2) < pA);
-
                         const useSurplusA = () => {
                             let surplusA = Math.max(0, A - reqA);
                             let possibleAtoP = Math.floor(surplusA / normalRates.AtoP.in);
                             let neededAtoP = Math.ceil(neededP / normalRates.AtoP.out);
                             let excAtoP = Math.min(possibleAtoP, neededAtoP);
-                            
-                            if (excAtoP > 0) {
-                                logs.AtoP += excAtoP;
-                                A -= excAtoP * normalRates.AtoP.in;
-                                P += excAtoP * normalRates.AtoP.out;
-                                neededP = Math.max(0, -P);
-                            }
+                            if (excAtoP > 0) { logs.AtoP += excAtoP; A -= excAtoP * normalRates.AtoP.in; P += excAtoP * normalRates.AtoP.out; neededP = Math.max(0, -P); }
                         };
-
                         const useSurplusB = () => {
                             let surplusB = Math.max(0, B - reqB);
                             let possibleBtoP = Math.floor(surplusB / normalRates.BtoP.in);
                             let neededBtoP = Math.ceil(neededP / normalRates.BtoP.out);
                             let excBtoP = Math.min(possibleBtoP, neededBtoP);
-                            
-                            if (excBtoP > 0) {
-                                logs.BtoP += excBtoP;
-                                B -= excBtoP * normalRates.BtoP.in;
-                                P += excBtoP * normalRates.BtoP.out;
-                                neededP = Math.max(0, -P);
-                            }
+                            if (excBtoP > 0) { logs.BtoP += excBtoP; B -= excBtoP * normalRates.BtoP.in; P += excBtoP * normalRates.BtoP.out; neededP = Math.max(0, -P); }
                         };
-
-                        if (preferB) {
-                            useSurplusB();
-                            if (neededP > 0) useSurplusA();
-                        } else {
-                            useSurplusA();
-                            if (neededP > 0) useSurplusB();
-                        }
-                        
+                        if (preferB) { useSurplusB(); if (neededP > 0) useSurplusA(); }
+                        else { useSurplusA(); if (neededP > 0) useSurplusB(); }
                         if (neededP > 0) {
                             let surplusB = Math.max(0, B - reqB);
                             let possibleBtoA = Math.floor(surplusB / normalRates.BtoA.in);
-                            if (possibleBtoA > 0) {
-                                logs.BtoA += possibleBtoA;
-                                B -= possibleBtoA * normalRates.BtoA.in;
-                                A += possibleBtoA * normalRates.BtoA.out;
-                                useSurplusA();
-                            }
+                            if (possibleBtoA > 0) { logs.BtoA += possibleBtoA; B -= possibleBtoA * normalRates.BtoA.in; A += possibleBtoA * normalRates.BtoA.out; useSurplusA(); }
                         }
-                        
                         if (P < 0) return null;
                     }
-                    
                     let leftoverA = A - reqA;
                     if (leftoverA > 0 && logs.StoA > 0) {
                         let revertibleA = Math.min(leftoverA, logs.StoA * normalRates.StoA.out);
                         let revertCount = Math.floor(revertibleA / normalRates.StoA.out);
-                        if (revertCount > 0) {
-                            logs.StoA -= revertCount;
-                            A -= revertCount * normalRates.StoA.out;
-                            S += revertCount * normalRates.StoA.in;
-                        }
+                        if (revertCount > 0) { logs.StoA -= revertCount; A -= revertCount * normalRates.StoA.out; S += revertCount * normalRates.StoA.in; }
                     }
-                    
                     return { logs, consumed: { A: (resData.A || 0) - (A - reqA), B: (resData.B || 0) - (B - reqB), C: (resData.C || 0) - (C - reqC), S: (resData.S || 0) - S } };
                 };
 
@@ -2410,43 +1997,25 @@
                 };
 
                 const getOptimal = (resData, recipe, forceFlag) => {
-                    let low = 0;
-                    let high = 200000; 
-                    let bestLogs = null;
-                    let bestConsumed = null;
-                    let maxCrafts = 0;
-
+                    let low = 0; let high = 200000; 
+                    let bestLogs = null; let bestConsumed = null; let maxCrafts = 0;
                     while (low <= high) {
                         let mid = Math.floor((low + high) / 2);
                         let resultData = getOptimalForTarget(mid, forceFlag, resData, recipe, currentPrices);
-                        
-                        if (resultData !== null) {
-                            maxCrafts = mid;
-                            bestLogs = resultData.logs;
-                            bestConsumed = resultData.consumed;
-                            low = mid + 1; 
-                        } else {
-                            high = mid - 1; 
-                        }
+                        if (resultData !== null) { maxCrafts = mid; bestLogs = resultData.logs; bestConsumed = resultData.consumed; low = mid + 1; }
+                        else { high = mid - 1; }
                     }
-                    
                     const printOrder = this.exchangeType === 'farm' 
                         ? ["AtoP", "BtoP", "PtoB", "PtoC"]
                         : ["StoA", "BtoA", "AtoP", "BtoP", "PtoB", "PtoA", "PtoC"];
-
                     let orderedLogs = {};
                     if (bestLogs) {
-                        printOrder.forEach(key => { 
-                            if (bestLogs[key] > 0) {
-                                orderedLogs[key] = bestLogs[key]; 
-                            } 
-                        });
+                        printOrder.forEach(key => { if (bestLogs[key] > 0) orderedLogs[key] = bestLogs[key]; });
                     } else if (resData.S > 0 && this.exchangeType === 'normal') {
                         let stoaCount = Math.floor(resData.S / normalRates.StoA.in);
                         orderedLogs.StoA = stoaCount;
                         bestConsumed = { A: -(stoaCount * normalRates.StoA.out), B: 0, C: 0, S: stoaCount * normalRates.StoA.in };
                     }
-                    
                     return { totalO: maxCrafts, logs: orderedLogs, consumed: bestConsumed || {A:0,B:0,C:0,S:0}, approximated: false };
                 };
 
@@ -2454,7 +2023,6 @@
                 if (this.exchangeType === 'normal' && advResult.totalO === 0) {
                     advResult = getOptimal(this.resources, { A: 112, B: 59, C: 43 }, true);
                 }
-
                 let normResult = getOptimal(this.resources, { A: 86, B: 45, C: 33 }, this.forceConvert);
                 if (this.exchangeType === 'normal' && normResult.totalO === 0) {
                     normResult = getOptimal(this.resources, { A: 86, B: 45, C: 33 }, true);
@@ -2465,11 +2033,9 @@
             },
             startCooldownTimer(expireTime) {
                 this.isCooldown = true;
-                
                 const timer = setInterval(() => {
                     const now = Date.now();
                     const timeLeft = Math.ceil((expireTime - now) / 1000);
-
                     if (timeLeft <= 0) {
                         this.isCooldown = false;
                         this.cooldownTimer = 0;
