@@ -92,14 +92,14 @@ export default async function handler(req, res) {
                                 return { 
                                     // MM.DD 형식으로 포맷
                                     date: `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`, 
-                                    avgPrice: Math.round(s.AvgPrice), 
+                                    avgPrice: Number(s.AvgPrice.toFixed(1)),
                                     volume: s.TradeCount 
                                 };
                             });
                             const validPrices = history.map(h => h.avgPrice);
                             stats = {
                                 todayAvg: history[0].avgPrice,
-                                avg14d: Math.round(validPrices.reduce((a, b) => a + b, 0) / validPrices.length),
+                                avg14d: Number((validPrices.reduce((a, b) => a + b, 0) / validPrices.length).toFixed(1)),
                                 high14d: Math.max(...validPrices),
                                 low14d: Math.min(...validPrices),
                                 history: history
