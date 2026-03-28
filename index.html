@@ -2,9 +2,9 @@
 <html lang="ko">
 <head>
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,24 +23,24 @@
         .right-panel { padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
         .left-panel { flex: 1; padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
         .right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 20px; }
-
+        
         @media (max-width: 1400px) { .container { zoom: 1.1; } }
         @media (max-width: 1280px) { .container { zoom: 1.05; } }
         @media (max-width: 1180px) { .container { zoom: 1.0; } }
         @media (max-width: 1080px) { .container { zoom: 0.95; } }
-
+        
         @media (max-width: 980px) {
             .container { zoom: 0.95; }
             .ranking-row { grid-template-columns: 1.2fr 55px 60px 60px; font-size: 0.8em; gap: 3px; }
         }
-
+        
         @media (max-width: 925px) {
             .container { zoom: 1; width: 95%; } 
             .main-wrapper { flex-direction: column; gap: 20px; }
             .left-panel, .right-column { width: 100% !important; flex: none; }
             .right-panel { width: 100%; }
         }
-
+        
         @media (max-width: 600px) {
             .container { zoom: 0.85; width: 96%; margin: 10px auto; }
             .main-wrapper { flex-direction: column; gap: 15px; }
@@ -49,10 +49,10 @@
             .ranking-row { grid-template-columns: 1.6fr 45px 55px 55px !important; font-size: 0.75em; gap: 2px; }
             .input-in-table { width: 32px !important; }
         }
-
+        
         .mode-tab span, .name-text-wrap span { white-space: normal !important; word-break: keep-all; display: inline-block; line-height: 1.2; }
         .mode-tab { display: flex; align-items: center; justify-content: center; }
-
+        
         @media (max-width: 380px) {
             .mode-tab { min-height: auto; padding: 6px 4px; }
             .mode-tab .tab-content-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center !important; height: auto !important; line-height: 1.2; }
@@ -70,7 +70,7 @@
         .mode-tab:last-child { border-radius: 0 5px 5px 0; }
         .mode-tab:hover { background-color: #4a4a4a; color: #ffffff; }
         .mode-tab.active { background-color: #3a3a3a; color: #ffd700; border-bottom: 2px solid #ffd700; z-index: 10; }
-
+        
         .dropdown-content { display: none; position: absolute; top: 100%; left: -1px; width: calc(100% + 2px); background-color: #2b2b2b; border: 1px solid #3a3a3a; border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.6); z-index: 100; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .mode-tab.active:hover .dropdown-content { display: block; }
         .dropdown-item { padding: 8px 10px; text-align: center; color: #b0b0b0; font-size: 0.9em; font-weight: bold; transition: 0.2s; }
@@ -81,27 +81,27 @@
         h2 { font-size: 1.3em; color: #ffffff; margin: 0 0 12px 0; border-left: 4px solid #ffd700; padding-left: 10px; transition: color 0.3s ease, border-color 0.3s ease; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-left: 4px solid #ffd700; padding-left: 10px; transition: border-color 0.3s ease; }
         .section-header h2 { margin: 0; border-left: none; padding-left: 0; }
-
+        
         .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #3a3a3a; transition: border-color 0.3s ease; }
         .tab { flex: 1; text-align: center; padding: 8px 5px; font-size: 0.95em; cursor: pointer; background-color: transparent; color: #b0b0b0; border: 1px solid transparent; border-bottom: 2px solid transparent; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease; }
         .tab.active { background-color: #3a3a3a; color: #ffd700; font-weight: bold; border-color: rgba(255, 255, 255, 0.05); border-bottom: 2px solid #ffd700; border-radius: 6px 6px 0 0; }
         .tab:hover:not(.active) { background-color: #4a4a4a; color: #ffffff; border-radius: 6px 6px 0 0; }
         .hidden-radio { display: none; }
-
+        
         .input-group { margin-top: 10px; }
         .input-group label { display: flex; align-items: center; font-size: 0.95em; color: #b0b0b0; margin-bottom: 5px; justify-content: space-between; flex-wrap: wrap; gap: 6px; transition: color 0.3s ease; }
         .input-group > input { width: 100%; padding: 10px; font-size: 1em; border: 1px solid #3a3a3a; border-radius: 4px; background-color: #1e1e1e; color: #e0e0e0; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         
         .input-group > input:focus, input.price-input-small:focus, input.price-input-right:focus, input.input-in-table:focus, input.tiny-input:focus { border-color: #ffd700 !important; outline: none !important; box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15) !important; }
-
+        
         .right-badges { display: flex; align-items: center; gap: 8px; margin-left: auto; }
         .mark-target { color: #ffd700; font-size: 0.8em; font-weight: normal; border: 1px dashed #ffd700; padding: 2px 5px; border-radius: 4px; margin-left: 6px; display: inline-block; vertical-align: middle; transition: color 0.3s ease, border-color 0.3s ease; }
         .mat-price-tag { background: #3a3a3a; padding: 2px 6px; border: 1px solid transparent; border-radius: 4px; font-size: 0.75em; color: #ffd700; display: flex; align-items: center; white-space: nowrap; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
-
+        
         .deficit-info { text-align: center; font-size: 0.95em; color: #b0b0b0; margin-top: -8px; margin-bottom: 12px; transition: color 0.3s ease; }
         .text-deficit { color: #ff6666; font-weight: bold; }
         .text-surplus { color: #4ade80; font-weight: bold; }
-
+        
         button { width: 100%; margin-top: 15px; padding: 15px 10px; font-size: 1em; border: none; border-radius: 4px; background-color: #3a3a3a; color: #ffffff; cursor: pointer; font-weight: bold; transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s; }
         button:hover { background-color: #5a5a5a; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
         button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
@@ -115,11 +115,11 @@
         .btn-force:hover { background: rgba(255, 102, 102, 0.2); border-color: rgba(255, 102, 102, 0.6); color: #ffffff; }
         .btn-force.btn-farm { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; }
         .btn-force.btn-farm:hover { background: rgba(59, 130, 246, 0.25); border-color: #60a5fa; color: #ffffff; }
-
+        
         .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; transition: color 0.3s ease; }
         .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; cursor: help; }
         .resource-icon { width: 16px; height: 16px; object-fit: cover; pointer-events: none; }
-
+        
         .resource-A, .resource-P { color: rgb(159, 159, 159); }
         .resource-A .resource-icon-wrap, .resource-P .resource-icon-wrap { background: linear-gradient(135deg, rgb(49, 49, 49), rgb(88, 88, 88)); }
         .resource-B { color: rgb(120, 187, 39); }
@@ -131,7 +131,7 @@
         .final-product .resource-icon-wrap, .resource-icon-wrap.final-product { background: linear-gradient(135deg, #321142, #541973); }
         .normal-product { color: rgb(25, 124, 197); }
         .normal-product .resource-icon-wrap, .resource-icon-wrap.normal-product { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)); }
-
+        
         .result { margin-top: 20px; padding: 15px; background-color: #1e1e1e; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); overflow-x: auto; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .result-title { font-size: 1.1em; color: #ffffff; margin: 5px 0 15px 0; text-align: center; border-left: none; padding-left: 0; }
         .result-divider { border: 0; border-top: 2px dashed #4a4a4a; margin: 25px 0; transition: border-color 0.3s ease; }
@@ -146,12 +146,12 @@
         .arrow { text-align: center; color: #e0e0e0; font-size: 1.2em; transition: color 0.3s ease; }
         .count { text-align: center; font-size: 0.95em; color: #d0d0d0; transition: color 0.3s ease; }
         .num-point { color: #ffd700; font-weight: bold; text-shadow: 0 0 5px rgba(255, 215, 0, 0.8); }
-
+        
         .final-row { grid-column: span 4; display: grid; grid-template-columns: auto 120px; align-items: center; border-top: 1px solid #3a3a3a; margin-top: 10px; padding-top: 10px; transition: border-color 0.3s ease; }
         .final-product-label { flex: 1 1 auto; font-weight: bold; text-align: center; }
         .no-production { color: #ff6666; text-align: center; font-size: 1.1em; font-weight: bold; margin: 15px 0; }
         .desc { font-size: 11px; color: #b0b0b0; transition: color 0.3s ease; }
-
+        
         .market-box { background-color: #1e1e1e; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 15px; margin-top: 15px; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #3a3a3a; padding-bottom: 8px; transition: border-color 0.3s ease; }
         .market-header h3 { margin: 0; font-size: 1.1em; }
@@ -164,7 +164,7 @@
         input.price-input-small { width: 45px !important; height: 22px !important; padding: 0 4px !important; }
         input.price-input-right { width: 55px !important; height: 24px !important; padding: 0 4px !important; }
         input.price-input-small::-webkit-inner-spin-button, input.price-input-small::-webkit-outer-spin-button, input.price-input-right::-webkit-inner-spin-button, input.price-input-right::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-
+        
         .scenario-section { background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px 14px; margin-top: 12px; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .scenario-section.self-craft { border-left: 3px solid #ffd700; }
         .scenario-section.market-buy { border-left: 3px solid #888; }
@@ -175,23 +175,23 @@
         .scenario-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; margin-bottom: 6px; }
         .scenario-row:last-child { margin-bottom: 0; }
         .total-profit-row { margin-top: 6px; padding-top: 6px; border-top: 1px dotted #4a4a4a; font-weight: bold; font-size: 0.95em; transition: border-color 0.3s ease; }
-
+        
         .toggle-btn { width: auto !important; margin: 0 !important; padding: 4px 10px !important; background: transparent; border: 1px solid #5a5a5a; color: #b0b0b0; border-radius: 4px; font-size: 0.8em !important; font-weight: normal !important; cursor: pointer; transition: 0.2s; height: auto !important; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1.2; }
         .toggle-btn.active { background: #4ade80; color: #1e1e1e; border-color: #4ade80; font-weight: bold !important; }
         .toggle-btn:hover:not(.active) { border-color: #4ade80; color: #4ade80; transform: translateY(-1px); }
-
+        
         .ranking-board-wrap { position: relative; margin-bottom: 0px; background-color: rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 4px; overflow: hidden; display: flex; flex-direction: column; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .ranking-board { width: 100%; display: flex; flex-direction: column; gap: 0; padding-top: 0px; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; max-height: max-content; }
         .ranking-board::-webkit-scrollbar { display: none; }
         
         .ranking-row { display: grid; grid-template-columns: minmax(130px, 1fr) 65px 65px 65px; align-items: center; padding: 8px; border-bottom: 1px solid #3a3a3a; gap: 6px; font-size: 0.85em; transition: background-color 0.2s ease, border-color 0.3s ease; animation: fadeSlideDown 0.3s ease-out forwards; }
         @keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
+        
         .ranking-row:last-child { border-bottom: none; }
         .ranking-row:not(.ranking-header):hover { background-color: rgba(255, 255, 255, 0.05); }
         .ranking-row.is-profit { background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.04) 85%); }
         .ranking-row.is-loss { background: linear-gradient(90deg, transparent, rgba(255, 102, 102, 0.03) 85%); }
-
+        
         .ranking-header { border-bottom: 1px solid #5a5a5a; color: #b0b0b0; font-weight: bold; background: none !important; animation: none; transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease; }
         .sortable-header { display: flex; align-items: center; justify-content: center; justify-self: center; width: max-content; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; border-radius: 4px; padding: 0px 8px; }
         .sortable-header:hover { background-color: rgba(255, 255, 255, 0.08); color: #ffffff; }
@@ -201,7 +201,7 @@
         .star-btn { background: none; border: none; padding: 0; margin: 0; color: #555; cursor: pointer; font-size: 1.1em; line-height: 1; transition: color 0.2s, transform 0.2s; display: inline-flex; align-items: center; justify-content: center; width: 16px; flex-shrink: 0;}
         .star-btn.is-fav { color: #ffd700; text-shadow: 0 0 4px rgba(255,215,0,0.4); }
         .star-btn:hover { color: #ffd700; transform: scale(1.1); }
-
+        
         .rank-name-col .resource-icon-wrap { width: 20px; height: 20px; flex-shrink: 0; border-radius: 3px; display: flex; justify-content: center; align-items: center; margin-right: 2px; }
         .rank-name-col .resource-icon { width: 14px; height: 14px; object-fit: cover; }
         
@@ -214,14 +214,14 @@
         
         .input-in-table { width: 40px !important; height: 22px !important; padding: 0 1px !important; background-color: #1a1a1a !important; color: #ffd700 !important; border: 1px solid #555 !important; border-radius: 5px !important; text-align: center !important; font-size: 0.9em !important; font-weight: bold !important; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         .input-in-table::-webkit-inner-spin-button, .input-in-table::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-
+        
         .modern-expand-btn { position: relative; width: calc(100% + 8px); margin: auto -4px -4px -4px; background-color: rgba(0, 0, 0, 0.1); color: #666; border: none; border-top: 1px solid #3a3a3a; border-radius: 0 0 12px 12px; padding: 0; height: 14px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; }
         .modern-expand-btn:hover { color: #ffd700; background-color: rgba(255, 255, 255, 0.05); }
         .modern-expand-btn .chevron { font-size: 0.8em; line-height: 0; font-weight: bold; display: flex; align-items: center; justify-content: center; transform: translateY(3px); }
         .modern-expand-btn .chevron.is-open { transform: translateY(-3px); }
-
+        
         .control-panel-box { background-color: rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 15px; margin-top: 5px; transition: background-color 0.3s ease, border-color 0.3s ease; }
-
+        
         .stronghold-setting-box { display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px; padding-bottom: 12px; border-bottom: 1px dashed #4a4a4a; margin-bottom: 12px; overflow-x: auto; transition: border-color 0.3s ease;}
         .stronghold-setting-box > div { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
         .stronghold-setting-box .setting-title { font-weight: bold; color: #b0b0b0; font-size: 0.85em; white-space: nowrap; flex-shrink: 0; transition: color 0.3s ease; }
@@ -231,19 +231,19 @@
         
         input.tiny-input { width: 28px !important; height: 18px !important; padding: 0 !important; background-color: #1e1e1e !important; color: #e0e0e0 !important; border: 1px solid #555 !important; border-radius: 4px !important; text-align: center !important; font-size: 0.8em !important; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; }
         input.tiny-input::-webkit-inner-spin-button, input.tiny-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-
+        
         @keyframes gentle-glow-gold { 0% { text-shadow: 0 0 2px rgba(255, 215, 0, 0.4); color: #ffd700; } 50% { text-shadow: 0 0 7px rgba(255, 215, 0, 0.9); color: #ffd700; } 100% { text-shadow: 0 0 2px rgba(255, 215, 0, 0.4); color: #ffd700; } }
         .profit-neon-gold { animation: gentle-glow-gold 2.5s infinite ease-in-out; font-weight: bold; color: #ffd700; }
-
+        
         @keyframes gentle-glow-red { 0% { text-shadow: 0 0 2px rgba(255, 102, 102, 0.4); color: #ff6666; } 50% { text-shadow: 0 0 7px rgba(255, 102, 102, 0.9); color: #ff6666; } 100% { text-shadow: 0 0 2px rgba(255, 102, 102, 0.4); color: #ff6666; } }
         .profit-neon-red { animation: gentle-glow-red 2.5s infinite ease-in-out; font-weight: bold; color: #ff6666; }
-
+        
         .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .loading-spinner { width: 50px; height: 50px; border: 5px solid #3a3a3a; border-top: 5px solid #ffd700; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
+        
         .update-box { text-align: right; font-size: 12px; color: #888; margin-top: -15px; margin-bottom: 0; padding-right: 5px; transition: color 0.3s ease; }
-
+        
         .sync-pill { display: inline-flex; align-items: center; background-color: rgba(0, 0, 0, 0.25); border: 1px solid #3a3a3a; border-radius: 6px; padding: 4px 10px; font-size: 0.8em; color: #b0b0b0; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease; position: relative; top: 8px; }
         .sync-pill:hover { border-color: #5a5a5a; }
         .sync-info { display: flex; align-items: center; margin-right: 8px; padding-right: 8px; border-right: 1px solid #4a4a4a; white-space: nowrap; transition: border-color 0.3s ease; }
@@ -252,9 +252,9 @@
         .btn-sync-icon { background: transparent; border: none; color: #b0b0b0; padding: 0; margin: 0; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s, transform 0.3s ease; width: 12px; }
         .btn-sync-icon:hover:not(:disabled) { color: #ffd700; transform: rotate(180deg); }
         .btn-sync-icon:disabled { color: #4a4a4a; cursor: not-allowed; transform: rotate(360deg); transition: transform 1s linear infinite; }
-
+        
         .badge-exchange { color: rgb(25, 124, 197); font-size: 0.85em; margin-left: auto; font-weight: bold; white-space: nowrap; }
-
+        
         .guide-wrap { margin-top: 20px; }
         .guide-toggle-btn { width: 100%; margin: 0; background-color: transparent; border: 1px dashed #4a4a4a; color: #b0b0b0; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-size: 0.85em; font-weight: normal; display: flex; justify-content: space-between; align-items: center; }
         .guide-toggle-btn:hover { border-color: #ffd700; color: #ffd700; background-color: rgba(255, 215, 0, 0.05); }
@@ -274,69 +274,69 @@
         .guide-desc { font-size: 0.8em; color: #888; padding: 8px 0 0 0; text-align: right; margin: 0; }
         .th-normal { color: rgb(25, 124, 197) !important; }
         .th-advanced { color: #ce43fc !important; }
-
+        
         /* 라이트 모드 테마 */
         body.light-mode .resource-A, body.light-mode .resource-P { color: rgb(159, 159, 159) !important; }
         body.light-mode .resource-B { color: rgb(120, 187, 39) !important; }
         body.light-mode .resource-S, body.light-mode .resource-C { color: rgb(25, 124, 197) !important; }
         body.light-mode .final-product { color: #ce43fc !important; }
         body.light-mode .normal-product { color: rgb(25, 124, 197) !important; }
-
+        
         body.light-mode .resource-A .resource-icon-wrap, body.light-mode .resource-P .resource-icon-wrap { background: linear-gradient(135deg, rgb(49, 49, 49), rgb(88, 88, 88)) !important; }
         body.light-mode .resource-B .resource-icon-wrap { background: linear-gradient(135deg, rgb(30, 45, 11), rgb(48, 73, 17)) !important; }
         body.light-mode .resource-S .resource-icon-wrap, body.light-mode .resource-C .resource-icon-wrap { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)) !important; }
         body.light-mode .final-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.final-product { background: linear-gradient(135deg, #321142, #541973) !important; }
         body.light-mode .normal-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.normal-product { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)) !important; }
-
+        
         body.light-mode { background-color: #f2f5f9; color: #222222; color-scheme: light; }
         body.light-mode .left-panel, body.light-mode .right-panel, body.light-mode .result, body.light-mode .market-box, body.light-mode .scenario-section, body.light-mode .control-panel-box, body.light-mode .ranking-board-wrap, body.light-mode .dropdown-content, body.light-mode .guide-content { background-color: #ffffff !important; border: 1px solid #e3e7ed; box-shadow: 0 4px 16px rgba(0, 30, 80, 0.04); border-radius: 12px; }
-
+        
         body.light-mode h1, body.light-mode h2, body.light-mode .result-title { color: #111111; border-bottom-color: #e3e7ed; }
         body.light-mode h2, body.light-mode .section-header { border-left-color: #187ef5; } 
-
+        
         body.light-mode .arrow, body.light-mode .count, body.light-mode .desc, body.light-mode .setting-title, body.light-mode .scenario-title, body.light-mode .input-group label { color: #555555; font-weight: 500; }
         body.light-mode .update-box { color: #888888; }
-
+        
         body.light-mode .mode-tabs { border: 1px solid #e3e7ed; background-color: #f8fafc; border-radius: 8px; }
         body.light-mode .mode-tab { background-color: transparent; color: #666666; border-bottom: 2px solid transparent; }
         body.light-mode .mode-tab:hover { background-color: #f0f4f8; color: #187ef5; }
         body.light-mode .mode-tab.active { background-color: #ffffff; color: #187ef5; border-bottom: 2px solid #187ef5; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-
+        
         body.light-mode .dropdown-item { background-color: #ffffff; color: #555555; border-bottom: 1px solid #f0f4f8; }
         body.light-mode .dropdown-item:hover { background-color: #f5f9ff; color: #187ef5; }
         body.light-mode .dropdown-item.selected { background-color: #eef5ff; color: #187ef5; font-weight: bold; }
-
+        
         body.light-mode .tabs { border-bottom: 1px solid #e3e7ed; }
         body.light-mode .tab { background-color: transparent; color: #777777; }
         body.light-mode .tab.active { background-color: transparent; color: #187ef5; border-bottom: 2px solid #187ef5; font-weight: bold; border-radius: 6px 6px 0 0; }
         body.light-mode .tab:hover:not(.active) { color: #187ef5; background-color: #f5f9ff; border-radius: 6px 6px 0 0; }
-
+        
         body.light-mode .input-group > input { background-color: #f9fbfc !important; color: #222222 !important; border: 1px solid #d2d8e0 !important; border-radius: 6px !important; }
-
+        
         body.light-mode input.price-input-small, body.light-mode input.price-input-right, body.light-mode input.input-in-table, body.light-mode input.tiny-input { background-color: #f9fbfc !important; color: #111111 !important; border: 1px solid #d2d8e0 !important; border-radius: 6px !important; }
         body.light-mode .input-group > input:focus, body.light-mode input.price-input-small:focus, body.light-mode input.price-input-right:focus, body.light-mode input.input-in-table:focus, body.light-mode input.tiny-input:focus { border-color: #187ef5 !important; box-shadow: 0 0 0 3px rgba(24, 126, 245, 0.15) !important; background-color: #ffffff !important; }
-
+        
         body.light-mode .num-point, body.light-mode .mark-target { color: #187ef5 !important; text-shadow: none; border-color: #187ef5; }
         body.light-mode span[style*="color: #ffd700"] { color: #187ef5 !important; text-shadow: none; }
-
+        
         body.light-mode .profit-plus { color: #16a34a !important; font-weight: bold; text-shadow: none; }
         body.light-mode .text-deficit, body.light-mode .profit-minus, body.light-mode .no-production { color: #f05656 !important; text-shadow: none; }
         body.light-mode span[style*="color: #ff6666"] { color: #f05656 !important; text-shadow: none; }
         body.light-mode .text-surplus { color: #16a34a !important; text-shadow: none; }
         body.light-mode span[style*="color: #4ade80"] { color: #16a34a !important; text-shadow: none; }
-
+        
         body.light-mode button.btn-calc { background: linear-gradient(135deg, #2b8cff, #0066ff); color: #ffffff; border: none; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25); border-radius: 8px; }
         body.light-mode button.btn-calc:hover { background: linear-gradient(135deg, #187ef5, #005ce6); transform: translateY(-1px); box-shadow: 0 6px 15px rgba(0, 102, 255, 0.3); }
         body.light-mode .btn-force { background: rgba(24, 126, 245, 0.1); border-color: #187ef5; color: #187ef5; }
         body.light-mode .btn-force:hover { background: rgba(24, 126, 245, 0.2); color: #0066ff; }
         body.light-mode .btn-force.btn-farm { background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9; color: #0284c7; }
         body.light-mode .btn-force.btn-farm:hover { background: #0ea5e9; color: #ffffff; }
-
+        
         body.light-mode .mat-price-tag { background-color: #eef5ff; color: #187ef5; border: 1px solid #d2d8e0; }
         body.light-mode .toggle-btn { border-color: #d2d8e0; color: #666666; background-color: #ffffff; }
         body.light-mode .toggle-btn.active { background: #eef5ff; color: #187ef5; border-color: #187ef5; font-weight: bold !important; }
         body.light-mode .toggle-btn:hover:not(.active) { border-color: #187ef5; color: #187ef5; background: #f9fbfc; }
-
+        
         body.light-mode .ranking-row { border-bottom-color: #e3e7ed; }
         body.light-mode .ranking-row:not(.ranking-header):hover { background-color: #f5f9ff; }
         body.light-mode .ranking-row.is-profit, body.light-mode .ranking-row.is-loss { background: none; }
@@ -344,31 +344,31 @@
         body.light-mode .sortable-header:hover { background-color: #e3e7ed; color: #111111; }
         body.light-mode .modern-expand-btn { background-color: #f8fafc; border-top-color: #e3e7ed; color: #777777; border-radius: 0 0 12px 12px; }
         body.light-mode .modern-expand-btn:hover { background-color: #eef5ff; color: #187ef5; }
-
+        
         body.light-mode .guide-toggle-btn { border-color: #d2d8e0; color: #444444; background-color: #ffffff; }
         body.light-mode .guide-toggle-btn:hover { border-color: #187ef5; color: #187ef5; background-color: #eef5ff; }
         body.light-mode .guide-table { border: 1px solid #d2d8e0; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02); border-radius: 8px; }
         body.light-mode .guide-table th, body.light-mode .guide-table td { background-color: #ffffff; border-color: #e3e7ed; color: #222222; }
         body.light-mode .guide-table th { background-color: #f8fafc; border-bottom-color: #d2d8e0; color: #444444; }
         body.light-mode .guide-table td.hovered-group { background-color: #eef5ff !important; color: #187ef5 !important; font-weight: bold; }
-
+        
         body.light-mode .result-divider, body.light-mode .scenario-header, body.light-mode .total-profit-row, body.light-mode .stronghold-setting-box, body.light-mode .market-header, body.light-mode .final-row { border-color: #e3e7ed; }
         body.light-mode .scenario-section.self-craft { border-left: 3px solid #187ef5; background-color: #fdfdfe; }
         body.light-mode .scenario-section.market-buy { border-left: 3px solid #94a3b8; background-color: #fdfdfe; }
         body.light-mode .scenario-section.deficit-craft { border-left: 3px solid #10b981; background-color: #fdfdfe; }
-
+        
         body.light-mode .sync-pill { background-color: #ffffff; border-color: #d2d8e0; color: #555555; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
         body.light-mode .sync-info { border-right-color: #d2d8e0; }
         body.light-mode .btn-sync-icon { color: #888888; }
         body.light-mode .btn-sync-icon:hover:not(:disabled) { color: #187ef5; }
         body.light-mode .live-dot.is-syncing { background-color: #10b981; box-shadow: 0 0 5px rgba(16, 185, 129, 0.6); }
-
+        
         body.light-mode .profit-neon-gold { animation: light-glow-green 2.5s infinite ease-in-out; color: #16a34a; font-weight: bold; }
         @keyframes light-glow-green { 0% { text-shadow: 0 0 2px rgba(22, 163, 74, 0.1); color: #16a34a; } 50% { text-shadow: 0 0 6px rgba(22, 163, 74, 0.4); color: #15803d; } 100% { text-shadow: 0 0 2px rgba(22, 163, 74, 0.1); color: #16a34a; } }
-
+        
         body.light-mode .profit-neon-red { animation: light-glow-red 2.5s infinite ease-in-out; color: #dc2626; font-weight: bold; }
         @keyframes light-glow-red { 0% { text-shadow: 0 0 2px rgba(220, 38, 38, 0.1); color: #dc2626; } 50% { text-shadow: 0 0 6px rgba(220, 38, 38, 0.4); color: #b91c1c; } 100% { text-shadow: 0 0 2px rgba(220, 38, 38, 0.1); color: #dc2626; } }
-
+        
         body.light-mode .scenario-row span[style*="#e0e0e0"], body.light-mode .scenario-row span[style*="rgb(224, 224, 224)"], body.light-mode .scenario-row span[style*="rgb(224,224,224)"] { color: #555555 !important; font-weight: 800 !important; }
         body.light-mode .total-profit-row > span:first-child { color: #D4A017 !important; font-weight: 900 !important; }
         body.light-mode .scenario-row span[style*="color: #888"] { color: #777777 !important; }
@@ -378,30 +378,30 @@
         body.light-mode .guide-desc { color: #555555; }
         body.light-mode .guide-desc span:last-child {color: #0069d9 !important;text-shadow: none;}
         body.light-mode span[style*="color: #b0b0b0"] { color: #888888 !important; } 
-
+        
         body.light-mode .theme-switch-btn { background-color: #ffffff; color: #187ef5; border: 2px solid #e3e7ed; box-shadow: 0 4px 16px rgba(24, 126, 245, 0.15); }
         body.light-mode .theme-switch-btn:hover { background-color: #eef5ff; border-color: #187ef5; transform: scale(1.1); }
-
+        
         .theme-switch-btn { position: fixed; bottom: 30px; right: 30px; width: 52px; height: 52px; border-radius: 50%; background-color: #3a3a3a; color: #ffd700; border: 2px solid #5a5a5a; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000; }
         .theme-switch-btn:hover { transform: scale(1.1) translateY(-2px); background-color: #4a4a4a; }
         .theme-switch-btn svg { width: 26px; height: 26px; }
         .tab span { word-break: break-all !important; white-space: normal !important; }
-
+        
         .tooltip-container { position: relative; display: inline-flex; align-items: center; cursor: help; border-bottom: 1px dotted #888; }
         .tooltip-box { visibility: hidden; position: absolute; bottom: 120%; left: 0; background-color: #333; color: #fff; padding: 10px 14px 6px; border-radius: 6px; font-size: 0.85em; z-index: 100; opacity: 0; transition: opacity 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #555; pointer-events: none; white-space: nowrap; width: max-content; max-width: none; text-align: left; line-height: 1.3; }
         .tooltip-container:hover .tooltip-box { visibility: visible; opacity: 1; }
         body.light-mode .tooltip-box { background-color: #ffffff; color: #222222; border-color: #d2d8e0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-
+        
         .app-footer { margin-top: 90px; padding: 20px 10px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s ease; }
         .app-footer .footer-disclaimer { color: #888; font-size: 11px; line-height: 1.4; word-break: keep-all; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-align: left; }
         .app-footer .privacy-link { color: #b0b0b0; font-weight: bold; text-decoration: none; margin: 0; transition: color 0.2s ease; white-space: nowrap; flex-shrink: 0; }
         .app-footer .privacy-link:hover { color: #ffffff; text-decoration: underline; }
-
+        
         body.light-mode .app-footer { border-top-color: #e3e7ed; }
         body.light-mode .app-footer .footer-disclaimer { color: #888888; }
         body.light-mode .app-footer .privacy-link { color: #555555; }
         body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
-
+        
         /* ================= 시세 차트 툴팁 UI CSS ================= */
         .market-chart-tooltip {
             position: absolute;
@@ -412,6 +412,7 @@
             width: 680px;
             z-index: 99999;
             box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+            /* pointer-events: none; 삭제됨 - 마우스 호버 유지를 위해 */
             color: #e0e0e0;
             font-family: "Noto Sans KR", sans-serif;
             transition: opacity 0.15s ease-in-out;
@@ -422,10 +423,10 @@
         .mct-summary { display: flex; border: 1px solid #333; border-radius: 6px; margin-bottom: 12px; background: #1a1a1a; }
         .mct-summary-item { flex: 1; padding: 10px; text-align: center; border-right: 1px solid #333; }
         .mct-summary-item:last-child { border-right: none; }
-        .mct-label { display: block; font-size: 11px; color: #aaa; margin-bottom: 4px; word-break: keep-all; }
+        .mct-label { display: block; font-size: 11px; color: #aaa; margin-bottom: 4px; word-break: keep-all;}
         .mct-value { display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #ffd700; gap: 4px; }
         .gold-icon { width: 14px; height: 14px; object-fit: contain; vertical-align: middle; position: relative; top: -1px; margin-left: 2px; }
-
+        
         .mct-body { display: flex; gap: 12px; height: 240px; }
         .mct-chart-wrap { flex: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 8px; min-width: 0; }
         .mct-table-wrap { width: 250px; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; overflow-y: auto; }
@@ -434,7 +435,7 @@
         .mct-table td { padding: 5px 4px; border-bottom: 1px solid #2a2a2a; white-space: nowrap; vertical-align: middle; line-height: 1.4; }
         .mct-table td:nth-child(2) { color: #ffd700; }
         .mct-table td:nth-child(3) { text-align: right; padding-right: 12px; font-variant-numeric: tabular-nums; letter-spacing: -0.2px; }
-
+        
         /* 시세 툴팁 라이트 모드 */
         body.light-mode .market-chart-tooltip { background: #ffffff; border-color: #e3e7ed; box-shadow: 0 8px 24px rgba(0,30,80,0.15); color: #222; }
         body.light-mode .mct-header { border-bottom-color: #e3e7ed; }
@@ -470,7 +471,7 @@
                 <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
             </svg>
         </button>
-
+        
         <div class="main-wrapper">
             <div class="left-panel wrap-cal">
                 <h1>아비도스 제작 계산기 ({{ currentMaterialName }})</h1>
@@ -490,7 +491,7 @@
                             <div class="dropdown-item" :class="{ selected: exchangeType === 'farm' }" @click.stop="exchangeType = 'farm'">재료 교환 계산 (영지 농장)</div>
                         </div>
                     </div>
-
+                    
                     <div class="mode-tab" :class="{ active: calcMode === 'deficit' }" @click="calcMode = 'deficit'">
                         <div class="tab-content-wrap" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
                             <span>부족한 재료 계산</span>
@@ -498,14 +499,14 @@
                         </div>
                     </div>
                 </div>
-            
+                
                 <div class="tabs">
                     <label v-for="material in materials" :key="material.code" class="tab" :class="{ active: selectedMaterial === material.code }">
                         <input type="radio" :value="material.code" v-model="selectedMaterial" class="hidden-radio" />
                         {{ material.name }}
                     </label>
                 </div>
-
+                
                 <template v-for="(resInfo, key) in selectedResources" :key="key">
                     <div class="input-group" v-if="resInfo && (calcMode === 'optimize' ? !(exchangeType === 'farm' && key === 'S') : (key !== 'S' && key !== 'P'))">
                         <label>
@@ -529,16 +530,16 @@
                         <input type="number" v-model.number="resources[key]" placeholder="0" max="999999" onfocus="this.select()">
                     </div>
                 </template>
-
+                
                 <button class="btn-calc" :disabled="isDisabled || loading" @click="calculate()">
                     {{ loading ? "계산중..." : "계산하기" }}
                 </button>
-
+                
                 <div v-if="result" class="result">
                     <button v-if="result.mode === 'optimize' && exchangeType === 'farm' && !forceConvert" @click="doForceConvert" class="btn-force btn-farm">
                         농장 재료 전량 소모
                     </button>
-
+                    
                     <template v-if="result.mode === 'optimize'">
                         <h2 class="result-title"> 아비도스 융화 재료 </h2>
                         <template v-if="result.normal.totalO === 0">
@@ -575,9 +576,9 @@
                                 </div>
                             </div>
                         </template>
-
+                        
                         <hr class="result-divider">
-
+                        
                         <h2 class="result-title"> 상급 아비도스 융화 재료 </h2>
                         <template v-if="result.advanced.totalO === 0">
                             <div class="no-production">제작이 불가능합니다.</div>
@@ -614,7 +615,7 @@
                             </div>
                         </template>
                     </template>
-
+                    
                     <template v-else-if="result.mode === 'deficit'">
                         <h2 class="result-title"> 아비도스 융화 재료 </h2>
                         <template v-if="result.normal.totalO === 0">
@@ -644,7 +645,7 @@
                                     <span v-else class="text-surplus">충분함 ({{ Math.abs(result.normal.deficitB).toLocaleString() }}개 남음)</span>
                                 </div>
                             </div>
-
+                            
                             <div class="final-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 12px 10px 0;">
                                 <span class="resource-label normal-product">
                                     <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
@@ -653,9 +654,9 @@
                                 <div class="count"><span class="num-point">{{ result.normal.totalO }}</span>회 제작</div>
                             </div>
                         </template>
-
+                        
                         <hr class="result-divider">
-
+                        
                         <h2 class="result-title"> 상급 아비도스 융화 재료 </h2>
                         <template v-if="result.advanced.totalO === 0">
                             <div class="no-production">기준점(4티어 재료) 수량이 너무 적습니다.</div>
@@ -684,7 +685,7 @@
                                     <span v-else class="text-surplus">충분함 ({{ Math.abs(result.advanced.deficitB).toLocaleString() }}개 남음)</span>
                                 </div>
                             </div>
-
+                            
                             <div class="final-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 12px 10px 0;">
                                 <span class="resource-label final-product">
                                     <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
@@ -695,7 +696,7 @@
                         </template>
                     </template>
                 </div>
-
+                
                 <div v-if="selectedResources.S && calcMode === 'optimize' && exchangeType === 'normal'" class="guide-wrap">
                     <button class="guide-toggle-btn" :class="{'is-open': showExchangeGuide}" @click="showExchangeGuide = !showExchangeGuide">
                         <span>{{ shortSName }} 교환 제작 구매 가이드</span>
@@ -723,10 +724,18 @@
                             <tbody>
                                 <tr v-for="row in guideTableData" :key="row.target">
                                     <td style="border-right: 1px solid #3a3a3a; font-weight:bold;">{{ row.target }}회</td>
-                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">{{ row.normS }}개</td>
-                                    <td class="clickable-td" style="border-right: 1px solid #3a3a3a;" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">{{ row.normB }}개</td>
-                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'adv-' + row.target}" @mouseenter="hoverTarget = 'adv-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('advanced', row)">{{ row.advS }}개</td>
-                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'adv-' + row.target}" @mouseenter="hoverTarget = 'adv-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('advanced', row)">{{ row.advB }}개</td>
+                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
+                                        {{ row.normS }}개
+                                    </td>
+                                    <td class="clickable-td" style="border-right: 1px solid #3a3a3a;" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
+                                        {{ row.normB }}개
+                                    </td>
+                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'adv-' + row.target}" @mouseenter="hoverTarget = 'adv-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('advanced', row)">
+                                        {{ row.advS }}개
+                                    </td>
+                                    <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'adv-' + row.target}" @mouseenter="hoverTarget = 'adv-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('advanced', row)">
+                                        {{ row.advB }}개
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -738,7 +747,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="right-column">
                 <div class="right-panel wrap-cal">
                     <div class="section-header" style="margin-top: 0;">
@@ -748,10 +757,18 @@
                     <div class="ranking-board-wrap" :class="{'is-expanded': showAllRanks}">
                         <div class="ranking-board" :style="customRankingHeight ? { height: customRankingHeight + 'px', overflowY: 'hidden' } : {}">
                             <div class="ranking-row ranking-header">
-                                <div class="sortable-header" @click="toggleSort('name')">제작 아이템<span class="sort-icon" v-if="sortKey === 'name'">{{ sortIconText }}</span></div>
-                                <div class="sortable-header" @click="toggleSort('price')">시세<span class="sort-icon" v-if="sortKey === 'price'">{{ sortIconText }}</span></div>
-                                <div class="sortable-header" @click="toggleSort('cost')">제작비용<span class="sort-icon" v-if="sortKey === 'cost'">{{ sortIconText }}</span></div>
-                                <div class="sortable-header" @click="toggleSort('profit')">판매손익<span class="sort-icon" v-if="sortKey === 'profit'">{{ sortIconText }}</span></div>
+                                <div class="sortable-header" @click="toggleSort('name')">
+                                    제작 아이템<span class="sort-icon" v-if="sortKey === 'name'">{{ sortIconText }}</span>
+                                </div>
+                                <div class="sortable-header" @click="toggleSort('price')">
+                                    시세<span class="sort-icon" v-if="sortKey === 'price'">{{ sortIconText }}</span>
+                                </div>
+                                <div class="sortable-header" @click="toggleSort('cost')">
+                                    제작비용<span class="sort-icon" v-if="sortKey === 'cost'">{{ sortIconText }}</span>
+                                </div>
+                                <div class="sortable-header" @click="toggleSort('profit')">
+                                    판매손익<span class="sort-icon" v-if="sortKey === 'profit'">{{ sortIconText }}</span>
+                                </div>
                             </div>
                             
                             <div v-for="rank in displayedRankingList" :key="rank.id" class="ranking-row" :class="{'is-profit': rank.profit > 0, 'is-loss': rank.profit <= 0}">
@@ -763,8 +780,12 @@
                                         <img :src="rank.icon" class="resource-icon">
                                     </div>
                                     <div class="name-text-wrap">
-                                        <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">{{ rank.nameBase.replace(' 융화 재료', '') }}</span>
-                                        <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">융화 재료</span>
+                                        <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">
+                                            {{ rank.nameBase.replace(' 융화 재료', '') }}
+                                        </span>
+                                        <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">
+                                            융화 재료
+                                        </span>
                                         <span style="color: #888; font-size: 0.85em; margin-left: 2px;">{{ rank.nameSub }}</span>
                                     </div>
                                 </div>
@@ -772,35 +793,46 @@
                                     <input type="number" v-model.number="market[rank.priceKey].price" class="input-in-table">
                                     <span style="color: #ffd700; font-size: 0.85em; font-weight: bold;">G</span>
                                 </div>
-                                <div class="rank-cost-col">{{ Math.floor(rank.cost).toLocaleString() }} G</div>
+                                <div class="rank-cost-col">
+                                    {{ Math.floor(rank.cost).toLocaleString() }} G
+                                </div>
                                 <div class="rank-profit-col" :class="{'profit-plus': rank.profit > 0, 'profit-minus': rank.profit <= 0}">
                                     {{ rank.profit > 0 ? '+' : '' }}{{ Math.floor(rank.profit).toLocaleString() }} G
                                 </div>
                             </div>
                         </div>
                         
-                        <button v-if="rankingList.length > 3" class="modern-expand-btn" @mousedown.prevent="initDrag" @click="toggleRanks" style="cursor: ns-resize;" :title="showAllRanks ? '랭킹 접기' : '전체 랭킹 펼치기 (드래그하여 크기 조절)'">
-                            <span class="chevron" :class="{ 'is-open': showAllRanks }">{{ showAllRanks ? '︿' : '﹀' }}</span>
+                        <button v-if="rankingList.length > 3" 
+                            class="modern-expand-btn" 
+                            @mousedown.prevent="initDrag"
+                            @click="toggleRanks"
+                            style="cursor: ns-resize;"
+                            :title="showAllRanks ? '랭킹 접기' : '전체 랭킹 펼치기 (드래그하여 크기 조절)'">
+                            <span class="chevron" :class="{ 'is-open': showAllRanks }">
+                                {{ showAllRanks ? '︿' : '﹀' }}
+                            </span>
                         </button>
                     </div>
                 </div>
-
+                
                 <div class="right-panel wrap-cal" style="margin-bottom: 0;">
                     <div class="section-header" style="margin-top: 0; align-items: center;">
                         <h2>제작 수익 계산</h2>
                         
                         <div class="sync-pill">
                             <div class="sync-info">
-                                <i class="live-dot" :class="{'is-syncing': fetching}" style="position: relative; top: -0.5px;"></i>
+                                <i class="live-dot" :class="{'is-syncing': fetching}" style="position: relative; top: -0.5px;" ></i>
                                 <span style="position: relative; top: -1px;">갱신: {{ fetching ? '데이터 동기화 중...' : (lastMarketUpdate ? lastMarketUpdate : '데이터 없음') }}</span>
                             </div>
                             <button class="btn-sync-icon" @click="fetchMarketData(true)" :disabled="fetching || isCooldown" title="시세 새로고침">
-                                <span v-if="isCooldown" style="font-size: 0.85em; color: #b0b0b0; font-weight: bold;">{{ cooldownTimer }}</span>
+                                <span v-if="isCooldown" style="font-size: 0.85em; color: #b0b0b0; font-weight: bold;">
+                                    {{ cooldownTimer }}
+                                </span>
                                 <span v-else>↻</span>
                             </button>
                         </div>
                     </div>
-
+                    
                     <div class="control-panel-box">
                         <div class="stronghold-setting-box">
                             <span class="setting-title">영지 효과</span> 
@@ -821,7 +853,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div>
                             <div class="market-box" style="margin-top: 0; background-color: #1a1a1a;">
                                 <div class="market-header">
@@ -833,194 +865,330 @@
                                 </div>
                                 <div class="market-row" style="margin-bottom: 0;">
                                     <span>현재 최저가 (1개)</span>
-                                    <span><input type="number" v-model.number="market.normal.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span></span>
-                                </div>
-                                
-                                <template v-if="calcMode === 'optimize'">
-                                    <div class="scenario-section self-craft">
-                                        <div class="scenario-header"><span class="scenario-title" style="border:none; margin:0; padding:0;">자급자족 (재료값 0G)</span></div>
-                                        <div class="scenario-row">
-                                            <span>1회 제작 순수익</span>
-                                            <span :class="{'profit-plus': profitPerCraft.normal.zeroCost > 0, 'profit-minus': profitPerCraft.normal.zeroCost <= 0}">{{ profitPerCraft.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.normal.zeroCost).toLocaleString() }} G</span>
-                                        </div>
-                                        <template v-if="result && result.normal.totalO > 0">
-                                            <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
-                                                <div class="scenario-row"><span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span></div>
-                                                <div class="scenario-row" style="color: #666;"><span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span><span>- 0 G</span></div>
-                                                <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span></div>
-                                                <div class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="batchProfits.normal.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ batchProfits.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.zeroCost).toLocaleString() }} G</span></div>
-                                            </div>
-                                        </template>
-                                    </div>
-
-                                    <div class="scenario-section market-buy">
-                                        <div class="scenario-header">
-                                            <span class="scenario-title" style="border:none; margin:0; padding:0;">경매장 구매 (재료값 반영)</span>
-                                            <span v-if="profitPerCraft.normal.isExchange" class="badge-exchange">{{ shortSName }} 교환 제작 추천</span>
-                                        </div>
-                                        <div class="scenario-row">
-                                            <span>1회 제작 순수익</span>
-                                            <span :class="{'profit-plus': profitPerCraft.normal.fullCost > 0, 'profit-minus': profitPerCraft.normal.fullCost <= 0}">{{ profitPerCraft.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.normal.fullCost).toLocaleString() }} G</span>
-                                        </div>
-                                        <template v-if="result && result.normal.totalO > 0">
-                                            <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
-                                                <div class="scenario-row"><span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span></div>
-                                                <div class="scenario-row" style="color: #888;"><span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span><div class="tooltip-box" v-html="batchProfits.normal.formulaHtml"></div></span><span class="profit-minus">- {{ Math.floor(batchProfits.normal.opportunityCost).toLocaleString() }} G</span></div>
-                                                <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span></div>
-                                                <div class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="batchProfits.normal.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ batchProfits.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.fullCost).toLocaleString() }} G</span></div>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </template>
-                                
-                                <template v-else-if="calcMode === 'deficit'">
-                                    <div class="scenario-section deficit-craft">
-                                        <div class="scenario-header">
-                                            <span class="scenario-title" style="border:none; margin:0; padding:0;">현재 보유 재료 기반 총수익</span>
-                                            <button @click="includeSurplus = !includeSurplus" class="toggle-btn" :class="{ 'active': includeSurplus }">남는 재료 판매 {{ includeSurplus ? 'ON' : 'OFF' }}</button>
-                                        </div>
-                                        <div class="scenario-row" v-if="result && result.normal.totalO > 0"><span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.totalRevenue).toLocaleString() }} G</span></div>
-                                        <div class="scenario-row" style="color: #888;"><span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span><span class="profit-minus">- {{ Math.floor(deficitCosts.normal.opportunityCost).toLocaleString() }} G</span></div>
-                                        <div class="scenario-row"><span>부족한 재료 구매 비용</span><span class="profit-minus">- {{ Math.floor(deficitCosts.normal.missingMatCost).toLocaleString() }} G</span></div>
-                                        <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(deficitCosts.normal.totalFee).toLocaleString() }} G</span></div>
-                                        <div class="scenario-row" v-if="includeSurplus && deficitCosts.normal.surplusProfit > 0"><span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span><span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.surplusProfit).toLocaleString() }} G</span></div>
-                                        <div v-if="result && result.normal.totalO > 0" class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="deficitCosts.normal.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ deficitCosts.normal.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.normal.totalProfit).toLocaleString() }} G</span></div>
-                                    </div>
-                                </template>
-                            </div>
-
-                            <div class="market-box" style="background-color: #1a1a1a;">
-                                <div class="market-header">
-                                    <span class="resource-label final-product">
-                                        <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
-                                        <h3 class="final-product" style="display:inline; margin-left:5px;">상급 아비도스 융화 재료</h3>
+                                    <span>
+                                        <input type="number" v-model.number="market.normal.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span>
                                     </span>
-                                    <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
-                                </div>
-                                <div class="market-row" style="margin-bottom: 0;">
-                                    <span>현재 최저가 (1개)</span>
-                                    <span><input type="number" v-model.number="market.advanced.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span></span>
                                 </div>
                                 
                                 <template v-if="calcMode === 'optimize'">
                                     <div class="scenario-section self-craft">
-                                        <div class="scenario-header"><span class="scenario-title" style="border:none; margin:0; padding:0;">자급자족 (재료값 0G)</span></div>
+                                        <div class="scenario-header">
+                                            <span class="scenario-title" style="border:none; margin:0; padding:0;">자급자족 (재료값 0G)</span>
+                                        </div>
                                         <div class="scenario-row">
                                             <span>1회 제작 순수익</span>
-                                            <span :class="{'profit-plus': profitPerCraft.advanced.zeroCost > 0, 'profit-minus': profitPerCraft.advanced.zeroCost <= 0}">{{ profitPerCraft.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.advanced.zeroCost).toLocaleString() }} G</span>
+                                            <span :class="{'profit-plus': profitPerCraft.normal.zeroCost > 0, 'profit-minus': profitPerCraft.normal.zeroCost <= 0}">
+                                                {{ profitPerCraft.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.normal.zeroCost).toLocaleString() }} G
+                                            </span>
                                         </div>
-                                        <template v-if="result && result.advanced.totalO > 0">
+                                        <template v-if="result && result.normal.totalO > 0">
                                             <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
-                                                <div class="scenario-row"><span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span></div>
-                                                <div class="scenario-row" style="color: #666;"><span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span><span>- 0 G</span></div>
-                                                <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span></div>
-                                                <div class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="batchProfits.advanced.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ batchProfits.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.zeroCost).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row">
+                                                    <span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span>
+                                                    <span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span>
+                                                </div>
+                                                <div class="scenario-row" style="color: #666;">
+                                                    <span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span>
+                                                    <span>- 0 G</span>
+                                                </div>
+                                                <div class="scenario-row">
+                                                    <span>영지 제작 수수료</span>
+                                                    <span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span>
+                                                </div>
+                                                <div class="scenario-row total-profit-row">
+                                                    <span style="color: #ffd700;">최종 예상 수익</span>
+                                                    <span :class="batchProfits.normal.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
+                                                        {{ batchProfits.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.zeroCost).toLocaleString() }} G
+                                                    </span>
+                                                </div>
                                             </div>
                                         </template>
                                     </div>
-
+                                    
                                     <div class="scenario-section market-buy">
                                         <div class="scenario-header">
                                             <span class="scenario-title" style="border:none; margin:0; padding:0;">경매장 구매 (재료값 반영)</span>
-                                            <span v-if="profitPerCraft.advanced.isExchange" class="badge-exchange">{{ shortSName }} 교환 제작 추천</span>
+                                            <span v-if="profitPerCraft.normal.isExchange" class="badge-exchange">
+                                                {{ shortSName }} 교환 제작 추천
+                                            </span>
                                         </div>
                                         <div class="scenario-row">
                                             <span>1회 제작 순수익</span>
-                                            <span :class="{'profit-plus': profitPerCraft.advanced.fullCost > 0, 'profit-minus': profitPerCraft.advanced.fullCost <= 0}">{{ profitPerCraft.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.advanced.fullCost).toLocaleString() }} G</span>
+                                            <span :class="{'profit-plus': profitPerCraft.normal.fullCost > 0, 'profit-minus': profitPerCraft.normal.fullCost <= 0}">
+                                                {{ profitPerCraft.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.normal.fullCost).toLocaleString() }} G
+                                            </span>
                                         </div>
-                                        <template v-if="result && result.advanced.totalO > 0">
+                                        <template v-if="result && result.normal.totalO > 0">
                                             <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
-                                                <div class="scenario-row"><span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span></div>
-                                                <div class="scenario-row" style="color: #888;"><span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span><div class="tooltip-box" v-html="batchProfits.advanced.formulaHtml"></div></span><span class="profit-minus">- {{ Math.floor(batchProfits.advanced.opportunityCost).toLocaleString() }} G</span></div>
-                                                <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span></div>
-                                                <div class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="batchProfits.advanced.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ batchProfits.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.fullCost).toLocaleString() }} G</span></div>
+                                                <div class="scenario-row">
+                                                    <span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span>
+                                                    <span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span>
+                                                </div>
+                                                <div class="scenario-row" style="color: #888;">
+                                                    <span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span>
+                                                    <div class="tooltip-box" v-html="batchProfits.normal.formulaHtml"></div>
+                                                </span>
+                                                <span class="profit-minus">- {{ Math.floor(batchProfits.normal.opportunityCost).toLocaleString() }} G</span>
                                             </div>
-                                        </template>
-                                    </div>
-                                </template>
-                                
-                                <template v-else-if="calcMode === 'deficit'">
-                                    <div class="scenario-section deficit-craft">
-                                        <div class="scenario-header">
-                                            <span class="scenario-title" style="border:none; margin:0; padding:0;">현재 보유 재료 기반 총수익</span>
-                                            <button @click="includeSurplus = !includeSurplus" class="toggle-btn" :class="{ 'active': includeSurplus }">남는 재료 판매 {{ includeSurplus ? 'ON' : 'OFF' }}</button>
+                                            <div class="scenario-row">
+                                                <span>영지 제작 수수료</span>
+                                                <span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span>
+                                            </div>
+                                            <div class="scenario-row total-profit-row">
+                                                <span style="color: #ffd700;">최종 예상 수익</span>
+                                                <span :class="batchProfits.normal.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
+                                                    {{ batchProfits.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.fullCost).toLocaleString() }} G
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div class="scenario-row" v-if="result && result.advanced.totalO > 0"><span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span><span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.totalRevenue).toLocaleString() }} G</span></div>
-                                        <div class="scenario-row" style="color: #888;"><span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span><span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.opportunityCost).toLocaleString() }} G</span></div>
-                                        <div class="scenario-row"><span>부족한 재료 구매 비용</span><span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.missingMatCost).toLocaleString() }} G</span></div>
-                                        <div class="scenario-row"><span>영지 제작 수수료</span><span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.totalFee).toLocaleString() }} G</span></div>
-                                        <div class="scenario-row" v-if="includeSurplus && deficitCosts.advanced.surplusProfit > 0"><span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span><span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.surplusProfit).toLocaleString() }} G</span></div>
-                                        <div v-if="result && result.advanced.totalO > 0" class="scenario-row total-profit-row"><span style="color: #ffd700;">최종 예상 수익</span><span :class="deficitCosts.advanced.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">{{ deficitCosts.advanced.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.advanced.totalProfit).toLocaleString() }} G</span></div>
+                                    </template>
+                                </div>
+                            </template>
+                            
+                            <template v-else-if="calcMode === 'deficit'">
+                                <div class="scenario-section deficit-craft">
+                                    <div class="scenario-header">
+                                        <span class="scenario-title" style="border:none; margin:0; padding:0;">현재 보유 재료 기반 총수익</span>
+                                        <button @click="includeSurplus = !includeSurplus" class="toggle-btn" :class="{ 'active': includeSurplus }">
+                                            남는 재료 판매 {{ includeSurplus ? 'ON' : 'OFF' }}
+                                        </button>
+                                    </div>
+                                    <div class="scenario-row" v-if="result && result.normal.totalO > 0">
+                                        <span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span>
+                                        <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.totalRevenue).toLocaleString() }} G</span>
+                                    </div>
+                                    <div class="scenario-row" style="color: #888;">
+                                        <span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span>
+                                        <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.opportunityCost).toLocaleString() }} G</span>
+                                    </div>
+                                    <div class="scenario-row">
+                                        <span>부족한 재료 구매 비용</span>
+                                        <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.missingMatCost).toLocaleString() }} G</span>
+                                    </div>
+                                    <div class="scenario-row">
+                                        <span>영지 제작 수수료</span>
+                                        <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.totalFee).toLocaleString() }} G</span>
+                                    </div>
+                                    <div class="scenario-row" v-if="includeSurplus && deficitCosts.normal.surplusProfit > 0">
+                                        <span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span>
+                                        <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.surplusProfit).toLocaleString() }} G</span>
+                                    </div>
+                                    <div v-if="result && result.normal.totalO > 0" class="scenario-row total-profit-row">
+                                        <span style="color: #ffd700;">최종 예상 수익</span>
+                                        <span :class="deficitCosts.normal.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
+                                            {{ deficitCosts.normal.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.normal.totalProfit).toLocaleString() }} G
+                                        </span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        
+                        <div class="market-box" style="background-color: #1a1a1a;">
+                            <div class="market-header">
+                                <span class="resource-label final-product">
+                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
+                                    <h3 class="final-product" style="display:inline; margin-left:5px;">상급 아비도스 융화 재료</h3>
+                                </span>
+                                <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
+                            </div>
+                            <div class="market-row" style="margin-bottom: 0;">
+                                <span>현재 최저가 (1개)</span>
+                                <span>
+                                    <input type="number" v-model.number="market.advanced.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span>
+                                </span>
+                            </div>
+                            
+                            <template v-if="calcMode === 'optimize'">
+                                <div class="scenario-section self-craft">
+                                    <div class="scenario-header">
+                                        <span class="scenario-title" style="border:none; margin:0; padding:0;">자급자족 (재료값 0G)</span>
+                                    </div>
+                                    <div class="scenario-row">
+                                        <span>1회 제작 순수익</span>
+                                        <span :class="{'profit-plus': profitPerCraft.advanced.zeroCost > 0, 'profit-minus': profitPerCraft.advanced.zeroCost <= 0}">
+                                            {{ profitPerCraft.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.advanced.zeroCost).toLocaleString() }} G
+                                        </span>
+                                    </div>
+                                    <template v-if="result && result.advanced.totalO > 0">
+                                        <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
+                                            <div class="scenario-row">
+                                                <span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span>
+                                                <span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span>
+                                            </div>
+                                            <div class="scenario-row" style="color: #666;">
+                                                <span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span>
+                                                <span>- 0 G</span>
+                                            </div>
+                                            <div class="scenario-row">
+                                                <span>영지 제작 수수료</span>
+                                                <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span>
+                                            </div>
+                                            <div class="scenario-row total-profit-row">
+                                                <span style="color: #ffd700;">최종 예상 수익</span>
+                                                <span :class="batchProfits.advanced.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
+                                                    {{ batchProfits.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.zeroCost).toLocaleString() }} G
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                                
+                                <div class="scenario-section market-buy">
+                                    <div class="scenario-header">
+                                        <span class="scenario-title" style="border:none; margin:0; padding:0;">경매장 구매 (재료값 반영)</span>
+                                        <span v-if="profitPerCraft.advanced.isExchange" class="badge-exchange">
+                                            {{ shortSName }} 교환 제작 추천
+                                        </span>
+                                    </div>
+                                    <div class="scenario-row">
+                                        <span>1회 제작 순수익</span>
+                                        <span :class="{'profit-plus': profitPerCraft.advanced.fullCost > 0, 'profit-minus': profitPerCraft.advanced.fullCost <= 0}">
+                                            {{ profitPerCraft.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.advanced.fullCost).toLocaleString() }} G
+                                        </span>
+                                    </div>
+                                    <template v-if="result && result.advanced.totalO > 0">
+                                        <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
+                                            <div class="scenario-row">
+                                                <span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span>
+                                                <span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span>
+                                            </div>
+                                            <div class="scenario-row" style="color: #888;">
+                                                <span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span>
+                                                <div class="tooltip-box" v-html="batchProfits.advanced.formulaHtml"></div>
+                                            </span>
+                                            <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.opportunityCost).toLocaleString() }} G</span>
+                                        </div>
+                                        <div class="scenario-row">
+                                            <span>영지 제작 수수료</span>
+                                            <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span>
+                                        </div>
+                                        <div class="scenario-row total-profit-row">
+                                            <span style="color: #ffd700;">최종 예상 수익</span>
+                                            <span :class="batchProfits.advanced.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
+                                                {{ batchProfits.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.fullCost).toLocaleString() }} G
+                                            </span>
+                                        </div>
                                     </div>
                                 </template>
                             </div>
-                        </div>
-                    </div>
-                </div> 
-                <div class="update-box">update: 2026.03.29</div>
-            </div> 
-        </div>
-
-        <footer class="app-footer">
-            <div class="footer-disclaimer">
-                <span>© 2026 아비도스 제작 계산기. All Rights Reserved. This site is not associated with Smilegate RPG & Smilegate Stove. Data based on Lostark Open API.</span>
-                <a href="/privacy" class="privacy-link">개인정보 처리방침</a>
-            </div>
-        </footer>
-
-        <div v-if="loading || fetching" class="loading-overlay">
-            <div class="loading-spinner"></div>
-        </div>
-
-        <!-- 영지 농장 탭일 때는 시세 툴팁을 표시하지 않음 -->
-        <div v-show="hoveredMarketItem && !(calcMode === 'optimize' && exchangeType === 'farm')" class="market-chart-tooltip" :style="tooltipStyle" @mouseenter="cancelHideTooltip" @mouseleave="hideChartTooltip">
-            <div class="mct-header">
-                <span class="mct-title" :class="hoveredItemDetails ? hoveredItemDetails.class : ''">
-                    <div class="resource-icon-wrap" v-if="hoveredItemDetails">
-                        <img :src="hoveredItemDetails.imgUrl" class="resource-icon">
-                    </div>
-                    {{ hoveredMarketItem }} 
-                    <span style="font-size:12px; font-weight:normal; color:#aaa; margin-left:4px;">최근 거래 정보</span>
-                </span>
-                <span class="mct-date">{{ lastMarketUpdate }} 기준</span>
-            </div>
-            <template v-if="currentHoveredStats">
-                <div class="mct-summary">
-                    <div class="mct-summary-item"><span class="mct-label">오늘의 평균 거래가</span><span class="mct-value">{{ currentHoveredStats.todayAvg }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
-                    <div class="mct-summary-item"><span class="mct-label">14일간 평균 거래가</span><span class="mct-value">{{ currentHoveredStats.avg14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
-                    <div class="mct-summary-item"><span class="mct-label">14일간 최고 거래가</span><span class="mct-value">{{ currentHoveredStats.high14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
-                    <div class="mct-summary-item"><span class="mct-label">14일간 최저 거래가</span><span class="mct-value">{{ currentHoveredStats.low14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span></div>
-                </div>
-                <div class="mct-body">
-                    <div class="mct-chart-wrap">
-                        <canvas id="marketChartCanvas"></canvas>
-                    </div>
-                    <div class="mct-table-wrap">
-                        <table class="mct-table">
-                            <thead>
-                                <tr><th>거래 일자</th><th>평균 거래가</th><th>판매 건수</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="row in currentHoveredStats.history" :key="row.date">
-                                    <td>{{ row.date }}</td>
-                                    <td>{{ fmtDecimal(row.avgPrice) }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></td>
-                                    <td>{{ (row.volume ?? 0).toLocaleString() }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        </template>
+                        
+                        <template v-else-if="calcMode === 'deficit'">
+                            <div class="scenario-section deficit-craft">
+                                <div class="scenario-header">
+                                    <span class="scenario-title" style="border:none; margin:0; padding:0;">현재 보유 재료 기반 총수익</span>
+                                    <button @click="includeSurplus = !includeSurplus" class="toggle-btn" :class="{ 'active': includeSurplus }">
+                                        남는 재료 판매 {{ includeSurplus ? 'ON' : 'OFF' }}
+                                    </button>
+                                </div>
+                                <div class="scenario-row" v-if="result && result.advanced.totalO > 0">
+                                    <span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span>
+                                    <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.totalRevenue).toLocaleString() }} G</span>
+                                </div>
+                                <div class="scenario-row" style="color: #888;">
+                                    <span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span>
+                                    <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.opportunityCost).toLocaleString() }} G</span>
+                                </div>
+                                <div class="scenario-row">
+                                    <span>부족한 재료 구매 비용</span>
+                                    <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.missingMatCost).toLocaleString() }} G</span>
+                                </div>
+                                <div class="scenario-row">
+                                    <span>영지 제작 수수료</span>
+                                    <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.totalFee).toLocaleString() }} G</span>
+                                </div>
+                                <div class="scenario-row" v-if="includeSurplus && deficitCosts.advanced.surplusProfit > 0">
+                                    <span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span>
+                                    <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.surplusProfit).toLocaleString() }} G</span>
+                                </div>
+                                <div v-if="result && result.advanced.totalO > 0" class="scenario-row total-profit-row">
+                                    <span style="color: #ffd700;">최종 예상 수익</span>
+                                    <span :class="deficitCosts.advanced.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
+                                        {{ deficitCosts.advanced.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.advanced.totalProfit).toLocaleString() }} G
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
-            </template>
-            <div v-else style="padding: 30px; text-align: center; color: #888; font-size: 13px;">
-                시세 데이터를 불러오는 중이거나 기록이 없습니다.
             </div>
-        </div>
+        </div> 
+        <div class="update-box">update: 2026.03.29</div>
+    </div> 
+</div>
 
+<footer class="app-footer">
+    <div class="footer-disclaimer">
+        <span>© 2026 아비도스 제작 계산기. All Rights Reserved. This site is not associated with Smilegate RPG & Smilegate Stove. Data based on Lostark Open API.</span>
+        <a href="/privacy" class="privacy-link">개인정보 처리방침</a>
     </div>
+</footer>
+
+<div v-if="loading || fetching" class="loading-overlay">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- 영지 농장 탭일 때는 시세 툴팁을 표시하지 않음 -->
+<div v-show="hoveredMarketItem && !(calcMode === 'optimize' && exchangeType === 'farm')" class="market-chart-tooltip" :style="tooltipStyle" @mouseenter="cancelHideTooltip" @mouseleave="hideChartTooltip">
+    <div class="mct-header">
+        <span class="mct-title" :class="hoveredItemDetails ? hoveredItemDetails.class : ''">
+            <div class="resource-icon-wrap" v-if="hoveredItemDetails">
+                <img :src="hoveredItemDetails.imgUrl" class="resource-icon">
+            </div>
+            {{ hoveredMarketItem }} 
+            <span style="font-size:12px; font-weight:normal; color:#aaa; margin-left:4px;">최근 거래 정보</span>
+        </span>
+        <span class="mct-date">{{ lastMarketUpdate }} 기준</span>
+    </div>
+    <template v-if="currentHoveredStats">
+        <div class="mct-summary">
+            <div class="mct-summary-item">
+                <span class="mct-label">오늘의 평균 거래가</span>
+                <span class="mct-value">{{ currentHoveredStats.todayAvg }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+            </div>
+            <div class="mct-summary-item">
+                <span class="mct-label">14일간 평균 거래가</span>
+                <span class="mct-value">{{ currentHoveredStats.avg14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+            </div>
+            <div class="mct-summary-item">
+                <span class="mct-label">14일간 최고 거래가</span>
+                <span class="mct-value">{{ currentHoveredStats.high14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+            </div>
+            <div class="mct-summary-item">
+                <span class="mct-label">14일간 최저 거래가</span>
+                <span class="mct-value">{{ currentHoveredStats.low14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+            </div>
+        </div>
+        <div class="mct-body">
+            <div class="mct-chart-wrap">
+                <canvas id="marketChartCanvas"></canvas>
+            </div>
+            <div class="mct-table-wrap">
+                <table class="mct-table">
+                    <thead>
+                        <tr><th>거래 일자</th><th>평균 거래가</th><th>판매 건수</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in currentHoveredStats.history" :key="row.date">
+                            <td>{{ row.date }}</td>
+                            <td>{{ row.avgPrice }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></td>
+                            <td>{{ row.volume.toLocaleString() }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+    <div v-else style="padding: 30px; text-align: center; color: #888; font-size: 13px;">
+        시세 데이터를 불러오는 중이거나 기록이 없습니다.
+    </div>
+</div>
+
+</div>
 
 <script>
     const { createApp } = Vue;
-
+    
     createApp({
         data() {
             return {
@@ -1051,113 +1219,114 @@
                 selectedMaterial: "WL",
                 sortKey: null,
                 sortDir: 0,
+                // 차트 툴팁용 상태
                 hoveredMarketItem: null,
-                tooltipTimer: null,
+                tooltipTimer: null, // 툴팁 딜레이 타이머
                 tooltipStyle: { top: '0px', left: '0px' },
                 marketStats: {},
                 materials: [
-                    { 
-                        code: "WL", name: "벌목", 
-                        resources: { 
-                            A: { name: "목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_252.png" }, 
-                            B: { name: "부드러운 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_253.png" }, 
-                            S: { name: "튼튼한 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_4.png" }, 
-                            C: { name: "아비도스 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_48.png" }, 
-                            P: { name: "벌목의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_37.png" } 
-                        },
-                        farmResources: { 
-                            A: { name: "원목", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_153.png" }, 
-                            B: { name: "부드러운 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_154.png" }, 
-                            S: { name: "단단한 원목", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_65.png" }, 
-                            C: { name: "아비도스 원목", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_57.png" }, 
-                            P: { name: "벌목의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_37.png" } 
-                        }
+                { 
+                    code: "WL", name: "벌목", 
+                    resources: { 
+                        A: { name: "목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_252.png" }, 
+                        B: { name: "부드러운 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_253.png" }, 
+                        S: { name: "튼튼한 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_4.png" }, 
+                        C: { name: "아비도스 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_48.png" }, 
+                        P: { name: "벌목의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_37.png" } 
                     },
-                    { 
-                        code: "MN", name: "채광", 
-                        resources: { 
-                            A: { name: "철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_243.png" }, 
-                            B: { name: "묵직한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_239.png" }, 
-                            S: { name: "단단한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_76.png" }, 
-                            C: { name: "아비도스 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_49.png" }, 
-                            P: { name: "채광의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_36.png" } 
-                        },
-                        farmResources: { 
-                            A: { name: "투박한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_188.png" }, 
-                            B: { name: "천연 보석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_198.png" }, 
-                            S: { name: "단단한 원석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_76.png" }, 
-                            C: { name: "아비도스 원석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_58.png" }, 
-                            P: { name: "채광의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_36.png" } 
-                        }
-                    },
-                    { 
-                        code: "AR", name: "고고학", 
-                        resources: { 
-                            A: { name: "고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_3.png" }, 
-                            B: { name: "희귀한 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_4.png" }, 
-                            S: null, 
-                            C: { name: "아비도스 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_55.png" }, 
-                            P: { name: "고고학의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_40.png" } 
-                        },
-                        farmResources: { 
-                            A: { name: "오래된 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_28.png" }, 
-                            B: { name: "은은한 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_54.png" }, 
-                            S: { name: "진귀한 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_62.png" }, 
-                            C: { name: "아비도스 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_55.png" }, 
-                            P: { name: "고고학의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_40.png" } 
-                        }
-                    },
-                    { 
-                        code: "FS", name: "낚시", 
-                        resources: { 
-                            A: { name: "생선", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_142.png" }, 
-                            B: { name: "붉은 살 생선", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_49.png" }, 
-                            S: null, 
-                            C: { name: "아비도스 태양 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_53.png" }, 
-                            P: { name: "낚시의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_35.png" } 
-                        },
-                        farmResources: { 
-                            A: { name: "싱싱한 피라미", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_03_184.png" }, 
-                            B: { name: "튼튼한 붕어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_130.png" }, 
-                            S: { name: "오레하 금빛 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_67.png" }, 
-                            C: { name: "아비도스 금빛 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_53.png" }, 
-                            P: { name: "낚시의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_35.png" } 
-                        }
-                    },
-                    { 
-                        code: "HR", name: "수렵", 
-                        resources: { 
-                            A: { name: "두툼한 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_192.png" }, 
-                            B: { name: "다듬은 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_196.png" }, 
-                            S: null, 
-                            C: { name: "아비도스 두툼한 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_51.png" }, 
-                            P: { name: "수렵의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_39.png" } 
-                        },
-                        farmResources: { 
-                            A: { name: "생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_02_128.png" }, 
-                            B: { name: "고급 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_02_125.png" }, 
-                            S: { name: "두툼한 가죽", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_59.png" }, 
-                            C: { name: "아비도스 농장 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_60.png" }, 
-                            P: { name: "수렵의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_39.png" } 
-                        }
-                    },
-                    { 
-                        code: "CL", name: "채집", 
-                        resources: { 
-                            A: { name: "들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_46.png" }, 
-                            B: { name: "수줍은 들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_14.png" }, 
-                            S: null, 
-                            C: { name: "아비도스 들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_47.png" }, 
-                            P: { name: "채집의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_38.png" } 
-                        },
-                        farmResources: { 
-                            A: { name: "소박한 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_219.png" }, 
-                            B: { name: "귀여운 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_220.png" }, 
-                            S: { name: "화려한 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_218.png" }, 
-                            C: { name: "아비도스 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_56.png" }, 
-                            P: { name: "채집의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_38.png" } 
-                        }
+                    farmResources: { 
+                        A: { name: "원목", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_153.png" }, 
+                        B: { name: "부드러운 목재", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_154.png" }, 
+                        S: { name: "단단한 원목", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_65.png" }, 
+                        C: { name: "아비도스 원목", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_57.png" }, 
+                        P: { name: "벌목의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_37.png" } 
                     }
+                },
+                { 
+                    code: "MN", name: "채광", 
+                    resources: { 
+                        A: { name: "철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_243.png" }, 
+                        B: { name: "묵직한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_3_239.png" }, 
+                        S: { name: "단단한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_76.png" }, 
+                        C: { name: "아비도스 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_49.png" }, 
+                        P: { name: "채광의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_36.png" } 
+                    },
+                    farmResources: { 
+                        A: { name: "투박한 철광석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_188.png" }, 
+                        B: { name: "천연 보석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_198.png" }, 
+                        S: { name: "단단한 원석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_5_76.png" }, 
+                        C: { name: "아비도스 원석", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_58.png" }, 
+                        P: { name: "채광의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_36.png" } 
+                    }
+                },
+                { 
+                    code: "AR", name: "고고학", 
+                    resources: { 
+                        A: { name: "고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_3.png" }, 
+                        B: { name: "희귀한 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_9_4.png" }, 
+                        S: null, 
+                        C: { name: "아비도스 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_55.png" }, 
+                        P: { name: "고고학의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_40.png" } 
+                    },
+                    farmResources: { 
+                        A: { name: "오래된 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_28.png" }, 
+                        B: { name: "은은한 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_54.png" }, 
+                        S: { name: "진귀한 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_62.png" }, 
+                        C: { name: "아비도스 고대 유물", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_55.png" }, 
+                        P: { name: "고고학의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_40.png" } 
+                    }
+                },
+                { 
+                    code: "FS", name: "낚시", 
+                    resources: { 
+                        A: { name: "생선", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_142.png" }, 
+                        B: { name: "붉은 살 생선", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_49.png" }, 
+                        S: null, 
+                        C: { name: "아비도스 태양 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_53.png" }, 
+                        P: { name: "낚시의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_35.png" } 
+                    },
+                    farmResources: { 
+                        A: { name: "싱싱한 피라미", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_03_184.png" }, 
+                        B: { name: "튼튼한 붕어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_1_130.png" }, 
+                        S: { name: "오레하 금빛 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_67.png" }, 
+                        C: { name: "아비도스 금빛 잉어", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_53.png" }, 
+                        P: { name: "낚시의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_35.png" } 
+                    }
+                },
+                { 
+                    code: "HR", name: "수렵", 
+                    resources: { 
+                        A: { name: "두툼한 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_192.png" }, 
+                        B: { name: "다듬은 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_2_196.png" }, 
+                        S: null, 
+                        C: { name: "아비도스 두툼한 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_51.png" }, 
+                        P: { name: "수렵의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_39.png" } 
+                    },
+                    farmResources: { 
+                        A: { name: "생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_02_128.png" }, 
+                        B: { name: "고급 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_02_125.png" }, 
+                        S: { name: "두툼한 가죽", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_59.png" }, 
+                        C: { name: "아비도스 농장 생고기", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_60.png" }, 
+                        P: { name: "수렵의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_39.png" } 
+                    }
+                },
+                { 
+                    code: "CL", name: "채집", 
+                    resources: { 
+                        A: { name: "들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_8_46.png" }, 
+                        B: { name: "수줍은 들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_4_14.png" }, 
+                        S: null, 
+                        C: { name: "아비도스 들꽃", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_47.png" }, 
+                        P: { name: "채집의 가루", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_38.png" } 
+                    },
+                    farmResources: { 
+                        A: { name: "소박한 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_219.png" }, 
+                        B: { name: "귀여운 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_220.png" }, 
+                        S: { name: "화려한 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/all_quest/all_quest_01_218.png" }, 
+                        C: { name: "아비도스 꽃잎", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/lifelevel/lifelevel_02_56.png" }, 
+                        P: { name: "채집의 흔적", imgUrl: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_10_38.png" } 
+                    }
+                }
                 ],
                 result: null,
                 stronghold: { greatSuccess: 0, feeDiscount: 0 },
@@ -1176,6 +1345,7 @@
                 if (!this.hoveredMarketItem) return null;
                 if (this.hoveredMarketItem.includes('상급 아비도스 융화 재료')) return { class: 'final-product', imgUrl: 'https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png' };
                 if (this.hoveredMarketItem.includes('아비도스 융화 재료')) return { class: 'normal-product', imgUrl: 'https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png' };
+                
                 for (const [key, res] of Object.entries(this.selectedResources)) {
                     if (res && res.name === this.hoveredMarketItem) return { class: 'resource-' + key, imgUrl: res.imgUrl };
                 }
@@ -1183,12 +1353,26 @@
             },
             transformationMap() {
                 if (this.exchangeType === 'farm') {
-                    return { AtoP: { from: "A", to: "P" }, BtoP: { from: "B", to: "P" }, PtoB: { from: "P", to: "B" }, PtoC: { from: "P", to: "C" } };
+                    return {
+                        AtoP: { from: "A", to: "P" },
+                        BtoP: { from: "B", to: "P" },
+                        PtoB: { from: "P", to: "B" },
+                        PtoC: { from: "P", to: "C" }
+                    };
                 }
-                return { StoA: { from: "S", to: "A" }, BtoA: { from: "B", to: "A" }, BtoP: { from: "B", to: "P" }, AtoP: { from: "A", to: "P" }, PtoC: { from: "P", to: "C" }, PtoB: { from: "P", to: "B" }, PtoA: { from: "P", to: "A" } };
+                return { 
+                    StoA: { from: "S", to: "A" }, 
+                    BtoA: { from: "B", to: "A" }, 
+                    BtoP: { from: "B", to: "P" }, 
+                    AtoP: { from: "A", to: "P" }, 
+                    PtoC: { from: "P", to: "C" },
+                    PtoB: { from: "P", to: "B" }, 
+                    PtoA: { from: "P", to: "A" }  
+                };
             },
             guideTableData() {
                 const targets = [10, 20, 30, 40];
+                
                 const getExactS = (t, recA, recC) => {
                     const reqC = t * recC;
                     const excPtoC = Math.ceil(reqC / 10);
@@ -1198,14 +1382,17 @@
                     const excStoA = Math.ceil(reqA / 50);
                     return excStoA * 5;
                 };
+                
                 return targets.map(t => {
                     const nS_exact = getExactS(t, 86, 33);
                     const aS_exact = getExactS(t, 112, 43);
                     const nB_exact = t * 45;
                     const aB_exact = t * 59;
+                    
                     return {
                         target: t,
-                        normC: Math.ceil(t * 33), advC: Math.ceil(t * 43),  
+                        normC: Math.ceil(t * 33), 
+                        advC: Math.ceil(t * 43),  
                         normS: this.guideExactMode ? nS_exact : Math.ceil(nS_exact / 100) * 100,
                         normB: this.guideExactMode ? nB_exact : Math.ceil(nB_exact / 100) * 100,
                         advS: this.guideExactMode ? aS_exact : Math.ceil(aS_exact / 100) * 100,
@@ -1230,57 +1417,125 @@
                 const ranks = [];
                 const pN = this.market.normal.price || 0;
                 const pA = this.market.advanced.price || 0;
+                
                 const actualFeeN = Math.floor(400 * (1 - this.stronghold.feeDiscount / 100));
                 const actualFeeA = Math.floor(520 * (1 - this.stronghold.feeDiscount / 100));
+                
                 const finalGsRate = 0.05 * (1 + (this.stronghold.greatSuccess / 100));
                 const expectedYield = 10 * (1 + finalGsRate);
+                
                 const netPn = pN - Math.ceil(pN * 0.05);
                 const netPa = pA - Math.ceil(pA * 0.05);
+                
                 const revN = netPn * expectedYield;
                 const revA = netPa * expectedYield; 
-
+                
                 this.materials.forEach(mat => {
                     const activeRes = mat.resources; 
+                    
                     const matA = this.globalPrices[activeRes.A?.name] || 0;
                     const matB = this.globalPrices[activeRes.B?.name] || 0;
                     const matC = this.globalPrices[activeRes.C?.name] || 0;
                     const matS = activeRes.S ? (this.globalPrices[activeRes.S.name] || 0) : null;
+                    
                     const costMatN = (86 * matA / 100) + (45 * matB / 100) + (33 * matC / 100);
                     const costMatA = (112 * matA / 100) + (59 * matB / 100) + (43 * matC / 100);
+                    
                     const profitN = revN - actualFeeN - costMatN;
                     const profitA = revA - actualFeeA - costMatA;
-
-                    ranks.push({ id: `norm-${mat.code}`, type: 'normal', craftName: `아비도스 융화 재료(${mat.name})`, nameBase: `아비도스 융화 재료`, nameSub: `(${mat.name})`, icon: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png", priceKey: 'normal', cost: costMatN + actualFeeN, profit: profitN });
-                    ranks.push({ id: `adv-${mat.code}`, type: 'advanced', craftName: `상급 아비도스 융화 재료(${mat.name})`, nameBase: `상급 아비도스 융화 재료`, nameSub: `(${mat.name})`, icon: "https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png", priceKey: 'advanced', cost: costMatA + actualFeeA, profit: profitA });
-
+                    
+                    ranks.push({ 
+                        id: `norm-${mat.code}`,
+                        type: 'normal',
+                        craftName: `아비도스 융화 재료(${mat.name})`,
+                        nameBase: `아비도스 융화 재료`,
+                        nameSub: `(${mat.name})`,
+                        icon: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png",
+                        priceKey: 'normal',
+                        cost: costMatN + actualFeeN,
+                        profit: profitN
+                    });
+                    ranks.push({ 
+                        id: `adv-${mat.code}`,
+                        type: 'advanced',
+                        craftName: `상급 아비도스 융화 재료(${mat.name})`,
+                        nameBase: `상급 아비도스 융화 재료`,
+                        nameSub: `(${mat.name})`,
+                        icon: "https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png",
+                        priceKey: 'advanced',
+                        cost: costMatA + actualFeeA,
+                        profit: profitA
+                    });
+                    
                     if (matS !== null) {
                         let shortS = activeRes.S.name.substring(0,2);
                         const parts = activeRes.S.name.split(" ");
                         if (parts.length >= 2) shortS = parts[0][0] + parts[1][0];
                         const exName = shortS + "교환";
-                        const normB_bundles = 18; const normS_bundles = 20; 
-                        const advB_bundles = 23.6; const advS_bundles = 26;
+                        
+                        const normB_bundles = 18; 
+                        const normS_bundles = 20; 
+                        const advB_bundles = 23.6;
+                        const advS_bundles = 26;
+                        
                         const costExN = (normS_bundles * matS + normB_bundles * matB) / 40;
                         const costExA = (advS_bundles * matS + advB_bundles * matB) / 40;
-                        ranks.push({ id: `norm-ex-${mat.code}`, type: 'normal', craftName: `아비도스 융화 재료(${exName})`, nameBase: `아비도스 융화 재료`, nameSub: `(${exName})`, icon: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png", priceKey: 'normal', cost: costExN + actualFeeN, profit: revN - actualFeeN - costExN });
-                        ranks.push({ id: `adv-ex-${mat.code}`, type: 'advanced', craftName: `상급 아비도스 융화 재료(${exName})`, nameBase: `상급 아비도스 융화 재료`, nameSub: `(${exName})`, icon: "https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png", priceKey: 'advanced', cost: costExA + actualFeeA, profit: revA - actualFeeA - costExA });
+                        
+                        const profitExN = revN - actualFeeN - costExN;
+                        const profitExA = revA - actualFeeA - costExA;
+                        
+                        ranks.push({
+                            id: `norm-ex-${mat.code}`,
+                            type: 'normal',
+                            craftName: `아비도스 융화 재료(${exName})`,
+                            nameBase: `아비도스 융화 재료`,
+                            nameSub: `(${exName})`,
+                            icon: "https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png",
+                            priceKey: 'normal',
+                            cost: costExN + actualFeeN,
+                            profit: profitExN
+                        });
+                        ranks.push({
+                            id: `adv-ex-${mat.code}`,
+                            type: 'advanced',
+                            craftName: `상급 아비도스 융화 재료(${exName})`,
+                            nameBase: `상급 아비도스 융화 재료`,
+                            nameSub: `(${exName})`,
+                            icon: "https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png",
+                            priceKey: 'advanced',
+                            cost: costExA + actualFeeA,
+                            profit: profitExA
+                        });
                     }
                 });
+                
                 return ranks;
             },
             sortedRankingList() {
                 let list = [...this.rankingList];
+                
                 if (this.sortKey && this.sortDir !== 0) {
                     list.sort((a, b) => {
                         const aFav = this.favorites.includes(a.id);
                         const bFav = this.favorites.includes(b.id);
                         if (aFav && !bFav) return -1;
                         if (!aFav && bFav) return 1;
+                        
                         let valA, valB;
-                        if (this.sortKey === 'name') { valA = a.craftName; valB = b.craftName; }
-                        else if (this.sortKey === 'price') { valA = this.market[a.priceKey].price || 0; valB = this.market[b.priceKey].price || 0; }
-                        else if (this.sortKey === 'cost') { valA = a.cost; valB = b.cost; }
-                        else if (this.sortKey === 'profit') { valA = a.profit; valB = b.profit; }
+                        if (this.sortKey === 'name') {
+                            valA = a.craftName;
+                            valB = b.craftName;
+                        } else if (this.sortKey === 'price') {
+                            valA = this.market[a.priceKey].price || 0;
+                            valB = this.market[b.priceKey].price || 0;
+                        } else if (this.sortKey === 'cost') {
+                            valA = a.cost;
+                            valB = b.cost;
+                        } else if (this.sortKey === 'profit') {
+                            valA = a.profit;
+                            valB = b.profit;
+                        }
+                        
                         if (valA < valB) return this.sortDir === 1 ? -1 : 1;
                         if (valA > valB) return this.sortDir === 1 ? 1 : -1;
                         return 0;
@@ -1294,6 +1549,7 @@
                         return b.profit - a.profit;
                     });
                 }
+                
                 return list;
             },
             displayedRankingList() {
@@ -1310,39 +1566,51 @@
                 const baseFeeN = 400; const baseFeeA = 520; 
                 const actualFeeN = Math.floor(baseFeeN * (1 - this.stronghold.feeDiscount / 100));
                 const actualFeeA = Math.floor(baseFeeA * (1 - this.stronghold.feeDiscount / 100));
+                
                 const baseGsRate = 0.05;
                 const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
                 const expectedYield = 10 * (1 + finalGsRate);
+                
                 const pN = this.market.normal.price || 0;
                 const pA = this.market.advanced.price || 0;
                 const netPn = pN - Math.ceil(pN * 0.05);
                 const netPa = pA - Math.ceil(pA * 0.05);
                 const revN = netPn * expectedYield;
                 const revA = netPa * expectedYield; 
+                
                 const mat = this.materials.find(m => m.code === this.selectedMaterial);
                 const baseRes = mat.resources; 
                 const priceA = this.globalPrices[baseRes.A?.name] || 0;
                 const priceB = this.globalPrices[baseRes.B?.name] || 0;
                 const priceC = this.globalPrices[baseRes.C?.name] || 0;
                 const priceS = baseRes.S ? (this.globalPrices[baseRes.S.name] || 0) : 0;
+                
                 const costMatN = (86 * priceA / 100) + (45 * priceB / 100) + (33 * priceC / 100);
                 const costMatA = (112 * priceA / 100) + (59 * priceB / 100) + (43 * priceC / 100);
-                let bestCostN = costMatN; let bestCostA = costMatA;
-                let isExchangeN = false; let isExchangeA = false;
+                
+                let bestCostN = costMatN;
+                let bestCostA = costMatA;
+                let isExchangeN = false;
+                let isExchangeA = false;
+                
                 if (baseRes.S && !this.result) { 
-                    const normB_bundles = 18; const normS_bundles = 20; 
-                    const advB_bundles = 23.6; const advS_bundles = 26;
+                    const normB_bundles = 18; 
+                    const normS_bundles = 20; 
+                    const advB_bundles = 23.6;
+                    const advS_bundles = 26;
                     const costExN = (normS_bundles * priceS + normB_bundles * priceB) / 40;
                     const costExA = (advS_bundles * priceS + advB_bundles * priceB) / 40;
+                    
                     if (costExN < costMatN) { bestCostN = costExN; isExchangeN = true; }
                     if (costExA < costMatA) { bestCostA = costExA; isExchangeA = true; }
                 }
+                
                 return {
                     normal: { zeroCost: revN - actualFeeN, fullCost: revN - actualFeeN - bestCostN, isExchange: isExchangeN },
                     advanced: { zeroCost: revA - actualFeeA, fullCost: revA - actualFeeA - bestCostA, isExchange: isExchangeA }
                 };
             },
-
+            
             batchProfits() {
                 const getBatchRev = (totalO, itemPrice) => {
                     if (totalO === 0) return 0;
@@ -1352,23 +1620,28 @@
                     const netItemPrice = itemPrice - Math.ceil(itemPrice * 0.05);
                     return totalYield * netItemPrice;
                 };
+                
                 const calc = (type, feePerCraft, recipe) => {
                     const res = this.result && this.result[type];
                     const totalO = res ? res.totalO : 0;
                     if (totalO === 0) return { revenue: 0, totalFee: 0, opportunityCost: 0, zeroCost: 0, fullCost: 0, formulaHtml: "" };
+                    
                     const itemPrice = type === 'normal' ? (this.market.normal.price || 0) : (this.market.advanced.price || 0);
                     const rev = getBatchRev(totalO, itemPrice);
                     const actualFee = Math.floor(feePerCraft * (1 - this.stronghold.feeDiscount / 100));
                     const totalFee = actualFee * totalO;
+                    
                     const mat = this.materials.find(m => m.code === this.selectedMaterial);
                     const baseRes = mat.resources;
                     const pA = this.globalPrices[baseRes.A?.name] || 0;
                     const pB = this.globalPrices[baseRes.B?.name] || 0;
                     const pC = this.globalPrices[baseRes.C?.name] || 0;
                     const pS = baseRes.S ? (this.globalPrices[baseRes.S.name] || 0) : 0;
+                    
                     let costMat = 0;
                     let formulaStrArr = [];
                     let formulaHtml = "소모된 재료 없음";
+                    
                     if (this.exchangeType === 'farm') {
                         formulaHtml = "영지 농장 귀속 재료 (0G)";
                     } else if (res.consumed) {
@@ -1376,69 +1649,89 @@
                         const cB = Math.max(0, res.consumed.B || 0);
                         const cC = Math.max(0, res.consumed.C || 0);
                         const cS = Math.max(0, res.consumed.S || 0);
+                        
                         costMat = (cA * pA / 100) + (cB * pB / 100) + (cC * pC / 100) + (cS * pS / 100);
+                        
                         if (cA > 0 && baseRes.A) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.A.name} ${cA.toLocaleString()}개 × (${pA}G / 100개)</span><span>= ${Math.floor(cA * pA / 100).toLocaleString()}G</span></div>`);
                         if (cB > 0 && baseRes.B) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.B.name} ${cB.toLocaleString()}개 × (${pB}G / 100개)</span><span>= ${Math.floor(cB * pB / 100).toLocaleString()}G</span></div>`);
                         if (cC > 0 && baseRes.C) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.C.name} ${cC.toLocaleString()}개 × (${pC}G / 100개)</span><span>= ${Math.floor(cC * pC / 100).toLocaleString()}G</span></div>`);
                         if (cS > 0 && baseRes.S) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.S.name} ${cS.toLocaleString()}개 × (${pS}G / 100개)</span><span>= ${Math.floor(cS * pS / 100).toLocaleString()}G</span></div>`);
+                        
                         if (formulaStrArr.length > 0) {
                             formulaHtml = formulaStrArr.join("") + `<div style="border-top: 1px dashed #888; margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;"><span>총합:</span><span style="color: #ffd700;">${Math.floor(costMat).toLocaleString()} G</span></div>`;
                         }
                     }
+                    
                     return { revenue: rev, totalFee, opportunityCost: costMat, zeroCost: rev - totalFee, fullCost: rev - totalFee - costMat, formulaHtml };
                 };
+                
                 return {
                     normal: calc('normal', 400, {A: 86, B: 45, C: 33}),
                     advanced: calc('advanced', 520, {A: 112, B: 59, C: 43})
                 };
             },
-
+            
             deficitCosts() {
                 const result = { 
                     normal: { totalRevenue: 0, opportunityCost: 0, missingMatCost: 0, totalFee: 0, surplusProfit: 0, totalProfit: 0 }, 
                     advanced: { totalRevenue: 0, opportunityCost: 0, missingMatCost: 0, totalFee: 0, surplusProfit: 0, totalProfit: 0 } 
                 };
+                
                 if (!this.result || this.result.mode !== 'deficit') return result;
+                
                 const mat = this.materials.find(m => m.code === this.selectedMaterial);
                 const baseRes = mat.resources;
                 const pA = this.globalPrices[baseRes.A?.name] || 0;
                 const pB = this.globalPrices[baseRes.B?.name] || 0;
                 const pC = this.globalPrices[baseRes.C?.name] || 0;
+                
                 const baseGsRate = 0.05;
                 const finalGsRate = baseGsRate * (1 + (this.stronghold.greatSuccess / 100));
+                
                 const calcFor = (type, baseFee, itemPrice) => {
                     const res = this.result[type];
                     if (!res || res.totalO === 0) return { totalRevenue: 0, opportunityCost: 0, missingMatCost: 0, totalFee: 0, surplusProfit: 0, totalProfit: 0 };
+                    
                     const reqA = res.totalO * (type === 'normal' ? 86 : 112);
                     const reqB = res.totalO * (type === 'normal' ? 45 : 59);
                     const reqC = res.totalO * (type === 'normal' ? 33 : 43);
+                    
                     const missingA = Math.max(0, res.deficitA);
                     const missingB = Math.max(0, res.deficitB);
                     const costA = Math.ceil(missingA / 100) * pA;
                     const costB = Math.ceil(missingB / 100) * pB;
                     const missingMatCost = costA + costB;
+                    
                     const consumedA = reqA - missingA; 
                     const consumedB = reqB - missingB;
                     const consumedC = reqC;
+                    
                     const getNetVal = (qty, bundlePrice) => {
                         const netBundlePrice = bundlePrice - Math.ceil(bundlePrice * 0.05);
                         return (qty / 100) * netBundlePrice;
                     };
+                    
                     const opportunityCost = getNetVal(consumedA, pA) + getNetVal(consumedB, pB) + getNetVal(consumedC, pC);
+                    
                     let surplusProfit = 0;
                     if (this.includeSurplus) {
                         const surplusA = Math.max(0, -res.deficitA);
                         const surplusB = Math.max(0, -res.deficitB);
                         surplusProfit = getNetVal(Math.floor(surplusA / 100) * 100, pA) + getNetVal(Math.floor(surplusB / 100) * 100, pB);
                     }
+                    
                     const actualFee = Math.floor(baseFee * (1 - this.stronghold.feeDiscount / 100));
                     const totalFee = actualFee * res.totalO;
+                    
                     const totalYield = 10 * res.totalO * (1 + finalGsRate);
                     const netItemPrice = itemPrice - Math.ceil(itemPrice * 0.05);
                     const totalRevenue = totalYield * netItemPrice;
+                    
                     const totalProfit = totalRevenue - totalFee - missingMatCost - opportunityCost + surplusProfit;
+                    
                     return { totalRevenue, opportunityCost, missingMatCost, totalFee, surplusProfit, totalProfit };
                 };
+                
                 result.normal = calcFor('normal', 400, this.market.normal.price || 0);
                 result.advanced = calcFor('advanced', 520, this.market.advanced.price || 0);
                 return result;
@@ -1450,23 +1743,34 @@
                 this.isLightMode = true;
                 document.body.classList.add('light-mode');
             }
+            
             this.materials.forEach(mat => {
-                Object.values(mat.resources).forEach(res => { if (res) this.globalPrices[res.name] = 0; });
-                Object.values(mat.farmResources).forEach(res => { if (res) this.globalPrices[res.name] = 0; });
+                Object.values(mat.resources).forEach(res => {
+                    if (res) this.globalPrices[res.name] = 0;
+                });
+                Object.values(mat.farmResources).forEach(res => {
+                    if (res) this.globalPrices[res.name] = 0;
+                });
             });
+            
             const savedStronghold = localStorage.getItem('loa_stronghold');
             if(savedStronghold) this.stronghold = JSON.parse(savedStronghold);
+            
             const savedFavs = localStorage.getItem('loa_favs');
             if(savedFavs) this.favorites = JSON.parse(savedFavs);
+            
             this.fetchMarketData(false);
+            
             const startSyncedTimer = () => {
                 const scheduleNext = () => {
                     const now = new Date();
                     const minutes = now.getMinutes();
                     const seconds = now.getSeconds();
                     const milliseconds = now.getMilliseconds();
+                    
                     let delay = (5 * 60 * 1000) - ((minutes % 5) * 60 * 1000 + seconds * 1000 + milliseconds);
                     delay += 1000; 
+                    
                     this.refreshTimer = setTimeout(() => {
                         console.log("정시 시세 동기화 중...");
                         this.fetchMarketData(false, true);
@@ -1475,6 +1779,7 @@
                 };
                 scheduleNext();
             };
+            
             startSyncedTimer();
             const savedExpire = localStorage.getItem('market_cooldown_expire');
             if (savedExpire) {
@@ -1492,12 +1797,18 @@
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
                 this.forceConvert = false;
+                // 영지 농장 탭으로 변경 시 열려있는 툴팁 즉시 닫기
                 if (this.exchangeType === 'farm') {
                     this.cancelHideTooltip();
                     this.hoveredMarketItem = null;
                 }
             },
-            favorites: { handler(newVal) { localStorage.setItem('loa_favs', JSON.stringify(newVal)); }, deep: true },
+            favorites: {
+                handler(newVal) {
+                    localStorage.setItem('loa_favs', JSON.stringify(newVal));
+                },
+                deep: true
+            },
             selectedMaterial() {
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
@@ -1525,8 +1836,12 @@
             },
             stronghold: { 
                 handler(newVal) { 
-                    if (newVal.greatSuccess === "" || newVal.greatSuccess === null || newVal.greatSuccess === undefined) this.stronghold.greatSuccess = 0;
-                    if (newVal.feeDiscount === "" || newVal.feeDiscount === null || newVal.feeDiscount === undefined) this.stronghold.feeDiscount = 0;
+                    if (newVal.greatSuccess === "" || newVal.greatSuccess === null || newVal.greatSuccess === undefined) {
+                        this.stronghold.greatSuccess = 0;
+                    }
+                    if (newVal.feeDiscount === "" || newVal.feeDiscount === null || newVal.feeDiscount === undefined) {
+                        this.stronghold.feeDiscount = 0;
+                    }
                     localStorage.setItem('loa_stronghold', JSON.stringify(newVal)); 
                 }, 
                 deep: true 
@@ -1536,30 +1851,30 @@
             window.removeEventListener('resize', this.handleResize);
         },
         methods: {
-            fmtDecimal(v) {
-                const n = Number(v);
-                if (v == null || isNaN(n)) return '-';
-                return n.toFixed(1);
-                },
-            // ===== 시세 차트 툴팁 =====
+            // 차트 툴팁 표시 및 위치 계산
             showChartTooltip(event, itemName) {
+                // 영지 농장 탭에서는 시세 툴팁 비활성화
                 if (this.calcMode === 'optimize' && this.exchangeType === 'farm') return;
+                
+                // 1. 가루 류 아이템은 시세 정보 툴팁 표시 안함
                 if (!itemName || itemName.endsWith('가루')) return;
-
-                this.cancelHideTooltip();
+                
+                this.cancelHideTooltip(); // 열릴 때 기존 타이머 취소
                 this.hoveredMarketItem = itemName;
                 
+                // 이벤트 버블링 문제를 방지하기 위해 currentTarget 사용
                 const rect = event.currentTarget.getBoundingClientRect();
+                
                 const container = document.querySelector('.container');
                 const zoom = container ? (parseFloat(getComputedStyle(container).zoom) || 1) : 1;
                 
-                // 툴팁 너비 680px 기준 (zoom 반영)
+                // 3. zoom 비율이 적용된 실제 툴팁 렌더링 너비 계산
                 const tooltipActualWidth = 680 * zoom;
-
+                
                 let viewX = rect.right + 15;
                 let viewY = rect.top;
-
-                // 오른쪽 밖으로 넘어갈 경우 아이콘 왼쪽으로 배치
+                
+                // 오른쪽 밖으로 넘어갈 경우 아이콘 왼쪽으로 배치 (실제 렌더링 너비 기준)
                 if (viewX + tooltipActualWidth > window.innerWidth) {
                     viewX = rect.left - tooltipActualWidth - 15;
                 }
@@ -1568,82 +1883,96 @@
                     viewX = 10;
                     viewY = rect.bottom + 15;
                 }
-                // 최종 오른쪽 overflow 방지
                 if (viewX + tooltipActualWidth > window.innerWidth) {
                     viewX = Math.max(10, window.innerWidth - tooltipActualWidth - 10);
                 }
-
                 const tooltipEstimatedHeight = 420;
                 if (viewY + tooltipEstimatedHeight > window.innerHeight - 10) {
-                    viewY = Math.max(10, window.innerHeight - tooltipEstimatedHeight - 10);
+                        viewY = Math.max(10, window.innerHeight - tooltipEstimatedHeight - 10);
                 }
-
-                // 스크롤 위치를 더해 absolute 문서 기준으로 변환
+                // 좌표에 현재 스크롤 위치를 더해 absolute 문서 기준으로 변환 적용
                 this.tooltipStyle = { 
                     top: ((viewY + window.scrollY) / zoom) + 'px', 
                     left: ((viewX + window.scrollX) / zoom) + 'px' 
                 };
-
+                
                 this.$nextTick(() => {
                     this.renderMarketChart();
                 });
             },
             hideChartTooltip() {
+                // 커서를 이동할 시간을 주기 위해 0.15초 딜레이
                 this.tooltipTimer = setTimeout(() => {
                     this.hoveredMarketItem = null;
                 }, 150);
             },
             cancelHideTooltip() {
+                // 툴팁 위로 마우스가 올라가면 닫기 취소
                 if (this.tooltipTimer) {
                     clearTimeout(this.tooltipTimer);
                     this.tooltipTimer = null;
                 }
             },
-            // ===== Chart.js 렌더링 (afterBuildTicks y1 축 최적화 적용) =====
+            // Chart.js 렌더링
             renderMarketChart() {
                 const canvas = document.getElementById('marketChartCanvas');
                 if (!canvas) return;
                 if (window.marketChartInstance) { window.marketChartInstance.destroy(); }
-
+                
                 const isLight = this.isLightMode;
                 const textColor = isLight ? '#555' : '#aaa';
+                const gridColor = isLight ? '#e3e7ed' : '#333';
                 const container = document.querySelector('.container');
                 const zoom = container ? (parseFloat(getComputedStyle(container).zoom) || 1) : 1;
-
+                
                 if (!this.currentHoveredStats || !this.currentHoveredStats.history) return;
                 const chartData = [...this.currentHoveredStats.history].reverse();
                 const labels = chartData.map(d => d.date);
                 const priceData = chartData.map(d => d.avgPrice);
                 const volumeData = chartData.map(d => d.volume);
-
+                
+                // 판매량(y1) 단위 자동 계산 - y축 눈금 수에 맞춰 깔끔한 숫자로 정렬
                 const maxVol = Math.max(...volumeData, 1);
-
+                const tickCount = 5; // 눈금 5개 고정 (0 포함)
+                const rawStep = maxVol / (tickCount - 1);
+                const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+                const normalized = rawStep / magnitude;
+                let niceStep;
+                if (normalized <= 1) niceStep = 1;
+                else if (normalized <= 2) niceStep = 2;
+                else if (normalized <= 2.5) niceStep = 2.5;
+                else if (normalized <= 5) niceStep = 5;
+                else niceStep = 10;
+                const stepSizeY1 = niceStep * magnitude;
+                const maxY1 = stepSizeY1 * (tickCount - 1);
+                const y1Ticks = Array.from({ length: tickCount }, (_, i) => i * stepSizeY1);
+                
                 window.marketChartInstance = new Chart(canvas, {
                     type: 'bar',
                     data: {
                         labels: labels,
                         datasets: [
-                            {
-                                type: 'line',
-                                label: '평균 거래가',
-                                data: priceData,
-                                borderColor: '#3b82f6',
-                                backgroundColor: '#3b82f6',
-                                borderWidth: 2,
-                                yAxisID: 'y',
-                                tension: 0.1,
-                                pointRadius: 2,
-                                order: 1
-                            },
-                            {
-                                type: 'bar',
-                                label: '판매 건수',
-                                data: volumeData,
-                                backgroundColor: isLight ? 'rgba(245, 158, 11, 0.5)' : 'rgba(253, 224, 71, 0.4)',
-                                yAxisID: 'y1',
-                                barPercentage: 0.6,
-                                order: 2
-                            }
+                        {
+                            type: 'line',
+                            label: '평균 거래가',
+                            data: priceData,
+                            borderColor: '#3b82f6',
+                            backgroundColor: '#3b82f6',
+                            borderWidth: 2,
+                            yAxisID: 'y',
+                            tension: 0.1,
+                            pointRadius: 2,
+                            order: 1
+                        },
+                        {
+                            type: 'bar',
+                            label: '판매 건수',
+                            data: volumeData,
+                            backgroundColor: isLight ? 'rgba(245, 158, 11, 0.5)' : 'rgba(253, 224, 71, 0.4)',
+                            yAxisID: 'y1',
+                            barPercentage: 0.6,
+                            order: 2
+                        }
                         ]
                     },
                     options: {
@@ -1671,29 +2000,29 @@
                                 min: 0,
                                 border: { display: false },
                                 afterBuildTicks: (axis) => {
-                                    const yAxis = axis.chart.scales['y'];
-                                    const tickCount = yAxis ? yAxis.ticks.length : 5;
-                                    const intervals = Math.max(1, tickCount - 1);
+    const yAxis = axis.chart.scales['y'];
+    const tickCount = yAxis ? yAxis.ticks.length : 5;
+    const intervals = Math.max(1, tickCount - 1);
 
-                                    const rawStep = maxVol / intervals;
-                                    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
-                                    const normalized = rawStep / magnitude;
-                                    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
-                                                     (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
-                                    let stepSize = niceStep * magnitude;
+    const rawStep = maxVol / intervals;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
+    const normalized = rawStep / magnitude;
+    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
+                     (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
+    let stepSize = niceStep * magnitude;
 
-                                    // 눈금 수가 너무 적으면(4개 이하) 단위를 절반으로 줄여 촘촘하게
-                                    let intervals2 = Math.ceil(maxVol / stepSize);
-                                    if (intervals2 <= 4) {
-                                        stepSize = stepSize / 2;
-                                        intervals2 = Math.ceil(maxVol / stepSize);
-                                    }
+    // 눈금 수가 너무 적으면(3개 이하) 단위를 절반으로 줄여 촘촘하게
+    let intervals2 = Math.ceil(maxVol / stepSize);
+    if (intervals2 <= 4) {
+        stepSize = stepSize / 2;
+        intervals2 = Math.ceil(maxVol / stepSize);
+    }
 
-                                    axis.max = stepSize * intervals2;
-                                    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
-                                        value: stepSize * i
-                                    }));
-                                },
+    axis.max = stepSize * intervals2;
+    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
+        value: stepSize * i
+    }));
+},
                                 ticks: {
                                     color: textColor,
                                     font: { size: 10 },
@@ -1710,7 +2039,7 @@
                     }
                 });
             },
-
+            
             toggleTheme() {
                 this.isLightMode = !this.isLightMode;
                 if (this.isLightMode) {
@@ -1723,16 +2052,32 @@
             },
             applyGuideValues(type, row) {
                 this.calcMode = 'optimize';
-                let nextRes = { A: this.resources.A, B: 0, S: 0, C: this.resources.C, P: this.resources.P };
-                if (type === 'normal') { nextRes.S = row.normS; nextRes.B = row.normB; }
-                else { nextRes.S = row.advS; nextRes.B = row.advB; }
+                
+                let nextRes = { 
+                    A: this.resources.A, 
+                    B: 0, 
+                    S: 0, 
+                    C: this.resources.C, 
+                    P: this.resources.P 
+                };
+                
+                if (type === 'normal') {
+                    nextRes.S = row.normS;
+                    nextRes.B = row.normB;
+                } else {
+                    nextRes.S = row.advS;
+                    nextRes.B = row.advB;
+                }
+                
                 this.resources = nextRes;
                 this.calculate(true);
             },
             toggleSort(key) {
                 if (this.sortKey === key) {
                     this.sortDir = (this.sortDir + 1) % 3;
-                    if (this.sortDir === 0) this.sortKey = null; 
+                    if (this.sortDir === 0) {
+                        this.sortKey = null; 
+                    }
                 } else {
                     this.sortKey = key;
                     this.sortDir = 1; 
@@ -1753,18 +2098,23 @@
                 this.isDraggingHandle = false;
                 this.startY = e.clientY;
                 const board = document.querySelector('.ranking-board');
+                
                 this.startHeight = board.getBoundingClientRect().height / 1.1;
+                
                 const rows = board.querySelectorAll('.ranking-row');
                 this.headerH = rows[0] ? (rows[0].getBoundingClientRect().height / 1.1) : 0;
+                
                 this.minBoardHeight = this.headerH;
                 for (let i = 1; i <= 3 && i < rows.length; i++) {
                     this.minBoardHeight += (rows[i].getBoundingClientRect().height / 1.1);
                 }
+                
                 document.addEventListener('mousemove', this.onDrag);
                 document.addEventListener('mouseup', this.stopDrag);
             },
             onDrag(e) {
                 const dy = (e.clientY - this.startY) / 1.1; 
+                
                 if (Math.abs(dy) > 3) {
                     this.isDraggingHandle = true;
                     this.showAllRanks = true;
@@ -1776,6 +2126,7 @@
                     const rows = document.querySelectorAll('.ranking-board .ranking-row');
                     let targetHeight = this.headerH;
                     let visibleCount = 0;
+                    
                     for (let i = 1; i < rows.length; i++) {
                         const rowH = rows[i].getBoundingClientRect().height / 1.1;
                         if (targetHeight + (rowH / 2) > this.customRankingHeight && visibleCount >= 3) break;
@@ -1785,6 +2136,7 @@
                     this.customRankingHeight = targetHeight;
                     this.visibleRowsCount = visibleCount;
                 }
+                
                 document.removeEventListener('mousemove', this.onDrag);
                 document.removeEventListener('mouseup', this.stopDrag);
             },
@@ -1792,6 +2144,7 @@
                 if (this.showAllRanks && this.customRankingHeight && this.visibleRowsCount) {
                     const rows = document.querySelectorAll('.ranking-board .ranking-row');
                     if (!rows.length) return;
+                    
                     let newHeight = rows[0].getBoundingClientRect().height / 1.1; 
                     for (let i = 1; i <= this.visibleRowsCount && i < rows.length; i++) {
                         newHeight += rows[i].getBoundingClientRect().height / 1.1;
@@ -1804,72 +2157,67 @@
                     setTimeout(() => { this.isDraggingHandle = false; }, 50);
                     return;
                 }
+                
                 this.showAllRanks = !this.showAllRanks;
                 this.customRankingHeight = null; 
             },
-            // ===== Vercel /api/market 호출 =====
             async fetchMarketData(isForce = false, isSilent = false) {
-                if (isForce && this.isCooldown) return;
-                if (!isSilent) this.fetching = true;
-                if (isForce) this.isCooldown = true;
+    if (isForce && this.isCooldown) return;
+    if (!isSilent) this.fetching = true;
+    if (isForce) this.isCooldown = true;
+    
+    try {
+        // 1. 강제 갱신 여부에 따라 API 엔드포인트 변경 (?force=true 추가)
+        const url = isForce ? '/api/market?force=true' : '/api/market';
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`백엔드 API 호출 실패: ${response.status}`);
+        }
+        
+        const data = await response.json();
 
-                try {
-                    const url = isForce ? '/api/market?force=true' : '/api/market';
-                    const response = await fetch(url);
-                    
-                    if (!response.ok) throw new Error("서버 응답 오류");
-                    
-                    const data = await response.json();
-                    const fetchedPrices = data.prices;
-                    const fetchedStats = data.stats; 
+        // 2. market.js가 보내주는 키 이름(prices, stats)에 정확히 맞춤!
+        this.globalPrices = data.prices; 
+        this.marketStats = data.stats;
 
-                    if (fetchedStats) {
-                        for (const key of Object.keys(fetchedStats)) {
-                            if (fetchedStats[key]?.avg14d != null) {
-                            fetchedStats[key].avg14d = parseFloat(fetchedStats[key].avg14d).toFixed(1);
-                            }
-                        }
-                        this.marketStats = fetchedStats;
-                    }
+        // 3. UI 업데이트용 가격 맵핑
+        if (this.globalPrices["아비도스 융화 재료"]) {
+            this.market.normal.price = this.globalPrices["아비도스 융화 재료"];
+        }
+        if (this.globalPrices["상급 아비도스 융화 재료"]) {
+            this.market.advanced.price = this.globalPrices["상급 아비도스 융화 재료"];
+        }
 
-                    if (fetchedPrices) {
-                        for (const [k, v] of Object.entries(fetchedPrices)) {
-                            if (v && v > 0) this.globalPrices[k] = v;
-                        }
-                        const newNormalPrice = this.globalPrices["아비도스 융화 재료"];
-                        if (newNormalPrice > 0) this.market.normal.price = newNormalPrice;
-                        const newAdvancedPrice = this.globalPrices["상급 아비도스 융화 재료"];
-                        if (newAdvancedPrice > 0) this.market.advanced.price = newAdvancedPrice;
-                    }
-
-                    const updateTime = data.lastUpdated ? new Date(data.lastUpdated) : new Date();
-                    this.lastMarketUpdate = new Intl.DateTimeFormat('ko-KR', { 
-                        year: 'numeric', month: 'numeric', day: 'numeric', 
-                        hour: 'numeric', minute: 'numeric', second: 'numeric' 
-                    }).format(updateTime);
-                    
-                    this.showMarketUi = true; 
-
-                } catch (error) {
-                    console.error("API Error:", error);
-                    if (!isSilent) alert("시세 데이터를 불러오는데 실패했습니다.");
-                } finally { 
-                    this.fetching = false; 
-                    if (isForce) {
-                        const expireTime = Date.now() + 60000; 
-                        localStorage.setItem('market_cooldown_expire', expireTime);    
-                        this.startCooldownTimer(expireTime);
-                    }
-                }
-            },
+        // 4. 백엔드에서 보내준 lastUpdated 시간을 활용해 업데이트 시간 표시
+        const updateTime = data.lastUpdated ? new Date(data.lastUpdated) : new Date();
+        this.lastMarketUpdate = new Intl.DateTimeFormat('ko-KR', {
+            year: 'numeric', month: 'numeric', day: 'numeric',
+            hour: 'numeric', minute: 'numeric', second: 'numeric'
+        }).format(updateTime);
+        
+        this.showMarketUi = true;
+        
+    } catch (error) {
+        console.error("API 연동 실패:", error);
+    } finally {
+        this.fetching = false;
+        if (isForce) {
+            const expireTime = Date.now() + 60000; // 1분 쿨다운
+            localStorage.setItem('market_cooldown_expire', expireTime);
+            this.startCooldownTimer(expireTime);
+        }
+    }
+},
             async calculate(skipDelay = false) {
                 if (!skipDelay) this.loading = true;
                 if (!skipDelay) await new Promise(resolve => setTimeout(resolve, 50)); 
-
+                
                 if (this.calcMode === 'deficit') {
                     const resC = this.resources.C || 0;
                     const resA = this.resources.A || 0;
                     const resB = this.resources.B || 0;
+                    
                     this.result = {
                         mode: 'deficit',
                         normal: { totalO: Math.floor(resC / 33), deficitA: (Math.floor(resC / 33) * 86) - resA, deficitB: (Math.floor(resC / 33) * 45) - resB },
@@ -1878,7 +2226,7 @@
                     if (!skipDelay) this.loading = false;
                     return;
                 }
-
+                
                 const normalRates = { 
                     StoA: { from: "S", to: "A", in: 5, out: 50 }, 
                     BtoA: { from: "B", to: "A", in: 25, out: 50 }, 
@@ -1888,73 +2236,120 @@
                     PtoB: { from: "P", to: "B", in: 100, out: 50 }, 
                     PtoA: { from: "P", to: "A", in: 100, out: 100 }  
                 };
-
+                
                 const farmRates = {
                     AtoP: { from: "A", to: "P", in: 100, out: 80 },
                     BtoP: { from: "B", to: "P", in: 50, out: 80 },
                     PtoB: { from: "P", to: "B", in: 100, out: 50 },
                     PtoC: { from: "P", to: "C", in: 100, out: 10 }
                 };
-
+                
                 const getOptimalForTarget = (target, forceConvert, resData, recipe, currentPrices) => {
                     let S = resData.S || 0;
                     let A = resData.A || 0;
                     let B = resData.B || 0;
                     let C = resData.C || 0;
                     let P = resData.P || 0;
-
+                    
                     if (this.exchangeType === 'farm') {
                         let logs = { AtoP: 0, BtoP: 0, PtoB: 0, PtoC: 0 };
+                        
                         let reqA = target * recipe.A;
                         if (A < reqA) return null;
+                        
                         let reqC = target * recipe.C;
                         if (C < reqC) {
                             let neededC = reqC - C;
                             let excPtoC = Math.ceil(neededC / farmRates.PtoC.out);
-                            logs.PtoC += excPtoC; P -= excPtoC * farmRates.PtoC.in; C += excPtoC * farmRates.PtoC.out;
+                            logs.PtoC += excPtoC;
+                            P -= excPtoC * farmRates.PtoC.in;
+                            C += excPtoC * farmRates.PtoC.out;
                         }
+                        
                         let reqB = target * recipe.B;
                         if (B < reqB) {
                             if (!forceConvert) return null;
                             let neededB = reqB - B;
                             let excPtoB = Math.ceil(neededB / farmRates.PtoB.out);
-                            logs.PtoB += excPtoB; P -= excPtoB * farmRates.PtoB.in; B += excPtoB * farmRates.PtoB.out;
+                            logs.PtoB += excPtoB;
+                            P -= excPtoB * farmRates.PtoB.in;
+                            B += excPtoB * farmRates.PtoB.out;
                         }
+                        
                         if (P < 0) {
                             let neededP = -P;
                             let surplusA = Math.max(0, A - reqA);
                             let surplusB = Math.max(0, B - reqB);
+                            
                             while (neededP > 0) {
                                 let canConvertA = surplusA >= farmRates.AtoP.in; 
                                 let canConvertB = surplusB >= farmRates.BtoP.in; 
+                                
                                 if (!canConvertA && !canConvertB) break; 
+                                
                                 if (canConvertA && canConvertB) {
-                                    if (surplusA >= surplusB) { logs.AtoP++; surplusA -= farmRates.AtoP.in; neededP -= farmRates.AtoP.out; P += farmRates.AtoP.out; A -= farmRates.AtoP.in; }
-                                    else { logs.BtoP++; surplusB -= farmRates.BtoP.in; neededP -= farmRates.BtoP.out; P += farmRates.BtoP.out; B -= farmRates.BtoP.in; }
-                                } else if (canConvertA) { logs.AtoP++; surplusA -= farmRates.AtoP.in; neededP -= farmRates.AtoP.out; P += farmRates.AtoP.out; A -= farmRates.AtoP.in; }
-                                else { logs.BtoP++; surplusB -= farmRates.BtoP.in; neededP -= farmRates.BtoP.out; P += farmRates.BtoP.out; B -= farmRates.BtoP.in; }
+                                    if (surplusA >= surplusB) {
+                                        logs.AtoP++;
+                                        surplusA -= farmRates.AtoP.in;
+                                        neededP -= farmRates.AtoP.out;
+                                        P += farmRates.AtoP.out;
+                                        A -= farmRates.AtoP.in;
+                                    } else {
+                                        logs.BtoP++;
+                                        surplusB -= farmRates.BtoP.in;
+                                        neededP -= farmRates.BtoP.out;
+                                        P += farmRates.BtoP.out;
+                                        B -= farmRates.BtoP.in;
+                                    }
+                                } else if (canConvertA) {
+                                    logs.AtoP++;
+                                    surplusA -= farmRates.AtoP.in;
+                                    neededP -= farmRates.AtoP.out;
+                                    P += farmRates.AtoP.out;
+                                    A -= farmRates.AtoP.in;
+                                } else {
+                                    logs.BtoP++;
+                                    surplusB -= farmRates.BtoP.in;
+                                    neededP -= farmRates.BtoP.out;
+                                    P += farmRates.BtoP.out;
+                                    B -= farmRates.BtoP.in;
+                                }
                             }
+                            
                             if (neededP > 0) return null;
                         }
+                        
                         return { logs, consumed: { A: (resData.A || 0) - (A - reqA), B: (resData.B || 0) - (B - reqB), C: (resData.C || 0) - (C - reqC), S: (resData.S || 0) - S } };
                     }
                     
                     let logs = { StoA: 0, BtoA: 0, AtoP: 0, BtoP: 0, PtoB: 0, PtoA: 0, PtoC: 0 };
+                    
                     let excStoA = Math.floor(S / normalRates.StoA.in);
-                    if (excStoA > 0) { logs.StoA += excStoA; A += excStoA * normalRates.StoA.out; S -= excStoA * normalRates.StoA.in; }
+                    if (excStoA > 0) {
+                        logs.StoA += excStoA;
+                        A += excStoA * normalRates.StoA.out;
+                        S -= excStoA * normalRates.StoA.in;
+                    }
+                    
                     let reqC = target * recipe.C;
                     if (C < reqC) {
                         let neededC = reqC - C;
                         let excPtoC = Math.ceil(neededC / normalRates.PtoC.out);
-                        logs.PtoC += excPtoC; P -= excPtoC * normalRates.PtoC.in; C += excPtoC * normalRates.PtoC.out;
+                        logs.PtoC += excPtoC;
+                        P -= excPtoC * normalRates.PtoC.in;
+                        C += excPtoC * normalRates.PtoC.out;
                     }
+                    
                     let reqB = target * recipe.B;
                     if (B < reqB) {
                         if (!forceConvert) return null;
                         let neededB = reqB - B;
                         let excPtoB = Math.ceil(neededB / normalRates.PtoB.out);
-                        logs.PtoB += excPtoB; P -= excPtoB * normalRates.PtoB.in; B += excPtoB * normalRates.PtoB.out;
+                        logs.PtoB += excPtoB;
+                        P -= excPtoB * normalRates.PtoB.in;
+                        B += excPtoB * normalRates.PtoB.out;
                     }
+                    
                     let reqA = target * recipe.A;
                     if (A < reqA) {
                         let neededA = reqA - A;
@@ -1962,95 +2357,159 @@
                         let possibleBtoA = Math.floor(surplusB / normalRates.BtoA.in);
                         let neededBtoA = Math.ceil(neededA / normalRates.BtoA.out);
                         let excBtoA = Math.min(possibleBtoA, neededBtoA);
-                        if (excBtoA > 0) { logs.BtoA += excBtoA; B -= excBtoA * normalRates.BtoA.in; A += excBtoA * normalRates.BtoA.out; neededA = Math.max(0, reqA - A); }
+                        
+                        if (excBtoA > 0) {
+                            logs.BtoA += excBtoA;
+                            B -= excBtoA * normalRates.BtoA.in;
+                            A += excBtoA * normalRates.BtoA.out;
+                            neededA = Math.max(0, reqA - A);
+                        }
+                        
                         if (neededA > 0) {
                             if (!forceConvert) return null;
                             let excPtoA = Math.ceil(neededA / normalRates.PtoA.out);
-                            logs.PtoA += excPtoA; P -= excPtoA * normalRates.PtoA.in; A += excPtoA * normalRates.PtoA.out;
+                            logs.PtoA += excPtoA;
+                            P -= excPtoA * normalRates.PtoA.in;
+                            A += excPtoA * normalRates.PtoA.out;
                         }
                     }
+                    
                     if (P < 0) {
                         let neededP = -P;
                         const pA = currentPrices.A; 
                         const pB = currentPrices.B;
                         const preferB = (pA > 0 && pB > 0) && ((pB / 2) < pA);
+                        
                         const useSurplusA = () => {
                             let surplusA = Math.max(0, A - reqA);
                             let possibleAtoP = Math.floor(surplusA / normalRates.AtoP.in);
                             let neededAtoP = Math.ceil(neededP / normalRates.AtoP.out);
                             let excAtoP = Math.min(possibleAtoP, neededAtoP);
-                            if (excAtoP > 0) { logs.AtoP += excAtoP; A -= excAtoP * normalRates.AtoP.in; P += excAtoP * normalRates.AtoP.out; neededP = Math.max(0, -P); }
+                            
+                            if (excAtoP > 0) {
+                                logs.AtoP += excAtoP;
+                                A -= excAtoP * normalRates.AtoP.in;
+                                P += excAtoP * normalRates.AtoP.out;
+                                neededP = Math.max(0, -P);
+                            }
                         };
+                        
                         const useSurplusB = () => {
                             let surplusB = Math.max(0, B - reqB);
                             let possibleBtoP = Math.floor(surplusB / normalRates.BtoP.in);
                             let neededBtoP = Math.ceil(neededP / normalRates.BtoP.out);
                             let excBtoP = Math.min(possibleBtoP, neededBtoP);
-                            if (excBtoP > 0) { logs.BtoP += excBtoP; B -= excBtoP * normalRates.BtoP.in; P += excBtoP * normalRates.BtoP.out; neededP = Math.max(0, -P); }
+                            
+                            if (excBtoP > 0) {
+                                logs.BtoP += excBtoP;
+                                B -= excBtoP * normalRates.BtoP.in;
+                                P += excBtoP * normalRates.BtoP.out;
+                                neededP = Math.max(0, -P);
+                            }
                         };
-                        if (preferB) { useSurplusB(); if (neededP > 0) useSurplusA(); }
-                        else { useSurplusA(); if (neededP > 0) useSurplusB(); }
+                        
+                        if (preferB) {
+                            useSurplusB();
+                            if (neededP > 0) useSurplusA();
+                        } else {
+                            useSurplusA();
+                            if (neededP > 0) useSurplusB();
+                        }
+                        
                         if (neededP > 0) {
                             let surplusB = Math.max(0, B - reqB);
                             let possibleBtoA = Math.floor(surplusB / normalRates.BtoA.in);
-                            if (possibleBtoA > 0) { logs.BtoA += possibleBtoA; B -= possibleBtoA * normalRates.BtoA.in; A += possibleBtoA * normalRates.BtoA.out; useSurplusA(); }
+                            if (possibleBtoA > 0) {
+                                logs.BtoA += possibleBtoA;
+                                B -= possibleBtoA * normalRates.BtoA.in;
+                                A += possibleBtoA * normalRates.BtoA.out;
+                                useSurplusA();
+                            }
                         }
+                        
                         if (P < 0) return null;
                     }
+                    
                     let leftoverA = A - reqA;
                     if (leftoverA > 0 && logs.StoA > 0) {
                         let revertibleA = Math.min(leftoverA, logs.StoA * normalRates.StoA.out);
                         let revertCount = Math.floor(revertibleA / normalRates.StoA.out);
-                        if (revertCount > 0) { logs.StoA -= revertCount; A -= revertCount * normalRates.StoA.out; S += revertCount * normalRates.StoA.in; }
+                        if (revertCount > 0) {
+                            logs.StoA -= revertCount;
+                            A -= revertCount * normalRates.StoA.out;
+                            S += revertCount * normalRates.StoA.in;
+                        }
                     }
+                    
                     return { logs, consumed: { A: (resData.A || 0) - (A - reqA), B: (resData.B || 0) - (B - reqB), C: (resData.C || 0) - (C - reqC), S: (resData.S || 0) - S } };
                 };
-
+                
                 const currentPrices = {
                     A: this.globalPrices[this.selectedResources.A?.name] || 0,
                     B: this.globalPrices[this.selectedResources.B?.name] || 0
                 };
-
+                
                 const getOptimal = (resData, recipe, forceFlag) => {
-                    let low = 0; let high = 200000; 
-                    let bestLogs = null; let bestConsumed = null; let maxCrafts = 0;
+                    let low = 0;
+                    let high = 200000; 
+                    let bestLogs = null;
+                    let bestConsumed = null;
+                    let maxCrafts = 0;
+                    
                     while (low <= high) {
                         let mid = Math.floor((low + high) / 2);
                         let resultData = getOptimalForTarget(mid, forceFlag, resData, recipe, currentPrices);
-                        if (resultData !== null) { maxCrafts = mid; bestLogs = resultData.logs; bestConsumed = resultData.consumed; low = mid + 1; }
-                        else { high = mid - 1; }
+                        
+                        if (resultData !== null) {
+                            maxCrafts = mid;
+                            bestLogs = resultData.logs;
+                            bestConsumed = resultData.consumed;
+                            low = mid + 1; 
+                        } else {
+                            high = mid - 1; 
+                        }
                     }
+                    
                     const printOrder = this.exchangeType === 'farm' 
-                        ? ["AtoP", "BtoP", "PtoB", "PtoC"]
-                        : ["StoA", "BtoA", "AtoP", "BtoP", "PtoB", "PtoA", "PtoC"];
+                    ? ["AtoP", "BtoP", "PtoB", "PtoC"]
+                    : ["StoA", "BtoA", "AtoP", "BtoP", "PtoB", "PtoA", "PtoC"];
+                    
                     let orderedLogs = {};
                     if (bestLogs) {
-                        printOrder.forEach(key => { if (bestLogs[key] > 0) orderedLogs[key] = bestLogs[key]; });
+                        printOrder.forEach(key => { 
+                            if (bestLogs[key] > 0) {
+                                orderedLogs[key] = bestLogs[key]; 
+                            } 
+                        });
                     } else if (resData.S > 0 && this.exchangeType === 'normal') {
                         let stoaCount = Math.floor(resData.S / normalRates.StoA.in);
                         orderedLogs.StoA = stoaCount;
                         bestConsumed = { A: -(stoaCount * normalRates.StoA.out), B: 0, C: 0, S: stoaCount * normalRates.StoA.in };
                     }
+                    
                     return { totalO: maxCrafts, logs: orderedLogs, consumed: bestConsumed || {A:0,B:0,C:0,S:0}, approximated: false };
                 };
-
+                
                 let advResult = getOptimal(this.resources, { A: 112, B: 59, C: 43 }, this.forceConvert);
                 if (this.exchangeType === 'normal' && advResult.totalO === 0) {
                     advResult = getOptimal(this.resources, { A: 112, B: 59, C: 43 }, true);
                 }
+                
                 let normResult = getOptimal(this.resources, { A: 86, B: 45, C: 33 }, this.forceConvert);
                 if (this.exchangeType === 'normal' && normResult.totalO === 0) {
                     normResult = getOptimal(this.resources, { A: 86, B: 45, C: 33 }, true);
                 }
-
+                
                 this.result = { mode: 'optimize', advanced: advResult, normal: normResult };
                 if (!skipDelay) this.loading = false;
             },
             startCooldownTimer(expireTime) {
                 this.isCooldown = true;
+                
                 const timer = setInterval(() => {
                     const now = Date.now();
                     const timeLeft = Math.ceil((expireTime - now) / 1000);
+                    
                     if (timeLeft <= 0) {
                         this.isCooldown = false;
                         this.cooldownTimer = 0;
