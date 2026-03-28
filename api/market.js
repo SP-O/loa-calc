@@ -1,5 +1,5 @@
 // Vercel 서버가 떠있는 동안 메모리에 유지될 캐시 변수들
-let cachedData = null; // 이제 { prices: {}, stats: {} } 형태로 저장됩니다.
+let cachedData = null; // { prices: {}, stats: {} } 형태로 저장
 let lastFetchTime = 0;
 
 // 검색할 아이템 22종
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     const currentBlock = Math.floor(now / (5 * 60 * 1000));
     const cachedBlock = Math.floor(lastFetchTime / (5 * 60 * 1000));
 
-    // 1. 캐시 반환 로직 구조 수정 (이전에 단가가 안 떴던 원인 해결)
+    // 캐시 반환 로직: 강제 갱신이 아니고, 캐시가 있고, 같은 5분 블록이면 캐시 반환
     if (!isForceRefresh && cachedData && cachedData.prices && (currentBlock === cachedBlock)) {
         return res.status(200).json({
             prices: cachedData.prices,
@@ -30,6 +30,7 @@ export default async function handler(req, res) {
         });
     }
 
+    // 강제 갱신은 MANUAL 키, 자동 갱신은 AUTO 키 사용 (Vercel 환경변수에 설정)
     const API_KEY = isForceRefresh 
         ? process.env.LOSTARK_API_KEY_MANUAL 
         : process.env.LOSTARK_API_KEY_AUTO;
@@ -59,7 +60,11 @@ export default async function handler(req, res) {
 
                     const response = await fetch(url, {
                         method: 'POST',
-                        headers: { 'accept': 'application/json', 'authorization': `bearer ${API_KEY}`, 'content-type': 'application/json' },
+                        headers: { 
+                            'accept': 'application/json', 
+                            'authorization': `bearer ${API_KEY}`, 
+                            'content-type': 'application/json' 
+                        },
                         body: JSON.stringify(payload)
                     });
                     
@@ -68,10 +73,13 @@ export default async function handler(req, res) {
                     const exactItem = data.Items?.find(i => i.Name === itemName);
                     if (!exactItem) return { name: itemName, price: null, stats: null };
 
-                    // 2. 단가를 구한 후 해당 아이템의 14일치 시세(stats) 추가 조회
+                    // 단가 확보 후 해당 아이템의 14일치 시세(stats) 추가 조회
                     let stats = null;
                     const statsRes = await fetch(`https://developer-lostark.game.onstove.com/markets/items/${exactItem.Id}`, {
-                        headers: { 'accept': 'application/json', 'authorization': `bearer ${API_KEY}` }
+                        headers: { 
+                            'accept': 'application/json', 
+                            'authorization': `bearer ${API_KEY}` 
+                        }
                     });
 
                     if (statsRes.ok) {
@@ -81,8 +89,10 @@ export default async function handler(req, res) {
                             const history = sorted.slice(0, 14).map(s => {
                                 const d = new Date(s.Date);
                                 return { 
+                                    // MM.DD 형식으로 포맷
                                     date: `${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`, 
-                                    avgPrice: Math.round(s.AvgPrice), volume: s.TradeCount 
+                                    avgPrice: Math.round(s.AvgPrice), 
+                                    volume: s.TradeCount 
                                 };
                             });
                             const validPrices = history.map(h => h.avgPrice);
@@ -109,7 +119,7 @@ export default async function handler(req, res) {
             if (i + chunkSize < ITEM_NAMES.length) await delay(200); 
         }
 
-        // 기존 캐시 복사 및 병합
+        // 기존 캐시 복사 및 병합 (실패한 아이템은 이전 캐시값 유지)
         const newPrices = cachedData?.prices ? { ...cachedData.prices } : {};
         const newStats = cachedData?.stats ? { ...cachedData.stats } : {};
 
