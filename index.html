@@ -28,13 +28,13 @@
         @media (max-width: 1280px) { .container { zoom: 1.05; } #app { min-height: calc((100vh + 62px) / 1.05); } }
         @media (max-width: 1180px) { .container { zoom: 1.0; }  #app { min-height: calc((100vh + 62px) / 1.0); } }
         @media (max-width: 1080px) { .container { zoom: 0.95; } #app { min-height: calc((100vh + 62px) / 0.95); } }
-
+        
         @media (max-width: 980px) {
             .container { zoom: 0.95; }
             #app { min-height: calc((100vh + 62px) / 0.95); }
             .ranking-row { grid-template-columns: 1.2fr 55px 60px 60px; font-size: 0.8em; gap: 3px; }
         }
-
+        
         @media (max-width: 925px) {
             .container { zoom: 1; width: 95%; }
             #app { min-height: calc((100vh + 62px) / 1.0); }
@@ -42,7 +42,7 @@
             .left-panel, .right-column { width: 100% !important; flex: none; }
             .right-panel { width: 100%; }
         }
-
+        
         @media (max-width: 600px) {
             .container { zoom: 0.85; width: 96%; margin: 10px auto; }
             #app { min-height: calc((100vh + 62px) / 0.85); }
@@ -135,7 +135,7 @@
         .normal-product { color: oklab(0.57 -0.0547 -0.1298); }
         .normal-product .resource-icon-wrap, .resource-icon-wrap.normal-product { background: linear-gradient(135deg, oklab(0.2642 -0.0184 -0.04), oklab(0.3474 -0.0315 -0.0661)); }
         .normal-product .resource-icon { width: 24px; height: 24px; }
-
+        
         .result { margin-top: 20px; padding: 15px; background-color: oklab(0.235 0 0); border-radius: 12px; border: 1px solid oklab(1 0 0 / 0.05); overflow-x: auto; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .result-title { font-size: 1.1em; color: oklab(1 0 0); margin: 5px 0 15px 0; text-align: center; border-left: none; padding-left: 0; }
         .result-divider { border: 0; border-top: 2px dashed oklab(0.4091 0 0); margin: 25px 0; transition: border-color 0.3s ease; }
@@ -1160,11 +1160,11 @@
             </div>
             <div class="mct-summary-item">
                 <span class="mct-label">14일간 최고 거래가</span>
-                <span class="mct-value">{{ currentHoveredStats.high14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+                <span class="mct-value">{{ Math.round(Number(currentHoveredStats.high14d) || 0) }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
             </div>
             <div class="mct-summary-item">
                 <span class="mct-label">14일간 최저 거래가</span>
-                <span class="mct-value">{{ currentHoveredStats.low14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+                <span class="mct-value">{{ Math.round(Number(currentHoveredStats.low14d) || 0) }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
             </div>
         </div>
         <div class="mct-body">
@@ -1896,10 +1896,10 @@
                 }
                 const tooltipEstimatedHeight = 420;
                 const bottomMargin = 40; // 창을 줄였을 때 바닥에서 띄울 여백 (필요에 따라 숫자를 조절하세요!)
-
+                
                 // 툴팁 하단이 줄어든 창의 바닥(bottomMargin 포함)을 벗어나는 경우 위치 보정
                 if (viewY + tooltipEstimatedHeight > window.innerHeight - bottomMargin) {
-                        viewY = Math.max(10, window.innerHeight - tooltipEstimatedHeight - bottomMargin);
+                    viewY = Math.max(10, window.innerHeight - tooltipEstimatedHeight - bottomMargin);
                 }
                 
                 // 좌표에 현재 스크롤 위치를 더해 absolute 문서 기준으로 변환 적용
@@ -1984,7 +1984,7 @@
                         ctx.restore();
                     }
                 };
-
+                
                 window.marketChartInstance = new Chart(canvas, {
                     type: 'bar',
                     plugins: [y1GridPlugin],
@@ -2039,29 +2039,29 @@
                                 min: 0,
                                 border: { display: false },
                                 afterBuildTicks: (axis) => {
-    const yAxis = axis.chart.scales['y'];
-    const tickCount = yAxis ? yAxis.ticks.length : 5;
-    const intervals = Math.max(1, tickCount - 1);
-
-    const rawStep = maxVol / intervals;
-    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
-    const normalized = rawStep / magnitude;
-    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
-                     (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
-    let stepSize = niceStep * magnitude;
-
-    // 눈금 수가 너무 적으면(3개 이하) 단위를 절반으로 줄여 촘촘하게
-    let intervals2 = Math.ceil(maxVol / stepSize);
-    if (intervals2 <= 4) {
-        stepSize = stepSize / 2;
-        intervals2 = Math.ceil(maxVol / stepSize);
-    }
-
-    axis.max = stepSize * intervals2;
-    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
-        value: stepSize * i
-    }));
-},
+                                    const yAxis = axis.chart.scales['y'];
+                                    const tickCount = yAxis ? yAxis.ticks.length : 5;
+                                    const intervals = Math.max(1, tickCount - 1);
+                                    
+                                    const rawStep = maxVol / intervals;
+                                    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
+                                    const normalized = rawStep / magnitude;
+                                    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
+                                    (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
+                                    let stepSize = niceStep * magnitude;
+                                    
+                                    // 눈금 수가 너무 적으면(3개 이하) 단위를 절반으로 줄여 촘촘하게
+                                    let intervals2 = Math.ceil(maxVol / stepSize);
+                                    if (intervals2 <= 4) {
+                                        stepSize = stepSize / 2;
+                                        intervals2 = Math.ceil(maxVol / stepSize);
+                                    }
+                                    
+                                    axis.max = stepSize * intervals2;
+                                    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
+                                        value: stepSize * i
+                                    }));
+                                },
                                 ticks: {
                                     color: textColor,
                                     font: { size: 10 },
