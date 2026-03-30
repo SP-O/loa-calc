@@ -8,37 +8,34 @@
     })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로아도쓰 | 아비도스 제작 계산기</title>
+    <title>아비도스 제작 계산기</title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: "Noto Sans KR", sans-serif; background-color: oklab(0.235 0 0); color: oklab(0.9067 0 0); margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; color-scheme: dark; }
+        body { font-family: "Noto Sans KR", sans-serif; background-color: #1e1e1e; color: #e0e0e0; margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; color-scheme: dark; }
         *, *::before, *::after { box-sizing: inherit; }
-        #app { display: flex; flex-direction: column; min-height: calc((100vh + 62px) / 1.1); }
-
+        
         .container { max-width: 1100px; width: 95%; margin: 30px auto 0; zoom: 1.1; }
         .main-wrapper { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
         
-        .right-panel { padding: 20px; background-color: oklab(0.2891 0 0); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; box-shadow: 0 0 10px oklab(0 0 0 / 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
-        .left-panel { flex: 1; padding: 20px; background-color: oklab(0.2891 0 0); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; box-shadow: 0 0 10px oklab(0 0 0 / 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
+        .right-panel { padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
+        .left-panel { flex: 1; padding: 20px; background-color: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
         .right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 20px; }
         
         @media (max-width: 1400px) { .container { zoom: 1.1; } }
-        @media (max-width: 1280px) { .container { zoom: 1.05; } #app { min-height: calc((100vh + 62px) / 1.05); } }
-        @media (max-width: 1180px) { .container { zoom: 1.0; }  #app { min-height: calc((100vh + 62px) / 1.0); } }
-        @media (max-width: 1080px) { .container { zoom: 0.95; } #app { min-height: calc((100vh + 62px) / 0.95); } }
+        @media (max-width: 1280px) { .container { zoom: 1.05; } }
+        @media (max-width: 1180px) { .container { zoom: 1.0; } }
+        @media (max-width: 1080px) { .container { zoom: 0.95; } }
         
         @media (max-width: 980px) {
             .container { zoom: 0.95; }
-            #app { min-height: calc((100vh + 62px) / 0.95); }
             .ranking-row { grid-template-columns: 1.2fr 55px 60px 60px; font-size: 0.8em; gap: 3px; }
         }
         
         @media (max-width: 925px) {
-            .container { zoom: 1; width: 95%; }
-            #app { min-height: calc((100vh + 62px) / 1.0); }
+            .container { zoom: 1; width: 95%; } 
             .main-wrapper { flex-direction: column; gap: 20px; }
             .left-panel, .right-column { width: 100% !important; flex: none; }
             .right-panel { width: 100%; }
@@ -46,7 +43,6 @@
         
         @media (max-width: 600px) {
             .container { zoom: 0.85; width: 96%; margin: 10px auto; }
-            #app { min-height: calc((100vh + 62px) / 0.85); }
             .main-wrapper { flex-direction: column; gap: 15px; }
             .left-panel, .right-column { width: 100% !important; padding: 0 !important; margin: 0; }
             .left-panel, .right-panel { width: 100% !important; padding: 15px !important; box-sizing: border-box; margin: 0 auto; }
@@ -66,80 +62,79 @@
             .name-text-wrap { display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 0 !important; }
         }
         
-        h1 { font-size: 1.3em; color: oklab(1 0 0); border-bottom: 2px solid oklab(0.3485 0 0); padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; transition: color 0.3s ease, border-color 0.3s ease; }
+        h1 { font-size: 1.3em; color: #ffffff; border-bottom: 2px solid #3a3a3a; padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; transition: color 0.3s ease, border-color 0.3s ease; }
         
-        .mode-tabs { display: flex; margin-bottom: 15px; border-radius: 6px; border: 1px solid oklab(1 0 0 / 0.05); transition: border-color 0.3s ease, background-color 0.3s ease; }
-        .mode-tab { flex: 1; text-align: center; padding: 8px 10px; cursor: pointer; background-color: oklab(0.2891 0 0); color: oklab(0.7572 0 0); font-weight: bold; transition: 0.2s; font-size: 0.9em; position: relative; border-bottom: 2px solid transparent; }
+        .mode-tabs { display: flex; margin-bottom: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s ease, background-color 0.3s ease; }
+        .mode-tab { flex: 1; text-align: center; padding: 8px 10px; cursor: pointer; background-color: #2b2b2b; color: #b0b0b0; font-weight: bold; transition: 0.2s; font-size: 0.9em; position: relative; border-bottom: 2px solid transparent; }
         .mode-tab:first-child { border-radius: 5px 0 0 5px; }
         .mode-tab:last-child { border-radius: 0 5px 5px 0; }
-        .mode-tab:hover { background-color: oklab(0.4091 0 0); color: oklab(1 0 0); }
-        .mode-tab.active { background-color: oklab(0.3485 0 0); color: oklab(0.8868 -0.0169 0.1814); border-bottom: 2px solid oklab(0.8868 -0.0169 0.1814); z-index: 10; }
+        .mode-tab:hover { background-color: #4a4a4a; color: #ffffff; }
+        .mode-tab.active { background-color: #3a3a3a; color: #ffd700; border-bottom: 2px solid #ffd700; z-index: 10; }
         
-        .dropdown-content { display: none; position: absolute; top: 100%; left: -1px; width: calc(100% + 2px); background-color: oklab(0.2891 0 0); border: 1px solid oklab(0.3485 0 0); border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 8px 16px oklab(0 0 0 / 0.6); z-index: 100; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .dropdown-content { display: none; position: absolute; top: 100%; left: -1px; width: calc(100% + 2px); background-color: #2b2b2b; border: 1px solid #3a3a3a; border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.6); z-index: 100; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .mode-tab.active:hover .dropdown-content { display: block; }
-        .dropdown-item { padding: 8px 10px; text-align: center; color: oklab(0.7572 0 0); font-size: 0.9em; font-weight: bold; transition: 0.2s; }
+        .dropdown-item { padding: 8px 10px; text-align: center; color: #b0b0b0; font-size: 0.9em; font-weight: bold; transition: 0.2s; }
         .dropdown-item:last-child { border-radius: 0 0 12px 12px; }
-        .dropdown-item:hover { background-color: oklab(0.4091 0 0); color: oklab(1 0 0); }
-        .dropdown-item.selected { color: oklab(0.8868 -0.0169 0.1814); background-color: oklab(0.3485 0 0); }
+        .dropdown-item:hover { background-color: #4a4a4a; color: #ffffff; }
+        .dropdown-item.selected { color: #ffd700; background-color: #3a3a3a; }
         
-        h2 { font-size: 1.3em; color: oklab(1 0 0); margin: 0 0 12px 0; border-left: 4px solid oklab(0.8868 -0.0169 0.1814); padding-left: 10px; transition: color 0.3s ease, border-color 0.3s ease; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-left: 4px solid oklab(0.8868 -0.0169 0.1814); padding-left: 10px; transition: border-color 0.3s ease; }
+        h2 { font-size: 1.3em; color: #ffffff; margin: 0 0 12px 0; border-left: 4px solid #ffd700; padding-left: 10px; transition: color 0.3s ease, border-color 0.3s ease; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-left: 4px solid #ffd700; padding-left: 10px; transition: border-color 0.3s ease; }
         .section-header h2 { margin: 0; border-left: none; padding-left: 0; }
         
-        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid oklab(0.3485 0 0); transition: border-color 0.3s ease; }
-        .tab { flex: 1; text-align: center; padding: 8px 5px; font-size: 0.95em; cursor: pointer; background-color: transparent; color: oklab(0.7572 0 0); border: 1px solid transparent; border-bottom: 2px solid transparent; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease; }
-        .tab.active { background-color: oklab(0.3485 0 0); color: oklab(0.8868 -0.0169 0.1814); font-weight: bold; border-color: oklab(1 0 0 / 0.05); border-bottom: 2px solid oklab(0.8868 -0.0169 0.1814); border-radius: 6px 6px 0 0; }
-        .tab:hover:not(.active) { background-color: oklab(0.4091 0 0); color: oklab(1 0 0); border-radius: 6px 6px 0 0; }
+        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #3a3a3a; transition: border-color 0.3s ease; }
+        .tab { flex: 1; text-align: center; padding: 8px 5px; font-size: 0.95em; cursor: pointer; background-color: transparent; color: #b0b0b0; border: 1px solid transparent; border-bottom: 2px solid transparent; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease; }
+        .tab.active { background-color: #3a3a3a; color: #ffd700; font-weight: bold; border-color: rgba(255, 255, 255, 0.05); border-bottom: 2px solid #ffd700; border-radius: 6px 6px 0 0; }
+        .tab:hover:not(.active) { background-color: #4a4a4a; color: #ffffff; border-radius: 6px 6px 0 0; }
         .hidden-radio { display: none; }
         
         .input-group { margin-top: 10px; }
-        .input-group label { display: flex; align-items: center; font-size: 0.95em; color: oklab(0.7572 0 0); margin-bottom: 5px; justify-content: space-between; flex-wrap: wrap; gap: 6px; transition: color 0.3s ease; }
-        .input-group > input { width: 100%; padding: 10px; font-size: 1em; border: 1px solid oklab(0.3485 0 0); border-radius: 4px; background-color: oklab(0.235 0 0); color: oklab(0.9067 0 0); transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        .input-group label { display: flex; align-items: center; font-size: 0.95em; color: #b0b0b0; margin-bottom: 5px; justify-content: space-between; flex-wrap: wrap; gap: 6px; transition: color 0.3s ease; }
+        .input-group > input { width: 100%; padding: 10px; font-size: 1em; border: 1px solid #3a3a3a; border-radius: 4px; background-color: #1e1e1e; color: #e0e0e0; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         
-        .input-group > input:focus, input.price-input-small:focus, input.price-input-right:focus, input.input-in-table:focus, input.tiny-input:focus { border-color: oklab(0.8868 -0.0169 0.1814) !important; outline: none !important; box-shadow: 0 0 0 3px oklab(0.8868 -0.0169 0.1814 / 0.15) !important; }
+        .input-group > input:focus, input.price-input-small:focus, input.price-input-right:focus, input.input-in-table:focus, input.tiny-input:focus { border-color: #ffd700 !important; outline: none !important; box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15) !important; }
         
         .right-badges { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-        .mark-target { color: oklab(0.8868 -0.0169 0.1814); font-size: 0.8em; font-weight: normal; border: 1px dashed oklab(0.8868 -0.0169 0.1814); padding: 2px 5px; border-radius: 4px; margin-left: 6px; display: inline-block; vertical-align: middle; transition: color 0.3s ease, border-color 0.3s ease; }
-        .mat-price-tag { background: oklab(0.3485 0 0); padding: 2px 6px; border: 1px solid transparent; border-radius: 4px; font-size: 0.75em; color: oklab(0.8868 -0.0169 0.1814); display: flex; align-items: center; white-space: nowrap; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        .mark-target { color: #ffd700; font-size: 0.8em; font-weight: normal; border: 1px dashed #ffd700; padding: 2px 5px; border-radius: 4px; margin-left: 6px; display: inline-block; vertical-align: middle; transition: color 0.3s ease, border-color 0.3s ease; }
+        .mat-price-tag { background: #3a3a3a; padding: 2px 6px; border: 1px solid transparent; border-radius: 4px; font-size: 0.75em; color: #ffd700; display: flex; align-items: center; white-space: nowrap; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         
-        .deficit-info { text-align: center; font-size: 0.95em; color: oklab(0.7572 0 0); margin-top: -8px; margin-bottom: 12px; transition: color 0.3s ease; }
-        .text-deficit { color: oklab(0.7044 0.1721 0.0737); font-weight: bold; }
-        .text-surplus { color: oklab(0.8003 -0.1603 0.0863); font-weight: bold; }
+        .deficit-info { text-align: center; font-size: 0.95em; color: #b0b0b0; margin-top: -8px; margin-bottom: 12px; transition: color 0.3s ease; }
+        .text-deficit { color: #ff6666; font-weight: bold; }
+        .text-surplus { color: #4ade80; font-weight: bold; }
         
-        button { width: 100%; margin-top: 15px; padding: 15px 10px; font-size: 1em; border: none; border-radius: 4px; background-color: oklab(0.3485 0 0); color: oklab(1 0 0); cursor: pointer; font-weight: bold; transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s; }
-        button:hover { background-color: oklab(0.4676 0 0); transform: translateY(-1px); box-shadow: 0 4px 12px oklab(0 0 0 / 0.3); }
+        button { width: 100%; margin-top: 15px; padding: 15px 10px; font-size: 1em; border: none; border-radius: 4px; background-color: #3a3a3a; color: #ffffff; cursor: pointer; font-weight: bold; transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s; }
+        button:hover { background-color: #5a5a5a; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
         button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
         
         button.btn-calc { border-radius: 8px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px oklab(0.8868 -0.0169 0.1814 / 0.1); }
-        body.light-mode button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px oklab(0.5635 -0.0384 -0.2377 / 0.15); }
-        body.light-mode .rank-cost-col { color: oklab(0.3867 0 0) !important; font-weight: 500 !important; }
+        button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px rgba(255, 215, 0, 0.1); }
+        body.light-mode button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px rgba(0, 102, 255, 0.15); }
+        body.light-mode .rank-cost-col { color: #444444 !important; font-weight: 500 !important; }
         
-        .btn-force { position: absolute; right: 15px; top: 15px; width: auto; margin: 0; padding: 3px 8px; background: oklab(0.7044 0.1721 0.0737 / 0.08); border: 1px solid oklab(0.7044 0.1721 0.0737 / 0.3); color: oklab(0.7529 0.1385 0.0538); border-radius: 4px; font-size: 0.7em; font-weight: normal; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
-        .btn-force:hover { background: oklab(0.7044 0.1721 0.0737 / 0.2); border-color: oklab(0.7044 0.1721 0.0737 / 0.6); color: oklab(1 0 0); }
-        .btn-force.btn-farm { background: oklab(0.6231 -0.0332 -0.1851 / 0.1); border: 1px solid oklab(0.6231 -0.0332 -0.1851 / 0.4); color: oklab(0.7137 -0.038 -0.1382); }
-        .btn-force.btn-farm:hover { background: oklab(0.6231 -0.0332 -0.1851 / 0.25); border-color: oklab(0.7137 -0.038 -0.1382); color: oklab(1 0 0); }
+        .btn-force { position: absolute; right: 15px; top: 15px; width: auto; margin: 0; padding: 3px 8px; background: rgba(255, 102, 102, 0.08); border: 1px solid rgba(255, 102, 102, 0.3); color: #ff8585; border-radius: 4px; font-size: 0.7em; font-weight: normal; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
+        .btn-force:hover { background: rgba(255, 102, 102, 0.2); border-color: rgba(255, 102, 102, 0.6); color: #ffffff; }
+        .btn-force.btn-farm { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; }
+        .btn-force.btn-farm:hover { background: rgba(59, 130, 246, 0.25); border-color: #60a5fa; color: #ffffff; }
         
         .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; transition: color 0.3s ease; }
         .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; cursor: help; }
-        .resource-icon { width: 20px; height: 20px; object-fit: cover; pointer-events: none; }
+        .resource-icon { width: 16px; height: 16px; object-fit: cover; pointer-events: none; }
         
-        .resource-A, .resource-P { color: oklab(0.7025 0 0); }
-        .resource-A .resource-icon-wrap, .resource-P .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.3132 0 0), oklab(0.4604 0 0)); }
-        .resource-B { color: oklab(0.7203 -0.1229 0.1378); }
-        .resource-B .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.2747 -0.0373 0.0449), oklab(0.372 -0.0563 0.0658)); }
-        .resource-S, .resource-C { color: oklab(0.57 -0.0547 -0.1298); }
-        .resource-S .resource-icon-wrap, .resource-C .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.2642 -0.0184 -0.04), oklab(0.3474 -0.0315 -0.0661)); }
+        .resource-A, .resource-P { color: rgb(159, 159, 159); }
+        .resource-A .resource-icon-wrap, .resource-P .resource-icon-wrap { background: linear-gradient(135deg, rgb(49, 49, 49), rgb(88, 88, 88)); }
+        .resource-B { color: rgb(120, 187, 39); }
+        .resource-B .resource-icon-wrap { background: linear-gradient(135deg, rgb(30, 45, 11), rgb(48, 73, 17)); }
+        .resource-S, .resource-C { color: rgb(25, 124, 197); }
+        .resource-S .resource-icon-wrap, .resource-C .resource-icon-wrap { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)); }
         
-        .final-product { color: oklab(0.6577 0.1936 -0.1862); }
-        .final-product .resource-icon-wrap, .resource-icon-wrap.final-product { background: linear-gradient(135deg, oklab(0.2565 0.0625 -0.0677), oklab(0.3556 0.0967 -0.1117)); }
-        .normal-product { color: oklab(0.57 -0.0547 -0.1298); }
-        .normal-product .resource-icon-wrap, .resource-icon-wrap.normal-product { background: linear-gradient(135deg, oklab(0.2642 -0.0184 -0.04), oklab(0.3474 -0.0315 -0.0661)); }
-        .normal-product .resource-icon { width: 24px; height: 24px; }
-
-        .result { margin-top: 20px; padding: 15px; background-color: oklab(0.235 0 0); border-radius: 12px; border: 1px solid oklab(1 0 0 / 0.05); overflow-x: auto; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .result-title { font-size: 1.1em; color: oklab(1 0 0); margin: 5px 0 15px 0; text-align: center; border-left: none; padding-left: 0; }
-        .result-divider { border: 0; border-top: 2px dashed oklab(0.4091 0 0); margin: 25px 0; transition: border-color 0.3s ease; }
+        .final-product { color: #ce43fc; }
+        .final-product .resource-icon-wrap, .resource-icon-wrap.final-product { background: linear-gradient(135deg, #321142, #541973); }
+        .normal-product { color: rgb(25, 124, 197); }
+        .normal-product .resource-icon-wrap, .resource-icon-wrap.normal-product { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)); }
+        
+        .result { margin-top: 20px; padding: 15px; background-color: #1e1e1e; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); overflow-x: auto; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .result-title { font-size: 1.1em; color: #ffffff; margin: 5px 0 15px 0; text-align: center; border-left: none; padding-left: 0; }
+        .result-divider { border: 0; border-top: 2px dashed #4a4a4a; margin: 25px 0; transition: border-color 0.3s ease; }
         /* 계산 결과창 내부에 있는 아이콘의 툴팁 이벤트 원천 차단 */
         .result .resource-icon-wrap {
             pointer-events: none !important;
@@ -148,312 +143,310 @@
         .conversion-grid { display: grid; grid-template-columns: auto auto auto 120px; align-items: center; gap: 10px; }
         .conversion-row { display: contents; }
         .label-wrap { display: flex; justify-content: center; align-items: center; width: 100%; }
-        .arrow { text-align: center; color: oklab(0.9067 0 0); font-size: 1.2em; transition: color 0.3s ease; }
-        .count { text-align: center; font-size: 0.95em; color: oklab(0.8576 0 0); transition: color 0.3s ease; }
-        .num-point { color: oklab(0.8868 -0.0169 0.1814); font-weight: bold; text-shadow: 0 0 5px oklab(0.8868 -0.0169 0.1814 / 0.8); }
+        .arrow { text-align: center; color: #e0e0e0; font-size: 1.2em; transition: color 0.3s ease; }
+        .count { text-align: center; font-size: 0.95em; color: #d0d0d0; transition: color 0.3s ease; }
+        .num-point { color: #ffd700; font-weight: bold; text-shadow: 0 0 5px rgba(255, 215, 0, 0.8); }
         
-        .final-row { grid-column: span 4; display: grid; grid-template-columns: auto 120px; align-items: center; border-top: 1px solid oklab(0.3485 0 0); margin-top: 10px; padding-top: 10px; transition: border-color 0.3s ease; }
+        .final-row { grid-column: span 4; display: grid; grid-template-columns: auto 120px; align-items: center; border-top: 1px solid #3a3a3a; margin-top: 10px; padding-top: 10px; transition: border-color 0.3s ease; }
         .final-product-label { flex: 1 1 auto; font-weight: bold; text-align: center; }
-        .no-production { color: oklab(0.7044 0.1721 0.0737); text-align: center; font-size: 1.1em; font-weight: bold; margin: 15px 0; }
-        .desc { font-size: 11px; color: oklab(0.7572 0 0); transition: color 0.3s ease; }
+        .no-production { color: #ff6666; text-align: center; font-size: 1.1em; font-weight: bold; margin: 15px 0; }
+        .desc { font-size: 11px; color: #b0b0b0; transition: color 0.3s ease; }
         
-        .market-box { background-color: oklab(0.235 0 0); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; padding: 15px; margin-top: 15px; transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid oklab(0.3485 0 0); padding-bottom: 8px; transition: border-color 0.3s ease; }
+        .market-box { background-color: #1e1e1e; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 15px; margin-top: 15px; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #3a3a3a; padding-bottom: 8px; transition: border-color 0.3s ease; }
         .market-header h3 { margin: 0; font-size: 1.1em; }
         .market-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95em; gap: 10px; word-break: keep-all; }
         
-        .profit-plus { color: oklab(0.8868 -0.0169 0.1814); font-weight: bold; }
-        .profit-minus { color: oklab(0.7044 0.1721 0.0737); font-weight: bold; }
+        .profit-plus { color: #ffd700; font-weight: bold; }
+        .profit-minus { color: #ff6666; font-weight: bold; }
         
-        input.price-input-small, input.price-input-right { background-color: oklab(0.235 0 0) !important; color: oklab(0.8868 -0.0169 0.1814) !important; border: 1px solid oklab(0.4676 0 0) !important; border-radius: 5px !important; text-align: right !important; margin: 0 4px !important; font-size: 1.1em !important; font-weight: bold !important; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        input.price-input-small, input.price-input-right { background-color: #1e1e1e !important; color: #ffd700 !important; border: 1px solid #5a5a5a !important; border-radius: 5px !important; text-align: right !important; margin: 0 4px !important; font-size: 1.1em !important; font-weight: bold !important; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         input.price-input-small { width: 45px !important; height: 22px !important; padding: 0 4px !important; }
         input.price-input-right { width: 55px !important; height: 24px !important; padding: 0 4px !important; }
         input.price-input-small::-webkit-inner-spin-button, input.price-input-small::-webkit-outer-spin-button, input.price-input-right::-webkit-inner-spin-button, input.price-input-right::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
-        .scenario-section { background-color: oklab(1 0 0 / 0.03); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; padding: 12px 14px; margin-top: 12px; transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .scenario-section.self-craft { border-left: 3px solid oklab(0.8868 -0.0169 0.1814); }
-        .scenario-section.market-buy { border-left: 3px solid oklab(0.6268 0 0); }
-        .scenario-section.deficit-craft { border-left: 3px solid oklab(0.8003 -0.1603 0.0863); }
+        .scenario-section { background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 12px 14px; margin-top: 12px; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .scenario-section.self-craft { border-left: 3px solid #ffd700; }
+        .scenario-section.market-buy { border-left: 3px solid #888; }
+        .scenario-section.deficit-craft { border-left: 3px solid #4ade80; }
         
-        .scenario-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed oklab(0.4091 0 0); margin-bottom: 8px; padding-bottom: 5px; transition: border-color 0.3s ease; }
-        .scenario-title { font-size: 0.85em; color: oklab(0.7572 0 0); transition: color 0.3s ease; }
+        .scenario-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #4a4a4a; margin-bottom: 8px; padding-bottom: 5px; transition: border-color 0.3s ease; }
+        .scenario-title { font-size: 0.85em; color: #b0b0b0; transition: color 0.3s ease; }
         .scenario-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; margin-bottom: 6px; }
         .scenario-row:last-child { margin-bottom: 0; }
-        .total-profit-row { margin-top: 6px; padding-top: 6px; border-top: 1px dotted oklab(0.4091 0 0); font-weight: bold; font-size: 0.95em; transition: border-color 0.3s ease; }
+        .total-profit-row { margin-top: 6px; padding-top: 6px; border-top: 1px dotted #4a4a4a; font-weight: bold; font-size: 0.95em; transition: border-color 0.3s ease; }
         
-        .toggle-btn { width: auto !important; margin: 0 !important; padding: 4px 10px !important; background: transparent; border: 1px solid oklab(0.4676 0 0); color: oklab(0.7572 0 0); border-radius: 4px; font-size: 0.8em !important; font-weight: normal !important; cursor: pointer; transition: 0.2s; height: auto !important; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1.2; }
-        .toggle-btn.active { background: oklab(0.8003 -0.1603 0.0863); color: oklab(0.235 0 0); border-color: oklab(0.8003 -0.1603 0.0863); font-weight: bold !important; }
-        .toggle-btn:hover:not(.active) { border-color: oklab(0.8003 -0.1603 0.0863); color: oklab(0.8003 -0.1603 0.0863); transform: translateY(-1px); }
+        .toggle-btn { width: auto !important; margin: 0 !important; padding: 4px 10px !important; background: transparent; border: 1px solid #5a5a5a; color: #b0b0b0; border-radius: 4px; font-size: 0.8em !important; font-weight: normal !important; cursor: pointer; transition: 0.2s; height: auto !important; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1.2; }
+        .toggle-btn.active { background: #4ade80; color: #1e1e1e; border-color: #4ade80; font-weight: bold !important; }
+        .toggle-btn:hover:not(.active) { border-color: #4ade80; color: #4ade80; transform: translateY(-1px); }
         
-        .ranking-board-wrap { position: relative; margin-bottom: 0px; background-color: oklab(0 0 0 / 0.15); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; padding: 4px; overflow: hidden; display: flex; flex-direction: column; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .ranking-board-wrap { position: relative; margin-bottom: 0px; background-color: rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 4px; overflow: hidden; display: flex; flex-direction: column; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .ranking-board { width: 100%; display: flex; flex-direction: column; gap: 0; padding-top: 0px; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; max-height: max-content; }
         .ranking-board::-webkit-scrollbar { display: none; }
         
-        .ranking-row { display: grid; grid-template-columns: minmax(130px, 1fr) 65px 65px 65px; align-items: center; padding: 8px; border-bottom: 1px solid oklab(0.3485 0 0); gap: 6px; font-size: 0.85em; transition: background-color 0.2s ease, border-color 0.3s ease; animation: fadeSlideDown 0.3s ease-out forwards; }
+        .ranking-row { display: grid; grid-template-columns: minmax(130px, 1fr) 65px 65px 65px; align-items: center; padding: 8px; border-bottom: 1px solid #3a3a3a; gap: 6px; font-size: 0.85em; transition: background-color 0.2s ease, border-color 0.3s ease; animation: fadeSlideDown 0.3s ease-out forwards; }
         @keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         
         .ranking-row:last-child { border-bottom: none; }
-        .ranking-row:not(.ranking-header):hover { background-color: oklab(1 0 0 / 0.05); }
-        .ranking-row.is-profit { background: linear-gradient(90deg, transparent, oklab(0.8003 -0.1603 0.0863 / 0.04) 85%); }
-        .ranking-row.is-loss { background: linear-gradient(90deg, transparent, oklab(0.7044 0.1721 0.0737 / 0.03) 85%); }
+        .ranking-row:not(.ranking-header):hover { background-color: rgba(255, 255, 255, 0.05); }
+        .ranking-row.is-profit { background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.04) 85%); }
+        .ranking-row.is-loss { background: linear-gradient(90deg, transparent, rgba(255, 102, 102, 0.03) 85%); }
         
-        .ranking-header { border-bottom: 1px solid oklab(0.4676 0 0); color: oklab(0.7572 0 0); font-weight: bold; background: none !important; animation: none; transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease; }
+        .ranking-header { border-bottom: 1px solid #5a5a5a; color: #b0b0b0; font-weight: bold; background: none !important; animation: none; transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease; }
         .sortable-header { display: flex; align-items: center; justify-content: center; justify-self: center; width: max-content; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; border-radius: 4px; padding: 0px 8px; }
-        .sortable-header:hover { background-color: oklab(1 0 0 / 0.08); color: oklab(1 0 0); }
+        .sortable-header:hover { background-color: rgba(255, 255, 255, 0.08); color: #ffffff; }
         .sort-icon { color: inherit; margin-left: 4px; font-size: 1.1em; font-weight: bold; display: inline-block; width: 14px; text-align: center; }
         
         .rank-name-col { display: flex; align-items: center; gap: 4px; min-width: 0; } 
-        .star-btn { background: none; border: none; padding: 0; margin: 0; color: oklab(0.4495 0 0); cursor: pointer; font-size: 1.1em; line-height: 1; transition: color 0.2s, transform 0.2s; display: inline-flex; align-items: center; justify-content: center; width: 16px; flex-shrink: 0;}
-        .star-btn.is-fav { color: oklab(0.8868 -0.0169 0.1814); text-shadow: 0 0 4px oklab(0.8868 -0.0169 0.1814 / 0.4); }
-        .star-btn:hover { color: oklab(0.8868 -0.0169 0.1814); transform: scale(1.1); }
+        .star-btn { background: none; border: none; padding: 0; margin: 0; color: #555; cursor: pointer; font-size: 1.1em; line-height: 1; transition: color 0.2s, transform 0.2s; display: inline-flex; align-items: center; justify-content: center; width: 16px; flex-shrink: 0;}
+        .star-btn.is-fav { color: #ffd700; text-shadow: 0 0 4px rgba(255,215,0,0.4); }
+        .star-btn:hover { color: #ffd700; transform: scale(1.1); }
         
         .rank-name-col .resource-icon-wrap { width: 20px; height: 20px; flex-shrink: 0; border-radius: 3px; display: flex; justify-content: center; align-items: center; margin-right: 2px; }
-        .rank-name-col .resource-icon { width: 16px; height: 16px; object-fit: cover; }
-        .rank-name-col .resource-icon-wrap.normal-product .resource-icon { width: 20px; height: 20px; }
-
+        .rank-name-col .resource-icon { width: 14px; height: 14px; object-fit: cover; }
+        
         .name-text-wrap { display: flex; align-items: baseline; flex-wrap: wrap; width: 100%; line-height: 1.2; gap: 2px;}
         .name-text-wrap span { word-break: keep-all; }
         
         .rank-price-col { display: flex; align-items: center; justify-content: center; gap: 3px; } 
-        .rank-cost-col { color: oklab(0.8576 0 0); text-align: center; justify-content: center; }
+        .rank-cost-col { color: #d0d0d0; text-align: center; justify-content: center; }
         .rank-profit-col { text-align: center; font-weight: bold; font-size: 1.05em; justify-content: center; }
         
-        .input-in-table { width: 40px !important; height: 22px !important; padding: 0 1px !important; background-color: oklab(0.2178 0 0) !important; color: oklab(0.8868 -0.0169 0.1814) !important; border: 1px solid oklab(0.4495 0 0) !important; border-radius: 5px !important; text-align: center !important; font-size: 0.9em !important; font-weight: bold !important; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        .input-in-table { width: 40px !important; height: 22px !important; padding: 0 1px !important; background-color: #1a1a1a !important; color: #ffd700 !important; border: 1px solid #555 !important; border-radius: 5px !important; text-align: center !important; font-size: 0.9em !important; font-weight: bold !important; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         .input-in-table::-webkit-inner-spin-button, .input-in-table::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
-        .modern-expand-btn { position: relative; width: calc(100% + 8px); margin: auto -4px -4px -4px; background-color: oklab(0 0 0 / 0.1); color: oklab(0.5103 0 0); border: none; border-top: 1px solid oklab(0.3485 0 0); border-radius: 0 0 12px 12px; padding: 0; height: 14px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; }
-        .modern-expand-btn:hover { color: oklab(0.8868 -0.0169 0.1814); background-color: oklab(1 0 0 / 0.05); }
+        .modern-expand-btn { position: relative; width: calc(100% + 8px); margin: auto -4px -4px -4px; background-color: rgba(0, 0, 0, 0.1); color: #666; border: none; border-top: 1px solid #3a3a3a; border-radius: 0 0 12px 12px; padding: 0; height: 14px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; }
+        .modern-expand-btn:hover { color: #ffd700; background-color: rgba(255, 255, 255, 0.05); }
         .modern-expand-btn .chevron { font-size: 0.8em; line-height: 0; font-weight: bold; display: flex; align-items: center; justify-content: center; transform: translateY(3px); }
         .modern-expand-btn .chevron.is-open { transform: translateY(-3px); }
         
-        .control-panel-box { background-color: oklab(0 0 0 / 0.15); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; padding: 15px; margin-top: 5px; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .control-panel-box { background-color: rgba(0, 0, 0, 0.15); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; padding: 15px; margin-top: 5px; transition: background-color 0.3s ease, border-color 0.3s ease; }
         
-        .stronghold-setting-box { display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px; padding-bottom: 12px; border-bottom: 1px dashed oklab(0.4091 0 0); margin-bottom: 12px; overflow-x: auto; transition: border-color 0.3s ease;}
+        .stronghold-setting-box { display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px; padding-bottom: 12px; border-bottom: 1px dashed #4a4a4a; margin-bottom: 12px; overflow-x: auto; transition: border-color 0.3s ease;}
         .stronghold-setting-box > div { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
-        .stronghold-setting-box .setting-title { font-weight: bold; color: oklab(0.7572 0 0); font-size: 0.85em; white-space: nowrap; flex-shrink: 0; transition: color 0.3s ease; }
+        .stronghold-setting-box .setting-title { font-weight: bold; color: #b0b0b0; font-size: 0.85em; white-space: nowrap; flex-shrink: 0; transition: color 0.3s ease; }
         .stronghold-setting-box .inputs-wrap { display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; margin-left: auto; }
         .stronghold-setting-box .input-group { margin: 0; display: flex; align-items: center; gap: 6px; }
-        .stronghold-setting-box label { margin: 0; font-size: 0.8em; color: oklab(0.6268 0 0); white-space: nowrap; }
+        .stronghold-setting-box label { margin: 0; font-size: 0.8em; color: #888; white-space: nowrap; }
         
-        input.tiny-input { width: 28px !important; height: 18px !important; padding: 0 !important; background-color: oklab(0.235 0 0) !important; color: oklab(0.9067 0 0) !important; border: 1px solid oklab(0.4495 0 0) !important; border-radius: 4px !important; text-align: center !important; font-size: 0.8em !important; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; }
+        input.tiny-input { width: 28px !important; height: 18px !important; padding: 0 !important; background-color: #1e1e1e !important; color: #e0e0e0 !important; border: 1px solid #555 !important; border-radius: 4px !important; text-align: center !important; font-size: 0.8em !important; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; }
         input.tiny-input::-webkit-inner-spin-button, input.tiny-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
-        @keyframes gentle-glow-gold { 0% { text-shadow: 0 0 2px oklab(0.8868 -0.0169 0.1814 / 0.4); color: oklab(0.8868 -0.0169 0.1814); } 50% { text-shadow: 0 0 7px oklab(0.8868 -0.0169 0.1814 / 0.9); color: oklab(0.8868 -0.0169 0.1814); } 100% { text-shadow: 0 0 2px oklab(0.8868 -0.0169 0.1814 / 0.4); color: oklab(0.8868 -0.0169 0.1814); } }
-        .profit-neon-gold { animation: gentle-glow-gold 2.5s infinite ease-in-out; font-weight: bold; color: oklab(0.8868 -0.0169 0.1814); }
+        @keyframes gentle-glow-gold { 0% { text-shadow: 0 0 2px rgba(255, 215, 0, 0.4); color: #ffd700; } 50% { text-shadow: 0 0 7px rgba(255, 215, 0, 0.9); color: #ffd700; } 100% { text-shadow: 0 0 2px rgba(255, 215, 0, 0.4); color: #ffd700; } }
+        .profit-neon-gold { animation: gentle-glow-gold 2.5s infinite ease-in-out; font-weight: bold; color: #ffd700; }
         
-        @keyframes gentle-glow-red { 0% { text-shadow: 0 0 2px oklab(0.7044 0.1721 0.0737 / 0.4); color: oklab(0.7044 0.1721 0.0737); } 50% { text-shadow: 0 0 7px oklab(0.7044 0.1721 0.0737 / 0.9); color: oklab(0.7044 0.1721 0.0737); } 100% { text-shadow: 0 0 2px oklab(0.7044 0.1721 0.0737 / 0.4); color: oklab(0.7044 0.1721 0.0737); } }
-        .profit-neon-red { animation: gentle-glow-red 2.5s infinite ease-in-out; font-weight: bold; color: oklab(0.7044 0.1721 0.0737); }
+        @keyframes gentle-glow-red { 0% { text-shadow: 0 0 2px rgba(255, 102, 102, 0.4); color: #ff6666; } 50% { text-shadow: 0 0 7px rgba(255, 102, 102, 0.9); color: #ff6666; } 100% { text-shadow: 0 0 2px rgba(255, 102, 102, 0.4); color: #ff6666; } }
+        .profit-neon-red { animation: gentle-glow-red 2.5s infinite ease-in-out; font-weight: bold; color: #ff6666; }
         
-        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: oklab(0 0 0 / 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; }
-        .loading-spinner { width: 50px; height: 50px; border: 5px solid oklab(0.3485 0 0); border-top: 5px solid oklab(0.8868 -0.0169 0.1814); border-radius: 50%; animation: spin 1s linear infinite; }
+        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .loading-spinner { width: 50px; height: 50px; border: 5px solid #3a3a3a; border-top: 5px solid #ffd700; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .update-box { text-align: right; font-size: 12px; color: oklab(0.6268 0 0); margin-top: -15px; margin-bottom: 0; padding-right: 5px; transition: color 0.3s ease; }
+        .update-box { text-align: right; font-size: 12px; color: #888; margin-top: -15px; margin-bottom: 0; padding-right: 5px; transition: color 0.3s ease; }
         
-        .sync-pill { display: inline-flex; align-items: center; background-color: oklab(0 0 0 / 0.25); border: 1px solid oklab(0.3485 0 0); border-radius: 6px; padding: 4px 10px; font-size: 0.8em; color: oklab(0.7572 0 0); box-shadow: inset 0 1px 3px oklab(0 0 0 / 0.3); transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease; position: relative; top: 8px; }
-        .sync-pill:hover { border-color: oklab(0.4676 0 0); }
-        .sync-info { display: flex; align-items: center; margin-right: 8px; padding-right: 8px; border-right: 1px solid oklab(0.4091 0 0); white-space: nowrap; transition: border-color 0.3s ease; }
-        .live-dot.is-syncing { background-color: oklab(0.8003 -0.1603 0.0863); box-shadow: 0 0 5px oklab(0.8003 -0.1603 0.0863 / 0.6); animation: fast-pulse 1s infinite ease-in-out; }
+        .sync-pill { display: inline-flex; align-items: center; background-color: rgba(0, 0, 0, 0.25); border: 1px solid #3a3a3a; border-radius: 6px; padding: 4px 10px; font-size: 0.8em; color: #b0b0b0; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease; position: relative; top: 8px; }
+        .sync-pill:hover { border-color: #5a5a5a; }
+        .sync-info { display: flex; align-items: center; margin-right: 8px; padding-right: 8px; border-right: 1px solid #4a4a4a; white-space: nowrap; transition: border-color 0.3s ease; }
+        .live-dot.is-syncing { background-color: #4ade80; box-shadow: 0 0 5px rgba(74, 222, 128, 0.6); animation: fast-pulse 1s infinite ease-in-out; }
         @keyframes fast-pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .btn-sync-icon { background: transparent; border: none; color: oklab(0.7572 0 0); padding: 0; margin: 0; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s, transform 0.3s ease; width: 12px; }
-        .btn-sync-icon:hover:not(:disabled) { color: oklab(0.8868 -0.0169 0.1814); transform: rotate(180deg); }
-        .btn-sync-icon:disabled { color: oklab(0.4091 0 0); cursor: not-allowed; transform: rotate(360deg); transition: transform 1s linear infinite; }
+        .btn-sync-icon { background: transparent; border: none; color: #b0b0b0; padding: 0; margin: 0; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s, transform 0.3s ease; width: 12px; }
+        .btn-sync-icon:hover:not(:disabled) { color: #ffd700; transform: rotate(180deg); }
+        .btn-sync-icon:disabled { color: #4a4a4a; cursor: not-allowed; transform: rotate(360deg); transition: transform 1s linear infinite; }
         
-        .badge-exchange { color: oklab(0.57 -0.0547 -0.1298); font-size: 0.85em; margin-left: auto; font-weight: bold; white-space: nowrap; }
+        .badge-exchange { color: rgb(25, 124, 197); font-size: 0.85em; margin-left: auto; font-weight: bold; white-space: nowrap; }
         
         .guide-wrap { margin-top: 20px; }
-        .guide-toggle-btn { width: 100%; margin: 0; background-color: transparent; border: 1px dashed oklab(0.4091 0 0); color: oklab(0.7572 0 0); padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-size: 0.85em; font-weight: normal; display: flex; justify-content: space-between; align-items: center; }
-        .guide-toggle-btn:hover { border-color: oklab(0.8868 -0.0169 0.1814); color: oklab(0.8868 -0.0169 0.1814); background-color: oklab(0.8868 -0.0169 0.1814 / 0.05); }
+        .guide-toggle-btn { width: 100%; margin: 0; background-color: transparent; border: 1px dashed #4a4a4a; color: #b0b0b0; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-size: 0.85em; font-weight: normal; display: flex; justify-content: space-between; align-items: center; }
+        .guide-toggle-btn:hover { border-color: #ffd700; color: #ffd700; background-color: rgba(255, 215, 0, 0.05); }
         .guide-toggle-btn .chevron { font-size: 0.85em; transition: transform 0.3s ease; }
         .guide-toggle-btn.is-open .chevron { transform: rotate(180deg); }
         
-        .guide-content { margin-top: 8px; background-color: oklab(0.2178 0 0); border-radius: 12px; padding: 12px; border: 1px solid oklab(1 0 0 / 0.05); animation: fadeSlideDown 0.2s ease-out forwards; transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .guide-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid oklab(0.3485 0 0); border-radius: 6px; overflow: hidden; font-size: 0.85em; text-align: center; transition: border-color 0.3s ease; }
-        .guide-table th, .guide-table td { padding: 8px 4px; border-bottom: 1px solid oklab(0.3485 0 0); word-break: keep-all; background-color: oklab(0.235 0 0); transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .guide-table th { color: oklab(0.7572 0 0); font-weight: bold; background-color: oklab(0.2645 0 0); }
-        .guide-table thead tr:first-child th { border-bottom: 1px solid oklab(0.4091 0 0); }
+        .guide-content { margin-top: 8px; background-color: #1a1a1a; border-radius: 12px; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.05); animation: fadeSlideDown 0.2s ease-out forwards; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .guide-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #3a3a3a; border-radius: 6px; overflow: hidden; font-size: 0.85em; text-align: center; transition: border-color 0.3s ease; }
+        .guide-table th, .guide-table td { padding: 8px 4px; border-bottom: 1px solid #3a3a3a; word-break: keep-all; background-color: #1e1e1e; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .guide-table th { color: #b0b0b0; font-weight: bold; background-color: #252525; }
+        .guide-table thead tr:first-child th { border-bottom: 1px solid #4a4a4a; }
         .guide-table tbody tr:last-child td { border-bottom: none; }
         
         .guide-table td.clickable-td { cursor: pointer; transition: background-color 0.1s, color 0.1s; }
-        .guide-table td.hovered-group { background-color: oklab(0.3485 0 0) !important; color: oklab(0.8868 -0.0169 0.1814); font-weight: bold; }
+        .guide-table td.hovered-group { background-color: #3a3a3a !important; color: #ffd700; font-weight: bold; }
         
-        .guide-desc { font-size: 0.8em; color: oklab(0.6268 0 0); padding: 8px 0 0 0; text-align: right; margin: 0; }
-        .th-normal { color: oklab(0.57 -0.0547 -0.1298) !important; }
-        .th-advanced { color: oklab(0.6577 0.1936 -0.1862) !important; }
+        .guide-desc { font-size: 0.8em; color: #888; padding: 8px 0 0 0; text-align: right; margin: 0; }
+        .th-normal { color: rgb(25, 124, 197) !important; }
+        .th-advanced { color: #ce43fc !important; }
         
         /* 라이트 모드 테마 */
-        body.light-mode .resource-A, body.light-mode .resource-P { color: oklab(0.54 0 0) !important; }
-        body.light-mode .resource-B { color: oklab(0.7203 -0.1229 0.1378) !important; }
-        body.light-mode .resource-S, body.light-mode .resource-C { color: oklab(0.57 -0.0547 -0.1298) !important; }
-        body.light-mode .final-product { color: oklab(0.6577 0.1936 -0.1862) !important; }
-        body.light-mode .normal-product { color: oklab(0.57 -0.0547 -0.1298) !important; }
+        body.light-mode .resource-A, body.light-mode .resource-P { color: rgb(159, 159, 159) !important; }
+        body.light-mode .resource-B { color: rgb(120, 187, 39) !important; }
+        body.light-mode .resource-S, body.light-mode .resource-C { color: rgb(25, 124, 197) !important; }
+        body.light-mode .final-product { color: #ce43fc !important; }
+        body.light-mode .normal-product { color: rgb(25, 124, 197) !important; }
         
-        body.light-mode .resource-A .resource-icon-wrap, body.light-mode .resource-P .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.3132 0 0), oklab(0.4604 0 0)) !important; }
-        body.light-mode .resource-B .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.2747 -0.0373 0.0449), oklab(0.372 -0.0563 0.0658)) !important; }
-        body.light-mode .resource-S .resource-icon-wrap, body.light-mode .resource-C .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.2642 -0.0184 -0.04), oklab(0.3474 -0.0315 -0.0661)) !important; }
-        body.light-mode .final-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.final-product { background: linear-gradient(135deg, oklab(0.2565 0.0625 -0.0677), oklab(0.3556 0.0967 -0.1117)) !important; }
-        body.light-mode .normal-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.normal-product { background: linear-gradient(135deg, oklab(0.2642 -0.0184 -0.04), oklab(0.3474 -0.0315 -0.0661)) !important; }
+        body.light-mode .resource-A .resource-icon-wrap, body.light-mode .resource-P .resource-icon-wrap { background: linear-gradient(135deg, rgb(49, 49, 49), rgb(88, 88, 88)) !important; }
+        body.light-mode .resource-B .resource-icon-wrap { background: linear-gradient(135deg, rgb(30, 45, 11), rgb(48, 73, 17)) !important; }
+        body.light-mode .resource-S .resource-icon-wrap, body.light-mode .resource-C .resource-icon-wrap { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)) !important; }
+        body.light-mode .final-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.final-product { background: linear-gradient(135deg, #321142, #541973) !important; }
+        body.light-mode .normal-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.normal-product { background: linear-gradient(135deg, rgb(17, 39, 57), rgb(17, 61, 93)) !important; }
         
-        body.light-mode { background-color: oklab(0.969 -0.0016 -0.006); color: oklab(0.252 0 0); color-scheme: light; }
-        body.light-mode .left-panel, body.light-mode .right-panel, body.light-mode .result, body.light-mode .market-box, body.light-mode .scenario-section, body.light-mode .control-panel-box, body.light-mode .ranking-board-wrap, body.light-mode .dropdown-content, body.light-mode .guide-content { background-color: oklab(1 0 0) !important; border: 1px solid oklab(0.9266 -0.0019 -0.009); box-shadow: 0 4px 16px oklab(0.2512 -0.0183 -0.0972 / 0.04); border-radius: 12px; }
+        body.light-mode { background-color: #f2f5f9; color: #222222; color-scheme: light; }
+        body.light-mode .left-panel, body.light-mode .right-panel, body.light-mode .result, body.light-mode .market-box, body.light-mode .scenario-section, body.light-mode .control-panel-box, body.light-mode .ranking-board-wrap, body.light-mode .dropdown-content, body.light-mode .guide-content { background-color: #ffffff !important; border: 1px solid #e3e7ed; box-shadow: 0 4px 16px rgba(0, 30, 80, 0.04); border-radius: 12px; }
         
-        body.light-mode h1, body.light-mode h2, body.light-mode .result-title { color: oklab(0.1776 0 0); border-bottom-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode h2, body.light-mode .section-header { border-left-color: oklab(0.6059 -0.0465 -0.1931); } 
+        body.light-mode h1, body.light-mode h2, body.light-mode .result-title { color: #111111; border-bottom-color: #e3e7ed; }
+        body.light-mode h2, body.light-mode .section-header { border-left-color: #187ef5; } 
         
-        body.light-mode .arrow, body.light-mode .count, body.light-mode .desc, body.light-mode .setting-title, body.light-mode .scenario-title, body.light-mode .input-group label { color: oklab(0.4495 0 0); font-weight: 500; }
-        body.light-mode .update-box { color: oklab(0.6268 0 0); }
+        body.light-mode .arrow, body.light-mode .count, body.light-mode .desc, body.light-mode .setting-title, body.light-mode .scenario-title, body.light-mode .input-group label { color: #555555; font-weight: 500; }
+        body.light-mode .update-box { color: #888888; }
         
-        body.light-mode .mode-tabs { border: 1px solid oklab(0.9266 -0.0019 -0.009); background-color: oklab(0.9842 -0.0013 -0.0032); border-radius: 8px; }
-        body.light-mode .mode-tab { background-color: transparent; color: oklab(0.5103 0 0); border-bottom: 2px solid transparent; }
-        body.light-mode .mode-tab:hover { background-color: oklab(0.9653 -0.0026 -0.0064); color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode .mode-tab.active { background-color: oklab(1 0 0); color: oklab(0.6059 -0.0465 -0.1931); border-bottom: 2px solid oklab(0.6059 -0.0465 -0.1931); font-weight: bold; box-shadow: 0 2px 4px oklab(0 0 0 / 0.02); }
+        body.light-mode .mode-tabs { border: 1px solid #e3e7ed; background-color: #f8fafc; border-radius: 8px; }
+        body.light-mode .mode-tab { background-color: transparent; color: #666666; border-bottom: 2px solid transparent; }
+        body.light-mode .mode-tab:hover { background-color: #f0f4f8; color: #187ef5; }
+        body.light-mode .mode-tab.active { background-color: #ffffff; color: #187ef5; border-bottom: 2px solid #187ef5; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
         
-        body.light-mode .dropdown-item { background-color: oklab(1 0 0); color: oklab(0.4495 0 0); border-bottom: 1px solid oklab(0.9653 -0.0026 -0.0064); }
-        body.light-mode .dropdown-item:hover { background-color: oklab(0.9808 -0.0018 -0.0089); color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode .dropdown-item.selected { background-color: oklab(0.9678 -0.0034 -0.015); color: oklab(0.6059 -0.0465 -0.1931); font-weight: bold; }
+        body.light-mode .dropdown-item { background-color: #ffffff; color: #555555; border-bottom: 1px solid #f0f4f8; }
+        body.light-mode .dropdown-item:hover { background-color: #f5f9ff; color: #187ef5; }
+        body.light-mode .dropdown-item.selected { background-color: #eef5ff; color: #187ef5; font-weight: bold; }
         
-        body.light-mode .tabs { border-bottom: 1px solid oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .tab { background-color: transparent; color: oklab(0.5693 0 0); }
-        body.light-mode .tab.active { background-color: transparent; color: oklab(0.6059 -0.0465 -0.1931); border-bottom: 2px solid oklab(0.6059 -0.0465 -0.1931); font-weight: bold; border-radius: 6px 6px 0 0; }
-        body.light-mode .tab:hover:not(.active) { color: oklab(0.6059 -0.0465 -0.1931); background-color: oklab(0.9808 -0.0018 -0.0089); border-radius: 6px 6px 0 0; }
+        body.light-mode .tabs { border-bottom: 1px solid #e3e7ed; }
+        body.light-mode .tab { background-color: transparent; color: #777777; }
+        body.light-mode .tab.active { background-color: transparent; color: #187ef5; border-bottom: 2px solid #187ef5; font-weight: bold; border-radius: 6px 6px 0 0; }
+        body.light-mode .tab:hover:not(.active) { color: #187ef5; background-color: #f5f9ff; border-radius: 6px 6px 0 0; }
         
-        body.light-mode .input-group > input { background-color: oklab(0.9869 -0.0017 -0.0019) !important; color: oklab(0.252 0 0) !important; border: 1px solid oklab(0.88 -0.0032 -0.0124) !important; border-radius: 6px !important; }
+        body.light-mode .input-group > input { background-color: #f9fbfc !important; color: #222222 !important; border: 1px solid #d2d8e0 !important; border-radius: 6px !important; }
         
-        body.light-mode input.price-input-small, body.light-mode input.price-input-right, body.light-mode input.input-in-table, body.light-mode input.tiny-input { background-color: oklab(0.9869 -0.0017 -0.0019) !important; color: oklab(0.1776 0 0) !important; border: 1px solid oklab(0.88 -0.0032 -0.0124) !important; border-radius: 6px !important; }
-        body.light-mode .input-group > input:focus, body.light-mode input.price-input-small:focus, body.light-mode input.price-input-right:focus, body.light-mode input.input-in-table:focus, body.light-mode input.tiny-input:focus { border-color: oklab(0.6059 -0.0465 -0.1931) !important; box-shadow: 0 0 0 3px oklab(0.6059 -0.0465 -0.1931 / 0.15) !important; background-color: oklab(1 0 0) !important; }
+        body.light-mode input.price-input-small, body.light-mode input.price-input-right, body.light-mode input.input-in-table, body.light-mode input.tiny-input { background-color: #f9fbfc !important; color: #111111 !important; border: 1px solid #d2d8e0 !important; border-radius: 6px !important; }
+        body.light-mode .input-group > input:focus, body.light-mode input.price-input-small:focus, body.light-mode input.price-input-right:focus, body.light-mode input.input-in-table:focus, body.light-mode input.tiny-input:focus { border-color: #187ef5 !important; box-shadow: 0 0 0 3px rgba(24, 126, 245, 0.15) !important; background-color: #ffffff !important; }
         
-        body.light-mode .num-point, body.light-mode .mark-target { color: oklab(0.6059 -0.0465 -0.1931) !important; text-shadow: none; border-color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode span[style*="color: oklab(0.8868 -0.0169 0.1814)"] { color: oklab(0.6059 -0.0465 -0.1931) !important; text-shadow: none; }
+        body.light-mode .num-point, body.light-mode .mark-target { color: #187ef5 !important; text-shadow: none; border-color: #187ef5; }
+        body.light-mode span[style*="color: #ffd700"] { color: #187ef5 !important; text-shadow: none; }
         
-        body.light-mode .profit-plus { color: oklab(0.6271 -0.146 0.087) !important; font-weight: bold; text-shadow: none; }
-        body.light-mode .text-deficit, body.light-mode .profit-minus, body.light-mode .no-production { color: oklab(0.6598 0.1736 0.077) !important; text-shadow: none; }
-        body.light-mode span[style*="color: oklab(0.7044 0.1721 0.0737)"] { color: oklab(0.6598 0.1736 0.077) !important; text-shadow: none; }
-        body.light-mode .text-surplus { color: oklab(0.6271 -0.146 0.087) !important; text-shadow: none; }
-        body.light-mode span[style*="color: oklab(0.8003 -0.1603 0.0863)"] { color: oklab(0.6271 -0.146 0.087) !important; text-shadow: none; }
+        body.light-mode .profit-plus { color: #16a34a !important; font-weight: bold; text-shadow: none; }
+        body.light-mode .text-deficit, body.light-mode .profit-minus, body.light-mode .no-production { color: #f05656 !important; text-shadow: none; }
+        body.light-mode span[style*="color: #ff6666"] { color: #f05656 !important; text-shadow: none; }
+        body.light-mode .text-surplus { color: #16a34a !important; text-shadow: none; }
+        body.light-mode span[style*="color: #4ade80"] { color: #16a34a !important; text-shadow: none; }
         
-        body.light-mode button.btn-calc { background: linear-gradient(135deg, oklab(0.6458 -0.0475 -0.1861), oklab(0.5635 -0.0384 -0.2377)); color: oklab(1 0 0); border: none; box-shadow: 0 4px 12px oklab(0.5635 -0.0384 -0.2377 / 0.25); border-radius: 8px; }
-        body.light-mode button.btn-calc:hover { background: linear-gradient(135deg, oklab(0.6059 -0.0465 -0.1931), oklab(0.5227 -0.0358 -0.2189)); transform: translateY(-1px); box-shadow: 0 6px 15px oklab(0.5635 -0.0384 -0.2377 / 0.3); }
-        body.light-mode .btn-force { background: oklab(0.6059 -0.0465 -0.1931 / 0.1); border-color: oklab(0.6059 -0.0465 -0.1931); color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode .btn-force:hover { background: oklab(0.6059 -0.0465 -0.1931 / 0.2); color: oklab(0.5635 -0.0384 -0.2377); }
-        body.light-mode .btn-force.btn-farm { background: oklab(0.6847 -0.0798 -0.1245 / 0.1); border-color: oklab(0.6847 -0.0798 -0.1245); color: oklab(0.5876 -0.0653 -0.1226); }
-        body.light-mode .btn-force.btn-farm:hover { background: oklab(0.6847 -0.0798 -0.1245); color: oklab(1 0 0); }
+        body.light-mode button.btn-calc { background: linear-gradient(135deg, #2b8cff, #0066ff); color: #ffffff; border: none; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25); border-radius: 8px; }
+        body.light-mode button.btn-calc:hover { background: linear-gradient(135deg, #187ef5, #005ce6); transform: translateY(-1px); box-shadow: 0 6px 15px rgba(0, 102, 255, 0.3); }
+        body.light-mode .btn-force { background: rgba(24, 126, 245, 0.1); border-color: #187ef5; color: #187ef5; }
+        body.light-mode .btn-force:hover { background: rgba(24, 126, 245, 0.2); color: #0066ff; }
+        body.light-mode .btn-force.btn-farm { background: rgba(14, 165, 233, 0.1); border-color: #0ea5e9; color: #0284c7; }
+        body.light-mode .btn-force.btn-farm:hover { background: #0ea5e9; color: #ffffff; }
         
-        body.light-mode .mat-price-tag { background-color: oklab(0.9678 -0.0034 -0.015); color: oklab(0.6059 -0.0465 -0.1931); border: 1px solid oklab(0.88 -0.0032 -0.0124); }
-        body.light-mode .toggle-btn { border-color: oklab(0.88 -0.0032 -0.0124); color: oklab(0.5103 0 0); background-color: oklab(1 0 0); }
-        body.light-mode .toggle-btn.active { background: oklab(0.9678 -0.0034 -0.015); color: oklab(0.6059 -0.0465 -0.1931); border-color: oklab(0.6059 -0.0465 -0.1931); font-weight: bold !important; }
-        body.light-mode .toggle-btn:hover:not(.active) { border-color: oklab(0.6059 -0.0465 -0.1931); color: oklab(0.6059 -0.0465 -0.1931); background: oklab(0.9869 -0.0017 -0.0019); }
+        body.light-mode .mat-price-tag { background-color: #eef5ff; color: #187ef5; border: 1px solid #d2d8e0; }
+        body.light-mode .toggle-btn { border-color: #d2d8e0; color: #666666; background-color: #ffffff; }
+        body.light-mode .toggle-btn.active { background: #eef5ff; color: #187ef5; border-color: #187ef5; font-weight: bold !important; }
+        body.light-mode .toggle-btn:hover:not(.active) { border-color: #187ef5; color: #187ef5; background: #f9fbfc; }
         
-        body.light-mode .ranking-row { border-bottom-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .ranking-row:not(.ranking-header):hover { background-color: oklab(0.9808 -0.0018 -0.0089); }
+        body.light-mode .ranking-row { border-bottom-color: #e3e7ed; }
+        body.light-mode .ranking-row:not(.ranking-header):hover { background-color: #f5f9ff; }
         body.light-mode .ranking-row.is-profit, body.light-mode .ranking-row.is-loss { background: none; }
-        body.light-mode .ranking-header { border-bottom: 1px solid oklab(0.88 -0.0032 -0.0124); color: oklab(0.3867 0 0); background-color: oklab(0.9842 -0.0013 -0.0032) !important; border-radius: 12px 12px 0 0; }
-        body.light-mode .sortable-header:hover { background-color: oklab(0.9266 -0.0019 -0.009); color: oklab(0.1776 0 0); }
-        body.light-mode .modern-expand-btn { background-color: oklab(0.9842 -0.0013 -0.0032); border-top-color: oklab(0.9266 -0.0019 -0.009); color: oklab(0.5693 0 0); border-radius: 0 0 12px 12px; }
-        body.light-mode .modern-expand-btn:hover { background-color: oklab(0.9678 -0.0034 -0.015); color: oklab(0.6059 -0.0465 -0.1931); }
+        body.light-mode .ranking-header { border-bottom: 1px solid #d2d8e0; color: #444444; background-color: #f8fafc !important; border-radius: 12px 12px 0 0; }
+        body.light-mode .sortable-header:hover { background-color: #e3e7ed; color: #111111; }
+        body.light-mode .modern-expand-btn { background-color: #f8fafc; border-top-color: #e3e7ed; color: #777777; border-radius: 0 0 12px 12px; }
+        body.light-mode .modern-expand-btn:hover { background-color: #eef5ff; color: #187ef5; }
         
-        body.light-mode .guide-toggle-btn { border-color: oklab(0.88 -0.0032 -0.0124); color: oklab(0.3867 0 0); background-color: oklab(1 0 0); }
-        body.light-mode .guide-toggle-btn:hover { border-color: oklab(0.6059 -0.0465 -0.1931); color: oklab(0.6059 -0.0465 -0.1931); background-color: oklab(0.9678 -0.0034 -0.015); }
-        body.light-mode .guide-table { border: 1px solid oklab(0.88 -0.0032 -0.0124); box-shadow: 0 2px 10px oklab(0 0 0 / 0.02); border-radius: 8px; }
-        body.light-mode .guide-table th, body.light-mode .guide-table td { background-color: oklab(1 0 0); border-color: oklab(0.9266 -0.0019 -0.009); color: oklab(0.252 0 0); }
-        body.light-mode .guide-table th { background-color: oklab(0.9842 -0.0013 -0.0032); border-bottom-color: oklab(0.88 -0.0032 -0.0124); color: oklab(0.3867 0 0); }
-        body.light-mode .guide-table td.hovered-group { background-color: oklab(0.9678 -0.0034 -0.015) !important; color: oklab(0.6059 -0.0465 -0.1931) !important; font-weight: bold; }
+        body.light-mode .guide-toggle-btn { border-color: #d2d8e0; color: #444444; background-color: #ffffff; }
+        body.light-mode .guide-toggle-btn:hover { border-color: #187ef5; color: #187ef5; background-color: #eef5ff; }
+        body.light-mode .guide-table { border: 1px solid #d2d8e0; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02); border-radius: 8px; }
+        body.light-mode .guide-table th, body.light-mode .guide-table td { background-color: #ffffff; border-color: #e3e7ed; color: #222222; }
+        body.light-mode .guide-table th { background-color: #f8fafc; border-bottom-color: #d2d8e0; color: #444444; }
+        body.light-mode .guide-table td.hovered-group { background-color: #eef5ff !important; color: #187ef5 !important; font-weight: bold; }
         
-        body.light-mode .result-divider, body.light-mode .scenario-header, body.light-mode .total-profit-row, body.light-mode .stronghold-setting-box, body.light-mode .market-header, body.light-mode .final-row { border-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .scenario-section.self-craft { border-left: 3px solid oklab(0.6059 -0.0465 -0.1931); background-color: oklab(0.9943 0.0004 -0.0013); }
-        body.light-mode .scenario-section.market-buy { border-left: 3px solid oklab(0.7107 -0.008 -0.0342); background-color: oklab(0.9943 0.0004 -0.0013); }
-        body.light-mode .scenario-section.deficit-craft { border-left: 3px solid oklab(0.6959 -0.1422 0.0449); background-color: oklab(0.9943 0.0004 -0.0013); }
+        body.light-mode .result-divider, body.light-mode .scenario-header, body.light-mode .total-profit-row, body.light-mode .stronghold-setting-box, body.light-mode .market-header, body.light-mode .final-row { border-color: #e3e7ed; }
+        body.light-mode .scenario-section.self-craft { border-left: 3px solid #187ef5; background-color: #fdfdfe; }
+        body.light-mode .scenario-section.market-buy { border-left: 3px solid #94a3b8; background-color: #fdfdfe; }
+        body.light-mode .scenario-section.deficit-craft { border-left: 3px solid #10b981; background-color: #fdfdfe; }
         
-        body.light-mode .sync-pill { background-color: oklab(1 0 0); border-color: oklab(0.88 -0.0032 -0.0124); color: oklab(0.4495 0 0); box-shadow: 0 1px 3px oklab(0 0 0 / 0.03); }
-        body.light-mode .sync-info { border-right-color: oklab(0.88 -0.0032 -0.0124); }
-        body.light-mode .btn-sync-icon { color: oklab(0.6268 0 0); }
-        body.light-mode .btn-sync-icon:hover:not(:disabled) { color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode .live-dot.is-syncing { background-color: oklab(0.6959 -0.1422 0.0449); box-shadow: 0 0 5px oklab(0.6959 -0.1422 0.0449 / 0.6); }
+        body.light-mode .sync-pill { background-color: #ffffff; border-color: #d2d8e0; color: #555555; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+        body.light-mode .sync-info { border-right-color: #d2d8e0; }
+        body.light-mode .btn-sync-icon { color: #888888; }
+        body.light-mode .btn-sync-icon:hover:not(:disabled) { color: #187ef5; }
+        body.light-mode .live-dot.is-syncing { background-color: #10b981; box-shadow: 0 0 5px rgba(16, 185, 129, 0.6); }
         
-        body.light-mode .profit-neon-gold { animation: light-glow-green 2.5s infinite ease-in-out; color: oklab(0.6271 -0.146 0.087); font-weight: bold; }
-        @keyframes light-glow-green { 0% { text-shadow: 0 0 2px oklab(0.6271 -0.146 0.087 / 0.1); color: oklab(0.6271 -0.146 0.087); } 50% { text-shadow: 0 0 6px oklab(0.6271 -0.146 0.087 / 0.4); color: oklab(0.5273 -0.1188 0.0684); } 100% { text-shadow: 0 0 2px oklab(0.6271 -0.146 0.087 / 0.1); color: oklab(0.6271 -0.146 0.087); } }
+        body.light-mode .profit-neon-gold { animation: light-glow-green 2.5s infinite ease-in-out; color: #16a34a; font-weight: bold; }
+        @keyframes light-glow-green { 0% { text-shadow: 0 0 2px rgba(22, 163, 74, 0.1); color: #16a34a; } 50% { text-shadow: 0 0 6px rgba(22, 163, 74, 0.4); color: #15803d; } 100% { text-shadow: 0 0 2px rgba(22, 163, 74, 0.1); color: #16a34a; } }
         
-        body.light-mode .profit-neon-red { animation: light-glow-red 2.5s infinite ease-in-out; color: oklab(0.5771 0.1911 0.0988); font-weight: bold; }
-        @keyframes light-glow-red { 0% { text-shadow: 0 0 2px oklab(0.5771 0.1911 0.0988 / 0.1); color: oklab(0.5771 0.1911 0.0988); } 50% { text-shadow: 0 0 6px oklab(0.5771 0.1911 0.0988 / 0.4); color: oklab(0.5054 0.1689 0.088); } 100% { text-shadow: 0 0 2px oklab(0.5771 0.1911 0.0988 / 0.1); color: oklab(0.5771 0.1911 0.0988); } }
+        body.light-mode .profit-neon-red { animation: light-glow-red 2.5s infinite ease-in-out; color: #dc2626; font-weight: bold; }
+        @keyframes light-glow-red { 0% { text-shadow: 0 0 2px rgba(220, 38, 38, 0.1); color: #dc2626; } 50% { text-shadow: 0 0 6px rgba(220, 38, 38, 0.4); color: #b91c1c; } 100% { text-shadow: 0 0 2px rgba(220, 38, 38, 0.1); color: #dc2626; } }
         
-        body.light-mode .scenario-row span[style*="oklab(0.9067 0 0)"], body.light-mode .scenario-row span[style*="oklab(0.9067 0 0)"], body.light-mode .scenario-row span[style*="oklab(0.9067 0 0)"] { color: oklab(0.4495 0 0) !important; font-weight: 800 !important; }
-        body.light-mode .total-profit-row > span:first-child { color: oklab(0.735 0.0146 0.1455) !important; font-weight: 900 !important; }
-        body.light-mode .scenario-row span[style*="color: oklab(0.6268 0 0)"] { color: oklab(0.5693 0 0) !important; }
-        body.light-mode span[style*="color:oklab(0.7921 0 0)"] { color: oklab(0.6268 0 0) !important; }
+        body.light-mode .scenario-row span[style*="#e0e0e0"], body.light-mode .scenario-row span[style*="rgb(224, 224, 224)"], body.light-mode .scenario-row span[style*="rgb(224,224,224)"] { color: #555555 !important; font-weight: 800 !important; }
+        body.light-mode .total-profit-row > span:first-child { color: #D4A017 !important; font-weight: 900 !important; }
+        body.light-mode .scenario-row span[style*="color: #888"] { color: #777777 !important; }
+        body.light-mode span[style*="color:#bbb"] { color: #888888 !important; }
         
         body.light-mode .deficit-info,
-        body.light-mode .guide-desc { color: oklab(0.4495 0 0); }
-        body.light-mode .guide-desc span:last-child {color: oklab(0.5383 -0.0432 -0.1851) !important;text-shadow: none;}
-        body.light-mode span[style*="color: oklab(0.7572 0 0)"] { color: oklab(0.6268 0 0) !important; } 
+        body.light-mode .guide-desc { color: #555555; }
+        body.light-mode .guide-desc span:last-child {color: #0069d9 !important;text-shadow: none;}
+        body.light-mode span[style*="color: #b0b0b0"] { color: #888888 !important; } 
         
-        body.light-mode .theme-switch-btn { background-color: oklab(1 0 0); color: oklab(0.6059 -0.0465 -0.1931); border: 2px solid oklab(0.9266 -0.0019 -0.009); box-shadow: 0 4px 16px oklab(0.6059 -0.0465 -0.1931 / 0.15); }
-        body.light-mode .theme-switch-btn:hover { background-color: oklab(0.9678 -0.0034 -0.015); border-color: oklab(0.6059 -0.0465 -0.1931); transform: scale(1.1); }
+        body.light-mode .theme-switch-btn { background-color: #ffffff; color: #187ef5; border: 2px solid #e3e7ed; box-shadow: 0 4px 16px rgba(24, 126, 245, 0.15); }
+        body.light-mode .theme-switch-btn:hover { background-color: #eef5ff; border-color: #187ef5; transform: scale(1.1); }
         
-        .theme-switch-btn { position: fixed; bottom: 30px; right: 30px; width: 52px; height: 52px; border-radius: 50%; background-color: oklab(0.3485 0 0); color: oklab(0.8868 -0.0169 0.1814); border: 2px solid oklab(0.4676 0 0); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px oklab(0 0 0 / 0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000; }
-        .theme-switch-btn:hover { transform: scale(1.1) translateY(-2px); background-color: oklab(0.4091 0 0); }
+        .theme-switch-btn { position: fixed; bottom: 30px; right: 30px; width: 52px; height: 52px; border-radius: 50%; background-color: #3a3a3a; color: #ffd700; border: 2px solid #5a5a5a; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000; }
+        .theme-switch-btn:hover { transform: scale(1.1) translateY(-2px); background-color: #4a4a4a; }
         .theme-switch-btn svg { width: 26px; height: 26px; }
         .tab span { word-break: break-all !important; white-space: normal !important; }
         
-        .tooltip-container { position: relative; display: inline-flex; align-items: center; cursor: help; border-bottom: 1px dotted oklab(0.6268 0 0); }
-        .tooltip-box { visibility: hidden; position: absolute; bottom: 120%; left: 0; background-color: oklab(0.3211 0 0); color: oklab(1 0 0); padding: 10px 14px 6px; border-radius: 6px; font-size: 0.85em; z-index: 100; opacity: 0; transition: opacity 0.2s; box-shadow: 0 4px 6px oklab(0 0 0 / 0.3); border: 1px solid oklab(0.4495 0 0); pointer-events: none; white-space: nowrap; width: max-content; max-width: none; text-align: left; line-height: 1.3; }
+        .tooltip-container { position: relative; display: inline-flex; align-items: center; cursor: help; border-bottom: 1px dotted #888; }
+        .tooltip-box { visibility: hidden; position: absolute; bottom: 120%; left: 0; background-color: #333; color: #fff; padding: 10px 14px 6px; border-radius: 6px; font-size: 0.85em; z-index: 100; opacity: 0; transition: opacity 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid #555; pointer-events: none; white-space: nowrap; width: max-content; max-width: none; text-align: left; line-height: 1.3; }
         .tooltip-container:hover .tooltip-box { visibility: visible; opacity: 1; }
-        body.light-mode .tooltip-box { background-color: oklab(1 0 0); color: oklab(0.252 0 0); border-color: oklab(0.88 -0.0032 -0.0124); box-shadow: 0 4px 6px oklab(0 0 0 / 0.1); }
+        body.light-mode .tooltip-box { background-color: #ffffff; color: #222222; border-color: #d2d8e0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         
-        .footer-spacer { flex: 1; min-height: 90px; }
-        .app-footer { padding: 20px 10px; text-align: center; border-top: 1px solid oklab(1 0 0 / 0.05); transition: border-color 0.3s ease; }
-        .app-footer .footer-disclaimer { color: oklab(0.6268 0 0); font-size: 11px; line-height: 1.4; word-break: keep-all; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-align: left; }
-        .app-footer .privacy-link { color: oklab(0.7572 0 0); font-weight: bold; text-decoration: none; margin: 0; transition: color 0.2s ease; white-space: nowrap; flex-shrink: 0; }
-        .app-footer .privacy-link:hover { color: oklab(1 0 0); text-decoration: underline; }
+        .app-footer { margin-top: 90px; padding: 20px 10px; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); transition: border-color 0.3s ease; }
+        .app-footer .footer-disclaimer { color: #888; font-size: 11px; line-height: 1.4; word-break: keep-all; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-align: left; }
+        .app-footer .privacy-link { color: #b0b0b0; font-weight: bold; text-decoration: none; margin: 0; transition: color 0.2s ease; white-space: nowrap; flex-shrink: 0; }
+        .app-footer .privacy-link:hover { color: #ffffff; text-decoration: underline; }
         
-        body.light-mode .app-footer { border-top-color: oklab(0.9266 -0.0019 -0.009); background-color: oklab(0.969 -0.0016 -0.006); }
-        body.light-mode .app-footer .footer-disclaimer { color: oklab(0.6268 0 0); }
-        body.light-mode .app-footer .privacy-link { color: oklab(0.4495 0 0); }
-        body.light-mode .app-footer .privacy-link:hover { color: oklab(0.6059 -0.0465 -0.1931); }
+        body.light-mode .app-footer { border-top-color: #e3e7ed; }
+        body.light-mode .app-footer .footer-disclaimer { color: #888888; }
+        body.light-mode .app-footer .privacy-link { color: #555555; }
+        body.light-mode .app-footer .privacy-link:hover { color: #187ef5; }
         
         /* ================= 시세 차트 툴팁 UI CSS ================= */
         .market-chart-tooltip {
             position: absolute;
-            background: oklab(0.1822 0 0);
-            border: 1px solid oklab(0.3485 0 0);
+            background: #121212;
+            border: 1px solid #3a3a3a;
             border-radius: 8px;
             padding: 16px;
             width: 680px;
             z-index: 99999;
-            box-shadow: 0 8px 24px oklab(0 0 0 / 0.8);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.8);
             /* pointer-events: none; 삭제됨 - 마우스 호버 유지를 위해 */
-            color: oklab(0.9067 0 0);
+            color: #e0e0e0;
             font-family: "Noto Sans KR", sans-serif;
             transition: opacity 0.15s ease-in-out;
         }
-        .mct-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; border-bottom: 1px solid oklab(0.3211 0 0); padding-bottom: 8px; }
+        .mct-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; border-bottom: 1px solid #333; padding-bottom: 8px; }
         .mct-title { font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
-        .mct-date { font-size: 11px; color: oklab(0.6268 0 0); }
-        .mct-summary { display: flex; border: 1px solid oklab(0.3211 0 0); border-radius: 6px; margin-bottom: 12px; background: oklab(0.2178 0 0); }
-        .mct-summary-item { flex: 1; padding: 10px; text-align: center; border-right: 1px solid oklab(0.3211 0 0); }
+        .mct-date { font-size: 11px; color: #888; }
+        .mct-summary { display: flex; border: 1px solid #333; border-radius: 6px; margin-bottom: 12px; background: #1a1a1a; }
+        .mct-summary-item { flex: 1; padding: 10px; text-align: center; border-right: 1px solid #333; }
         .mct-summary-item:last-child { border-right: none; }
-        .mct-label { display: block; font-size: 11px; color: oklab(0.738 0 0); margin-bottom: 4px; word-break: keep-all;}
-        .mct-value { display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: oklab(0.8868 -0.0169 0.1814); gap: 4px; }
+        .mct-label { display: block; font-size: 11px; color: #aaa; margin-bottom: 4px; word-break: keep-all;}
+        .mct-value { display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: #ffd700; gap: 4px; }
         .gold-icon { width: 14px; height: 14px; object-fit: contain; vertical-align: middle; position: relative; top: -1px; margin-left: 2px; }
         
         .mct-body { display: flex; gap: 12px; height: 240px; }
-        .mct-chart-wrap { flex: 1; background: oklab(0.2178 0 0); border: 1px solid oklab(0.3211 0 0); border-radius: 6px; padding: 8px; min-width: 0; }
-        .mct-table-wrap { width: 250px; background: oklab(0.2178 0 0); border: 1px solid oklab(0.3211 0 0); border-radius: 6px; overflow-y: auto; }
+        .mct-chart-wrap { flex: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 8px; min-width: 0; }
+        .mct-table-wrap { width: 250px; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; overflow-y: auto; }
         .mct-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; table-layout: auto; }
-        .mct-table th { position: sticky; top: 0; background: oklab(0.2645 0 0); color: oklab(0.738 0 0); padding: 8px 6px; border-bottom: 2px solid oklab(0.3211 0 0); z-index: 2; white-space: nowrap; font-size: 12px; }
-        .mct-table td { padding: 5px 4px; border-bottom: 1px solid oklab(0.285 0 0); white-space: nowrap; vertical-align: middle; line-height: 1.4; }
-        .mct-table td:nth-child(2) { color: oklab(0.8868 -0.0169 0.1814); }
+        .mct-table th { position: sticky; top: 0; background: #252525; color: #aaa; padding: 8px 6px; border-bottom: 2px solid #333; z-index: 2; white-space: nowrap; font-size: 12px; }
+        .mct-table td { padding: 5px 4px; border-bottom: 1px solid #2a2a2a; white-space: nowrap; vertical-align: middle; line-height: 1.4; }
+        .mct-table td:nth-child(2) { color: #ffd700; }
         .mct-table td:nth-child(3) { text-align: right; padding-right: 12px; font-variant-numeric: tabular-nums; letter-spacing: -0.2px; }
         
         /* 시세 툴팁 라이트 모드 */
-        body.light-mode .market-chart-tooltip { background: oklab(1 0 0); border-color: oklab(0.9266 -0.0019 -0.009); box-shadow: 0 8px 24px oklab(0.2512 -0.0183 -0.0972 / 0.15); color: oklab(0.252 0 0); }
-        body.light-mode .mct-header { border-bottom-color: oklab(0.9266 -0.0019 -0.009); }
+        body.light-mode .market-chart-tooltip { background: #ffffff; border-color: #e3e7ed; box-shadow: 0 8px 24px rgba(0,30,80,0.15); color: #222; }
+        body.light-mode .mct-header { border-bottom-color: #e3e7ed; }
         body.light-mode .mct-title { color: inherit; }
-        body.light-mode .mct-summary, body.light-mode .mct-chart-wrap, body.light-mode .mct-table-wrap { background: oklab(0.9842 -0.0013 -0.0032); border-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .mct-summary-item { border-right-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .mct-label { color: oklab(0.5103 0 0); }
-        body.light-mode .mct-value { color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode .mct-table th { background: oklab(0.9653 -0.0026 -0.0064); color: oklab(0.4495 0 0); border-bottom-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .mct-table td { border-bottom-color: oklab(0.9678 -0.0034 -0.015); }
-        body.light-mode .mct-table td:nth-child(2) { color: oklab(0.6059 -0.0465 -0.1931); }
+        body.light-mode .mct-summary, body.light-mode .mct-chart-wrap, body.light-mode .mct-table-wrap { background: #f8fafc; border-color: #e3e7ed; }
+        body.light-mode .mct-summary-item { border-right-color: #e3e7ed; }
+        body.light-mode .mct-label { color: #666; }
+        body.light-mode .mct-value { color: #187ef5; }
+        body.light-mode .mct-table th { background: #f0f4f8; color: #555; border-bottom-color: #e3e7ed; }
+        body.light-mode .mct-table td { border-bottom-color: #eef5ff; }
+        body.light-mode .mct-table td:nth-child(2) { color: #187ef5; }
     </style>
 </head>
 <body>
@@ -461,8 +454,7 @@
         <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5S9NKGBL" height="0" width="0" style="display:none;visibility:hidden"></iframe>
     </noscript>
     
-    <div id="app">
-    <div class="container">
+    <div id="app" class="container">
         <button class="theme-switch-btn" @click="toggleTheme" :title="isLightMode ? '다크 모드로 전환' : '라이트 모드로 전환'">
             <svg v-if="isLightMode" class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
@@ -531,7 +523,7 @@
                             <div class="right-badges">
                                 <span class="mat-price-tag" v-if="showMarketUi && exchangeType !== 'farm' && (key === 'A' || key === 'B' || key === 'S' || key === 'C')">
                                     단가: <input type="number" v-model.number="globalPrices[resInfo.name]" class="price-input-small" tabindex="-1"> G 
-                                    <span style="font-size:0.9em; margin-left: 2px; position: relative; top: 1px; color:oklab(0.7921 0 0);">/ 100개</span>
+                                    <span style="font-size:0.9em; margin-left: 2px; position: relative; top: 1px; color:#bbb;">/ 100개</span>
                                 </span>
                             </div>
                         </label>
@@ -718,24 +710,24 @@
                         <table class="guide-table">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" style="border-right: 1px solid oklab(0.3485 0 0); vertical-align: middle;">목표</th>
-                                    <th colspan="2" class="th-normal" style="border-right: 1px solid oklab(0.3485 0 0);">아비도스 융화 재료</th>
+                                    <th rowspan="2" style="border-right: 1px solid #3a3a3a; vertical-align: middle;">목표</th>
+                                    <th colspan="2" class="th-normal" style="border-right: 1px solid #3a3a3a;">아비도스 융화 재료</th>
                                     <th colspan="2" class="th-advanced">상급 아비도스 융화 재료</th>
                                 </tr>
                                 <tr>
-                                    <th style="font-size: 0.9em; font-weight: bold; color: oklab(0.57 -0.0547 -0.1298);">{{ selectedResources.S.name }}</th>
-                                    <th style="font-size: 0.9em; font-weight: bold; color: oklab(0.7203 -0.1229 0.1378); border-right: 1px solid oklab(0.3485 0 0);">{{ selectedResources.B.name }}</th>
-                                    <th style="font-size: 0.9em; font-weight: bold; color: oklab(0.57 -0.0547 -0.1298);">{{ selectedResources.S.name }}</th>
-                                    <th style="font-size: 0.9em; font-weight: bold; color: oklab(0.7203 -0.1229 0.1378);">{{ selectedResources.B.name }}</th>
+                                    <th style="font-size: 0.9em; font-weight: bold; color: rgb(25, 124, 197);">{{ selectedResources.S.name }}</th>
+                                    <th style="font-size: 0.9em; font-weight: bold; color: rgb(120, 187, 39); border-right: 1px solid #3a3a3a;">{{ selectedResources.B.name }}</th>
+                                    <th style="font-size: 0.9em; font-weight: bold; color: rgb(25, 124, 197);">{{ selectedResources.S.name }}</th>
+                                    <th style="font-size: 0.9em; font-weight: bold; color: rgb(120, 187, 39);">{{ selectedResources.B.name }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="row in guideTableData" :key="row.target">
-                                    <td style="border-right: 1px solid oklab(0.3485 0 0); font-weight:bold;">{{ row.target }}회</td>
+                                    <td style="border-right: 1px solid #3a3a3a; font-weight:bold;">{{ row.target }}회</td>
                                     <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
                                         {{ row.normS }}개
                                     </td>
-                                    <td class="clickable-td" style="border-right: 1px solid oklab(0.3485 0 0);" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
+                                    <td class="clickable-td" style="border-right: 1px solid #3a3a3a;" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
                                         {{ row.normB }}개
                                     </td>
                                     <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'adv-' + row.target}" @mouseenter="hoverTarget = 'adv-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('advanced', row)">
@@ -750,7 +742,7 @@
                         <p class="guide-desc">
                             <span v-if="!guideExactMode">* 경매장 100개 단위 구매 기준입니다.</span>
                             <span v-else>* 제작에 필요한 최소 수량입니다.</span><br>
-                            <span style="color:oklab(0.8868 -0.0169 0.1814);">* 수치를 클릭하면 계산기에 자동 기입되어 계산됩니다.</span>
+                            <span style="color:#ffd700;">* 수치를 클릭하면 계산기에 자동 기입되어 계산됩니다.</span>
                         </p>
                     </div>
                 </div>
@@ -794,12 +786,12 @@
                                         <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">
                                             융화 재료
                                         </span>
-                                        <span style="color: oklab(0.6268 0 0); font-size: 0.85em; margin-left: 2px;">{{ rank.nameSub }}</span>
+                                        <span style="color: #888; font-size: 0.85em; margin-left: 2px;">{{ rank.nameSub }}</span>
                                     </div>
                                 </div>
                                 <div class="rank-price-col">
                                     <input type="number" v-model.number="market[rank.priceKey].price" class="input-in-table">
-                                    <span style="color: oklab(0.8868 -0.0169 0.1814); font-size: 0.85em; font-weight: bold;">G</span>
+                                    <span style="color: #ffd700; font-size: 0.85em; font-weight: bold;">G</span>
                                 </div>
                                 <div class="rank-cost-col">
                                     {{ Math.floor(rank.cost).toLocaleString() }} G
@@ -833,7 +825,7 @@
                                 <span style="position: relative; top: -1px;">갱신: {{ fetching ? '데이터 동기화 중...' : (lastMarketUpdate ? lastMarketUpdate : '데이터 없음') }}</span>
                             </div>
                             <button class="btn-sync-icon" @click="fetchMarketData(true)" :disabled="fetching || isCooldown" title="시세 새로고침">
-                                <span v-if="isCooldown" style="font-size: 0.85em; color: oklab(0.7572 0 0); font-weight: bold;">
+                                <span v-if="isCooldown" style="font-size: 0.85em; color: #b0b0b0; font-weight: bold;">
                                     {{ cooldownTimer }}
                                 </span>
                                 <span v-else>↻</span>
@@ -849,32 +841,32 @@
                                     <label>대성공</label>
                                     <div style="display: flex; align-items: center; gap: 3px;">
                                         <input type="number" class="tiny-input" v-model.number="stronghold.greatSuccess" placeholder="0" min="0" max="99">
-                                        <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">%</span>
+                                        <span style="font-size: 0.8em; color: #888;">%</span>
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <label>수수료감소</label>
                                     <div style="display: flex; align-items: center; gap: 3px;">
                                         <input type="number" class="tiny-input" v-model.number="stronghold.feeDiscount" placeholder="0" min="0" max="99">
-                                        <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">%</span>
+                                        <span style="font-size: 0.8em; color: #888;">%</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <div>
-                            <div class="market-box" style="margin-top: 0; background-color: oklab(0.2178 0 0);">
+                            <div class="market-box" style="margin-top: 0; background-color: #1a1a1a;">
                                 <div class="market-header">
                                     <span class="resource-label normal-product">
                                         <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
                                         <h3 class="normal-product" style="display:inline; margin-left:5px;">아비도스 융화 재료</h3>
                                     </span>
-                                    <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">(1회 10개 제작)</span>
+                                    <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
                                 </div>
                                 <div class="market-row" style="margin-bottom: 0;">
                                     <span>현재 최저가 (1개)</span>
                                     <span>
-                                        <input type="number" v-model.number="market.normal.price" class="price-input-right"> <span style="color: oklab(0.8868 -0.0169 0.1814); font-weight: bold;">G</span>
+                                        <input type="number" v-model.number="market.normal.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span>
                                     </span>
                                 </div>
                                 
@@ -890,12 +882,12 @@
                                             </span>
                                         </div>
                                         <template v-if="result && result.normal.totalO > 0">
-                                            <div style="margin-top: 8px; border-top: 1px dashed oklab(0.4091 0 0); padding-top: 8px;">
+                                            <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
                                                 <div class="scenario-row">
-                                                    <span style="color: oklab(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입</span>
+                                                    <span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span>
                                                     <span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span>
                                                 </div>
-                                                <div class="scenario-row" style="color: oklab(0.5103 0 0);">
+                                                <div class="scenario-row" style="color: #666;">
                                                     <span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span>
                                                     <span>- 0 G</span>
                                                 </div>
@@ -904,7 +896,7 @@
                                                     <span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span>
                                                 </div>
                                                 <div class="scenario-row total-profit-row">
-                                                    <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                                    <span style="color: #ffd700;">최종 예상 수익</span>
                                                     <span :class="batchProfits.normal.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                                         {{ batchProfits.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.zeroCost).toLocaleString() }} G
                                                     </span>
@@ -927,12 +919,12 @@
                                             </span>
                                         </div>
                                         <template v-if="result && result.normal.totalO > 0">
-                                            <div style="margin-top: 8px; border-top: 1px dashed oklab(0.4091 0 0); padding-top: 8px;">
+                                            <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
                                                 <div class="scenario-row">
-                                                    <span style="color: oklab(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입</span>
+                                                    <span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span>
                                                     <span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span>
                                                 </div>
-                                                <div class="scenario-row" style="color: oklab(0.6268 0 0);">
+                                                <div class="scenario-row" style="color: #888;">
                                                     <span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span>
                                                     <div class="tooltip-box" v-html="batchProfits.normal.formulaHtml"></div>
                                                 </span>
@@ -943,7 +935,7 @@
                                                 <span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span>
                                             </div>
                                             <div class="scenario-row total-profit-row">
-                                                <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                                <span style="color: #ffd700;">최종 예상 수익</span>
                                                 <span :class="batchProfits.normal.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                                     {{ batchProfits.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.fullCost).toLocaleString() }} G
                                                 </span>
@@ -962,10 +954,10 @@
                                         </button>
                                     </div>
                                     <div class="scenario-row" v-if="result && result.normal.totalO > 0">
-                                        <span style="color: oklab(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입</span>
+                                        <span style="color: #e0e0e0;">{{ result.normal.totalO }}회 제작 판매 수입</span>
                                         <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.totalRevenue).toLocaleString() }} G</span>
                                     </div>
-                                    <div class="scenario-row" style="color: oklab(0.6268 0 0);">
+                                    <div class="scenario-row" style="color: #888;">
                                         <span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span>
                                         <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.opportunityCost).toLocaleString() }} G</span>
                                     </div>
@@ -978,11 +970,11 @@
                                         <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.totalFee).toLocaleString() }} G</span>
                                     </div>
                                     <div class="scenario-row" v-if="includeSurplus && deficitCosts.normal.surplusProfit > 0">
-                                        <span style="color: oklab(0.8003 -0.1603 0.0863);">남는 재료 판매 <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">(100개 단위)</span></span>
+                                        <span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span>
                                         <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.surplusProfit).toLocaleString() }} G</span>
                                     </div>
                                     <div v-if="result && result.normal.totalO > 0" class="scenario-row total-profit-row">
-                                        <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                        <span style="color: #ffd700;">최종 예상 수익</span>
                                         <span :class="deficitCosts.normal.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                             {{ deficitCosts.normal.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.normal.totalProfit).toLocaleString() }} G
                                         </span>
@@ -991,18 +983,18 @@
                             </template>
                         </div>
                         
-                        <div class="market-box" style="background-color: oklab(0.2178 0 0);">
+                        <div class="market-box" style="background-color: #1a1a1a;">
                             <div class="market-header">
                                 <span class="resource-label final-product">
                                     <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
                                     <h3 class="final-product" style="display:inline; margin-left:5px;">상급 아비도스 융화 재료</h3>
                                 </span>
-                                <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">(1회 10개 제작)</span>
+                                <span style="font-size: 0.8em; color: #888;">(1회 10개 제작)</span>
                             </div>
                             <div class="market-row" style="margin-bottom: 0;">
                                 <span>현재 최저가 (1개)</span>
                                 <span>
-                                    <input type="number" v-model.number="market.advanced.price" class="price-input-right"> <span style="color: oklab(0.8868 -0.0169 0.1814); font-weight: bold;">G</span>
+                                    <input type="number" v-model.number="market.advanced.price" class="price-input-right"> <span style="color: #ffd700; font-weight: bold;">G</span>
                                 </span>
                             </div>
                             
@@ -1018,12 +1010,12 @@
                                         </span>
                                     </div>
                                     <template v-if="result && result.advanced.totalO > 0">
-                                        <div style="margin-top: 8px; border-top: 1px dashed oklab(0.4091 0 0); padding-top: 8px;">
+                                        <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
                                             <div class="scenario-row">
-                                                <span style="color: oklab(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입</span>
+                                                <span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span>
                                                 <span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span>
                                             </div>
-                                            <div class="scenario-row" style="color: oklab(0.5103 0 0);">
+                                            <div class="scenario-row" style="color: #666;">
                                                 <span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span>
                                                 <span>- 0 G</span>
                                             </div>
@@ -1032,7 +1024,7 @@
                                                 <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span>
                                             </div>
                                             <div class="scenario-row total-profit-row">
-                                                <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                                <span style="color: #ffd700;">최종 예상 수익</span>
                                                 <span :class="batchProfits.advanced.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                                     {{ batchProfits.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.zeroCost).toLocaleString() }} G
                                                 </span>
@@ -1055,12 +1047,12 @@
                                         </span>
                                     </div>
                                     <template v-if="result && result.advanced.totalO > 0">
-                                        <div style="margin-top: 8px; border-top: 1px dashed oklab(0.4091 0 0); padding-top: 8px;">
+                                        <div style="margin-top: 8px; border-top: 1px dashed #4a4a4a; padding-top: 8px;">
                                             <div class="scenario-row">
-                                                <span style="color: oklab(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입</span>
+                                                <span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span>
                                                 <span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span>
                                             </div>
-                                            <div class="scenario-row" style="color: oklab(0.6268 0 0);">
+                                            <div class="scenario-row" style="color: #888;">
                                                 <span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span>
                                                 <div class="tooltip-box" v-html="batchProfits.advanced.formulaHtml"></div>
                                             </span>
@@ -1071,7 +1063,7 @@
                                             <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span>
                                         </div>
                                         <div class="scenario-row total-profit-row">
-                                            <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                            <span style="color: #ffd700;">최종 예상 수익</span>
                                             <span :class="batchProfits.advanced.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                                 {{ batchProfits.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.fullCost).toLocaleString() }} G
                                             </span>
@@ -1090,10 +1082,10 @@
                                     </button>
                                 </div>
                                 <div class="scenario-row" v-if="result && result.advanced.totalO > 0">
-                                    <span style="color: oklab(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입</span>
+                                    <span style="color: #e0e0e0;">{{ result.advanced.totalO }}회 제작 판매 수입</span>
                                     <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.totalRevenue).toLocaleString() }} G</span>
                                 </div>
-                                <div class="scenario-row" style="color: oklab(0.6268 0 0);">
+                                <div class="scenario-row" style="color: #888;">
                                     <span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span>
                                     <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.opportunityCost).toLocaleString() }} G</span>
                                 </div>
@@ -1106,11 +1098,11 @@
                                     <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.totalFee).toLocaleString() }} G</span>
                                 </div>
                                 <div class="scenario-row" v-if="includeSurplus && deficitCosts.advanced.surplusProfit > 0">
-                                    <span style="color: oklab(0.8003 -0.1603 0.0863);">남는 재료 판매 <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">(100개 단위)</span></span>
+                                    <span style="color: #4ade80;">남는 재료 판매 <span style="font-size: 0.8em; color: #888;">(100개 단위)</span></span>
                                     <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.surplusProfit).toLocaleString() }} G</span>
                                 </div>
                                 <div v-if="result && result.advanced.totalO > 0" class="scenario-row total-profit-row">
-                                    <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                    <span style="color: #ffd700;">최종 예상 수익</span>
                                     <span :class="deficitCosts.advanced.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                         {{ deficitCosts.advanced.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.advanced.totalProfit).toLocaleString() }} G
                                     </span>
@@ -1122,75 +1114,75 @@
             </div>
         </div> 
         <div class="update-box">update: 2026.03.29</div>
+    </div> 
+</div>
+
+<footer class="app-footer">
+    <div class="footer-disclaimer">
+        <span>© 2026 아비도스 제작 계산기. All Rights Reserved. This site is not associated with Smilegate RPG & Smilegate Stove. Data based on Lostark Open API.</span>
+        <a href="/privacy" class="privacy-link">개인정보 처리방침</a>
     </div>
+</footer>
 
-    <div class="footer-spacer"></div>
-    <footer class="app-footer">
-        <div class="footer-disclaimer">
-            <span>© 2026 아비도스 제작 계산기. All Rights Reserved. This site is not associated with Smilegate RPG & Smilegate Stove. Data based on Lostark Open API.</span>
-            <a href="/privacy" class="privacy-link">개인정보 처리방침</a>
-        </div>
-    </footer>
+<div v-if="loading || fetching" class="loading-overlay">
+    <div class="loading-spinner"></div>
+</div>
 
-    <div v-if="loading || fetching" class="loading-overlay">
-        <div class="loading-spinner"></div>
-    </div>
-
-    <!-- 영지 농장 탭일 때는 시세 툴팁을 표시하지 않음 -->
-    <div v-show="hoveredMarketItem && !(calcMode === 'optimize' && exchangeType === 'farm')" class="market-chart-tooltip" :style="tooltipStyle" @mouseenter="cancelHideTooltip" @mouseleave="hideChartTooltip">
-        <div class="mct-header">
-            <span class="mct-title" :class="hoveredItemDetails ? hoveredItemDetails.class : ''">
-                <div class="resource-icon-wrap" v-if="hoveredItemDetails">
-                    <img :src="hoveredItemDetails.imgUrl" class="resource-icon">
-                </div>
-                {{ hoveredMarketItem }}
-                <span style="font-size:12px; font-weight:normal; color:oklab(0.738 0 0); margin-left:4px;">최근 거래 정보</span>
-            </span>
-            <span class="mct-date">{{ lastMarketUpdate }} 기준</span>
-        </div>
-        <template v-if="currentHoveredStats">
-            <div class="mct-summary">
-                <div class="mct-summary-item">
-                    <span class="mct-label">오늘의 평균 거래가</span>
-                    <span class="mct-value">{{ currentHoveredStats.todayAvg }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
-                </div>
-                <div class="mct-summary-item">
-                    <span class="mct-label">14일간 평균 거래가</span>
-                    <span class="mct-value">{{ currentHoveredStats.avg14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
-                </div>
-                <div class="mct-summary-item">
-                    <span class="mct-label">14일간 최고 거래가</span>
-                    <span class="mct-value">{{ Math.round(currentHoveredStats.high14d) }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
-                </div>
-                <div class="mct-summary-item">
-                    <span class="mct-label">14일간 최저 거래가</span>
-                    <span class="mct-value">{{ Math.round(currentHoveredStats.low14d) }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
-                </div>
+<!-- 영지 농장 탭일 때는 시세 툴팁을 표시하지 않음 -->
+<div v-show="hoveredMarketItem && !(calcMode === 'optimize' && exchangeType === 'farm')" class="market-chart-tooltip" :style="tooltipStyle" @mouseenter="cancelHideTooltip" @mouseleave="hideChartTooltip">
+    <div class="mct-header">
+        <span class="mct-title" :class="hoveredItemDetails ? hoveredItemDetails.class : ''">
+            <div class="resource-icon-wrap" v-if="hoveredItemDetails">
+                <img :src="hoveredItemDetails.imgUrl" class="resource-icon">
             </div>
-            <div class="mct-body">
-                <div class="mct-chart-wrap">
-                    <canvas id="marketChartCanvas"></canvas>
-                </div>
-                <div class="mct-table-wrap">
-                    <table class="mct-table">
-                        <thead>
-                            <tr><th>거래 일자</th><th>평균 거래가</th><th>판매 건수</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="row in currentHoveredStats.history" :key="row.date">
-                                <td>{{ row.date }}</td>
-                                <td>{{ row.avgPrice }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></td>
-                                <td>{{ row.volume.toLocaleString() }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </template>
-        <div v-else style="padding: 30px; text-align: center; color: oklab(0.6268 0 0); font-size: 13px;">
-            시세 데이터를 불러오는 중이거나 기록이 없습니다.
-        </div>
+            {{ hoveredMarketItem }} 
+            <span style="font-size:12px; font-weight:normal; color:#aaa; margin-left:4px;">최근 거래 정보</span>
+        </span>
+        <span class="mct-date">{{ lastMarketUpdate }} 기준</span>
     </div>
+    <template v-if="currentHoveredStats">
+        <div class="mct-summary">
+            <div class="mct-summary-item">
+                <span class="mct-label">오늘의 평균 거래가</span>
+                <span class="mct-value">{{ currentHoveredStats.todayAvg }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+            </div>
+            <div class="mct-summary-item">
+                <span class="mct-label">14일간 평균 거래가</span>
+                <span class="mct-value">{{ currentHoveredStats.avg14d }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+            </div>
+            <div class="mct-summary-item">
+                <span class="mct-label">14일간 최고 거래가</span>
+                <span class="mct-value">{{ Math.round(currentHoveredStats.high14d) }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+            </div>
+            <div class="mct-summary-item">
+                <span class="mct-label">14일간 최저 거래가</span>
+                <span class="mct-value">{{ Math.round(currentHoveredStats.low14d) }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></span>
+            </div>
+        </div>
+        <div class="mct-body">
+            <div class="mct-chart-wrap">
+                <canvas id="marketChartCanvas"></canvas>
+            </div>
+            <div class="mct-table-wrap">
+                <table class="mct-table">
+                    <thead>
+                        <tr><th>거래 일자</th><th>평균 거래가</th><th>판매 건수</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in currentHoveredStats.history" :key="row.date">
+                            <td>{{ row.date }}</td>
+                            <td>{{ row.avgPrice }} <img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/money/money_4.png" class="gold-icon"></td>
+                            <td>{{ row.volume.toLocaleString() }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </template>
+    <div v-else style="padding: 30px; text-align: center; color: #888; font-size: 13px;">
+        시세 데이터를 불러오는 중이거나 기록이 없습니다.
+    </div>
+</div>
 
 </div>
 
@@ -1666,7 +1658,7 @@
                         if (cS > 0 && baseRes.S) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.S.name} ${cS.toLocaleString()}개 × (${pS}G / 100개)</span><span>= ${Math.floor(cS * pS / 100).toLocaleString()}G</span></div>`);
                         
                         if (formulaStrArr.length > 0) {
-                            formulaHtml = formulaStrArr.join("") + `<div style="border-top: 1px dashed oklab(0.6268 0 0); margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;"><span>총합:</span><span style="color: oklab(0.8868 -0.0169 0.1814);">${Math.floor(costMat).toLocaleString()} G</span></div>`;
+                            formulaHtml = formulaStrArr.join("") + `<div style="border-top: 1px dashed #888; margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;"><span>총합:</span><span style="color: #ffd700;">${Math.floor(costMat).toLocaleString()} G</span></div>`;
                         }
                     }
                     
@@ -1931,8 +1923,8 @@
                 if (window.marketChartInstance) { window.marketChartInstance.destroy(); }
                 
                 const isLight = this.isLightMode;
-                const textColor = isLight ? 'oklab(0.4495 0 0)' : 'oklab(0.738 0 0)';
-                const gridColor = isLight ? 'oklab(0.9266 -0.0019 -0.009)' : 'oklab(0.3211 0 0)';
+                const textColor = isLight ? '#555' : '#aaa';
+                const gridColor = isLight ? '#e3e7ed' : '#333';
                 const container = document.querySelector('.container');
                 const zoom = container ? (parseFloat(getComputedStyle(container).zoom) || 1) : 1;
                 
@@ -1958,35 +1950,8 @@
                 const maxY1 = stepSizeY1 * (tickCount - 1);
                 const y1Ticks = Array.from({ length: tickCount }, (_, i) => i * stepSizeY1);
                 
-                const y1GridPlugin = {
-                    id: 'y1GridBehindBars',
-                    beforeDatasetsDraw(chart) {
-                        const {ctx, chartArea, scales} = chart;
-                        const y1 = scales.y1;
-                        if (!y1 || !y1.ticks) return;
-                        const gridColor = isLight ? 'oklab(0 0 0 / 0.1)' : 'oklab(1 0 0 / 0.1)';
-                        ctx.save();
-                        ctx.beginPath();
-                        ctx.rect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
-                        ctx.clip();
-                        y1.ticks.forEach(tick => {
-                            const yRaw = y1.getPixelForValue(tick.value);
-                            const y = Math.round(yRaw) + 0.5;
-                            if (y < chartArea.top || y > chartArea.bottom) return;
-                            ctx.beginPath();
-                            ctx.moveTo(chartArea.left, y);
-                            ctx.lineTo(chartArea.right, y);
-                            ctx.strokeStyle = gridColor;
-                            ctx.lineWidth = 1;
-                            ctx.stroke();
-                        });
-                        ctx.restore();
-                    }
-                };
-
                 window.marketChartInstance = new Chart(canvas, {
                     type: 'bar',
-                    plugins: [y1GridPlugin],
                     data: {
                         labels: labels,
                         datasets: [
@@ -1994,8 +1959,8 @@
                             type: 'line',
                             label: '평균 거래가',
                             data: priceData,
-                            borderColor: 'oklab(0.6231 -0.0332 -0.1851)',
-                            backgroundColor: 'oklab(0.6231 -0.0332 -0.1851)',
+                            borderColor: '#3b82f6',
+                            backgroundColor: '#3b82f6',
                             borderWidth: 2,
                             yAxisID: 'y',
                             tension: 0.1,
@@ -2006,7 +1971,7 @@
                             type: 'bar',
                             label: '판매 건수',
                             data: volumeData,
-                            backgroundColor: isLight ? 'oklab(0.7686 0.0561 0.1548 / 0.93)' : 'oklab(0.9052 -0.0234 0.164 / 0.82)',
+                            backgroundColor: isLight ? 'rgba(245, 158, 11, 0.5)' : 'rgba(253, 224, 71, 0.4)',
                             yAxisID: 'y1',
                             barPercentage: 0.6,
                             order: 2
@@ -2038,36 +2003,38 @@
                                 min: 0,
                                 border: { display: false },
                                 afterBuildTicks: (axis) => {
-    const yAxis = axis.chart.scales['y'];
-    const tickCount = yAxis ? yAxis.ticks.length : 5;
-    const intervals = Math.max(1, tickCount - 1);
-
-    const rawStep = maxVol / intervals;
-    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
-    const normalized = rawStep / magnitude;
-    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
-                     (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
-    let stepSize = niceStep * magnitude;
-
-    let intervals2 = Math.ceil(maxVol / stepSize);
-    if (intervals2 <= 4) {
-        stepSize = stepSize / 2;
-        intervals2 = Math.ceil(maxVol / stepSize);
-    }
-
-    axis.max = stepSize * intervals2;
-    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
-        value: stepSize * i
-    }));
-},
+                                    const yAxis = axis.chart.scales['y'];
+                                    const tickCount = yAxis ? yAxis.ticks.length : 5;
+                                    const intervals = Math.max(1, tickCount - 1);
+                                    
+                                    const rawStep = maxVol / intervals;
+                                    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
+                                    const normalized = rawStep / magnitude;
+                                    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
+                                    (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
+                                    let stepSize = niceStep * magnitude;
+                                    
+                                    // 눈금 수가 너무 적으면(3개 이하) 단위를 절반으로 줄여 촘촘하게
+                                    let intervals2 = Math.ceil(maxVol / stepSize);
+                                    if (intervals2 <= 4) {
+                                        stepSize = stepSize / 2;
+                                        intervals2 = Math.ceil(maxVol / stepSize);
+                                    }
+                                    
+                                    axis.max = stepSize * intervals2;
+                                    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
+                                        value: stepSize * i
+                                    }));
+                                },
                                 ticks: {
                                     color: textColor,
                                     font: { size: 10 },
                                     callback: (v) => v.toLocaleString()
                                 },
-                                grid: {
-                                    display: false,
-                                    drawOnChartArea: false,
+                                grid: { 
+                                    display: true, 
+                                    color: isLight ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)',
+                                    drawOnChartArea: true,
                                     drawTicks: false
                                 }
                             }
