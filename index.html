@@ -12,40 +12,40 @@
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Outfit:wght@800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: "Noto Sans KR", sans-serif; background-color: oklab(0.235 0 0); color: oklab(0.9067 0 0); margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; color-scheme: dark; }
+        body { font-family: "Noto Sans KR", sans-serif; background-color: oklch(0.235 0 0); color: oklch(0.9067 0 0); margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease; color-scheme: dark; }
         *, *::before, *::after { box-sizing: inherit; }
-        #app { display: flex; flex-direction: column; min-height: calc((100vh + 62px) / 1.1); }
-        .container { max-width: 1100px; width: 95%; margin: 30px auto 0; zoom: 1.1; }
+        #app { display: flex; flex-direction: column; min-height: calc((100vh + 76px) / 1.1); }
+        .container { max-width: 1100px; width: 95%; margin: 0 auto; padding-top: 76px; zoom: 1.1; }
         .main-wrapper { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
         
-        .right-panel { padding: 20px; background-color: oklab(0.2891 0 0); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; box-shadow: 0 0 10px oklab(0 0 0 / 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
-        .left-panel { flex: 1; padding: 20px; background-color: oklab(0.2891 0 0); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; box-shadow: 0 0 10px oklab(0 0 0 / 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
+        .right-panel { padding: 20px; background-color: oklch(0.2891 0 0); border: 1px solid oklch(1 0 0 / 0.05); border-radius: 12px; box-shadow: 0 0 10px oklch(0 0 0 / 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
+        .left-panel { flex: 1; padding: 20px; background-color: oklch(0.2891 0 0); border: 1px solid oklch(1 0 0 / 0.05); border-radius: 12px; box-shadow: 0 0 10px oklch(0 0 0 / 0.5); min-width: 0; transition: background-color 0.3s ease, box-shadow 0.3s ease, border-radius 0.3s ease; }
         .right-column { flex: 1; display: flex; flex-direction: column; min-width: 0; gap: 20px; }
         
         @media (max-width: 1400px) { .container { zoom: 1.1; } }
-        @media (max-width: 1280px) { .container { zoom: 1.05; } #app { min-height: calc((100vh + 62px) / 1.05); } }
-        @media (max-width: 1180px) { .container { zoom: 1.0; }  #app { min-height: calc((100vh + 62px) / 1.0); } }
-        @media (max-width: 1080px) { .container { zoom: 0.95; } #app { min-height: calc((100vh + 62px) / 0.95); } }
-        
+        @media (max-width: 1280px) { .container { zoom: 1.05; } #app { min-height: calc((100vh + 76px) / 1.05); } }
+        @media (max-width: 1180px) { .container { zoom: 1.0; }  #app { min-height: calc((100vh + 76px) / 1.0); } }
+        @media (max-width: 1080px) { .container { zoom: 0.95; } #app { min-height: calc((100vh + 76px) / 0.95); } }
+
         @media (max-width: 980px) {
             .container { zoom: 0.95; }
-            #app { min-height: calc((100vh + 62px) / 0.95); }
+            #app { min-height: calc((100vh + 76px) / 0.95); }
             .ranking-row { grid-template-columns: 1.2fr 55px 60px 60px; font-size: 0.8em; gap: 3px; }
         }
-        
+
         @media (max-width: 925px) {
             .container { zoom: 1; width: 95%; }
-            #app { min-height: calc((100vh + 62px) / 1.0); }
+            #app { min-height: calc((100vh + 76px) / 1.0); }
             .main-wrapper { flex-direction: column; gap: 20px; }
             .left-panel, .right-column { width: 100% !important; flex: none; }
             .right-panel { width: 100%; }
         }
-        
+
         @media (max-width: 600px) {
             .container { zoom: 0.85; width: 96%; margin: 10px auto; }
-            #app { min-height: calc((100vh + 62px) / 0.85); }
+            #app { min-height: calc((100vh + 76px) / 0.85); }
             .main-wrapper { flex-direction: column; gap: 15px; }
             .left-panel, .right-column { width: 100% !important; padding: 0 !important; margin: 0; }
             .left-panel, .right-panel { width: 100% !important; padding: 15px !important; box-sizing: border-box; margin: 0 auto; }
@@ -65,80 +65,80 @@
             .name-text-wrap { display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 0 !important; }
         }
         
-        h1 { font-size: 1.3em; color: oklab(1 0 0); border-bottom: 2px solid oklab(0.3485 0 0); padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; transition: color 0.3s ease, border-color 0.3s ease; }
+        h1 { font-size: 1.3em; color: oklch(1 0 0); border-bottom: 2px solid oklch(0.3485 0 0); padding-bottom: 10px; margin: 0 0 20px 0; text-align: center; word-break: keep-all; transition: color 0.3s ease, border-color 0.3s ease; }
         
-        .mode-tabs { display: flex; margin-bottom: 15px; border-radius: 6px; border: 1px solid oklab(1 0 0 / 0.05); transition: border-color 0.3s ease, background-color 0.3s ease; }
-        .mode-tab { flex: 1; text-align: center; padding: 8px 10px; cursor: pointer; background-color: oklab(0.2891 0 0); color: oklab(0.7572 0 0); font-weight: bold; transition: 0.2s; font-size: 0.9em; position: relative; border-bottom: 2px solid transparent; }
+        .mode-tabs { display: flex; margin-bottom: 15px; border-radius: 6px; border: 1px solid oklch(1 0 0 / 0.05); transition: border-color 0.3s ease, background-color 0.3s ease; }
+        .mode-tab { flex: 1; text-align: center; padding: 8px 10px; cursor: pointer; background-color: oklch(0.2891 0 0); color: oklch(0.7572 0 0); font-weight: bold; transition: 0.2s; font-size: 0.9em; position: relative; border-bottom: 2px solid transparent; }
         .mode-tab:first-child { border-radius: 5px 0 0 5px; }
         .mode-tab:last-child { border-radius: 0 5px 5px 0; }
-        .mode-tab:hover { background-color: oklab(0.4091 0 0); color: oklab(1 0 0); }
-        .mode-tab.active { background-color: oklab(0.3485 0 0); color: oklab(0.8868 -0.0169 0.1814); border-bottom: 2px solid oklab(0.8868 -0.0169 0.1814); z-index: 10; }
+        .mode-tab:hover { background-color: oklch(0.4091 0 0); color: oklch(1 0 0); }
+        .mode-tab.active { background-color: oklch(0.3485 0 0); color: oklch(0.8868 0.1822 95.3226); border-bottom: 2px solid oklch(0.8868 0.1822 95.3226); z-index: 10; }
         
-        .dropdown-content { display: none; position: absolute; top: 100%; left: -1px; width: calc(100% + 2px); background-color: oklab(0.2891 0 0); border: 1px solid oklab(0.3485 0 0); border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 8px 16px oklab(0 0 0 / 0.6); z-index: 100; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .dropdown-content { display: none; position: absolute; top: 100%; left: -1px; width: calc(100% + 2px); background-color: oklch(0.2891 0 0); border: 1px solid oklch(0.3485 0 0); border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 8px 16px oklch(0 0 0 / 0.6); z-index: 100; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .mode-tab.active:hover .dropdown-content { display: block; }
-        .dropdown-item { padding: 8px 10px; text-align: center; color: oklab(0.7572 0 0); font-size: 0.9em; font-weight: bold; transition: 0.2s; }
+        .dropdown-item { padding: 8px 10px; text-align: center; color: oklch(0.7572 0 0); font-size: 0.9em; font-weight: bold; transition: 0.2s; }
         .dropdown-item:last-child { border-radius: 0 0 12px 12px; }
-        .dropdown-item:hover { background-color: oklab(0.4091 0 0); color: oklab(1 0 0); }
-        .dropdown-item.selected { color: oklab(0.8868 -0.0169 0.1814); background-color: oklab(0.3485 0 0); }
+        .dropdown-item:hover { background-color: oklch(0.4091 0 0); color: oklch(1 0 0); }
+        .dropdown-item.selected { color: oklch(0.8868 0.1822 95.3226); background-color: oklch(0.3485 0 0); }
         
-        h2 { font-size: 1.3em; color: oklab(1 0 0); margin: 0 0 12px 0; border-left: 4px solid oklab(0.8868 -0.0169 0.1814); padding-left: 10px; transition: color 0.3s ease, border-color 0.3s ease; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-left: 4px solid oklab(0.8868 -0.0169 0.1814); padding-left: 10px; transition: border-color 0.3s ease; }
+        h2 { font-size: 1.3em; color: oklch(1 0 0); margin: 0 0 12px 0; border-left: 4px solid oklch(0.8868 0.1822 95.3226); padding-left: 10px; transition: color 0.3s ease, border-color 0.3s ease; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-left: 4px solid oklch(0.8868 0.1822 95.3226); padding-left: 10px; transition: border-color 0.3s ease; }
         .section-header h2 { margin: 0; border-left: none; padding-left: 0; }
         
-        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid oklab(0.3485 0 0); transition: border-color 0.3s ease; }
-        .tab { flex: 1; text-align: center; padding: 8px 5px; font-size: 0.95em; cursor: pointer; background-color: transparent; color: oklab(0.7572 0 0); border: 1px solid transparent; border-bottom: 2px solid transparent; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease; }
-        .tab.active { background-color: oklab(0.3485 0 0); color: oklab(0.8868 -0.0169 0.1814); font-weight: bold; border-color: oklab(1 0 0 / 0.05); border-bottom: 2px solid oklab(0.8868 -0.0169 0.1814); border-radius: 6px 6px 0 0; }
-        .tab:hover:not(.active) { background-color: oklab(0.4091 0 0); color: oklab(1 0 0); border-radius: 6px 6px 0 0; }
+        .tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid oklch(0.3485 0 0); transition: border-color 0.3s ease; }
+        .tab { flex: 1; text-align: center; padding: 8px 5px; font-size: 0.95em; cursor: pointer; background-color: transparent; color: oklch(0.7572 0 0); border: 1px solid transparent; border-bottom: 2px solid transparent; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, border-radius 0.3s ease; }
+        .tab.active { background-color: oklch(0.3485 0 0); color: oklch(0.8868 0.1822 95.3226); font-weight: bold; border-color: oklch(1 0 0 / 0.05); border-bottom: 2px solid oklch(0.8868 0.1822 95.3226); border-radius: 6px 6px 0 0; }
+        .tab:hover:not(.active) { background-color: oklch(0.4091 0 0); color: oklch(1 0 0); border-radius: 6px 6px 0 0; }
         .hidden-radio { display: none; }
         
         .input-group { margin-top: 10px; }
-        .input-group label { display: flex; align-items: center; font-size: 0.95em; color: oklab(0.7572 0 0); margin-bottom: 5px; justify-content: space-between; flex-wrap: wrap; gap: 6px; transition: color 0.3s ease; }
-        .input-group > input { width: 100%; padding: 10px; font-size: 1em; border: 1px solid oklab(0.3485 0 0); border-radius: 4px; background-color: oklab(0.235 0 0); color: oklab(0.9067 0 0); transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        .input-group label { display: flex; align-items: center; font-size: 0.95em; color: oklch(0.7572 0 0); margin-bottom: 5px; justify-content: space-between; flex-wrap: wrap; gap: 6px; transition: color 0.3s ease; }
+        .input-group > input { width: 100%; padding: 10px; font-size: 1em; border: 1px solid oklch(0.3485 0 0); border-radius: 4px; background-color: oklch(0.235 0 0); color: oklch(0.9067 0 0); transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         
-        .input-group > input:focus, input.price-input-small:focus, input.price-input-right:focus, input.input-in-table:focus, input.tiny-input:focus { border-color: oklab(0.8868 -0.0169 0.1814) !important; outline: none !important; box-shadow: 0 0 0 3px oklab(0.8868 -0.0169 0.1814 / 0.15) !important; }
+        .input-group > input:focus, input.price-input-small:focus, input.price-input-right:focus, input.input-in-table:focus, input.tiny-input:focus { border-color: oklch(0.8868 0.1822 95.3226) !important; outline: none !important; box-shadow: 0 0 0 3px oklch(0.8868 0.1822 95.3226 / 0.15) !important; }
         
         .right-badges { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-        .mark-target { color: oklab(0.8868 -0.0169 0.1814); font-size: 0.8em; font-weight: normal; border: 1px dashed oklab(0.8868 -0.0169 0.1814); padding: 2px 5px; border-radius: 4px; margin-left: 6px; display: inline-block; vertical-align: middle; transition: color 0.3s ease, border-color 0.3s ease; }
-        .mat-price-tag { background: oklab(0.3485 0 0); padding: 2px 6px; border: 1px solid transparent; border-radius: 4px; font-size: 0.75em; color: oklab(0.8868 -0.0169 0.1814); display: flex; align-items: center; white-space: nowrap; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        .mark-target { color: oklch(0.8868 0.1822 95.3226); font-size: 0.8em; font-weight: normal; border: 1px dashed oklch(0.8868 0.1822 95.3226); padding: 2px 5px; border-radius: 4px; margin-left: 6px; display: inline-block; vertical-align: middle; transition: color 0.3s ease, border-color 0.3s ease; }
+        .mat-price-tag { background: oklch(0.3485 0 0); padding: 2px 6px; border: 1px solid transparent; border-radius: 4px; font-size: 0.75em; color: oklch(0.8868 0.1822 95.3226); display: flex; align-items: center; white-space: nowrap; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         
-        .deficit-info { text-align: center; font-size: 0.95em; color: oklab(0.7572 0 0); margin-top: -8px; margin-bottom: 12px; transition: color 0.3s ease; }
-        .text-deficit { color: oklab(0.7044 0.1721 0.0737); font-weight: bold; }
-        .text-surplus { color: oklab(0.8003 -0.1603 0.0863); font-weight: bold; }
+        .deficit-info { text-align: center; font-size: 0.95em; color: oklch(0.7572 0 0); margin-top: -8px; margin-bottom: 12px; transition: color 0.3s ease; }
+        .text-deficit { color: oklch(0.7044 0.1872 23.1825); font-weight: bold; }
+        .text-surplus { color: oklch(0.8003 0.1821 151.7035); font-weight: bold; }
         
-        button { width: 100%; margin-top: 15px; padding: 15px 10px; font-size: 1em; border: none; border-radius: 4px; background-color: oklab(0.3485 0 0); color: oklab(1 0 0); cursor: pointer; font-weight: bold; transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s; }
-        button:hover { background-color: oklab(0.4676 0 0); transform: translateY(-1px); box-shadow: 0 4px 12px oklab(0 0 0 / 0.3); }
+        button { width: 100%; margin-top: 15px; padding: 15px 10px; font-size: 1em; border: none; border-radius: 4px; background-color: oklch(0.3485 0 0); color: oklch(1 0 0); cursor: pointer; font-weight: bold; transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s; }
+        button:hover { background-color: oklch(0.4676 0 0); transform: translateY(-1px); box-shadow: 0 4px 12px oklch(0 0 0 / 0.3); }
         button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
         
         button.btn-calc { border-radius: 8px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px oklab(0.8868 -0.0169 0.1814 / 0.1); }
-        body.light-mode button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px oklab(0.5635 -0.0384 -0.2377 / 0.15); }
-        body.light-mode .rank-cost-col { color: oklab(0.3867 0 0) !important; font-weight: 500 !important; }
+        button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px oklch(0.8868 0.1822 95.3226 / 0.1); }
+        body.light-mode button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px oklch(0.5635 0.2408 260.8233 / 0.15); }
+        body.light-mode .rank-cost-col { color: oklch(0.3867 0 0) !important; font-weight: 500 !important; }
         
-        .btn-force { position: absolute; right: 15px; top: 15px; width: auto; margin: 0; padding: 3px 8px; background: oklab(0.7044 0.1721 0.0737 / 0.08); border: 1px solid oklab(0.7044 0.1721 0.0737 / 0.3); color: oklab(0.7529 0.1385 0.0538); border-radius: 4px; font-size: 0.7em; font-weight: normal; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
-        .btn-force:hover { background: oklab(0.7044 0.1721 0.0737 / 0.2); border-color: oklab(0.7044 0.1721 0.0737 / 0.6); color: oklab(1 0 0); }
-        .btn-force.btn-farm { background: oklab(0.6231 -0.0332 -0.1851 / 0.1); border: 1px solid oklab(0.6231 -0.0332 -0.1851 / 0.4); color: oklab(0.7137 -0.038 -0.1382); }
-        .btn-force.btn-farm:hover { background: oklab(0.6231 -0.0332 -0.1851 / 0.25); border-color: oklab(0.7137 -0.038 -0.1382); color: oklab(1 0 0); }
+        .btn-force { position: absolute; right: 15px; top: 15px; width: auto; margin: 0; padding: 3px 8px; background: oklch(0.7044 0.1872 23.1825 / 0.08); border: 1px solid oklch(0.7044 0.1872 23.1825 / 0.3); color: oklch(0.7529 0.1486 21.2285); border-radius: 4px; font-size: 0.7em; font-weight: normal; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
+        .btn-force:hover { background: oklch(0.7044 0.1872 23.1825 / 0.2); border-color: oklch(0.7044 0.1872 23.1825 / 0.6); color: oklch(1 0 0); }
+        .btn-force.btn-farm { background: oklch(0.6231 0.1881 259.8314 / 0.1); border: 1px solid oklch(0.6231 0.1881 259.8314 / 0.4); color: oklch(0.7137 0.1433 254.6257); }
+        .btn-force.btn-farm:hover { background: oklch(0.6231 0.1881 259.8314 / 0.25); border-color: oklch(0.7137 0.1433 254.6257); color: oklch(1 0 0); }
         
         .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; transition: color 0.3s ease; }
         .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; cursor: help; }
         .resource-icon { width: 20px; height: 20px; object-fit: cover; pointer-events: none; }
         
-        .resource-A, .resource-P { color: oklab(0.7025 0 0); }
-        .resource-A .resource-icon-wrap, .resource-P .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.3132 0 0), oklab(0.4604 0 0)); }
-        .resource-B { color: oklab(0.7203 -0.1229 0.1378); }
-        .resource-B .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.2747 -0.0373 0.0449), oklab(0.372 -0.0563 0.0658)); }
-        .resource-S, .resource-C { color: oklab(0.57 -0.0547 -0.1298); }
-        .resource-S .resource-icon-wrap, .resource-C .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.2642 -0.0184 -0.04), oklab(0.3474 -0.0315 -0.0661)); }
+        .resource-A, .resource-P { color: oklch(0.7025 0 0); }
+        .resource-A .resource-icon-wrap, .resource-P .resource-icon-wrap { background: linear-gradient(135deg, oklch(0.3132 0 0), oklch(0.4604 0 0)); }
+        .resource-B { color: oklch(0.7203 0.1846 131.7289); }
+        .resource-B .resource-icon-wrap { background: linear-gradient(135deg, oklch(0.2747 0.0584 129.7176), oklch(0.372 0.0866 130.5511)); }
+        .resource-S, .resource-C { color: oklch(0.57 0.1409 247.1486); }
+        .resource-S .resource-icon-wrap, .resource-C .resource-icon-wrap { background: linear-gradient(135deg, oklch(0.2642 0.044 245.2976), oklch(0.3474 0.0732 244.5198)); }
         
-        .final-product { color: oklab(0.6577 0.1936 -0.1862); }
-        .final-product .resource-icon-wrap, .resource-icon-wrap.final-product { background: linear-gradient(135deg, oklab(0.2565 0.0625 -0.0677), oklab(0.3556 0.0967 -0.1117)); }
-        .normal-product { color: oklab(0.57 -0.0547 -0.1298); }
-        .normal-product .resource-icon-wrap, .resource-icon-wrap.normal-product { background: linear-gradient(135deg, oklab(0.2642 -0.0184 -0.04), oklab(0.3474 -0.0315 -0.0661)); }
+        .final-product { color: oklch(0.6577 0.2686 316.1162); }
+        .final-product .resource-icon-wrap, .resource-icon-wrap.final-product { background: linear-gradient(135deg, oklch(0.2565 0.0921 312.7129), oklch(0.3556 0.1477 310.8831)); }
+        .normal-product { color: oklch(0.57 0.1409 247.1486); }
+        .normal-product .resource-icon-wrap, .resource-icon-wrap.normal-product { background: linear-gradient(135deg, oklch(0.2642 0.044 245.2976), oklch(0.3474 0.0732 244.5198)); }
         .normal-product .resource-icon { width: 24px; height: 24px; }
-        
-        .result { margin-top: 20px; padding: 15px; background-color: oklab(0.235 0 0); border-radius: 12px; border: 1px solid oklab(1 0 0 / 0.05); overflow-x: auto; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .result-title { font-size: 1.1em; color: oklab(1 0 0); margin: 5px 0 15px 0; text-align: center; border-left: none; padding-left: 0; }
-        .result-divider { border: 0; border-top: 2px dashed oklab(0.4091 0 0); margin: 25px 0; transition: border-color 0.3s ease; }
+
+        .result { margin-top: 20px; padding: 15px; background-color: oklch(0.235 0 0); border-radius: 12px; border: 1px solid oklch(1 0 0 / 0.05); overflow-x: auto; position: relative; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .result-title { font-size: 1.1em; color: oklch(1 0 0); margin: 5px 0 15px 0; text-align: center; border-left: none; padding-left: 0; }
+        .result-divider { border: 0; border-top: 2px dashed oklch(0.4091 0 0); margin: 25px 0; transition: border-color 0.3s ease; }
         /* 계산 결과창 내부에 있는 아이콘의 툴팁 이벤트 원천 차단 */
         .result .resource-icon-wrap {
             pointer-events: none !important;
@@ -147,65 +147,65 @@
         .conversion-grid { display: grid; grid-template-columns: auto auto auto 120px; align-items: center; gap: 10px; }
         .conversion-row { display: contents; }
         .label-wrap { display: flex; justify-content: center; align-items: center; width: 100%; }
-        .arrow { text-align: center; color: oklab(0.9067 0 0); font-size: 1.2em; transition: color 0.3s ease; }
-        .count { text-align: center; font-size: 0.95em; color: oklab(0.8576 0 0); transition: color 0.3s ease; }
-        .num-point { color: oklab(0.8868 -0.0169 0.1814); font-weight: bold; text-shadow: 0 0 5px oklab(0.8868 -0.0169 0.1814 / 0.8); }
+        .arrow { text-align: center; color: oklch(0.9067 0 0); font-size: 1.2em; transition: color 0.3s ease; }
+        .count { text-align: center; font-size: 0.95em; color: oklch(0.8576 0 0); transition: color 0.3s ease; }
+        .num-point { color: oklch(0.8868 0.1822 95.3226); font-weight: bold; text-shadow: 0 0 5px oklch(0.8868 0.1822 95.3226 / 0.8); }
         
-        .final-row { grid-column: span 4; display: grid; grid-template-columns: auto 120px; align-items: center; border-top: 1px solid oklab(0.3485 0 0); margin-top: 10px; padding-top: 10px; transition: border-color 0.3s ease; }
+        .final-row { grid-column: span 4; display: grid; grid-template-columns: auto 120px; align-items: center; border-top: 1px solid oklch(0.3485 0 0); margin-top: 10px; padding-top: 10px; transition: border-color 0.3s ease; }
         .final-product-label { flex: 1 1 auto; font-weight: bold; text-align: center; }
-        .no-production { color: oklab(0.7044 0.1721 0.0737); text-align: center; font-size: 1.1em; font-weight: bold; margin: 15px 0; }
-        .desc { font-size: 11px; color: oklab(0.7572 0 0); transition: color 0.3s ease; }
+        .no-production { color: oklch(0.7044 0.1872 23.1825); text-align: center; font-size: 1.1em; font-weight: bold; margin: 15px 0; }
+        .desc { font-size: 11px; color: oklch(0.7572 0 0); transition: color 0.3s ease; }
         
-        .market-box { background-color: oklab(0.235 0 0); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; padding: 15px; margin-top: 15px; transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid oklab(0.3485 0 0); padding-bottom: 8px; transition: border-color 0.3s ease; }
+        .market-box { background-color: oklch(0.235 0 0); border: 1px solid oklch(1 0 0 / 0.05); border-radius: 12px; padding: 15px; margin-top: 15px; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .market-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid oklch(0.3485 0 0); padding-bottom: 8px; transition: border-color 0.3s ease; }
         .market-header h3 { margin: 0; font-size: 1.1em; }
         .market-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.95em; gap: 10px; word-break: keep-all; }
         
-        .profit-plus { color: oklab(0.8868 -0.0169 0.1814); font-weight: bold; }
-        .profit-minus { color: oklab(0.7044 0.1721 0.0737); font-weight: bold; }
-        .gold-g { color: oklab(0.8868 -0.0169 0.1814); font-weight: bold; }
+        .profit-plus { color: oklch(0.8868 0.1822 95.3226); font-weight: bold; }
+        .profit-minus { color: oklch(0.7044 0.1872 23.1825); font-weight: bold; }
+        .gold-g { color: oklch(0.8868 0.1822 95.3226); font-weight: bold; }
         
-        input.price-input-small, input.price-input-right { background-color: oklab(0.235 0 0) !important; color: oklab(0.8868 -0.0169 0.1814) !important; border: 1px solid oklab(0.4676 0 0) !important; border-radius: 5px !important; text-align: right !important; margin: 0 4px !important; font-size: 1.1em !important; font-weight: bold !important; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        input.price-input-small, input.price-input-right { background-color: oklch(0.235 0 0) !important; color: oklch(0.8868 0.1822 95.3226) !important; border: 1px solid oklch(0.4676 0 0) !important; border-radius: 5px !important; text-align: right !important; margin: 0 4px !important; font-size: 1.1em !important; font-weight: bold !important; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         input.price-input-small { width: 45px !important; height: 22px !important; padding: 0 4px !important; }
         input.price-input-right { width: 55px !important; height: 24px !important; padding: 0 4px !important; }
         input.price-input-small::-webkit-inner-spin-button, input.price-input-small::-webkit-outer-spin-button, input.price-input-right::-webkit-inner-spin-button, input.price-input-right::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
-        .scenario-section { background-color: oklab(1 0 0 / 0.03); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; padding: 12px 14px; margin-top: 12px; transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .scenario-section.self-craft { border-left: 3px solid oklab(0.8868 -0.0169 0.1814); }
-        .scenario-section.market-buy { border-left: 3px solid oklab(0.6268 0 0); }
-        .scenario-section.deficit-craft { border-left: 3px solid oklab(0.8003 -0.1603 0.0863); }
+        .scenario-section { background-color: oklch(1 0 0 / 0.03); border: 1px solid oklch(1 0 0 / 0.05); border-radius: 12px; padding: 12px 14px; margin-top: 12px; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .scenario-section.self-craft { border-left: 3px solid oklch(0.8868 0.1822 95.3226); }
+        .scenario-section.market-buy { border-left: 3px solid oklch(0.6268 0 0); }
+        .scenario-section.deficit-craft { border-left: 3px solid oklch(0.8003 0.1821 151.7035); }
         
-        .scenario-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed oklab(0.4091 0 0); margin-bottom: 8px; padding-bottom: 5px; transition: border-color 0.3s ease; }
-        .scenario-title { font-size: 0.85em; color: oklab(0.7572 0 0); transition: color 0.3s ease; }
+        .scenario-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed oklch(0.4091 0 0); margin-bottom: 8px; padding-bottom: 5px; transition: border-color 0.3s ease; }
+        .scenario-title { font-size: 0.85em; color: oklch(0.7572 0 0); transition: color 0.3s ease; }
         .scenario-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; margin-bottom: 6px; }
         .scenario-row:last-child { margin-bottom: 0; }
-        .total-profit-row { margin-top: 6px; padding-top: 6px; border-top: 1px dotted oklab(0.4091 0 0); font-weight: bold; font-size: 0.95em; transition: border-color 0.3s ease; }
+        .total-profit-row { margin-top: 6px; padding-top: 6px; border-top: 1px dotted oklch(0.4091 0 0); font-weight: bold; font-size: 0.95em; transition: border-color 0.3s ease; }
         
-        .toggle-btn { width: auto !important; margin: 0 !important; padding: 4px 10px !important; background: transparent; border: 1px solid oklab(0.4676 0 0); color: oklab(0.7572 0 0); border-radius: 4px; font-size: 0.8em !important; font-weight: normal !important; cursor: pointer; transition: 0.2s; height: auto !important; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1.2; }
-        .toggle-btn.active { background: oklab(0.8003 -0.1603 0.0863); color: oklab(0.235 0 0); border-color: oklab(0.8003 -0.1603 0.0863); font-weight: bold !important; }
-        .toggle-btn:hover:not(.active) { border-color: oklab(0.8003 -0.1603 0.0863); color: oklab(0.8003 -0.1603 0.0863); transform: translateY(-1px); }
+        .toggle-btn { width: auto !important; margin: 0 !important; padding: 4px 10px !important; background: transparent; border: 1px solid oklch(0.4676 0 0); color: oklch(0.7572 0 0); border-radius: 4px; font-size: 0.8em !important; font-weight: normal !important; cursor: pointer; transition: 0.2s; height: auto !important; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1.2; }
+        .toggle-btn.active { background: oklch(0.8003 0.1821 151.7035); color: oklch(0.235 0 0); border-color: oklch(0.8003 0.1821 151.7035); font-weight: bold !important; }
+        .toggle-btn:hover:not(.active) { border-color: oklch(0.8003 0.1821 151.7035); color: oklch(0.8003 0.1821 151.7035); transform: translateY(-1px); }
         
-        .ranking-board-wrap { position: relative; margin-bottom: 0px; background-color: oklab(0 0 0 / 0.15); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; padding: 4px; overflow: hidden; display: flex; flex-direction: column; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .ranking-board-wrap { position: relative; margin-bottom: 0px; background-color: oklch(0 0 0 / 0.15); border: 1px solid oklch(1 0 0 / 0.05); border-radius: 12px; padding: 4px; overflow: hidden; display: flex; flex-direction: column; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .ranking-board { width: 100%; display: flex; flex-direction: column; gap: 0; padding-top: 0px; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; max-height: max-content; }
         .ranking-board::-webkit-scrollbar { display: none; }
         
-        .ranking-row { display: grid; grid-template-columns: minmax(130px, 1fr) 65px 65px 65px; align-items: center; padding: 8px; border-bottom: 1px solid oklab(0.3485 0 0); gap: 6px; font-size: 0.85em; transition: background-color 0.2s ease, border-color 0.3s ease; animation: fadeSlideDown 0.3s ease-out forwards; }
+        .ranking-row { display: grid; grid-template-columns: minmax(130px, 1fr) 65px 65px 65px; align-items: center; padding: 8px; border-bottom: 1px solid oklch(0.3485 0 0); gap: 6px; font-size: 0.85em; transition: background-color 0.2s ease, border-color 0.3s ease; animation: fadeSlideDown 0.3s ease-out forwards; }
         @keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         
         .ranking-row:last-child { border-bottom: none; }
-        .ranking-row:not(.ranking-header):hover { background-color: oklab(1 0 0 / 0.05); }
-        .ranking-row.is-profit { background: linear-gradient(90deg, transparent, oklab(0.8003 -0.1603 0.0863 / 0.04) 85%); }
-        .ranking-row.is-loss { background: linear-gradient(90deg, transparent, oklab(0.7044 0.1721 0.0737 / 0.03) 85%); }
+        .ranking-row:not(.ranking-header):hover { background-color: oklch(1 0 0 / 0.05); }
+        .ranking-row.is-profit { background: linear-gradient(90deg, transparent, oklch(0.8003 0.1821 151.7035 / 0.04) 85%); }
+        .ranking-row.is-loss { background: linear-gradient(90deg, transparent, oklch(0.7044 0.1872 23.1825 / 0.03) 85%); }
         
-        .ranking-header { border-bottom: 1px solid oklab(0.4676 0 0); color: oklab(0.7572 0 0); font-weight: bold; background: none !important; animation: none; transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease; }
+        .ranking-header { border-bottom: 1px solid oklch(0.4676 0 0); color: oklch(0.7572 0 0); font-weight: bold; background: none !important; animation: none; transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease; }
         .sortable-header { display: flex; align-items: center; justify-content: center; justify-self: center; width: max-content; cursor: pointer; user-select: none; transition: background-color 0.2s, color 0.2s; border-radius: 4px; padding: 0px 8px; }
-        .sortable-header:hover { background-color: oklab(1 0 0 / 0.08); color: oklab(1 0 0); }
+        .sortable-header:hover { background-color: oklch(1 0 0 / 0.08); color: oklch(1 0 0); }
         .sort-icon { color: inherit; margin-left: 4px; font-size: 1.1em; font-weight: bold; display: inline-block; width: 14px; text-align: center; }
         
         .rank-name-col { display: flex; align-items: center; gap: 4px; min-width: 0; } 
-        .star-btn { background: none; border: none; padding: 0; margin: 0; color: oklab(0.4495 0 0); cursor: pointer; font-size: 1.1em; line-height: 1; transition: color 0.2s, transform 0.2s; display: inline-flex; align-items: center; justify-content: center; width: 16px; flex-shrink: 0;}
-        .star-btn.is-fav { color: oklab(0.8868 -0.0169 0.1814); text-shadow: 0 0 4px oklab(0.8868 -0.0169 0.1814 / 0.4); }
-        .star-btn:hover { color: oklab(0.8868 -0.0169 0.1814); transform: scale(1.1); }
+        .star-btn { background: none; border: none; padding: 0; margin: 0; color: oklch(0.4495 0 0); cursor: pointer; font-size: 1.1em; line-height: 1; transition: color 0.2s, transform 0.2s; display: inline-flex; align-items: center; justify-content: center; width: 16px; flex-shrink: 0;}
+        .star-btn.is-fav { color: oklch(0.8868 0.1822 95.3226); text-shadow: 0 0 4px oklch(0.8868 0.1822 95.3226 / 0.4); }
+        .star-btn:hover { color: oklch(0.8868 0.1822 95.3226); transform: scale(1.1); }
         
         .rank-name-col .resource-icon-wrap { width: 20px; height: 20px; flex-shrink: 0; border-radius: 3px; display: flex; justify-content: center; align-items: center; margin-right: 2px; }
         .rank-name-col .resource-icon { width: 16px; height: 16px; object-fit: cover; }
@@ -215,245 +215,254 @@
         .name-text-wrap span { word-break: keep-all; }
         
         .rank-price-col { display: flex; align-items: center; justify-content: center; gap: 3px; } 
-        .rank-cost-col { color: oklab(0.8576 0 0); text-align: center; justify-content: center; }
+        .rank-cost-col { color: oklch(0.8576 0 0); text-align: center; justify-content: center; }
         .rank-profit-col { text-align: center; font-weight: bold; font-size: 1.05em; justify-content: center; }
         
-        .input-in-table { width: 40px !important; height: 22px !important; padding: 0 1px !important; background-color: oklab(0.2178 0 0) !important; color: oklab(0.8868 -0.0169 0.1814) !important; border: 1px solid oklab(0.4495 0 0) !important; border-radius: 5px !important; text-align: center !important; font-size: 0.9em !important; font-weight: bold !important; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        .input-in-table { width: 40px !important; height: 22px !important; padding: 0 1px !important; background-color: oklch(0.2178 0 0) !important; color: oklch(0.8868 0.1822 95.3226) !important; border: 1px solid oklch(0.4495 0 0) !important; border-radius: 5px !important; text-align: center !important; font-size: 0.9em !important; font-weight: bold !important; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
         .input-in-table::-webkit-inner-spin-button, .input-in-table::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
-        .modern-expand-btn { position: relative; width: calc(100% + 8px); margin: auto -4px -4px -4px; background-color: oklab(0 0 0 / 0.1); color: oklab(0.5103 0 0); border: none; border-top: 1px solid oklab(0.3485 0 0); border-radius: 0 0 12px 12px; padding: 0; height: 14px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; }
-        .modern-expand-btn:hover { color: oklab(0.8868 -0.0169 0.1814); background-color: oklab(1 0 0 / 0.05); }
+        .modern-expand-btn { position: relative; width: calc(100% + 8px); margin: auto -4px -4px -4px; background-color: oklch(0 0 0 / 0.1); color: oklch(0.5103 0 0); border: none; border-top: 1px solid oklch(0.3485 0 0); border-radius: 0 0 12px 12px; padding: 0; height: 14px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; }
+        .modern-expand-btn:hover { color: oklch(0.8868 0.1822 95.3226); background-color: oklch(1 0 0 / 0.05); }
         .modern-expand-btn .chevron { font-size: 0.8em; line-height: 0; font-weight: bold; display: flex; align-items: center; justify-content: center; transform: translateY(3px); }
         .modern-expand-btn .chevron.is-open { transform: translateY(-3px); }
         
-        .control-panel-box { background-color: oklab(0 0 0 / 0.15); border: 1px solid oklab(1 0 0 / 0.05); border-radius: 12px; padding: 15px; margin-top: 5px; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .control-panel-box { background-color: oklch(0 0 0 / 0.15); border: 1px solid oklch(1 0 0 / 0.05); border-radius: 12px; padding: 15px; margin-top: 5px; transition: background-color 0.3s ease, border-color 0.3s ease; }
         
-        .stronghold-setting-box { display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px; padding-bottom: 12px; border-bottom: 1px dashed oklab(0.4091 0 0); margin-bottom: 12px; overflow-x: auto; transition: border-color 0.3s ease;}
+        .stronghold-setting-box { display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 8px; padding-bottom: 12px; border-bottom: 1px dashed oklch(0.4091 0 0); margin-bottom: 12px; overflow-x: auto; transition: border-color 0.3s ease;}
         .stronghold-setting-box > div { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
-        .stronghold-setting-box .setting-title { font-weight: bold; color: oklab(0.7572 0 0); font-size: 0.85em; white-space: nowrap; flex-shrink: 0; transition: color 0.3s ease; }
+        .stronghold-setting-box .setting-title { font-weight: bold; color: oklch(0.7572 0 0); font-size: 0.85em; white-space: nowrap; flex-shrink: 0; transition: color 0.3s ease; }
         .stronghold-setting-box .inputs-wrap { display: flex; gap: 10px; align-items: center; flex-wrap: nowrap; margin-left: auto; }
         .stronghold-setting-box .input-group { margin: 0; display: flex; align-items: center; gap: 6px; }
-        .stronghold-setting-box label { margin: 0; font-size: 0.8em; color: oklab(0.6268 0 0); white-space: nowrap; }
+        .stronghold-setting-box label { margin: 0; font-size: 0.8em; color: oklch(0.6268 0 0); white-space: nowrap; }
         
-        input.tiny-input { width: 28px !important; height: 18px !important; padding: 0 !important; background-color: oklab(0.235 0 0) !important; color: oklab(0.9067 0 0) !important; border: 1px solid oklab(0.4495 0 0) !important; border-radius: 4px !important; text-align: center !important; font-size: 0.8em !important; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; }
+        input.tiny-input { width: 28px !important; height: 18px !important; padding: 0 !important; background-color: oklch(0.235 0 0) !important; color: oklch(0.9067 0 0) !important; border: 1px solid oklch(0.4495 0 0) !important; border-radius: 4px !important; text-align: center !important; font-size: 0.8em !important; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; }
         input.tiny-input::-webkit-inner-spin-button, input.tiny-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         
-        @keyframes gentle-glow-gold { 0% { text-shadow: 0 0 2px oklab(0.8868 -0.0169 0.1814 / 0.4); color: oklab(0.8868 -0.0169 0.1814); } 50% { text-shadow: 0 0 7px oklab(0.8868 -0.0169 0.1814 / 0.9); color: oklab(0.8868 -0.0169 0.1814); } 100% { text-shadow: 0 0 2px oklab(0.8868 -0.0169 0.1814 / 0.4); color: oklab(0.8868 -0.0169 0.1814); } }
-        .profit-neon-gold { animation: gentle-glow-gold 2.5s infinite ease-in-out; font-weight: bold; color: oklab(0.8868 -0.0169 0.1814); }
+        @keyframes gentle-glow-gold { 0% { text-shadow: 0 0 2px oklch(0.8868 0.1822 95.3226 / 0.4); color: oklch(0.8868 0.1822 95.3226); } 50% { text-shadow: 0 0 7px oklch(0.8868 0.1822 95.3226 / 0.9); color: oklch(0.8868 0.1822 95.3226); } 100% { text-shadow: 0 0 2px oklch(0.8868 0.1822 95.3226 / 0.4); color: oklch(0.8868 0.1822 95.3226); } }
+        .profit-neon-gold { animation: gentle-glow-gold 2.5s infinite ease-in-out; font-weight: bold; color: oklch(0.8868 0.1822 95.3226); }
         
-        @keyframes gentle-glow-red { 0% { text-shadow: 0 0 2px oklab(0.7044 0.1721 0.0737 / 0.4); color: oklab(0.7044 0.1721 0.0737); } 50% { text-shadow: 0 0 7px oklab(0.7044 0.1721 0.0737 / 0.9); color: oklab(0.7044 0.1721 0.0737); } 100% { text-shadow: 0 0 2px oklab(0.7044 0.1721 0.0737 / 0.4); color: oklab(0.7044 0.1721 0.0737); } }
-        .profit-neon-red { animation: gentle-glow-red 2.5s infinite ease-in-out; font-weight: bold; color: oklab(0.7044 0.1721 0.0737); }
+        @keyframes gentle-glow-red { 0% { text-shadow: 0 0 2px oklch(0.7044 0.1872 23.1825 / 0.4); color: oklch(0.7044 0.1872 23.1825); } 50% { text-shadow: 0 0 7px oklch(0.7044 0.1872 23.1825 / 0.9); color: oklch(0.7044 0.1872 23.1825); } 100% { text-shadow: 0 0 2px oklch(0.7044 0.1872 23.1825 / 0.4); color: oklch(0.7044 0.1872 23.1825); } }
+        .profit-neon-red { animation: gentle-glow-red 2.5s infinite ease-in-out; font-weight: bold; color: oklch(0.7044 0.1872 23.1825); }
         
-        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: oklab(0 0 0 / 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; }
-        .loading-spinner { width: 50px; height: 50px; border: 5px solid oklab(0.3485 0 0); border-top: 5px solid oklab(0.8868 -0.0169 0.1814); border-radius: 50%; animation: spin 1s linear infinite; }
+        .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: oklch(0 0 0 / 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .loading-spinner { width: 50px; height: 50px; border: 5px solid oklch(0.3485 0 0); border-top: 5px solid oklch(0.8868 0.1822 95.3226); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .update-box { text-align: right; font-size: 12px; color: oklab(0.6268 0 0); margin-top: -15px; margin-bottom: 0; padding-right: 5px; transition: color 0.3s ease; }
+        .update-box { text-align: right; font-size: 12px; color: oklch(0.6268 0 0); margin-top: -15px; margin-bottom: 0; padding-right: 5px; transition: color 0.3s ease; }
         
-        .sync-pill { display: inline-flex; align-items: center; background-color: oklab(0 0 0 / 0.25); border: 1px solid oklab(0.3485 0 0); border-radius: 6px; padding: 4px 10px; font-size: 0.8em; color: oklab(0.7572 0 0); box-shadow: inset 0 1px 3px oklab(0 0 0 / 0.3); transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease; position: relative; top: 8px; }
-        .sync-pill:hover { border-color: oklab(0.4676 0 0); }
-        .sync-info { display: flex; align-items: center; margin-right: 8px; padding-right: 8px; border-right: 1px solid oklab(0.4091 0 0); white-space: nowrap; transition: border-color 0.3s ease; }
-        .live-dot.is-syncing { background-color: oklab(0.8003 -0.1603 0.0863); box-shadow: 0 0 5px oklab(0.8003 -0.1603 0.0863 / 0.6); animation: fast-pulse 1s infinite ease-in-out; }
+        .sync-pill { display: inline-flex; align-items: center; background-color: oklch(0 0 0 / 0.25); border: 1px solid oklch(0.3485 0 0); border-radius: 6px; padding: 4px 10px; font-size: 0.8em; color: oklch(0.7572 0 0); box-shadow: inset 0 1px 3px oklch(0 0 0 / 0.3); transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease; position: relative; top: 8px; }
+        .sync-pill:hover { border-color: oklch(0.4676 0 0); }
+        .sync-info { display: flex; align-items: center; margin-right: 8px; padding-right: 8px; border-right: 1px solid oklch(0.4091 0 0); white-space: nowrap; transition: border-color 0.3s ease; }
+        .live-dot.is-syncing { background-color: oklch(0.8003 0.1821 151.7035); box-shadow: 0 0 5px oklch(0.8003 0.1821 151.7035 / 0.6); animation: fast-pulse 1s infinite ease-in-out; }
         @keyframes fast-pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .btn-sync-icon { background: transparent; border: none; color: oklab(0.7572 0 0); padding: 0; margin: 0; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s, transform 0.3s ease; width: 12px; }
-        .btn-sync-icon:hover:not(:disabled) { color: oklab(0.8868 -0.0169 0.1814); transform: rotate(180deg); }
-        .btn-sync-icon:disabled { color: oklab(0.4091 0 0); cursor: not-allowed; transform: rotate(360deg); transition: transform 1s linear infinite; }
+        .btn-sync-icon { background: transparent; border: none; color: oklch(0.7572 0 0); padding: 0; margin: 0; font-size: 1.1em; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: color 0.2s, transform 0.3s ease; width: 12px; }
+        .btn-sync-icon:hover:not(:disabled) { color: oklch(0.8868 0.1822 95.3226); transform: rotate(180deg); }
+        .btn-sync-icon:disabled { color: oklch(0.4091 0 0); cursor: not-allowed; transform: rotate(360deg); transition: transform 1s linear infinite; }
         
-        .badge-exchange { color: oklab(0.57 -0.0547 -0.1298); font-size: 0.85em; margin-left: auto; font-weight: bold; white-space: nowrap; }
+        .badge-exchange { color: oklch(0.57 0.1409 247.1486); font-size: 0.85em; margin-left: auto; font-weight: bold; white-space: nowrap; }
         
         .guide-wrap { margin-top: 20px; }
-        .guide-toggle-btn { width: 100%; margin: 0; background-color: transparent; border: 1px dashed oklab(0.4091 0 0); color: oklab(0.7572 0 0); padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-size: 0.85em; font-weight: normal; display: flex; justify-content: space-between; align-items: center; }
-        .guide-toggle-btn:hover { border-color: oklab(0.8868 -0.0169 0.1814); color: oklab(0.8868 -0.0169 0.1814); background-color: oklab(0.8868 -0.0169 0.1814 / 0.05); }
+        .guide-toggle-btn { width: 100%; margin: 0; background-color: transparent; border: 1px dashed oklch(0.4091 0 0); color: oklch(0.7572 0 0); padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; font-size: 0.85em; font-weight: normal; display: flex; justify-content: space-between; align-items: center; }
+        .guide-toggle-btn:hover { border-color: oklch(0.8868 0.1822 95.3226); color: oklch(0.8868 0.1822 95.3226); background-color: oklch(0.8868 0.1822 95.3226 / 0.05); }
         .guide-toggle-btn .chevron { font-size: 0.85em; transition: transform 0.3s ease; }
         .guide-toggle-btn.is-open .chevron { transform: rotate(180deg); }
         
-        .guide-content { margin-top: 8px; background-color: oklab(0.2178 0 0); border-radius: 12px; padding: 12px; border: 1px solid oklab(1 0 0 / 0.05); animation: fadeSlideDown 0.2s ease-out forwards; transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .guide-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid oklab(0.3485 0 0); border-radius: 6px; overflow: hidden; font-size: 0.85em; text-align: center; transition: border-color 0.3s ease; }
-        .guide-table th, .guide-table td { padding: 8px 4px; border-bottom: 1px solid oklab(0.3485 0 0); word-break: keep-all; background-color: oklab(0.235 0 0); transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .guide-table th { color: oklab(0.7572 0 0); font-weight: bold; background-color: oklab(0.2645 0 0); }
-        .guide-table thead tr:first-child th { border-bottom: 1px solid oklab(0.4091 0 0); }
+        .guide-content { margin-top: 8px; background-color: oklch(0.2178 0 0); border-radius: 12px; padding: 12px; border: 1px solid oklch(1 0 0 / 0.05); animation: fadeSlideDown 0.2s ease-out forwards; transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .guide-table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid oklch(0.3485 0 0); border-radius: 6px; overflow: hidden; font-size: 0.85em; text-align: center; transition: border-color 0.3s ease; }
+        .guide-table th, .guide-table td { padding: 8px 4px; border-bottom: 1px solid oklch(0.3485 0 0); word-break: keep-all; background-color: oklch(0.235 0 0); transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .guide-table th { color: oklch(0.7572 0 0); font-weight: bold; background-color: oklch(0.2645 0 0); }
+        .guide-table thead tr:first-child th { border-bottom: 1px solid oklch(0.4091 0 0); }
         .guide-table tbody tr:last-child td { border-bottom: none; }
         
         .guide-table td.clickable-td { cursor: pointer; transition: background-color 0.1s, color 0.1s; }
-        .guide-table td.hovered-group { background-color: oklab(0.3485 0 0) !important; color: oklab(0.8868 -0.0169 0.1814); font-weight: bold; }
+        .guide-table td.hovered-group { background-color: oklch(0.3485 0 0) !important; color: oklch(0.8868 0.1822 95.3226); font-weight: bold; }
         
-        .guide-desc { font-size: 0.8em; color: oklab(0.6268 0 0); padding: 8px 0 0 0; text-align: right; margin: 0; }
-        .th-normal { color: oklab(0.57 -0.0547 -0.1298) !important; }
-        .th-advanced { color: oklab(0.6577 0.1936 -0.1862) !important; }
+        .guide-desc { font-size: 0.8em; color: oklch(0.6268 0 0); padding: 8px 0 0 0; text-align: right; margin: 0; }
+        .th-normal { color: oklch(0.57 0.1409 247.1486) !important; }
+        .th-advanced { color: oklch(0.6577 0.2686 316.1162) !important; }
         
         /* 라이트 모드 테마 */
-        body.light-mode .resource-A, body.light-mode .resource-P { color: oklab(0.54 0 0) !important; }
-        body.light-mode .resource-B { color: oklab(0.7203 -0.1229 0.1378) !important; }
-        body.light-mode .resource-S, body.light-mode .resource-C { color: oklab(0.57 -0.0547 -0.1298) !important; }
-        body.light-mode .final-product { color: oklab(0.6577 0.1936 -0.1862) !important; }
-        body.light-mode .normal-product { color: oklab(0.57 -0.0547 -0.1298) !important; }
+        body.light-mode .resource-A, body.light-mode .resource-P { color: oklch(0.54 0 0) !important; }
+        body.light-mode .resource-B { color: oklch(0.7203 0.1846 131.7289) !important; }
+        body.light-mode .resource-S, body.light-mode .resource-C { color: oklch(0.57 0.1409 247.1486) !important; }
+        body.light-mode .final-product { color: oklch(0.6577 0.2686 316.1162) !important; }
+        body.light-mode .normal-product { color: oklch(0.57 0.1409 247.1486) !important; }
         
-        body.light-mode .resource-A .resource-icon-wrap, body.light-mode .resource-P .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.3132 0 0), oklab(0.4604 0 0)) !important; }
-        body.light-mode .resource-B .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.2747 -0.0373 0.0449), oklab(0.372 -0.0563 0.0658)) !important; }
-        body.light-mode .resource-S .resource-icon-wrap, body.light-mode .resource-C .resource-icon-wrap { background: linear-gradient(135deg, oklab(0.2642 -0.0184 -0.04), oklab(0.3474 -0.0315 -0.0661)) !important; }
-        body.light-mode .final-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.final-product { background: linear-gradient(135deg, oklab(0.2565 0.0625 -0.0677), oklab(0.3556 0.0967 -0.1117)) !important; }
-        body.light-mode .normal-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.normal-product { background: linear-gradient(135deg, oklab(0.2642 -0.0184 -0.04), oklab(0.3474 -0.0315 -0.0661)) !important; }
+        body.light-mode .resource-A .resource-icon-wrap, body.light-mode .resource-P .resource-icon-wrap { background: linear-gradient(135deg, oklch(0.3132 0 0), oklch(0.4604 0 0)) !important; }
+        body.light-mode .resource-B .resource-icon-wrap { background: linear-gradient(135deg, oklch(0.2747 0.0584 129.7176), oklch(0.372 0.0866 130.5511)) !important; }
+        body.light-mode .resource-S .resource-icon-wrap, body.light-mode .resource-C .resource-icon-wrap { background: linear-gradient(135deg, oklch(0.2642 0.044 245.2976), oklch(0.3474 0.0732 244.5198)) !important; }
+        body.light-mode .final-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.final-product { background: linear-gradient(135deg, oklch(0.2565 0.0921 312.7129), oklch(0.3556 0.1477 310.8831)) !important; }
+        body.light-mode .normal-product .resource-icon-wrap, body.light-mode .resource-icon-wrap.normal-product { background: linear-gradient(135deg, oklch(0.2642 0.044 245.2976), oklch(0.3474 0.0732 244.5198)) !important; }
         
-        body.light-mode { background-color: oklab(0.969 -0.0016 -0.006); color: oklab(0.252 0 0); color-scheme: light; }
-        body.light-mode .left-panel, body.light-mode .right-panel, body.light-mode .result, body.light-mode .market-box, body.light-mode .scenario-section, body.light-mode .control-panel-box, body.light-mode .ranking-board-wrap, body.light-mode .dropdown-content, body.light-mode .guide-content { background-color: oklab(1 0 0) !important; border: 1px solid oklab(0.9266 -0.0019 -0.009); box-shadow: 0 4px 16px oklab(0.2512 -0.0183 -0.0972 / 0.04); border-radius: 12px; }
+        body.light-mode { background-color: oklch(0.969 0.0062 255.0686); color: oklch(0.252 0 0); color-scheme: light; }
+        body.light-mode .left-panel, body.light-mode .right-panel, body.light-mode .result, body.light-mode .market-box, body.light-mode .scenario-section, body.light-mode .control-panel-box, body.light-mode .ranking-board-wrap, body.light-mode .dropdown-content, body.light-mode .guide-content { background-color: oklch(1 0 0) !important; border: 1px solid oklch(0.9266 0.0092 258.0793); box-shadow: 0 4px 16px oklch(0.2512 0.0989 259.3376 / 0.04); border-radius: 12px; }
         
-        body.light-mode h1, body.light-mode h2, body.light-mode .result-title { color: oklab(0.1776 0 0); border-bottom-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode h2, body.light-mode .section-header { border-left-color: oklab(0.6059 -0.0465 -0.1931); } 
+        body.light-mode h1, body.light-mode h2, body.light-mode .result-title { color: oklch(0.1776 0 0); border-bottom-color: oklch(0.9266 0.0092 258.0793); }
+        body.light-mode h2, body.light-mode .section-header { border-left-color: oklch(0.6059 0.1986 256.4605); } 
         
-        body.light-mode .arrow, body.light-mode .count, body.light-mode .desc, body.light-mode .setting-title, body.light-mode .scenario-title, body.light-mode .input-group label { color: oklab(0.4495 0 0); font-weight: 500; }
-        body.light-mode .update-box { color: oklab(0.6268 0 0); }
+        body.light-mode .arrow, body.light-mode .count, body.light-mode .desc, body.light-mode .setting-title, body.light-mode .scenario-title, body.light-mode .input-group label { color: oklch(0.4495 0 0); font-weight: 500; }
+        body.light-mode .update-box { color: oklch(0.6268 0 0); }
         
-        body.light-mode .mode-tabs { border: 1px solid oklab(0.9266 -0.0019 -0.009); background-color: oklab(0.9842 -0.0013 -0.0032); border-radius: 8px; }
-        body.light-mode .mode-tab { background-color: transparent; color: oklab(0.5103 0 0); border-bottom: 2px solid transparent; }
-        body.light-mode .mode-tab:hover { background-color: oklab(0.9653 -0.0026 -0.0064); color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode .mode-tab.active { background-color: oklab(1 0 0); color: oklab(0.6059 -0.0465 -0.1931); border-bottom: 2px solid oklab(0.6059 -0.0465 -0.1931); font-weight: bold; box-shadow: 0 2px 4px oklab(0 0 0 / 0.02); }
+        body.light-mode .mode-tabs { border: 1px solid oklch(0.9266 0.0092 258.0793); background-color: oklch(0.9842 0.0035 247.8906); border-radius: 8px; }
+        body.light-mode .mode-tab { background-color: transparent; color: oklch(0.5103 0 0); border-bottom: 2px solid transparent; }
+        body.light-mode .mode-tab:hover { background-color: oklch(0.9653 0.0069 247.8906); color: oklch(0.6059 0.1986 256.4605); }
+        body.light-mode .mode-tab.active { background-color: oklch(1 0 0); color: oklch(0.6059 0.1986 256.4605); border-bottom: 2px solid oklch(0.6059 0.1986 256.4605); font-weight: bold; box-shadow: 0 2px 4px oklch(0 0 0 / 0.02); }
         
-        body.light-mode .dropdown-item { background-color: oklab(1 0 0); color: oklab(0.4495 0 0); border-bottom: 1px solid oklab(0.9653 -0.0026 -0.0064); }
-        body.light-mode .dropdown-item:hover { background-color: oklab(0.9808 -0.0018 -0.0089); color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode .dropdown-item.selected { background-color: oklab(0.9678 -0.0034 -0.015); color: oklab(0.6059 -0.0465 -0.1931); font-weight: bold; }
+        body.light-mode .dropdown-item { background-color: oklch(1 0 0); color: oklch(0.4495 0 0); border-bottom: 1px solid oklch(0.9653 0.0069 247.8906); }
+        body.light-mode .dropdown-item:hover { background-color: oklch(0.9808 0.0091 258.5663); color: oklch(0.6059 0.1986 256.4605); }
+        body.light-mode .dropdown-item.selected { background-color: oklch(0.9678 0.0154 257.2288); color: oklch(0.6059 0.1986 256.4605); font-weight: bold; }
         
-        body.light-mode .tabs { border-bottom: 1px solid oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .tab { background-color: transparent; color: oklab(0.5693 0 0); }
-        body.light-mode .tab.active { background-color: transparent; color: oklab(0.6059 -0.0465 -0.1931); border-bottom: 2px solid oklab(0.6059 -0.0465 -0.1931); font-weight: bold; border-radius: 6px 6px 0 0; }
-        body.light-mode .tab:hover:not(.active) { color: oklab(0.6059 -0.0465 -0.1931); background-color: oklab(0.9808 -0.0018 -0.0089); border-radius: 6px 6px 0 0; }
+        body.light-mode .tabs { border-bottom: 1px solid oklch(0.9266 0.0092 258.0793); }
+        body.light-mode .tab { background-color: transparent; color: oklch(0.5693 0 0); }
+        body.light-mode .tab.active { background-color: transparent; color: oklch(0.6059 0.1986 256.4605); border-bottom: 2px solid oklch(0.6059 0.1986 256.4605); font-weight: bold; border-radius: 6px 6px 0 0; }
+        body.light-mode .tab:hover:not(.active) { color: oklch(0.6059 0.1986 256.4605); background-color: oklch(0.9808 0.0091 258.5663); border-radius: 6px 6px 0 0; }
         
-        body.light-mode .input-group > input { background-color: oklab(0.9869 -0.0017 -0.0019) !important; color: oklab(0.252 0 0) !important; border: 1px solid oklab(0.88 -0.0032 -0.0124) !important; border-radius: 6px !important; }
+        body.light-mode .input-group > input { background-color: oklch(0.9869 0.0025 228.1798) !important; color: oklch(0.252 0 0) !important; border: 1px solid oklch(0.88 0.0128 255.5297) !important; border-radius: 6px !important; }
         
-        body.light-mode input.price-input-small, body.light-mode input.price-input-right, body.light-mode input.input-in-table, body.light-mode input.tiny-input { background-color: oklab(0.9869 -0.0017 -0.0019) !important; color: oklab(0.1776 0 0) !important; border: 1px solid oklab(0.88 -0.0032 -0.0124) !important; border-radius: 6px !important; }
-        body.light-mode .input-group > input:focus, body.light-mode input.price-input-small:focus, body.light-mode input.price-input-right:focus, body.light-mode input.input-in-table:focus, body.light-mode input.tiny-input:focus { border-color: oklab(0.6059 -0.0465 -0.1931) !important; box-shadow: 0 0 0 3px oklab(0.6059 -0.0465 -0.1931 / 0.15) !important; background-color: oklab(1 0 0) !important; }
+        body.light-mode input.price-input-small, body.light-mode input.price-input-right, body.light-mode input.input-in-table, body.light-mode input.tiny-input { background-color: oklch(0.9869 0.0025 228.1798) !important; color: oklch(0.1776 0 0) !important; border: 1px solid oklch(0.88 0.0128 255.5297) !important; border-radius: 6px !important; }
+        body.light-mode .input-group > input:focus, body.light-mode input.price-input-small:focus, body.light-mode input.price-input-right:focus, body.light-mode input.input-in-table:focus, body.light-mode input.tiny-input:focus { border-color: oklch(0.6059 0.1986 256.4605) !important; box-shadow: 0 0 0 3px oklch(0.6059 0.1986 256.4605 / 0.15) !important; background-color: oklch(1 0 0) !important; }
         
-        body.light-mode .num-point, body.light-mode .mark-target { color: oklab(0.6059 -0.0465 -0.1931) !important; text-shadow: none; border-color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode span[style*="color: oklab(0.8868 -0.0169 0.1814)"] { color: oklab(0.6059 -0.0465 -0.1931) !important; text-shadow: none; }
+        body.light-mode .num-point, body.light-mode .mark-target { color: oklch(0.6059 0.1986 256.4605) !important; text-shadow: none; border-color: oklch(0.6059 0.1986 256.4605); }
+        body.light-mode span[style*="color: oklch(0.8868 0.1822 95.3226)"] { color: oklch(0.6059 0.1986 256.4605) !important; text-shadow: none; }
         
-        body.light-mode .profit-plus { color: oklab(0.6271 -0.146 0.087) !important; font-weight: bold; text-shadow: none; }
-        body.light-mode .text-deficit, body.light-mode .profit-minus, body.light-mode .no-production { color: oklab(0.6598 0.1736 0.077) !important; text-shadow: none; }
-        body.light-mode span[style*="color: oklab(0.7044 0.1721 0.0737)"] { color: oklab(0.6598 0.1736 0.077) !important; text-shadow: none; }
-        body.light-mode .text-surplus { color: oklab(0.6271 -0.146 0.087) !important; text-shadow: none; }
-        body.light-mode span[style*="color: oklab(0.8003 -0.1603 0.0863)"] { color: oklab(0.6271 -0.146 0.087) !important; text-shadow: none; }
+        body.light-mode .profit-plus { color: oklch(0.6271 0.17 149.2097) !important; font-weight: bold; text-shadow: none; }
+        body.light-mode .text-deficit, body.light-mode .profit-minus, body.light-mode .no-production { color: oklch(0.6598 0.1899 23.9196) !important; text-shadow: none; }
+        body.light-mode span[style*="color: oklch(0.7044 0.1872 23.1825)"] { color: oklch(0.6598 0.1899 23.9196) !important; text-shadow: none; }
+        body.light-mode .text-surplus { color: oklch(0.6271 0.17 149.2097) !important; text-shadow: none; }
+        body.light-mode span[style*="color: oklch(0.8003 0.1821 151.7035)"] { color: oklch(0.6271 0.17 149.2097) !important; text-shadow: none; }
         
-        body.light-mode button.btn-calc { background: linear-gradient(135deg, oklab(0.6458 -0.0475 -0.1861), oklab(0.5635 -0.0384 -0.2377)); color: oklab(1 0 0); border: none; box-shadow: 0 4px 12px oklab(0.5635 -0.0384 -0.2377 / 0.25); border-radius: 8px; }
-        body.light-mode button.btn-calc:hover { background: linear-gradient(135deg, oklab(0.6059 -0.0465 -0.1931), oklab(0.5227 -0.0358 -0.2189)); transform: translateY(-1px); box-shadow: 0 6px 15px oklab(0.5635 -0.0384 -0.2377 / 0.3); }
-        body.light-mode .btn-force { background: oklab(0.6059 -0.0465 -0.1931 / 0.1); border-color: oklab(0.6059 -0.0465 -0.1931); color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode .btn-force:hover { background: oklab(0.6059 -0.0465 -0.1931 / 0.2); color: oklab(0.5635 -0.0384 -0.2377); }
-        body.light-mode .btn-force.btn-farm { background: oklab(0.6847 -0.0798 -0.1245 / 0.1); border-color: oklab(0.6847 -0.0798 -0.1245); color: oklab(0.5876 -0.0653 -0.1226); }
-        body.light-mode .btn-force.btn-farm:hover { background: oklab(0.6847 -0.0798 -0.1245); color: oklab(1 0 0); }
+        body.light-mode button.btn-calc { background: linear-gradient(135deg, oklch(0.6458 0.1921 255.6816), oklch(0.5635 0.2408 260.8233)); color: oklch(1 0 0); border: none; box-shadow: 0 4px 12px oklch(0.5635 0.2408 260.8233 / 0.25); border-radius: 8px; }
+        body.light-mode button.btn-calc:hover { background: linear-gradient(135deg, oklch(0.6059 0.1986 256.4605), oklch(0.5227 0.2218 260.7118)); transform: translateY(-1px); box-shadow: 0 6px 15px oklch(0.5635 0.2408 260.8233 / 0.3); }
+        body.light-mode .btn-force { background: oklch(0.6059 0.1986 256.4605 / 0.1); border-color: oklch(0.6059 0.1986 256.4605); color: oklch(0.6059 0.1986 256.4605); }
+        body.light-mode .btn-force:hover { background: oklch(0.6059 0.1986 256.4605 / 0.2); color: oklch(0.5635 0.2408 260.8233); }
+        body.light-mode .btn-force.btn-farm { background: oklch(0.6847 0.1479 237.3416 / 0.1); border-color: oklch(0.6847 0.1479 237.3416); color: oklch(0.5876 0.1389 241.9591); }
+        body.light-mode .btn-force.btn-farm:hover { background: oklch(0.6847 0.1479 237.3416); color: oklch(1 0 0); }
         
-        body.light-mode .mat-price-tag { background-color: oklab(0.9678 -0.0034 -0.015); color: oklab(0.6059 -0.0465 -0.1931); border: 1px solid oklab(0.88 -0.0032 -0.0124); }
-        body.light-mode .toggle-btn { border-color: oklab(0.88 -0.0032 -0.0124); color: oklab(0.5103 0 0); background-color: oklab(1 0 0); }
-        body.light-mode .toggle-btn.active { background: oklab(0.9678 -0.0034 -0.015); color: oklab(0.6059 -0.0465 -0.1931); border-color: oklab(0.6059 -0.0465 -0.1931); font-weight: bold !important; }
-        body.light-mode .toggle-btn:hover:not(.active) { border-color: oklab(0.6059 -0.0465 -0.1931); color: oklab(0.6059 -0.0465 -0.1931); background: oklab(0.9869 -0.0017 -0.0019); }
+        body.light-mode .mat-price-tag { background-color: oklch(0.9678 0.0154 257.2288); color: oklch(0.6059 0.1986 256.4605); border: 1px solid oklch(0.88 0.0128 255.5297); }
+        body.light-mode .toggle-btn { border-color: oklch(0.88 0.0128 255.5297); color: oklch(0.5103 0 0); background-color: oklch(1 0 0); }
+        body.light-mode .toggle-btn.active { background: oklch(0.9678 0.0154 257.2288); color: oklch(0.6059 0.1986 256.4605); border-color: oklch(0.6059 0.1986 256.4605); font-weight: bold !important; }
+        body.light-mode .toggle-btn:hover:not(.active) { border-color: oklch(0.6059 0.1986 256.4605); color: oklch(0.6059 0.1986 256.4605); background: oklch(0.9869 0.0025 228.1798); }
         
-        body.light-mode .ranking-row { border-bottom-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .ranking-row:not(.ranking-header):hover { background-color: oklab(0.9808 -0.0018 -0.0089); }
+        body.light-mode .ranking-row { border-bottom-color: oklch(0.9266 0.0092 258.0793); }
+        body.light-mode .ranking-row:not(.ranking-header):hover { background-color: oklch(0.9808 0.0091 258.5663); }
         body.light-mode .ranking-row.is-profit, body.light-mode .ranking-row.is-loss { background: none; }
-        body.light-mode .ranking-header { border-bottom: 1px solid oklab(0.88 -0.0032 -0.0124); color: oklab(0.3867 0 0); background-color: oklab(0.9842 -0.0013 -0.0032) !important; border-radius: 12px 12px 0 0; }
-        body.light-mode .sortable-header:hover { background-color: oklab(0.9266 -0.0019 -0.009); color: oklab(0.1776 0 0); }
-        body.light-mode .modern-expand-btn { background-color: oklab(0.9842 -0.0013 -0.0032); border-top-color: oklab(0.9266 -0.0019 -0.009); color: oklab(0.5693 0 0); border-radius: 0 0 12px 12px; }
-        body.light-mode .modern-expand-btn:hover { background-color: oklab(0.9678 -0.0034 -0.015); color: oklab(0.6059 -0.0465 -0.1931); }
+        body.light-mode .ranking-header { border-bottom: 1px solid oklch(0.88 0.0128 255.5297); color: oklch(0.3867 0 0); background-color: oklch(0.9842 0.0035 247.8906) !important; border-radius: 12px 12px 0 0; }
+        body.light-mode .sortable-header:hover { background-color: oklch(0.9266 0.0092 258.0793); color: oklch(0.1776 0 0); }
+        body.light-mode .modern-expand-btn { background-color: oklch(0.9842 0.0035 247.8906); border-top-color: oklch(0.9266 0.0092 258.0793); color: oklch(0.5693 0 0); border-radius: 0 0 12px 12px; }
+        body.light-mode .modern-expand-btn:hover { background-color: oklch(0.9678 0.0154 257.2288); color: oklch(0.6059 0.1986 256.4605); }
         
-        body.light-mode .guide-toggle-btn { border-color: oklab(0.88 -0.0032 -0.0124); color: oklab(0.3867 0 0); background-color: oklab(1 0 0); }
-        body.light-mode .guide-toggle-btn:hover { border-color: oklab(0.6059 -0.0465 -0.1931); color: oklab(0.6059 -0.0465 -0.1931); background-color: oklab(0.9678 -0.0034 -0.015); }
-        body.light-mode .guide-table { border: 1px solid oklab(0.88 -0.0032 -0.0124); box-shadow: 0 2px 10px oklab(0 0 0 / 0.02); border-radius: 8px; }
-        body.light-mode .guide-table th, body.light-mode .guide-table td { background-color: oklab(1 0 0); border-color: oklab(0.9266 -0.0019 -0.009); color: oklab(0.252 0 0); }
-        body.light-mode .guide-table th { background-color: oklab(0.9842 -0.0013 -0.0032); border-bottom-color: oklab(0.88 -0.0032 -0.0124); color: oklab(0.3867 0 0); }
-        body.light-mode .guide-table td.hovered-group { background-color: oklab(0.9678 -0.0034 -0.015) !important; color: oklab(0.6059 -0.0465 -0.1931) !important; font-weight: bold; }
+        body.light-mode .guide-toggle-btn { border-color: oklch(0.88 0.0128 255.5297); color: oklch(0.3867 0 0); background-color: oklch(1 0 0); }
+        body.light-mode .guide-toggle-btn:hover { border-color: oklch(0.6059 0.1986 256.4605); color: oklch(0.6059 0.1986 256.4605); background-color: oklch(0.9678 0.0154 257.2288); }
+        body.light-mode .guide-table { border: 1px solid oklch(0.88 0.0128 255.5297); box-shadow: 0 2px 10px oklch(0 0 0 / 0.02); border-radius: 8px; }
+        body.light-mode .guide-table th, body.light-mode .guide-table td { background-color: oklch(1 0 0); border-color: oklch(0.9266 0.0092 258.0793); color: oklch(0.252 0 0); }
+        body.light-mode .guide-table th { background-color: oklch(0.9842 0.0035 247.8906); border-bottom-color: oklch(0.88 0.0128 255.5297); color: oklch(0.3867 0 0); }
+        body.light-mode .guide-table td.hovered-group { background-color: oklch(0.9678 0.0154 257.2288) !important; color: oklch(0.6059 0.1986 256.4605) !important; font-weight: bold; }
         
-        body.light-mode .result-divider, body.light-mode .scenario-header, body.light-mode .total-profit-row, body.light-mode .stronghold-setting-box, body.light-mode .market-header, body.light-mode .final-row { border-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .scenario-section.self-craft { border-left: 3px solid oklab(0.6059 -0.0465 -0.1931); background-color: oklab(0.9943 0.0004 -0.0013); }
-        body.light-mode .scenario-section.market-buy { border-left: 3px solid oklab(0.7107 -0.008 -0.0342); background-color: oklab(0.9943 0.0004 -0.0013); }
-        body.light-mode .scenario-section.deficit-craft { border-left: 3px solid oklab(0.6959 -0.1422 0.0449); background-color: oklab(0.9943 0.0004 -0.0013); }
+        body.light-mode .result-divider, body.light-mode .scenario-header, body.light-mode .total-profit-row, body.light-mode .stronghold-setting-box, body.light-mode .market-header, body.light-mode .final-row { border-color: oklch(0.9266 0.0092 258.0793); }
+        body.light-mode .scenario-section.self-craft { border-left: 3px solid oklch(0.6059 0.1986 256.4605); background-color: oklch(0.9943 0.0014 287.1027); }
+        body.light-mode .scenario-section.market-buy { border-left: 3px solid oklch(0.7107 0.0351 256.8342); background-color: oklch(0.9943 0.0014 287.1027); }
+        body.light-mode .scenario-section.deficit-craft { border-left: 3px solid oklch(0.6959 0.1491 162.4764); background-color: oklch(0.9943 0.0014 287.1027); }
         
-        body.light-mode .sync-pill { background-color: oklab(1 0 0); border-color: oklab(0.88 -0.0032 -0.0124); color: oklab(0.4495 0 0); box-shadow: 0 1px 3px oklab(0 0 0 / 0.03); }
-        body.light-mode .sync-info { border-right-color: oklab(0.88 -0.0032 -0.0124); }
-        body.light-mode .btn-sync-icon { color: oklab(0.6268 0 0); }
-        body.light-mode .btn-sync-icon:hover:not(:disabled) { color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode .live-dot.is-syncing { background-color: oklab(0.6959 -0.1422 0.0449); box-shadow: 0 0 5px oklab(0.6959 -0.1422 0.0449 / 0.6); }
+        body.light-mode .sync-pill { background-color: oklch(1 0 0); border-color: oklch(0.88 0.0128 255.5297); color: oklch(0.4495 0 0); box-shadow: 0 1px 3px oklch(0 0 0 / 0.03); }
+        body.light-mode .sync-info { border-right-color: oklch(0.88 0.0128 255.5297); }
+        body.light-mode .btn-sync-icon { color: oklch(0.6268 0 0); }
+        body.light-mode .btn-sync-icon:hover:not(:disabled) { color: oklch(0.6059 0.1986 256.4605); }
+        body.light-mode .live-dot.is-syncing { background-color: oklch(0.6959 0.1491 162.4764); box-shadow: 0 0 5px oklch(0.6959 0.1491 162.4764 / 0.6); }
         
-        body.light-mode .profit-neon-gold { animation: light-glow-green 2.5s infinite ease-in-out; color: oklab(0.6271 -0.146 0.087); font-weight: bold; }
-        @keyframes light-glow-green { 0% { text-shadow: 0 0 2px oklab(0.6271 -0.146 0.087 / 0.1); color: oklab(0.6271 -0.146 0.087); } 50% { text-shadow: 0 0 6px oklab(0.6271 -0.146 0.087 / 0.4); color: oklab(0.5273 -0.1188 0.0684); } 100% { text-shadow: 0 0 2px oklab(0.6271 -0.146 0.087 / 0.1); color: oklab(0.6271 -0.146 0.087); } }
+        body.light-mode .profit-neon-gold { animation: light-glow-green 2.5s infinite ease-in-out; color: oklch(0.6271 0.17 149.2097); font-weight: bold; }
+        @keyframes light-glow-green { 0% { text-shadow: 0 0 2px oklch(0.6271 0.17 149.2097 / 0.1); color: oklch(0.6271 0.17 149.2097); } 50% { text-shadow: 0 0 6px oklch(0.6271 0.17 149.2097 / 0.4); color: oklch(0.5273 0.1371 150.0685); } 100% { text-shadow: 0 0 2px oklch(0.6271 0.17 149.2097 / 0.1); color: oklch(0.6271 0.17 149.2097); } }
         
-        body.light-mode .profit-neon-red { animation: light-glow-red 2.5s infinite ease-in-out; color: oklab(0.5771 0.1911 0.0988); font-weight: bold; }
-        @keyframes light-glow-red { 0% { text-shadow: 0 0 2px oklab(0.5771 0.1911 0.0988 / 0.1); color: oklab(0.5771 0.1911 0.0988); } 50% { text-shadow: 0 0 6px oklab(0.5771 0.1911 0.0988 / 0.4); color: oklab(0.5054 0.1689 0.088); } 100% { text-shadow: 0 0 2px oklab(0.5771 0.1911 0.0988 / 0.1); color: oklab(0.5771 0.1911 0.0988); } }
+        body.light-mode .profit-neon-red { animation: light-glow-red 2.5s infinite ease-in-out; color: oklch(0.5771 0.2151 27.3393); font-weight: bold; }
+        @keyframes light-glow-red { 0% { text-shadow: 0 0 2px oklch(0.5771 0.2151 27.3393 / 0.1); color: oklch(0.5771 0.2151 27.3393); } 50% { text-shadow: 0 0 6px oklch(0.5771 0.2151 27.3393 / 0.4); color: oklch(0.5054 0.1905 27.5203); } 100% { text-shadow: 0 0 2px oklch(0.5771 0.2151 27.3393 / 0.1); color: oklch(0.5771 0.2151 27.3393); } }
         
-        body.light-mode .scenario-row span[style*="oklab(0.9067 0 0)"], body.light-mode .scenario-row span[style*="oklab(0.9067 0 0)"], body.light-mode .scenario-row span[style*="oklab(0.9067 0 0)"] { color: oklab(0.4495 0 0) !important; font-weight: 800 !important; }
-        body.light-mode .total-profit-row > span:first-child { color: oklab(0.735 0.0146 0.1455) !important; font-weight: 900 !important; }
-        body.light-mode .scenario-row span[style*="color: oklab(0.6268 0 0)"] { color: oklab(0.5693 0 0) !important; }
-        body.light-mode span[style*="color:oklab(0.7921 0 0)"] { color: oklab(0.6268 0 0) !important; }
+        body.light-mode .scenario-row span[style*="oklch(0.9067 0 0)"], body.light-mode .scenario-row span[style*="oklch(0.9067 0 0)"], body.light-mode .scenario-row span[style*="oklch(0.9067 0 0)"] { color: oklch(0.4495 0 0) !important; font-weight: 800 !important; }
+        body.light-mode .total-profit-row > span:first-child { color: oklch(0.735 0.1462 84.2699) !important; font-weight: 900 !important; }
+        body.light-mode .scenario-row span[style*="color: oklch(0.6268 0 0)"] { color: oklch(0.5693 0 0) !important; }
+        body.light-mode span[style*="color:oklch(0.7921 0 0)"] { color: oklch(0.6268 0 0) !important; }
         
         body.light-mode .deficit-info,
-        body.light-mode .guide-desc { color: oklab(0.4495 0 0); }
-        body.light-mode .guide-desc span:last-child {color: oklab(0.5383 -0.0432 -0.1851) !important;text-shadow: none;}
-        body.light-mode span[style*="color: oklab(0.7572 0 0)"] { color: oklab(0.6268 0 0) !important; } 
+        body.light-mode .guide-desc { color: oklch(0.4495 0 0); }
+        body.light-mode .guide-desc span:last-child {color: oklch(0.5383 0.1901 256.863) !important;text-shadow: none;}
+        body.light-mode span[style*="color: oklch(0.7572 0 0)"] { color: oklch(0.6268 0 0) !important; } 
         
-        body.light-mode .theme-switch-btn { background-color: oklab(1 0 0); color: oklab(0.6059 -0.0465 -0.1931); border: 2px solid oklab(0.9266 -0.0019 -0.009); box-shadow: 0 4px 16px oklab(0.6059 -0.0465 -0.1931 / 0.15); }
-        body.light-mode .theme-switch-btn:hover { background-color: oklab(0.9678 -0.0034 -0.015); border-color: oklab(0.6059 -0.0465 -0.1931); transform: scale(1.1); }
-        
-        .theme-switch-btn { position: fixed; bottom: 30px; right: 30px; width: 52px; height: 52px; border-radius: 50%; background-color: oklab(0.3485 0 0); color: oklab(0.8868 -0.0169 0.1814); border: 2px solid oklab(0.4676 0 0); cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px oklab(0 0 0 / 0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10000; }
-        .theme-switch-btn:hover { transform: scale(1.1) translateY(-2px); background-color: oklab(0.4091 0 0); }
-        .theme-switch-btn svg { width: 26px; height: 26px; }
+        .site-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; zoom: calc(1/1.1); z-index: 10001; background: oklch(0.1822 0 0 / 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid oklch(1 0 0 / 0.07); transition: background-color 0.3s ease, border-color 0.3s ease; display: flex; align-items: center; }
+        .site-header-inner { max-width: calc(1100px * 1.1); width: 95%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0; }
+        .site-logo { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.75em; letter-spacing: 0.02em; text-decoration: none; display: flex; align-items: center; gap: 0; cursor: pointer; transition: opacity 0.2s ease; }
+        .site-logo:hover { opacity: 0.8; }
+        .site-logo-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .logo-loa { color: oklch(1 0 0); transition: color 0.3s ease; }
+        .logo-doss { color: oklch(0.62 0.062 278); transition: color 0.3s ease; }
+        .header-theme-btn { background: transparent; border: 1px solid oklch(0.4676 0 0); border-radius: 8px; color: oklch(0.738 0 0); cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: border-color 0.22s ease, color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease; padding: 0; margin: 0; flex-shrink: 0; font-size: 0; line-height: 0; transform: scale(1); }
+        .header-theme-btn:hover { border-color: oklch(0.8868 0.1822 95.3226); color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.1); box-shadow: 0 0 0 3px oklch(0.8868 0.1822 95.3226 / 0.12); transform: scale(1.1); }
+        .header-theme-btn svg { width: 18px; height: 18px; display: block; flex-shrink: 0; overflow: visible; }
+        body.light-mode .site-header { background: oklch(1 0 0 / 0.92); border-bottom-color: oklch(0.88 0.0128 255.5297 / 0.5); }
+        body.light-mode .logo-loa { color: oklch(0.15 0 0); }
+        body.light-mode .logo-doss { color: oklch(0.42 0.062 278); }
+        body.light-mode .header-theme-btn { border-color: oklch(0.88 0.0128 255.5297); color: oklch(0.5103 0 0); }
+        body.light-mode .header-theme-btn:hover { border-color: oklch(0.6059 0.1986 256.4605); color: oklch(0.6059 0.1986 256.4605); background: oklch(0.9678 0.0154 257.2288); box-shadow: 0 0 0 3px oklch(0.6059 0.1986 256.4605 / 0.12); }
         .tab span { word-break: break-all !important; white-space: normal !important; }
         
-        .tooltip-container { position: relative; display: inline-flex; align-items: center; cursor: help; border-bottom: 1px dotted oklab(0.6268 0 0); }
-        .tooltip-box { visibility: hidden; position: absolute; bottom: 120%; left: 0; background-color: oklab(0.3211 0 0); color: oklab(1 0 0); padding: 10px 14px 6px; border-radius: 6px; font-size: 0.85em; z-index: 100; opacity: 0; transition: opacity 0.2s; box-shadow: 0 4px 6px oklab(0 0 0 / 0.3); border: 1px solid oklab(0.4495 0 0); pointer-events: none; white-space: nowrap; width: max-content; max-width: none; text-align: left; line-height: 1.3; }
+        .tooltip-container { position: relative; display: inline-flex; align-items: center; cursor: help; border-bottom: 1px dotted oklch(0.6268 0 0); }
+        .tooltip-box { visibility: hidden; position: absolute; bottom: 120%; left: 0; background-color: oklch(0.3211 0 0); color: oklch(1 0 0); padding: 10px 14px 6px; border-radius: 6px; font-size: 0.85em; z-index: 100; opacity: 0; transition: opacity 0.2s; box-shadow: 0 4px 6px oklch(0 0 0 / 0.3); border: 1px solid oklch(0.4495 0 0); pointer-events: none; white-space: nowrap; width: max-content; max-width: none; text-align: left; line-height: 1.3; }
         .tooltip-container:hover .tooltip-box { visibility: visible; opacity: 1; }
-        body.light-mode .tooltip-box { background-color: oklab(1 0 0); color: oklab(0.252 0 0); border-color: oklab(0.88 -0.0032 -0.0124); box-shadow: 0 4px 6px oklab(0 0 0 / 0.1); }
+        body.light-mode .tooltip-box { background-color: oklch(1 0 0); color: oklch(0.252 0 0); border-color: oklch(0.88 0.0128 255.5297); box-shadow: 0 4px 6px oklch(0 0 0 / 0.1); }
         
         .footer-spacer { flex: 1; min-height: 90px; }
-        .app-footer { padding: 20px 10px; text-align: center; border-top: 1px solid oklab(1 0 0 / 0.05); transition: border-color 0.3s ease; }
-        .app-footer .footer-disclaimer { color: oklab(0.6268 0 0); font-size: 11px; line-height: 1.4; word-break: keep-all; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-align: left; }
-        .app-footer .privacy-link { color: oklab(0.7572 0 0); font-weight: bold; text-decoration: none; margin: 0; transition: color 0.2s ease; white-space: nowrap; flex-shrink: 0; }
-        .app-footer .privacy-link:hover { color: oklab(1 0 0); text-decoration: underline; }
+        .app-footer { padding: 20px 10px; text-align: center; border-top: 1px solid oklch(1 0 0 / 0.05); transition: border-color 0.3s ease; }
+        .app-footer .footer-disclaimer { color: oklch(0.6268 0 0); font-size: 11px; line-height: 1.4; word-break: keep-all; display: flex; justify-content: space-between; align-items: center; gap: 20px; text-align: left; }
+        .app-footer .privacy-link { color: oklch(0.7572 0 0); font-weight: bold; text-decoration: none; margin: 0; transition: color 0.2s ease; white-space: nowrap; flex-shrink: 0; }
+        .app-footer .privacy-link:hover { color: oklch(1 0 0); text-decoration: underline; }
         
-        body.light-mode .app-footer { border-top-color: oklab(0.9266 -0.0019 -0.009); background-color: oklab(0.969 -0.0016 -0.006); }
-        body.light-mode .app-footer .footer-disclaimer { color: oklab(0.6268 0 0); }
-        body.light-mode .app-footer .privacy-link { color: oklab(0.4495 0 0); }
-        body.light-mode .app-footer .privacy-link:hover { color: oklab(0.6059 -0.0465 -0.1931); }
+        body.light-mode .app-footer { border-top-color: oklch(0.9266 0.0092 258.0793); background-color: oklch(0.969 0.0062 255.0686); }
+        body.light-mode .app-footer .footer-disclaimer { color: oklch(0.6268 0 0); }
+        body.light-mode .app-footer .privacy-link { color: oklch(0.4495 0 0); }
+        body.light-mode .app-footer .privacy-link:hover { color: oklch(0.6059 0.1986 256.4605); }
         
         /* ================= 시세 차트 툴팁 UI CSS ================= */
         .market-chart-tooltip {
             position: absolute;
-            background: oklab(0.1822 0 0);
-            border: 1px solid oklab(0.3485 0 0);
+            background: oklch(0.1822 0 0);
+            border: 1px solid oklch(0.3485 0 0);
             border-radius: 8px;
             padding: 16px;
             width: 680px;
             z-index: 99999;
-            box-shadow: 0 8px 24px oklab(0 0 0 / 0.8);
+            box-shadow: 0 8px 24px oklch(0 0 0 / 0.8);
             /* pointer-events: none; 삭제됨 - 마우스 호버 유지를 위해 */
-            color: oklab(0.9067 0 0);
+            color: oklch(0.9067 0 0);
             font-family: "Noto Sans KR", sans-serif;
             transition: opacity 0.15s ease-in-out;
         }
-        .mct-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; border-bottom: 1px solid oklab(0.3211 0 0); padding-bottom: 8px; }
+        .mct-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; border-bottom: 1px solid oklch(0.3211 0 0); padding-bottom: 8px; }
         .mct-title { font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
-        .mct-date { font-size: 11px; color: oklab(0.6268 0 0); }
-        .mct-summary { display: flex; border: 1px solid oklab(0.3211 0 0); border-radius: 6px; margin-bottom: 12px; background: oklab(0.2178 0 0); }
-        .mct-summary-item { flex: 1; padding: 10px; text-align: center; border-right: 1px solid oklab(0.3211 0 0); }
+        .mct-date { font-size: 11px; color: oklch(0.6268 0 0); }
+        .mct-summary { display: flex; border: 1px solid oklch(0.3211 0 0); border-radius: 6px; margin-bottom: 12px; background: oklch(0.2178 0 0); }
+        .mct-summary-item { flex: 1; padding: 10px; text-align: center; border-right: 1px solid oklch(0.3211 0 0); }
         .mct-summary-item:last-child { border-right: none; }
-        .mct-label { display: block; font-size: 11px; color: oklab(0.738 0 0); margin-bottom: 4px; word-break: keep-all;}
-        .mct-value { display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: oklab(0.8868 -0.0169 0.1814); gap: 4px; }
+        .mct-label { display: block; font-size: 11px; color: oklch(0.738 0 0); margin-bottom: 4px; word-break: keep-all;}
+        .mct-value { display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: oklch(0.8868 0.1822 95.3226); gap: 4px; }
         .gold-icon { width: 14px; height: 14px; object-fit: contain; vertical-align: middle; position: relative; top: -1px; margin-left: 2px; }
         
         .mct-body { display: flex; gap: 12px; height: 240px; }
-        .mct-chart-wrap { flex: 1; background: oklab(0.2178 0 0); border: 1px solid oklab(0.3211 0 0); border-radius: 6px; padding: 8px; min-width: 0; }
-        .mct-table-wrap { width: 250px; background: oklab(0.2178 0 0); border: 1px solid oklab(0.3211 0 0); border-radius: 6px; overflow-y: auto; }
+        .mct-chart-wrap { flex: 1; background: oklch(0.2178 0 0); border: 1px solid oklch(0.3211 0 0); border-radius: 6px; padding: 8px; min-width: 0; }
+        .mct-table-wrap { width: 250px; background: oklch(0.2178 0 0); border: 1px solid oklch(0.3211 0 0); border-radius: 6px; overflow-y: auto; }
         .mct-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; table-layout: auto; }
-        .mct-table th { position: sticky; top: 0; background: oklab(0.2645 0 0); color: oklab(0.738 0 0); padding: 8px 6px; border-bottom: 2px solid oklab(0.3211 0 0); z-index: 2; white-space: nowrap; font-size: 12px; }
-        .mct-table td { padding: 5px 4px; border-bottom: 1px solid oklab(0.285 0 0); white-space: nowrap; vertical-align: middle; line-height: 1.4; }
-        .mct-table td:nth-child(2) { color: oklab(0.8868 -0.0169 0.1814); }
+        .mct-table th { position: sticky; top: 0; background: oklch(0.2645 0 0); color: oklch(0.738 0 0); padding: 8px 6px; border-bottom: 2px solid oklch(0.3211 0 0); z-index: 2; white-space: nowrap; font-size: 12px; }
+        .mct-table td { padding: 5px 4px; border-bottom: 1px solid oklch(0.285 0 0); white-space: nowrap; vertical-align: middle; line-height: 1.4; }
+        .mct-table td:nth-child(2) { color: oklch(0.8868 0.1822 95.3226); }
         .mct-table td:nth-child(3) { text-align: right; padding-right: 12px; font-variant-numeric: tabular-nums; letter-spacing: -0.2px; }
         
         /* 시세 툴팁 라이트 모드 */
-        body.light-mode .market-chart-tooltip { background: oklab(1 0 0); border-color: oklab(0.9266 -0.0019 -0.009); box-shadow: 0 8px 24px oklab(0.2512 -0.0183 -0.0972 / 0.15); color: oklab(0.252 0 0); }
-        body.light-mode .mct-header { border-bottom-color: oklab(0.9266 -0.0019 -0.009); }
+        body.light-mode .market-chart-tooltip { background: oklch(1 0 0); border-color: oklch(0.9266 0.0092 258.0793); box-shadow: 0 8px 24px oklch(0.2512 0.0989 259.3376 / 0.15); color: oklch(0.252 0 0); }
+        body.light-mode .mct-header { border-bottom-color: oklch(0.9266 0.0092 258.0793); }
         body.light-mode .mct-title { color: inherit; }
-        body.light-mode .mct-summary, body.light-mode .mct-chart-wrap, body.light-mode .mct-table-wrap { background: oklab(0.9842 -0.0013 -0.0032); border-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .mct-summary-item { border-right-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .mct-label { color: oklab(0.5103 0 0); }
-        body.light-mode .mct-value { color: oklab(0.6059 -0.0465 -0.1931); }
-        body.light-mode .mct-table th { background: oklab(0.9653 -0.0026 -0.0064); color: oklab(0.4495 0 0); border-bottom-color: oklab(0.9266 -0.0019 -0.009); }
-        body.light-mode .mct-table td { border-bottom-color: oklab(0.9678 -0.0034 -0.015); }
-        body.light-mode .mct-table td:nth-child(2) { color: oklab(0.6059 -0.0465 -0.1931); }
+        body.light-mode .mct-summary, body.light-mode .mct-chart-wrap, body.light-mode .mct-table-wrap { background: oklch(0.9842 0.0035 247.8906); border-color: oklch(0.9266 0.0092 258.0793); }
+        body.light-mode .mct-summary-item { border-right-color: oklch(0.9266 0.0092 258.0793); }
+        body.light-mode .mct-label { color: oklch(0.5103 0 0); }
+        body.light-mode .mct-value { color: oklch(0.6059 0.1986 256.4605); }
+        body.light-mode .mct-table th { background: oklch(0.9653 0.0069 247.8906); color: oklch(0.4495 0 0); border-bottom-color: oklch(0.9266 0.0092 258.0793); }
+        body.light-mode .mct-table td { border-bottom-color: oklch(0.9678 0.0154 257.2288); }
+        body.light-mode .mct-table td:nth-child(2) { color: oklch(0.6059 0.1986 256.4605); }
     </style>
 </head>
 <body>
@@ -462,23 +471,34 @@
     </noscript>
     
     <div id="app" class="container">
-        <button class="theme-switch-btn" @click="toggleTheme" :title="isLightMode ? '다크 모드로 전환' : '라이트 모드로 전환'">
-            <svg v-if="isLightMode" class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-            <svg v-else class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-        </button>
-        
+        <header class="site-header">
+            <div class="site-header-inner">
+                <a class="site-logo" href="" @click.prevent="() => location.reload()">
+                    <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
+                </a>
+                <button class="header-theme-btn" @click="toggleTheme" :title="isLightMode ? '다크 모드로 전환' : '라이트 모드로 전환'">
+                    <!-- 라이트모드: 달 아이콘 (클릭 시 다크로) -->
+                    <svg v-if="isLightMode" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        <path d="M19.5 2v3M18 3.5h3" stroke-width="1.5"/>
+                        <path d="M22 7v1.8M21.1 7.9h1.8" stroke-width="1.1"/>
+                    </svg>
+                    <!-- 다크모드: 태양 아이콘 (클릭 시 라이트로) -->
+                    <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                        <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none"/>
+                        <line x1="12" y1="1.5" x2="12" y2="4"/>
+                        <line x1="12" y1="20" x2="12" y2="22.5"/>
+                        <line x1="1.5" y1="12" x2="4" y2="12"/>
+                        <line x1="20" y1="12" x2="22.5" y2="12"/>
+                        <line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/>
+                        <line x1="17.8" y1="17.8" x2="19.6" y2="19.6"/>
+                        <line x1="19.6" y1="4.4" x2="17.8" y2="6.2"/>
+                        <line x1="6.2" y1="17.8" x2="4.4" y2="19.6"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
         <div class="main-wrapper">
             <div class="left-panel wrap-cal">
                 <h1>아비도스 제작 계산기 ({{ currentMaterialName }})</h1>
@@ -488,7 +508,7 @@
                         <div class="tab-content-wrap" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
                             <span>재료 교환 계산</span>
                             <span class="sub-text">{{ exchangeType === 'farm' ? ' (영지 농장)' : ' (기본)' }}</span>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklab(0.6268 0 0)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); flex-shrink: 0;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(0.6268 0 0)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); flex-shrink: 0;">
                                 <polyline points="7 13 12 18 17 13"></polyline>
                                 <polyline points="7 6 12 11 17 6"></polyline>
                             </svg>
@@ -530,7 +550,7 @@
                             <div class="right-badges">
                                 <span class="mat-price-tag" v-if="showMarketUi && exchangeType !== 'farm' && (key === 'A' || key === 'B' || key === 'S' || key === 'C')">
                                     단가: <input type="number" v-model.number="globalPrices[resInfo.name]" class="price-input-small" tabindex="-1"> G 
-                                    <span style="font-size:0.9em; margin-left: 2px; position: relative; top: 1px; color:oklab(0.7921 0 0);">/ 100개</span>
+                                    <span style="font-size:0.9em; margin-left: 2px; position: relative; top: 1px; color:oklch(0.7921 0 0);">/ 100개</span>
                                 </span>
                             </div>
                         </label>
@@ -717,24 +737,24 @@
                         <table class="guide-table">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" style="border-right: 1px solid oklab(0.3485 0 0); vertical-align: middle;">목표</th>
-                                    <th colspan="2" class="th-normal" style="border-right: 1px solid oklab(0.3485 0 0);">아비도스 융화 재료</th>
+                                    <th rowspan="2" style="border-right: 1px solid oklch(0.3485 0 0); vertical-align: middle;">목표</th>
+                                    <th colspan="2" class="th-normal" style="border-right: 1px solid oklch(0.3485 0 0);">아비도스 융화 재료</th>
                                     <th colspan="2" class="th-advanced">상급 아비도스 융화 재료</th>
                                 </tr>
                                 <tr>
-                                    <th style="font-size: 0.9em; font-weight: bold; color: oklab(0.57 -0.0547 -0.1298);">{{ selectedResources.S.name }}</th>
-                                    <th style="font-size: 0.9em; font-weight: bold; color: oklab(0.7203 -0.1229 0.1378); border-right: 1px solid oklab(0.3485 0 0);">{{ selectedResources.B.name }}</th>
-                                    <th style="font-size: 0.9em; font-weight: bold; color: oklab(0.57 -0.0547 -0.1298);">{{ selectedResources.S.name }}</th>
-                                    <th style="font-size: 0.9em; font-weight: bold; color: oklab(0.7203 -0.1229 0.1378);">{{ selectedResources.B.name }}</th>
+                                    <th style="font-size: 0.9em; font-weight: bold; color: oklch(0.57 0.1409 247.1486);">{{ selectedResources.S.name }}</th>
+                                    <th style="font-size: 0.9em; font-weight: bold; color: oklch(0.7203 0.1846 131.7289); border-right: 1px solid oklch(0.3485 0 0);">{{ selectedResources.B.name }}</th>
+                                    <th style="font-size: 0.9em; font-weight: bold; color: oklch(0.57 0.1409 247.1486);">{{ selectedResources.S.name }}</th>
+                                    <th style="font-size: 0.9em; font-weight: bold; color: oklch(0.7203 0.1846 131.7289);">{{ selectedResources.B.name }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="row in guideTableData" :key="row.target">
-                                    <td style="border-right: 1px solid oklab(0.3485 0 0); font-weight:bold;">{{ row.target }}회</td>
+                                    <td style="border-right: 1px solid oklch(0.3485 0 0); font-weight:bold;">{{ row.target }}회</td>
                                     <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
                                         {{ row.normS }}개
                                     </td>
-                                    <td class="clickable-td" style="border-right: 1px solid oklab(0.3485 0 0);" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
+                                    <td class="clickable-td" style="border-right: 1px solid oklch(0.3485 0 0);" :class="{'hovered-group': hoverTarget === 'norm-' + row.target}" @mouseenter="hoverTarget = 'norm-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('normal', row)">
                                         {{ row.normB }}개
                                     </td>
                                     <td class="clickable-td" :class="{'hovered-group': hoverTarget === 'adv-' + row.target}" @mouseenter="hoverTarget = 'adv-' + row.target" @mouseleave="hoverTarget = null" @click="applyGuideValues('advanced', row)">
@@ -749,7 +769,7 @@
                         <p class="guide-desc">
                             <span v-if="!guideExactMode">* 경매장 100개 단위 구매 기준입니다.</span>
                             <span v-else>* 제작에 필요한 최소 수량입니다.</span><br>
-                            <span style="color:oklab(0.8868 -0.0169 0.1814);">* 수치를 클릭하면 계산기에 자동 기입되어 계산됩니다.</span>
+                            <span style="color:oklch(0.8868 0.1822 95.3226);">* 수치를 클릭하면 계산기에 자동 기입되어 계산됩니다.</span>
                         </p>
                     </div>
                 </div>
@@ -793,7 +813,7 @@
                                         <span :class="rank.type === 'normal' ? 'normal-product' : 'final-product'" style="font-weight: bold;">
                                             융화 재료
                                         </span>
-                                        <span style="color: oklab(0.6268 0 0); font-size: 0.85em; margin-left: 2px;">{{ rank.nameSub }}</span>
+                                        <span style="color: oklch(0.6268 0 0); font-size: 0.85em; margin-left: 2px;">{{ rank.nameSub }}</span>
                                     </div>
                                 </div>
                                 <div class="rank-price-col">
@@ -832,7 +852,7 @@
                                 <span style="position: relative; top: -1px;">갱신: {{ fetching ? '데이터 동기화 중...' : (lastMarketUpdate ? lastMarketUpdate : '데이터 없음') }}</span>
                             </div>
                             <button class="btn-sync-icon" @click="fetchMarketData(true)" :disabled="fetching || isCooldown" title="시세 새로고침">
-                                <span v-if="isCooldown" style="font-size: 0.85em; color: oklab(0.7572 0 0); font-weight: bold;">
+                                <span v-if="isCooldown" style="font-size: 0.85em; color: oklch(0.7572 0 0); font-weight: bold;">
                                     {{ cooldownTimer }}
                                 </span>
                                 <span v-else>↻</span>
@@ -848,27 +868,27 @@
                                     <label>대성공</label>
                                     <div style="display: flex; align-items: center; gap: 3px;">
                                         <input type="number" class="tiny-input" v-model.number="stronghold.greatSuccess" placeholder="0" min="0" max="99">
-                                        <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">%</span>
+                                        <span style="font-size: 0.8em; color: oklch(0.6268 0 0);">%</span>
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <label>수수료감소</label>
                                     <div style="display: flex; align-items: center; gap: 3px;">
                                         <input type="number" class="tiny-input" v-model.number="stronghold.feeDiscount" placeholder="0" min="0" max="99">
-                                        <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">%</span>
+                                        <span style="font-size: 0.8em; color: oklch(0.6268 0 0);">%</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
                         <div>
-                            <div class="market-box" style="margin-top: 0; background-color: oklab(0.2178 0 0);">
+                            <div class="market-box" style="margin-top: 0; background-color: oklch(0.2178 0 0);">
                                 <div class="market-header">
                                     <span class="resource-label normal-product">
                                         <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
                                         <h3 class="normal-product" style="display:inline; margin-left:5px;">아비도스 융화 재료</h3>
                                     </span>
-                                    <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">(1회 10개 제작)</span>
+                                    <span style="font-size: 0.8em; color: oklch(0.6268 0 0);">(1회 10개 제작)</span>
                                 </div>
                                 <div class="market-row" style="margin-bottom: 0;">
                                     <span>현재 최저가 (1개)</span>
@@ -889,12 +909,12 @@
                                             </span>
                                         </div>
                                         <template v-if="result && result.normal.totalO > 0">
-                                            <div style="margin-top: 8px; border-top: 1px dashed oklab(0.4091 0 0); padding-top: 8px;">
+                                            <div style="margin-top: 8px; border-top: 1px dashed oklch(0.4091 0 0); padding-top: 8px;">
                                                 <div class="scenario-row">
-                                                    <span style="color: oklab(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입</span>
+                                                    <span style="color: oklch(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입</span>
                                                     <span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span>
                                                 </div>
-                                                <div class="scenario-row" style="color: oklab(0.5103 0 0);">
+                                                <div class="scenario-row" style="color: oklch(0.5103 0 0);">
                                                     <span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span>
                                                     <span>- 0 G</span>
                                                 </div>
@@ -903,7 +923,7 @@
                                                     <span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span>
                                                 </div>
                                                 <div class="scenario-row total-profit-row">
-                                                    <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                                    <span style="color: oklch(0.8868 0.1822 95.3226);">최종 예상 수익</span>
                                                     <span :class="batchProfits.normal.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                                         {{ batchProfits.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.zeroCost).toLocaleString() }} G
                                                     </span>
@@ -926,12 +946,12 @@
                                             </span>
                                         </div>
                                         <template v-if="result && result.normal.totalO > 0">
-                                            <div style="margin-top: 8px; border-top: 1px dashed oklab(0.4091 0 0); padding-top: 8px;">
+                                            <div style="margin-top: 8px; border-top: 1px dashed oklch(0.4091 0 0); padding-top: 8px;">
                                                 <div class="scenario-row">
-                                                    <span style="color: oklab(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입</span>
+                                                    <span style="color: oklch(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입</span>
                                                     <span class="profit-plus">+ {{ Math.floor(batchProfits.normal.revenue).toLocaleString() }} G</span>
                                                 </div>
-                                                <div class="scenario-row" style="color: oklab(0.6268 0 0);">
+                                                <div class="scenario-row" style="color: oklch(0.6268 0 0);">
                                                     <span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span>
                                                     <div class="tooltip-box" v-html="batchProfits.normal.formulaHtml"></div>
                                                 </span>
@@ -942,7 +962,7 @@
                                                 <span class="profit-minus">- {{ Math.floor(batchProfits.normal.totalFee).toLocaleString() }} G</span>
                                             </div>
                                             <div class="scenario-row total-profit-row">
-                                                <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                                <span style="color: oklch(0.8868 0.1822 95.3226);">최종 예상 수익</span>
                                                 <span :class="batchProfits.normal.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                                     {{ batchProfits.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.normal.fullCost).toLocaleString() }} G
                                                 </span>
@@ -961,10 +981,10 @@
                                         </button>
                                     </div>
                                     <div class="scenario-row" v-if="result && result.normal.totalO > 0">
-                                        <span style="color: oklab(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입</span>
+                                        <span style="color: oklch(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입</span>
                                         <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.totalRevenue).toLocaleString() }} G</span>
                                     </div>
-                                    <div class="scenario-row" style="color: oklab(0.6268 0 0);">
+                                    <div class="scenario-row" style="color: oklch(0.6268 0 0);">
                                         <span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span>
                                         <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.opportunityCost).toLocaleString() }} G</span>
                                     </div>
@@ -977,11 +997,11 @@
                                         <span class="profit-minus">- {{ Math.floor(deficitCosts.normal.totalFee).toLocaleString() }} G</span>
                                     </div>
                                     <div class="scenario-row" v-if="includeSurplus && deficitCosts.normal.surplusProfit > 0">
-                                        <span style="color: oklab(0.8003 -0.1603 0.0863);">남는 재료 판매 <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">(100개 단위)</span></span>
+                                        <span style="color: oklch(0.8003 0.1821 151.7035);">남는 재료 판매 <span style="font-size: 0.8em; color: oklch(0.6268 0 0);">(100개 단위)</span></span>
                                         <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.surplusProfit).toLocaleString() }} G</span>
                                     </div>
                                     <div v-if="result && result.normal.totalO > 0" class="scenario-row total-profit-row">
-                                        <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                        <span style="color: oklch(0.8868 0.1822 95.3226);">최종 예상 수익</span>
                                         <span :class="deficitCosts.normal.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                             {{ deficitCosts.normal.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.normal.totalProfit).toLocaleString() }} G
                                         </span>
@@ -990,13 +1010,13 @@
                             </template>
                         </div>
                         
-                        <div class="market-box" style="background-color: oklab(0.2178 0 0);">
+                        <div class="market-box" style="background-color: oklch(0.2178 0 0);">
                             <div class="market-header">
                                 <span class="resource-label final-product">
                                     <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
                                     <h3 class="final-product" style="display:inline; margin-left:5px;">상급 아비도스 융화 재료</h3>
                                 </span>
-                                <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">(1회 10개 제작)</span>
+                                <span style="font-size: 0.8em; color: oklch(0.6268 0 0);">(1회 10개 제작)</span>
                             </div>
                             <div class="market-row" style="margin-bottom: 0;">
                                 <span>현재 최저가 (1개)</span>
@@ -1017,12 +1037,12 @@
                                         </span>
                                     </div>
                                     <template v-if="result && result.advanced.totalO > 0">
-                                        <div style="margin-top: 8px; border-top: 1px dashed oklab(0.4091 0 0); padding-top: 8px;">
+                                        <div style="margin-top: 8px; border-top: 1px dashed oklch(0.4091 0 0); padding-top: 8px;">
                                             <div class="scenario-row">
-                                                <span style="color: oklab(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입</span>
+                                                <span style="color: oklch(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입</span>
                                                 <span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span>
                                             </div>
-                                            <div class="scenario-row" style="color: oklab(0.5103 0 0);">
+                                            <div class="scenario-row" style="color: oklch(0.5103 0 0);">
                                                 <span>재료 소모 비용 <span style="font-size: 0.8em;">(자급자족)</span></span>
                                                 <span>- 0 G</span>
                                             </div>
@@ -1031,7 +1051,7 @@
                                                 <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span>
                                             </div>
                                             <div class="scenario-row total-profit-row">
-                                                <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                                <span style="color: oklch(0.8868 0.1822 95.3226);">최종 예상 수익</span>
                                                 <span :class="batchProfits.advanced.zeroCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                                     {{ batchProfits.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.zeroCost).toLocaleString() }} G
                                                 </span>
@@ -1054,12 +1074,12 @@
                                         </span>
                                     </div>
                                     <template v-if="result && result.advanced.totalO > 0">
-                                        <div style="margin-top: 8px; border-top: 1px dashed oklab(0.4091 0 0); padding-top: 8px;">
+                                        <div style="margin-top: 8px; border-top: 1px dashed oklch(0.4091 0 0); padding-top: 8px;">
                                             <div class="scenario-row">
-                                                <span style="color: oklab(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입</span>
+                                                <span style="color: oklch(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입</span>
                                                 <span class="profit-plus">+ {{ Math.floor(batchProfits.advanced.revenue).toLocaleString() }} G</span>
                                             </div>
-                                            <div class="scenario-row" style="color: oklab(0.6268 0 0);">
+                                            <div class="scenario-row" style="color: oklch(0.6268 0 0);">
                                                 <span class="tooltip-container">소모된 재료 가치 <span style="font-size: 0.8em;"></span>
                                                 <div class="tooltip-box" v-html="batchProfits.advanced.formulaHtml"></div>
                                             </span>
@@ -1070,7 +1090,7 @@
                                             <span class="profit-minus">- {{ Math.floor(batchProfits.advanced.totalFee).toLocaleString() }} G</span>
                                         </div>
                                         <div class="scenario-row total-profit-row">
-                                            <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                            <span style="color: oklch(0.8868 0.1822 95.3226);">최종 예상 수익</span>
                                             <span :class="batchProfits.advanced.fullCost > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                                 {{ batchProfits.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(batchProfits.advanced.fullCost).toLocaleString() }} G
                                             </span>
@@ -1089,10 +1109,10 @@
                                     </button>
                                 </div>
                                 <div class="scenario-row" v-if="result && result.advanced.totalO > 0">
-                                    <span style="color: oklab(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입</span>
+                                    <span style="color: oklch(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입</span>
                                     <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.totalRevenue).toLocaleString() }} G</span>
                                 </div>
-                                <div class="scenario-row" style="color: oklab(0.6268 0 0);">
+                                <div class="scenario-row" style="color: oklch(0.6268 0 0);">
                                     <span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span>
                                     <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.opportunityCost).toLocaleString() }} G</span>
                                 </div>
@@ -1105,11 +1125,11 @@
                                     <span class="profit-minus">- {{ Math.floor(deficitCosts.advanced.totalFee).toLocaleString() }} G</span>
                                 </div>
                                 <div class="scenario-row" v-if="includeSurplus && deficitCosts.advanced.surplusProfit > 0">
-                                    <span style="color: oklab(0.8003 -0.1603 0.0863);">남는 재료 판매 <span style="font-size: 0.8em; color: oklab(0.6268 0 0);">(100개 단위)</span></span>
+                                    <span style="color: oklch(0.8003 0.1821 151.7035);">남는 재료 판매 <span style="font-size: 0.8em; color: oklch(0.6268 0 0);">(100개 단위)</span></span>
                                     <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.surplusProfit).toLocaleString() }} G</span>
                                 </div>
                                 <div v-if="result && result.advanced.totalO > 0" class="scenario-row total-profit-row">
-                                    <span style="color: oklab(0.8868 -0.0169 0.1814);">최종 예상 수익</span>
+                                    <span style="color: oklch(0.8868 0.1822 95.3226);">최종 예상 수익</span>
                                     <span :class="deficitCosts.advanced.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                         {{ deficitCosts.advanced.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.advanced.totalProfit).toLocaleString() }} G
                                     </span>
@@ -1144,7 +1164,7 @@
                 <img :src="hoveredItemDetails.imgUrl" class="resource-icon">
             </div>
             {{ hoveredMarketItem }} 
-            <span style="font-size:12px; font-weight:normal; color:oklab(0.738 0 0); margin-left:4px;">최근 거래 정보</span>
+            <span style="font-size:12px; font-weight:normal; color:oklch(0.738 0 0); margin-left:4px;">최근 거래 정보</span>
         </span>
         <span class="mct-date">{{ lastMarketUpdate }} 기준</span>
     </div>
@@ -1187,7 +1207,7 @@
             </div>
         </div>
     </template>
-    <div v-else style="padding: 30px; text-align: center; color: oklab(0.6268 0 0); font-size: 13px;">
+    <div v-else style="padding: 30px; text-align: center; color: oklch(0.6268 0 0); font-size: 13px;">
         시세 데이터를 불러오는 중이거나 기록이 없습니다.
     </div>
 </div>
@@ -1666,7 +1686,7 @@
                         if (cS > 0 && baseRes.S) formulaStrArr.push(`<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${baseRes.S.name} ${cS.toLocaleString()}개 × (${pS}G / 100개)</span><span>= ${Math.floor(cS * pS / 100).toLocaleString()}G</span></div>`);
                         
                         if (formulaStrArr.length > 0) {
-                            formulaHtml = formulaStrArr.join("") + `<div style="border-top: 1px dashed oklab(0.6268 0 0); margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;"><span>총합:</span><span style="color: oklab(0.8868 -0.0169 0.1814);">${Math.floor(costMat).toLocaleString()} G</span></div>`;
+                            formulaHtml = formulaStrArr.join("") + `<div style="border-top: 1px dashed oklch(0.6268 0 0); margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;"><span>총합:</span><span style="color: oklch(0.8868 0.1822 95.3226);">${Math.floor(costMat).toLocaleString()} G</span></div>`;
                         }
                     }
                     
@@ -1896,10 +1916,10 @@
                 }
                 const tooltipEstimatedHeight = 420;
                 const bottomMargin = 40; // 창을 줄였을 때 바닥에서 띄울 여백 (필요에 따라 숫자를 조절하세요!)
-                
+
                 // 툴팁 하단이 줄어든 창의 바닥(bottomMargin 포함)을 벗어나는 경우 위치 보정
                 if (viewY + tooltipEstimatedHeight > window.innerHeight - bottomMargin) {
-                    viewY = Math.max(10, window.innerHeight - tooltipEstimatedHeight - bottomMargin);
+                        viewY = Math.max(10, window.innerHeight - tooltipEstimatedHeight - bottomMargin);
                 }
                 
                 // 좌표에 현재 스크롤 위치를 더해 absolute 문서 기준으로 변환 적용
@@ -1932,8 +1952,8 @@
                 if (window.marketChartInstance) { window.marketChartInstance.destroy(); }
                 
                 const isLight = this.isLightMode;
-                const textColor = isLight ? 'oklab(0.4495 0 0)' : 'oklab(0.738 0 0)';
-                const gridColor = isLight ? 'oklab(0.9266 -0.0019 -0.009)' : 'oklab(0.3211 0 0)';
+                const textColor = isLight ? 'oklch(0.4495 0 0)' : 'oklch(0.738 0 0)';
+                const gridColor = isLight ? 'oklch(0.9266 0.0092 258.0793)' : 'oklch(0.3211 0 0)';
                 const container = document.querySelector('.container');
                 const zoom = container ? (parseFloat(getComputedStyle(container).zoom) || 1) : 1;
                 
@@ -1965,15 +1985,15 @@
                         const {ctx, chartArea, scales} = chart;
                         const y1 = scales.y1;
                         if (!y1 || !y1.ticks) return;
-                        const gridColor = isLight ? 'oklab(0 0 0 / 0.1)' : 'oklab(1 0 0 / 0.1)';
+                        const gridColor = isLight ? 'oklch(0 0 0 / 0.1)' : 'oklch(1 0 0 / 0.2)';
                         ctx.save();
                         ctx.beginPath();
                         ctx.rect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
                         ctx.clip();
                         y1.ticks.forEach(tick => {
                             const yRaw = y1.getPixelForValue(tick.value);
-                            const y = Math.round(yRaw) + 0.5;
-                            if (y < chartArea.top || y > chartArea.bottom) return;
+                            if (yRaw < chartArea.top || yRaw > chartArea.bottom) return;
+                            const y = Math.min(Math.round(yRaw) + 0.5, chartArea.bottom - 0.5);
                             ctx.beginPath();
                             ctx.moveTo(chartArea.left, y);
                             ctx.lineTo(chartArea.right, y);
@@ -1984,7 +2004,7 @@
                         ctx.restore();
                     }
                 };
-                
+
                 window.marketChartInstance = new Chart(canvas, {
                     type: 'bar',
                     plugins: [y1GridPlugin],
@@ -1995,8 +2015,8 @@
                             type: 'line',
                             label: '평균 거래가',
                             data: priceData,
-                            borderColor: 'oklab(0.6231 -0.0332 -0.1851)',
-                            backgroundColor: 'oklab(0.6231 -0.0332 -0.1851)',
+                            borderColor: 'oklch(0.6231 0.1881 259.8314)',
+                            backgroundColor: 'oklch(0.6231 0.1881 259.8314)',
                             borderWidth: 2,
                             yAxisID: 'y',
                             tension: 0.1,
@@ -2007,7 +2027,7 @@
                             type: 'bar',
                             label: '판매 건수',
                             data: volumeData,
-                            backgroundColor: isLight ? 'oklab(0.7686 0.0561 0.1548 / 0.93)' : 'oklab(0.9052 -0.0234 0.164 / 0.82)',
+                            backgroundColor: isLight ? 'oklch(0.7686 0.1647 70.0793 / 0.93)' : 'oklch(0.9052 0.1657 98.1203 / 0.82)',
                             yAxisID: 'y1',
                             barPercentage: 0.6,
                             order: 2
@@ -2027,7 +2047,7 @@
                             }
                         },
                         scales: {
-                            x: { ticks: { color: textColor, font: { size: 10 }, autoSkip: false }, grid: { display: false } },
+                            x: { ticks: { color: textColor, font: { size: 10 }, autoSkip: false, padding: 3 }, grid: { display: false, tickLength: 0 } },
                             y: {
                                 border: { display: false },
                                 type: 'linear', display: true, position: 'left',
@@ -2039,29 +2059,29 @@
                                 min: 0,
                                 border: { display: false },
                                 afterBuildTicks: (axis) => {
-                                    const yAxis = axis.chart.scales['y'];
-                                    const tickCount = yAxis ? yAxis.ticks.length : 5;
-                                    const intervals = Math.max(1, tickCount - 1);
-                                    
-                                    const rawStep = maxVol / intervals;
-                                    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
-                                    const normalized = rawStep / magnitude;
-                                    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
-                                    (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
-                                    let stepSize = niceStep * magnitude;
-                                    
-                                    // 눈금 수가 너무 적으면(3개 이하) 단위를 절반으로 줄여 촘촘하게
-                                    let intervals2 = Math.ceil(maxVol / stepSize);
-                                    if (intervals2 <= 4) {
-                                        stepSize = stepSize / 2;
-                                        intervals2 = Math.ceil(maxVol / stepSize);
-                                    }
-                                    
-                                    axis.max = stepSize * intervals2;
-                                    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
-                                        value: stepSize * i
-                                    }));
-                                },
+    const yAxis = axis.chart.scales['y'];
+    const tickCount = yAxis ? yAxis.ticks.length : 5;
+    const intervals = Math.max(1, tickCount - 1);
+
+    const rawStep = maxVol / intervals;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep || 1)));
+    const normalized = rawStep / magnitude;
+    const niceStep = (normalized <= 1) ? 1 : (normalized <= 2) ? 2 :
+                     (normalized <= 2.5) ? 2.5 : (normalized <= 5) ? 5 : 10;
+    let stepSize = niceStep * magnitude;
+
+    // 눈금 수가 너무 적으면(3개 이하) 단위를 절반으로 줄여 촘촘하게
+    let intervals2 = Math.ceil(maxVol / stepSize);
+    if (intervals2 <= 4) {
+        stepSize = stepSize / 2;
+        intervals2 = Math.ceil(maxVol / stepSize);
+    }
+
+    axis.max = stepSize * intervals2;
+    axis.ticks = Array.from({ length: intervals2 + 1 }, (_, i) => ({
+        value: stepSize * i
+    }));
+},
                                 ticks: {
                                     color: textColor,
                                     font: { size: 10 },
