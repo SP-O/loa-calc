@@ -394,7 +394,7 @@
         .logo-doss { color: oklch(0.62 0.062 278); transition: color 0.3s ease; }
         .header-theme-btn { background: transparent; border: 1px solid oklch(0.4676 0 0); border-radius: 8px; color: oklch(0.738 0 0); cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: border-color 0.22s ease, color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease; padding: 0; margin: 0; flex-shrink: 0; font-size: 0; line-height: 0; transform: scale(1); }
         .header-theme-btn:hover { border-color: oklch(0.8868 0.1822 95.3226); color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.1); box-shadow: 0 0 0 3px oklch(0.8868 0.1822 95.3226 / 0.12); transform: scale(1.1); }
-        .header-theme-btn svg { width: 18px; height: 18px; display: block; flex-shrink: 0; overflow: visible; }
+        .header-theme-btn svg { width: 22px; height: 22px; display: block; flex-shrink: 0; overflow: visible; }
         body.light-mode .site-header { background: oklch(1 0 0 / 0.92); border-bottom-color: oklch(0.88 0.0128 255.5297 / 0.5); }
         body.light-mode .logo-loa { color: oklch(0.15 0 0); }
         body.light-mode .logo-doss { color: oklch(0.42 0.062 278); }
@@ -444,7 +444,12 @@
         .gold-icon { width: 14px; height: 14px; object-fit: contain; vertical-align: middle; position: relative; top: -1px; margin-left: 2px; }
         
         .mct-body { display: flex; gap: 12px; height: 240px; }
-        .mct-chart-wrap { flex: 1; background: oklch(0.2178 0 0); border: 1px solid oklch(0.3211 0 0); border-radius: 6px; padding: 8px; min-width: 0; }
+        .mct-chart-wrap { flex: 1; background: oklch(0.2178 0 0); border: 1px solid oklch(0.3211 0 0); border-radius: 6px; padding: 8px; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+        .mct-canvas-box { flex: 1; min-height: 0; position: relative; }
+        .mct-chart-legend { display: flex; justify-content: center; gap: 16px; font-size: 11px; color: oklch(0.738 0 0); }
+        .mct-legend-item { display: flex; align-items: center; gap: 4px; }
+        .mct-legend-box { display: inline-block; width: 10px; height: 10px; border-radius: 1px; flex-shrink: 0; }
+        body.light-mode .mct-chart-legend { color: oklch(0.5103 0 0); }
         .mct-table-wrap { width: 250px; background: oklch(0.2178 0 0); border: 1px solid oklch(0.3211 0 0); border-radius: 6px; overflow-y: auto; }
         .mct-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: center; table-layout: auto; }
         .mct-table th { position: sticky; top: 0; background: oklch(0.2645 0 0); color: oklch(0.738 0 0); padding: 8px 6px; border-bottom: 2px solid oklch(0.3211 0 0); z-index: 2; white-space: nowrap; font-size: 12px; }
@@ -480,8 +485,8 @@
                     <!-- 라이트모드: 달 아이콘 (클릭 시 다크로) -->
                     <svg v-if="isLightMode" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                        <path d="M19.5 2v3M18 3.5h3" stroke-width="1.5"/>
-                        <path d="M22 7v1.8M21.1 7.9h1.8" stroke-width="1.1"/>
+                        <path d="M20 0.5L20.85 2.65L23 3.5L20.85 4.35L20 6.5L19.15 4.35L17 3.5L19.15 2.65Z" fill="currentColor" stroke="none"/>
+                        <path d="M22.5 6.2L23.01 7.49L24.3 8L23.01 8.51L22.5 9.8L21.99 8.51L20.7 8L21.99 7.49Z" fill="currentColor" stroke="none"/>
                     </svg>
                     <!-- 다크모드: 태양 아이콘 (클릭 시 라이트로) -->
                     <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
@@ -1189,7 +1194,17 @@
         </div>
         <div class="mct-body">
             <div class="mct-chart-wrap">
-                <canvas id="marketChartCanvas"></canvas>
+                <div class="mct-chart-legend">
+                    <span class="mct-legend-item">
+                        <span class="mct-legend-box" style="background:oklch(0.6231 0.1881 259.8314)"></span>평균 거래가
+                    </span>
+                    <span class="mct-legend-item">
+                        <span class="mct-legend-box" :style="{background: isLightMode ? 'oklch(0.7686 0.1647 70.0793)' : 'oklch(0.9052 0.1657 98.1203)'}"></span>판매 건수
+                    </span>
+                </div>
+                <div class="mct-canvas-box">
+                    <canvas id="marketChartCanvas"></canvas>
+                </div>
             </div>
             <div class="mct-table-wrap">
                 <table class="mct-table">
@@ -1959,7 +1974,7 @@
                 
                 if (!this.currentHoveredStats || !this.currentHoveredStats.history) return;
                 const chartData = [...this.currentHoveredStats.history].reverse();
-                const labels = chartData.map(d => d.date);
+                const labels = chartData.map(d => d.date.slice(5));
                 const priceData = chartData.map(d => d.avgPrice);
                 const volumeData = chartData.map(d => d.volume);
                 
@@ -1985,20 +2000,25 @@
                         const {ctx, chartArea, scales} = chart;
                         const y1 = scales.y1;
                         if (!y1 || !y1.ticks) return;
-                        const gridColor = isLight ? 'oklch(0 0 0 / 0.1)' : 'oklch(1 0 0 / 0.2)';
+                        const gridColor = isLight ? 'oklch(0 0 0 / 0.22)' : 'oklch(1 0 0 / 0.35)';
+                        const dpr = window.devicePixelRatio || 1;
+                        const halfPx = 0.5 / dpr;
                         ctx.save();
+                        // 차트 영역 밖(범례 영역 등)으로 선이 넘어가지 않도록 클립
                         ctx.beginPath();
                         ctx.rect(chartArea.left, chartArea.top, chartArea.right - chartArea.left, chartArea.bottom - chartArea.top);
                         ctx.clip();
+                        ctx.lineWidth = 1 / dpr;
                         y1.ticks.forEach(tick => {
                             const yRaw = y1.getPixelForValue(tick.value);
                             if (yRaw < chartArea.top || yRaw > chartArea.bottom) return;
-                            const y = Math.min(Math.round(yRaw) + 0.5, chartArea.bottom - 0.5);
+                            const rawSnapped = (Math.round(yRaw * dpr - 0.5) + 0.5) / dpr;
+                            // 선 중심이 항상 차트 영역 안에 위치하도록 보정
+                            const y = Math.max(chartArea.top + halfPx, Math.min(rawSnapped, chartArea.bottom - halfPx));
                             ctx.beginPath();
                             ctx.moveTo(chartArea.left, y);
                             ctx.lineTo(chartArea.right, y);
                             ctx.strokeStyle = gridColor;
-                            ctx.lineWidth = 1;
                             ctx.stroke();
                         });
                         ctx.restore();
@@ -2040,11 +2060,7 @@
                         maintainAspectRatio: false,
                         interaction: { mode: 'index', intersect: false },
                         plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top',
-                                labels: { color: textColor, boxWidth: 10, font: { size: 10 } }
-                            }
+                            legend: { display: false }
                         },
                         scales: {
                             x: { ticks: { color: textColor, font: { size: 10 }, autoSkip: false, padding: 3 }, grid: { display: false, tickLength: 0 } },
