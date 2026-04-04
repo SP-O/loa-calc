@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로아도쓰 | 이스터에그 </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK (compat - script tag 방식) -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+    <!-- Matter.js 물리엔진 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
+        }
+
+        .test-ui {
+            text-align: center;
+            z-index: 1;
+        }
+
+        .test-ui h1 {
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+            color: #a8d8a8;
+        }
+
+        .test-ui .status {
+            font-size: 0.95rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .test-ui .user-count {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #7CFC00;
+            margin-bottom: 6px;
+        }
+
+        .test-ui .my-uuid {
+            font-size: 0.75rem;
+            color: #555;
+            word-break: break-all;
+            max-width: 400px;
+        }
+
+        .test-ui .instructions {
+            margin-top: 20px;
+            padding: 16px 24px;
+            background: #16213e;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: #aaa;
+            line-height: 1.7;
+            max-width: 500px;
+        }
+
+        .test-ui .instructions strong {
+            color: #a8d8a8;
+        }
+
+        /* 이스터에그 캔버스 */
+        #easter-egg-canvas {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* 모바일에서 숨기기 (기존 사이트 breakpoint: 925px) */
+        @media (max-width: 925px) {
+            #easter-egg-canvas {
+                display: none;
+            }
+            .test-ui .mobile-notice {
+                display: block;
+            }
+        }
+
+        .mobile-notice {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #3a1a1a;
+            border-radius: 8px;
+            color: #ff8888;
+            font-size: 0.85rem;
+        }
+
+        /* 새 접속자 알림 토스트 */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: #16213e;
+            border: 1px solid #2a4a7f;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 0.82rem;
+            color: #a8d8a8;
+            opacity: 0;
+            transform: translateX(60px);
+            animation: toastIn 0.4s ease forwards, toastOut 0.4s ease 2.5s forwards;
+        }
+
+        .toast.leave {
+            color: #ff9999;
+            border-color: #7f2a2a;
+        }
+
+        @keyframes toastIn {
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes toastOut {
+            to { opacity: 0; transform: translateX(60px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="test-ui">
+        <h1>이스터에그 테스트</h1>
+        <div class="status" id="connectionStatus">Firebase 연결 중...</div>
+        <div class="user-count">접속자: <span id="userCount">0</span>명</div>
+        <div class="my-uuid" id="myUuidDisplay"></div>
+        <div class="instructions">
+            <strong>테스트 방법:</strong><br>
+            1. 이 페이지를 다른 브라우저/시크릿 창에서 열어보세요<br>
+            2. 접속할 때마다 모코코 씨앗이 심기고 도스터가 떨어집니다<br>
+            3. 탭을 닫으면 해당 캐릭터가 사라집니다<br>
+            4. 내 캐릭터는 밝은 색 + 흰 테두리로 표시됩니다
+        </div>
+        <div class="mobile-notice">
+            모바일 화면에서는 이스터에그가 숨겨집니다 (925px 이하)
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <canvas id="easter-egg-canvas"></canvas>
+
+    <script>
+    (function() {
+        'use strict';
+
+        // ============================================================
+        //  CONFIGURATION
+        // ============================================================
+
+        const CANVAS_HEIGHT = 200;          // 캔버스 높이 (px)
+        const MAX_USERS = 100;              // 최대 동시 접속자
+        const MOBILE_BREAKPOINT = 925;      // 모바일 기준 너비
+
+        // 모코코 플레이스홀더 크기
+        const MOKOKO_WIDTH = 36;
+        const MOKOKO_HEIGHT = 44;
+        const MOKOKO_MIN_GAP = 8;           // 모코코 간 최소 간격 (px)
+
+        // 도스터 플레이스홀더 크기 (타입별 반지름)
+        const DOSTER_RADIUS = [22, 26];
+
+        // 물리 설정
+        const PHYSICS = {
+            gravity: { x: 0, y: 1.2 },
+            restitution: 0.35,
+            friction: 0.4,
+            frictionAir: 0.012,
+            density: 0.002
+        };
+
+        // ============================================================
+        //  STATE
+        // ============================================================
+        let myFingerprint = null;
+        let db = null;
+        let usersRef = null;
+        let myUserRef = null;
+        let isConnected = false;
+        let isSpectator = false;
+
+        // 캐릭터 저장소
+        const mokokos = new Map();    // sessionKey -> { normalizedX, pixelX }
+        const dosters = new Map();    // sessionKey -> { body, type }
+
+        // Matter.js
+        let engine = null;
+        let world = null;
+        let ground = null;
+        let wallLeft = null;
+        let wallRight = null;
+
+        // Canvas
+        let canvas = null;
+        let ctx = null;
+        let dpr = 1;
+        let animFrameId = null;
+        let isTabVisible = true;
+
+        // 배치 처리 큐
+        let pendingAdds = [];
+        let pendingRemoves = [];
+        let hasPendingUpdates = false;
+
+        // ============================================================
+        //  DEVICE FINGERPRINT (시크릿 모드에서도 동일한 값 생성)
+        // ============================================================
+        function getDeviceFingerprint() {
+            const components = [
+                screen.width,
+                screen.height,
+                screen.colorDepth,
+                navigator.hardwareConcurrency || 'unknown',
+                navigator.language,
+                navigator.platform,
+                Intl.DateTimeFormat().resolvedOptions().timeZone,
+                // Canvas fingerprint (GPU/렌더링 엔진 차이 반영)
+                getCanvasFingerprint()
+            ];
+
+            const str = components.join('|');
+            // djb2 해시 알고리즘
+            let hash = 5381;
+            for (let i = 0; i < str.length; i++) {
+                hash = ((hash << 5) + hash) + str.charCodeAt(i);
+                hash = hash & hash; // 32bit 정수 변환
+            }
+            return 'fp_' + Math.abs(hash).toString(36);
+        }
+
+        function getCanvasFingerprint() {
+            try {
+                const c = document.createElement('canvas');
+                c.width = 200; c.height = 50;
+                const cCtx = c.getContext('2d');
+                cCtx.textBaseline = 'top';
+                cCtx.font = '14px Arial';
+                cCtx.fillStyle = '#f60';
+                cCtx.fillRect(50, 0, 80, 30);
+                cCtx.fillStyle = '#069';
+                cCtx.fillText('LoaDoss!', 2, 15);
+                return c.toDataURL().slice(-32);
+            } catch(e) {
+                return 'no-canvas';
+            }
+        }
+
+        // ============================================================
+        //  TOAST NOTIFICATIONS
+        // ============================================================
+        function showToast(message, isLeave) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (isLeave ? ' leave' : '');
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentNode) toast.parentNode.removeChild(toast);
+            }, 3200);
+        }
+
+        // ============================================================
+        //  MOBILE DETECTION
+        // ============================================================
+        function isMobile() {
+            return window.innerWidth <= MOBILE_BREAKPOINT;
+        }
+
+        // ============================================================
+        //  CANVAS SETUP
+        // ============================================================
+        function initCanvas() {
+            canvas = document.getElementById('easter-egg-canvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+        }
+
+        function resizeCanvas() {
+            dpr = window.devicePixelRatio || 1;
+            const width = window.innerWidth;
+            canvas.width = width * dpr;
+            canvas.height = CANVAS_HEIGHT * dpr;
+            canvas.style.height = CANVAS_HEIGHT + 'px';
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.scale(dpr, dpr);
+        }
+
+        // ============================================================
+        //  MATTER.JS PHYSICS
+        // ============================================================
+        function initPhysics() {
+            engine = Matter.Engine.create({
+                enableSleeping: true,
+                gravity: PHYSICS.gravity
+            });
+            world = engine.world;
+
+            updatePhysicsBounds();
+        }
+
+        function updatePhysicsBounds() {
+            const w = window.innerWidth;
+
+            // 기존 경계 제거
+            if (ground) Matter.Composite.remove(world, ground);
+            if (wallLeft) Matter.Composite.remove(world, wallLeft);
+            if (wallRight) Matter.Composite.remove(world, wallRight);
+
+            ground = Matter.Bodies.rectangle(
+                w / 2, CANVAS_HEIGHT + 5, w * 3, 10,
+                { isStatic: true, label: 'ground' }
+            );
+            wallLeft = Matter.Bodies.rectangle(
+                -5, CANVAS_HEIGHT / 2, 10, CANVAS_HEIGHT * 3,
+                { isStatic: true, label: 'wallLeft' }
+            );
+            wallRight = Matter.Bodies.rectangle(
+                w + 5, CANVAS_HEIGHT / 2, 10, CANVAS_HEIGHT * 3,
+                { isStatic: true, label: 'wallRight' }
+            );
+
+            Matter.Composite.add(world, [ground, wallLeft, wallRight]);
+        }
+
+        function createDosterBody(normalizedX, type) {
+            const x = normalizedX * window.innerWidth;
+            const y = -60;
+            const radius = DOSTER_RADIUS[type] || DOSTER_RADIUS[0];
+
+            const body = Matter.Bodies.circle(x, y, radius, {
+                restitution: PHYSICS.restitution,
+                friction: PHYSICS.friction,
+                frictionAir: PHYSICS.frictionAir,
+                density: PHYSICS.density,
+                label: 'doster'
+            });
+
+            // 약간의 랜덤 수평 속도
+            Matter.Body.setVelocity(body, {
+                x: (Math.random() - 0.5) * 4,
+                y: 0
+            });
+
+            Matter.Composite.add(world, body);
+            return body;
+        }
+
+        function removeDosterBody(sessionKey) {
+            const doster = dosters.get(sessionKey);
+            if (doster && doster.body) {
+                Matter.Composite.remove(world, doster.body);
+            }
+        }
+
+        function hasAwakeBodies() {
+            const bodies = Matter.Composite.allBodies(world);
+            for (let i = 0; i < bodies.length; i++) {
+                if (!bodies[i].isSleeping && !bodies[i].isStatic) return true;
+            }
+            return false;
+        }
+
+        // ============================================================
+        //  MOKOKO PLACEMENT (1D 그리디 패킹)
+        // ============================================================
+        function recalculateMokokoPositions() {
+            if (mokokos.size === 0) return;
+
+            const w = window.innerWidth;
+            const totalSlotWidth = MOKOKO_WIDTH + MOKOKO_MIN_GAP;
+            const entries = [];
+
+            for (const [key, mokoko] of mokokos) {
+                entries.push({ key, normalizedX: mokoko.normalizedX });
+            }
+
+            // X 기준 정렬
+            entries.sort((a, b) => a.normalizedX - b.normalizedX);
+
+            // 겹침 방지: 최소 간격 확보
+            const minGapNorm = totalSlotWidth / w;
+            for (let i = 1; i < entries.length; i++) {
+                const gap = entries[i].normalizedX - entries[i - 1].normalizedX;
+                if (gap < minGapNorm) {
+                    entries[i].normalizedX = entries[i - 1].normalizedX + minGapNorm;
+                }
+            }
+
+            // 오른쪽 넘침 보정
+            const last = entries[entries.length - 1];
+            const maxNorm = 1 - (MOKOKO_WIDTH / 2) / w;
+            if (last.normalizedX > maxNorm && entries.length > 1) {
+                const overflow = last.normalizedX - maxNorm;
+                const totalSpread = last.normalizedX - entries[0].normalizedX;
+                if (totalSpread > 0) {
+                    for (let i = 0; i < entries.length; i++) {
+                        const ratio = (entries[i].normalizedX - entries[0].normalizedX) / totalSpread;
+                        entries[i].normalizedX -= overflow * ratio;
+                    }
+                }
+            }
+
+            // 왼쪽 경계 보정
+            const minNorm = (MOKOKO_WIDTH / 2) / w;
+            for (let i = 0; i < entries.length; i++) {
+                if (entries[i].normalizedX < minNorm) {
+                    entries[i].normalizedX = minNorm;
+                }
+            }
+
+            // 결과 반영
+            for (const entry of entries) {
+                const mokoko = mokokos.get(entry.key);
+                if (mokoko) {
+                    mokoko.pixelX = entry.normalizedX * w;
+                }
+            }
+        }
+
+        // ============================================================
+        //  CANVAS RENDERING
+        // ============================================================
+        function drawMokoko(x, y, isMine) {
+            const hw = MOKOKO_WIDTH / 2;
+
+            // 줄기
+            ctx.strokeStyle = isMine ? '#66bb66' : '#3a7a3a';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x, y - 14);
+            ctx.stroke();
+
+            // 잎사귀 (작은 타원)
+            ctx.fillStyle = isMine ? '#88dd88' : '#4a9a4a';
+            ctx.beginPath();
+            ctx.ellipse(x + 4, y - 12, 6, 3, 0.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 씨앗 몸체 (둥근 삼각형 느낌)
+            ctx.fillStyle = isMine ? '#7CFC00' : '#228B22';
+            ctx.beginPath();
+            ctx.moveTo(x, y - 8);
+            ctx.quadraticCurveTo(x - hw, y + 4, x - hw + 6, y + MOKOKO_HEIGHT - 14);
+            ctx.quadraticCurveTo(x, y + MOKOKO_HEIGHT - 8, x + hw - 6, y + MOKOKO_HEIGHT - 14);
+            ctx.quadraticCurveTo(x + hw, y + 4, x, y - 8);
+            ctx.fill();
+
+            if (isMine) {
+                ctx.strokeStyle = '#ffffff88';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+
+            // 눈 (귀여운 점 두 개)
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(x - 5, y + 10, 2, 0, Math.PI * 2);
+            ctx.arc(x + 5, y + 10, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 볼터치
+            ctx.fillStyle = isMine ? '#ff9999' : '#cc6666';
+            ctx.globalAlpha = 0.4;
+            ctx.beginPath();
+            ctx.ellipse(x - 8, y + 14, 4, 2.5, 0, 0, Math.PI * 2);
+            ctx.ellipse(x + 8, y + 14, 4, 2.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+
+            // 입 (작은 미소)
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(x, y + 15, 3, 0.1 * Math.PI, 0.9 * Math.PI);
+            ctx.stroke();
+        }
+
+        function drawDoster(x, y, type, angle, isMine) {
+            const radius = DOSTER_RADIUS[type] || DOSTER_RADIUS[0];
+
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+
+            if (type === 0) {
+                // 도스터 A: 주황색 둥근 캐릭터
+                ctx.fillStyle = isMine ? '#FF8C42' : '#CC6B33';
+                ctx.beginPath();
+                ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (isMine) {
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+
+                // 귀 (작은 삼각형 두 개)
+                ctx.fillStyle = isMine ? '#FFAA66' : '#DD8844';
+                ctx.beginPath();
+                ctx.moveTo(-radius + 4, -radius + 2);
+                ctx.lineTo(-radius + 12, -radius - 10);
+                ctx.lineTo(-radius + 18, -radius + 4);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(radius - 18, -radius + 4);
+                ctx.lineTo(radius - 12, -radius - 10);
+                ctx.lineTo(radius - 4, -radius + 2);
+                ctx.fill();
+
+                // 눈
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(-6, -4, 2.5, 0, Math.PI * 2);
+                ctx.arc(6, -4, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 눈 하이라이트
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(-5, -5, 1, 0, Math.PI * 2);
+                ctx.arc(7, -5, 1, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 코
+                ctx.fillStyle = '#cc4444';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 3, 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 입
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(0, 3, 4, 0.1 * Math.PI, 0.9 * Math.PI);
+                ctx.stroke();
+
+            } else {
+                // 도스터 B: 청록색 둥근 캐릭터
+                ctx.fillStyle = isMine ? '#5CE0D0' : '#3BAFA0';
+                ctx.beginPath();
+                ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (isMine) {
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+
+                // 뿔 (작은 돌기 두 개)
+                ctx.fillStyle = isMine ? '#88EEDD' : '#55CCBB';
+                ctx.beginPath();
+                ctx.arc(-8, -radius + 2, 5, 0, Math.PI * 2);
+                ctx.arc(8, -radius + 2, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 눈 (약간 큰 동그란 눈)
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(-7, -3, 5, 0, Math.PI * 2);
+                ctx.arc(7, -3, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(-6, -2, 2.5, 0, Math.PI * 2);
+                ctx.arc(8, -2, 2.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 입 (작은 O 모양)
+                ctx.fillStyle = '#cc5555';
+                ctx.beginPath();
+                ctx.ellipse(0, 6, 3, 3.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+        }
+
+        function render() {
+            if (!ctx || !canvas) return;
+
+            // 배치 처리
+            if (hasPendingUpdates) {
+                processPendingUpdates();
+            }
+
+            const w = window.innerWidth;
+            ctx.clearRect(0, 0, w, CANVAS_HEIGHT);
+
+            // 모코코 그리기 (화면 하단에 정적)
+            for (const [key, mokoko] of mokokos) {
+                const isMine = key === myFingerprint;
+                drawMokoko(mokoko.pixelX, CANVAS_HEIGHT - MOKOKO_HEIGHT + 5, isMine);
+            }
+
+            // 도스터 그리기 (물리엔진 위치)
+            for (const [key, doster] of dosters) {
+                const pos = doster.body.position;
+                const angle = doster.body.angle;
+                const isMine = key === myFingerprint;
+                drawDoster(pos.x, pos.y, doster.type, angle, isMine);
+            }
+
+            // 물리엔진 업데이트 (깨어있는 body가 있을 때만)
+            if (hasAwakeBodies()) {
+                Matter.Engine.update(engine, 1000 / 60);
+            }
+
+            if (isTabVisible) {
+                animFrameId = requestAnimationFrame(render);
+            }
+        }
+
+        // ============================================================
+        //  BATCH PROCESSING (Firebase 이벤트 배치)
+        // ============================================================
+        function processPendingUpdates() {
+            // 추가
+            for (const item of pendingAdds) {
+                addCharacter(item.key, item.data);
+            }
+            pendingAdds = [];
+
+            // 제거
+            for (const key of pendingRemoves) {
+                removeCharacter(key);
+            }
+            pendingRemoves = [];
+
+            hasPendingUpdates = false;
+            updateUserCount();
+        }
+
+        function addCharacter(sessionKey, data) {
+            // 모코코 OR 도스터 중 하나만 추가
+            if (data.charType === 'mokoko' && data.mokoko && !mokokos.has(sessionKey)) {
+                mokokos.set(sessionKey, {
+                    normalizedX: data.mokoko.x,
+                    pixelX: data.mokoko.x * window.innerWidth
+                });
+                recalculateMokokoPositions();
+            } else if (data.charType === 'doster' && data.doster && !dosters.has(sessionKey)) {
+                const body = createDosterBody(data.doster.x, data.doster.type);
+                dosters.set(sessionKey, {
+                    body: body,
+                    type: data.doster.type
+                });
+            }
+        }
+
+        function removeCharacter(sessionKey) {
+            // 도스터 물리 body 제거
+            removeDosterBody(sessionKey);
+            dosters.delete(sessionKey);
+
+            // 모코코 제거
+            mokokos.delete(sessionKey);
+            recalculateMokokoPositions();
+        }
+
+        // ============================================================
+        //  FIREBASE PRESENCE
+        // ============================================================
+        async function initFirebase() {
+            let config;
+            try {
+                const response = await fetch('/api/firebase-config');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                config = await response.json();
+            } catch (e) {
+                console.error('Firebase 설정을 불러오지 못했습니다:', e);
+                return false;
+            }
+            firebase.initializeApp(config);
+            db = firebase.database();
+            usersRef = db.ref('users');
+            return true;
+        }
+
+        function registerPresence() {
+            if (isMobile() || isSpectator) return;
+
+            myUserRef = db.ref('users/' + myFingerprint);
+
+            // 이미 이 기기에서 접속 중인지 확인
+            myUserRef.once('value', function(snapshot) {
+                if (snapshot.exists()) {
+                    // 이미 접속 중 → 관전 모드
+                    isSpectator = true;
+                    document.getElementById('connectionStatus').textContent =
+                        '이미 다른 탭에서 접속 중입니다';
+                    document.getElementById('connectionStatus').style.color = '#ffaa44';
+                    return;
+                }
+
+                // 모코코 OR 도스터 중 랜덤 하나만 배정
+                const isMokokoType = Math.random() < 0.5;
+
+                let userData;
+                if (isMokokoType) {
+                    userData = {
+                        charType: 'mokoko',
+                        mokoko: { x: 0.05 + Math.random() * 0.9 },  // 5%~95%
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                    };
+                } else {
+                    userData = {
+                        charType: 'doster',
+                        doster: {
+                            type: Math.random() < 0.5 ? 0 : 1,
+                            x: 0.1 + Math.random() * 0.8             // 10%~90%
+                        },
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                    };
+                }
+
+                // 연결 해제 시 자동 삭제
+                myUserRef.onDisconnect().remove();
+
+                // 데이터 기록
+                myUserRef.set(userData);
+            });
+        }
+
+        function listenForUsers() {
+            const query = usersRef.orderByChild('timestamp').limitToLast(MAX_USERS);
+
+            // 초기 로드 완료 추적
+            let initialLoadDone = false;
+
+            query.on('child_added', function(snapshot) {
+                const key = snapshot.key;
+                const data = snapshot.val();
+                if (!data) return;
+
+                pendingAdds.push({ key, data });
+                hasPendingUpdates = true;
+
+                // 초기 로드 이후에만 토스트 표시
+                if (initialLoadDone && key !== myFingerprint) {
+                    const charName = data.charType === 'mokoko' ? '모코코 씨앗' : '도스터';
+                    showToast(charName + '이(가) 나타났습니다!', false);
+                }
+            });
+
+            query.on('child_removed', function(snapshot) {
+                const key = snapshot.key;
+                pendingRemoves.push(key);
+                hasPendingUpdates = true;
+
+                if (key !== myFingerprint) {
+                    showToast('누군가 떠났습니다...', true);
+                }
+            });
+
+            // 초기 로드 완료 감지
+            query.once('value', function() {
+                initialLoadDone = true;
+                updateUserCount();
+            });
+        }
+
+        function monitorConnection() {
+            db.ref('.info/connected').on('value', function(snapshot) {
+                if (snapshot.val() === true) {
+                    isConnected = true;
+                    document.getElementById('connectionStatus').textContent = '연결됨';
+                    document.getElementById('connectionStatus').style.color = '#7CFC00';
+
+                    // 재접속 시 presence 재등록
+                    if (!isSpectator && myUserRef) {
+                        myUserRef.onDisconnect().remove();
+                    }
+                } else {
+                    isConnected = false;
+                    document.getElementById('connectionStatus').textContent = '연결 끊김 - 재연결 시도 중...';
+                    document.getElementById('connectionStatus').style.color = '#ff8888';
+                }
+            });
+        }
+
+        async function checkAndRegister() {
+            // 현재 접속자 수 확인
+            const snapshot = await usersRef.once('value');
+            const currentCount = snapshot.numChildren();
+
+            if (currentCount >= MAX_USERS) {
+                isSpectator = true;
+                document.getElementById('connectionStatus').textContent =
+                    '관전 모드 (접속자 ' + MAX_USERS + '명 초과)';
+                document.getElementById('connectionStatus').style.color = '#ffaa44';
+            } else {
+                registerPresence();
+            }
+        }
+
+        function updateUserCount() {
+            const count = mokokos.size + dosters.size;
+            const el = document.getElementById('userCount');
+            if (el) el.textContent = count;
+        }
+
+        // ============================================================
+        //  RESIZE HANDLING
+        // ============================================================
+        let resizeTimer = null;
+
+        function handleResize() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (isMobile()) {
+                    // 모바일 전환: 정리
+                    if (myUserRef && !isSpectator) {
+                        myUserRef.remove();
+                    }
+                    if (animFrameId) {
+                        cancelAnimationFrame(animFrameId);
+                        animFrameId = null;
+                    }
+                    return;
+                }
+
+                resizeCanvas();
+                updatePhysicsBounds();
+                recalculateMokokoPositions();
+
+                // 렌더링이 멈춰있었으면 재시작
+                if (!animFrameId && isTabVisible) {
+                    animFrameId = requestAnimationFrame(render);
+                }
+
+                // presence가 없으면 재등록
+                if (!isSpectator && myUserRef) {
+                    // 이미 등록되어 있으면 무시
+                } else if (!isSpectator && !myUserRef) {
+                    checkAndRegister();
+                }
+            }, 200);
+        }
+
+        // ============================================================
+        //  VISIBILITY HANDLING (탭 숨김 시 일시정지)
+        // ============================================================
+        function handleVisibility() {
+            if (document.visibilityState === 'hidden') {
+                isTabVisible = false;
+                if (animFrameId) {
+                    cancelAnimationFrame(animFrameId);
+                    animFrameId = null;
+                }
+            } else {
+                isTabVisible = true;
+                if (!animFrameId && !isMobile()) {
+                    animFrameId = requestAnimationFrame(render);
+                }
+            }
+        }
+
+        // ============================================================
+        //  LIFECYCLE
+        // ============================================================
+        async function init() {
+            // 기기 지문 생성 (시크릿 모드에서도 동일한 값)
+            myFingerprint = getDeviceFingerprint();
+
+            // 지문 표시
+            document.getElementById('myUuidDisplay').textContent =
+                '기기 ID: ' + myFingerprint;
+
+            // 모바일 체크
+            if (isMobile()) {
+                document.getElementById('connectionStatus').textContent =
+                    '모바일 화면 - 이스터에그 비활성';
+                document.getElementById('connectionStatus').style.color = '#ffaa44';
+                // Firebase는 초기화하되, presence는 등록하지 않음
+                await initFirebase();
+                return;
+            }
+
+            // 초기화
+            initCanvas();
+            initPhysics();
+            const ok = await initFirebase();
+            if (!ok) return;
+
+            // Firebase 리스너
+            listenForUsers();
+            monitorConnection();
+
+            // presence 등록 (상한 체크 포함)
+            checkAndRegister();
+
+            // 렌더링 시작
+            animFrameId = requestAnimationFrame(render);
+
+            // 이벤트 리스너
+            window.addEventListener('resize', handleResize);
+            document.addEventListener('visibilitychange', handleVisibility);
+            window.addEventListener('beforeunload', cleanup);
+        }
+
+        function cleanup() {
+            if (myUserRef && !isSpectator) {
+                myUserRef.remove();
+            }
+            if (animFrameId) {
+                cancelAnimationFrame(animFrameId);
+            }
+        }
+
+        // 시작
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+</body>
+</html>
