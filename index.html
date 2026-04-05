@@ -2045,13 +2045,13 @@
                     // 아이템 비: 손익 50G 초과 (2초 디바운스 — 입력/API 로딩 중 중간값 무시)
                     var maxProfit = Math.max(newVal.normal.fullCost, newVal.advanced.fullCost);
                     if (this._itemRainTimer) clearTimeout(this._itemRainTimer);
-                    if (maxProfit > 50) {
+                    if (maxProfit > 55) {
                         // 비 시작은 2초 대기 후 (값이 안정되면)
                         var self = this;
                         this._itemRainTimer = setTimeout(function() {
                             // 타이머 만료 시점에 다시 체크
                             var cur = Math.max(self.profitPerCraft.normal.fullCost, self.profitPerCraft.advanced.fullCost);
-                            if (cur > 50 && self.isEasterEgg) {
+                            if (cur > 55 && self.isEasterEgg) {
                                 window.LoaDossEasterEgg.itemRain(true);
                             }
                         }, 2000);
