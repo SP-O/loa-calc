@@ -124,7 +124,7 @@
         .btn-force.btn-farm:hover { background: oklch(0.6231 0.1881 259.8314 / 0.25); border-color: oklch(0.7137 0.1433 254.6257); color: oklch(1 0 0); }
         
         .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; transition: color 0.3s ease; }
-        .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; cursor: help; }
+        .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; cursor: default; }
         .resource-icon { width: 20px; height: 20px; object-fit: cover; pointer-events: none; }
         
         .resource-A, .resource-P { color: oklch(0.7025 0 0); }
@@ -663,7 +663,7 @@
                     <div class="input-group" v-if="resInfo && (calcMode === 'optimize' ? !(exchangeType === 'farm' && key === 'S') : (key !== 'S' && key !== 'P'))">
                         <label>
                             <span :class="'resource-label resource-' + key">
-                                <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, resInfo.name)" @mouseleave="hideChartTooltip">
+                                <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(resInfo.name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, resInfo.name)" @mouseleave="hideChartTooltip">
                                     <img :src="resInfo.imgUrl" class="resource-icon" alt="icon">
                                 </div>
                                 {{ resInfo.name }}
@@ -703,14 +703,14 @@
                                     <div class="conversion-row" v-if="count > 0 && transformationMap[key]">
                                         <div class="label-wrap">
                                             <div :class="'resource-label resource-' + transformationMap[key].from">
-                                                <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].from].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
+                                                <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources[transformationMap[key].from].name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].from].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
                                                 {{ selectedResources[transformationMap[key].from].name }}
                                             </div>
                                         </div>
                                         <div class="arrow">→</div>
                                         <div class="label-wrap">
                                             <div :class="'resource-label resource-' + transformationMap[key].to">
-                                                <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].to].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
+                                                <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources[transformationMap[key].to].name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].to].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
                                                 {{ selectedResources[transformationMap[key].to].name }}
                                             </div>
                                         </div>
@@ -720,7 +720,7 @@
                                 <div class="conversion-row final-row">
                                     <div class="final-product-label">
                                         <span class="resource-label normal-product">
-                                            <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
+                                            <div class="resource-icon-wrap" :style="{ cursor: hasTooltip('아비도스 융화 재료') ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
                                             아비도스 융화 재료
                                         </span>
                                     </div>
@@ -741,14 +741,14 @@
                                     <div class="conversion-row" v-if="count > 0 && transformationMap[key]">
                                         <div class="label-wrap">
                                             <div :class="'resource-label resource-' + transformationMap[key].from">
-                                                <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].from].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
+                                                <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources[transformationMap[key].from].name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].from].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
                                                 {{ selectedResources[transformationMap[key].from].name }}
                                             </div>
                                         </div>
                                         <div class="arrow">→</div>
                                         <div class="label-wrap">
                                             <div :class="'resource-label resource-' + transformationMap[key].to">
-                                                <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].to].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
+                                                <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources[transformationMap[key].to].name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].to].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
                                                 {{ selectedResources[transformationMap[key].to].name }}
                                             </div>
                                         </div>
@@ -758,7 +758,7 @@
                                 <div class="conversion-row final-row">
                                     <div class="final-product-label">
                                         <span class="resource-label final-product">
-                                            <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
+                                            <div class="resource-icon-wrap" :style="{ cursor: hasTooltip('상급 아비도스 융화 재료') ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
                                             상급 아비도스 융화 재료
                                         </span>
                                     </div>
@@ -778,7 +778,7 @@
                             
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
                                 <div class="resource-label resource-A">
-                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources.A.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.A.imgUrl" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources.A.name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources.A.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.A.imgUrl" class="resource-icon"></div>
                                     {{ selectedResources.A.name }}
                                 </div>
                                 <div class="count">
@@ -789,7 +789,7 @@
                             
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
                                 <div class="resource-label resource-B">
-                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources.B.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.B.imgUrl" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources.B.name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources.B.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.B.imgUrl" class="resource-icon"></div>
                                     {{ selectedResources.B.name }}
                                 </div>
                                 <div class="count">
@@ -800,7 +800,7 @@
                             
                             <div class="final-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 12px 10px 0;">
                                 <span class="resource-label normal-product">
-                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" :style="{ cursor: hasTooltip('아비도스 융화 재료') ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
                                     예상 제작 결과
                                 </span>
                                 <div class="count"><span class="num-point">{{ result.normal.totalO }}</span>회 제작</div>
@@ -818,7 +818,7 @@
                             
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
                                 <div class="resource-label resource-A">
-                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources.A.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.A.imgUrl" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources.A.name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources.A.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.A.imgUrl" class="resource-icon"></div>
                                     {{ selectedResources.A.name }}
                                 </div>
                                 <div class="count">
@@ -829,7 +829,7 @@
                             
                             <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
                                 <div class="resource-label resource-B">
-                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, selectedResources.B.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.B.imgUrl" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources.B.name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources.B.name)" @mouseleave="hideChartTooltip"><img :src="selectedResources.B.imgUrl" class="resource-icon"></div>
                                     {{ selectedResources.B.name }}
                                 </div>
                                 <div class="count">
@@ -840,7 +840,7 @@
                             
                             <div class="final-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 12px 10px 0;">
                                 <span class="resource-label final-product">
-                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" :style="{ cursor: hasTooltip('상급 아비도스 융화 재료') ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
                                     예상 제작 결과
                                 </span>
                                 <div class="count"><span class="num-point">{{ result.advanced.totalO }}</span>회 제작</div>
@@ -1010,7 +1010,7 @@
                             <div class="market-box" style="margin-top: 0; background-color: oklch(0.2178 0 0);">
                                 <div class="market-header">
                                     <span class="resource-label normal-product">
-                                        <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
+                                        <div class="resource-icon-wrap" :style="{ cursor: hasTooltip('아비도스 융화 재료') ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon"></div>
                                         <h3 class="normal-product" style="display:inline; margin-left:5px;">아비도스 융화 재료</h3>
                                     </span>
                                     <span style="font-size: 0.8em; color: oklch(0.6268 0 0);">(1회 10개 제작)</span>
@@ -1138,7 +1138,7 @@
                         <div class="market-box" style="background-color: oklch(0.2178 0 0);">
                             <div class="market-header">
                                 <span class="resource-label final-product">
-                                    <div class="resource-icon-wrap" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
+                                    <div class="resource-icon-wrap" :style="{ cursor: hasTooltip('상급 아비도스 융화 재료') ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, '상급 아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon"></div>
                                     <h3 class="final-product" style="display:inline; margin-left:5px;">상급 아비도스 융화 재료</h3>
                                 </span>
                                 <span style="font-size: 0.8em; color: oklch(0.6268 0 0);">(1회 10개 제작)</span>
@@ -2067,6 +2067,12 @@
             window.removeEventListener('resize', this.handleResize);
         },
         methods: {
+            // 해당 아이템에 시세 툴팁이 표시되는지 여부
+            hasTooltip(itemName) {
+                if (this.calcMode === 'optimize' && this.exchangeType === 'farm') return false;
+                if (!itemName || itemName.endsWith('가루')) return false;
+                return true;
+            },
             // 차트 툴팁 표시 및 위치 계산
             showChartTooltip(event, itemName) {
                 // 영지 농장 탭에서는 시세 툴팁 비활성화
@@ -2110,10 +2116,11 @@
                         viewY = Math.max(10, window.innerHeight - tooltipEstimatedHeight - bottomMargin);
                 }
                 
-                // 좌표에 현재 스크롤 위치를 더해 absolute 문서 기준으로 변환 적용
-                this.tooltipStyle = { 
-                    top: ((viewY + window.scrollY) / zoom) + 'px', 
-                    left: ((viewX + window.scrollX) / zoom) + 'px' 
+                // 뷰포트 좌표에서 컨테이너 좌표를 빼서 offset parent 기준 상대 좌표로 변환
+                const containerRect = container.getBoundingClientRect();
+                this.tooltipStyle = {
+                    top: ((viewY - containerRect.top) / zoom) + 'px',
+                    left: ((viewX - containerRect.left) / zoom) + 'px'
                 };
                 
                 this.$nextTick(() => {
