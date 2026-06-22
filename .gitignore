@@ -1,0 +1,19 @@
+# 로컬 테스트 전용
+dev_server.py
+
+# 환경 변수
+.env
+.env.local
+.env*.local
+
+# 에디터 / OS
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 브레인스토밍 산출물
+.superpowers/
+
+# 의존성 / Vercel 
+node_modules/
+.vercel
