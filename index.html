@@ -1415,7 +1415,7 @@
                 activeTool: null,
                 activeToolSrc: '',
                 tools: [
-                    { id: 'tikatuka', label: '티카투카 계산기', src: 'tools/tikatuka/index.html' },
+                    { id: 'tikatuka', label: '티카투카 계산기', route: '/tikatuka', src: '/tools/tikatuka' },
                 ],
                 exchangeType: 'normal',
                 calcMode: 'optimize', 
@@ -2020,6 +2020,19 @@
                 }
             }
             window.addEventListener('resize', this.handleResize);
+            
+            // 뒤로/앞으로: 현재 주소에 해당하는 도구가 있으면 열고, 없으면 닫음(주소창과 화면 동기화)
+            window.addEventListener('popstate', () => {
+                const t = this.tools.find(x => x.route === location.pathname);
+                if (t) {
+                    if (this.activeTool !== t.id) this.openTool(t.id, false);
+                } else if (this.activeTool) {
+                    this.closeTool(false);
+                }
+            });
+            // 새로고침·직접 접속·공유 링크(예: /tikatuka)로 들어온 경우 해당 도구 자동 열기
+            const initTool = this.tools.find(x => x.route === location.pathname);
+            if (initTool) this.openTool(initTool.id, false);
         },
         watch: {
             exchangeType() {
@@ -2121,23 +2134,45 @@
             window.removeEventListener('message', this.onToolMessage);
         },
         methods: {
-            openTool(id) {
-                var t = this.tools.find(x => x.id === id);
-                // 여는 시점의 테마를 src에 스냅샷(이후 테마 변경은 postMessage로만 → iframe 리로드 방지)
-                this.activeToolSrc = (t ? t.src : '') + '?theme=' + (this.isLightMode ? 'light' : 'dark');
-                this.activeTool = id;
-                document.body.classList.add('tool-active');
-                // 아이템 비는 계산기 전용 효과 → 도구(티파고) 화면에선 중단 + 남은 아이템 제거
-                // (도스터/모코코는 그대로 유지). 계산기 복귀 시 잔상 안 뜨게 레이어 비움.
-                if (window.LoaDossEasterEgg) window.LoaDossEasterEgg.itemRain(false);
-                var rainLayer = document.getElementById('item-rain-layer');
-                if (rainLayer) rainLayer.innerHTML = '';
-                window.scrollTo({ top: 0, behavior: 'auto' });
-            },
-            closeTool() {
-                this.activeTool = null;
-                document.body.classList.remove('tool-active');
-            },
+            openTool(id, push = true) {
+
+    const t = this.tools.find(x => x.id === id);
+    if (!t) return;
+
+    this.activeToolSrc = t.src + '?theme=' + (this.isLightMode ? 'light' : 'dark');
+    this.activeTool = id;
+
+    if (push) {
+        history.pushState({ tool: id }, '', t.route);
+    }
+
+    document.body.classList.add('tool-active');
+
+    // 아이템 비는 계산기 전용 효과 → 도구 화면에서는 중단
+    if (window.LoaDossEasterEgg) {
+        window.LoaDossEasterEgg.itemRain(false);
+    }
+
+    const rainLayer = document.getElementById('item-rain-layer');
+    if (rainLayer) rainLayer.innerHTML = '';
+
+    window.scrollTo({
+        top: 0,
+        behavior: 'auto'
+    });
+},
+            closeTool(push = true) {
+
+    this.activeTool = null;
+    this.activeToolSrc = '';
+
+    document.body.classList.remove('tool-active');
+
+    if (push) {
+        history.pushState({}, '', '/');
+    }
+
+},
             onToolMessage(e) {
                 var d = e.data;
                 if (d && d.type === 'tipago-height' && typeof d.height === 'number') {
