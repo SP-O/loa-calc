@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로아도쓰 | 아비도스 제작 계산기</title>
     <link rel="canonical" href="https://loadoss.com/">
-    
+
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4933175914433503"
          crossorigin="anonymous"></script>
@@ -405,6 +405,29 @@
         .header-theme-btn { background: transparent; border: 1px solid oklch(0.4676 0 0); border-radius: 8px; color: oklch(0.738 0 0); cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: border-color 0.22s ease, color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease; padding: 0; margin: 0; flex-shrink: 0; font-size: 0; line-height: 0; transform: scale(1); }
         .header-theme-btn:hover { border-color: oklch(0.8868 0.1822 95.3226); color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.1); box-shadow: 0 0 0 3px oklch(0.8868 0.1822 95.3226 / 0.12); transform: scale(1.1); }
         .header-theme-btn svg { width: 22px; height: 22px; display: block; flex-shrink: 0; overflow: visible; }
+        /* 로고 + 도구를 왼쪽 묶음으로(가운데 흩어짐 방지). 로고 높이에 버튼을 맞춰 줄맞춤 */
+        .header-left { display: flex; align-items: center; }
+        /* 헤더 '도구' 메뉴 — 로고 옆 헤더 컨트롤(그리드 아이콘 + 텍스트 + 캐럿) */
+        .tool-menu { position: relative; margin-left: 26px; display: flex; align-items: center; }
+        .tool-menu-btn { width: auto; margin: 0; height: 34px; padding: 0 11px; display: inline-flex; align-items: center; gap: 7px; font-family: "Noto Sans KR", sans-serif; font-size: 0.9em; font-weight: 600; letter-spacing: 0.01em; color: oklch(0.82 0 0); background: oklch(1 0 0 / 0.04); border: 1px solid oklch(1 0 0 / 0.1); border-radius: 9px; cursor: pointer; transition: color 0.18s, background 0.18s, border-color 0.18s; }
+        .tool-menu-btn .tool-ico { flex-shrink: 0; opacity: 0.9; }
+        .tool-menu-btn .tool-label { line-height: 1; }
+        .tool-menu-btn .tool-caret { flex-shrink: 0; opacity: 0.6; margin-left: -1px; transition: transform 0.2s ease, opacity 0.18s; }
+        .tool-menu:hover .tool-menu-btn .tool-caret, .tool-menu-btn.open .tool-caret { transform: rotate(180deg); opacity: 0.9; }
+        .tool-menu-btn:hover, .tool-menu:hover .tool-menu-btn, .tool-menu-btn.open { color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.12); border-color: oklch(0.8868 0.1822 95.3226 / 0.55); }
+        .tool-dropdown { position: absolute; top: calc(100% + 6px); left: 0; min-width: 160px; background: oklch(0.2891 0 0); border: 1px solid oklch(0.3485 0 0); border-radius: 10px; box-shadow: 0 8px 20px oklch(0 0 0 / 0.5); padding: 4px; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s; z-index: 10002; }
+        .tool-menu:hover .tool-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+        .tool-dropdown-item { padding: 9px 12px; border-radius: 7px; font-size: 0.86em; font-weight: 700; color: oklch(0.7572 0 0); cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+        .tool-dropdown-item:hover { background: oklch(0.4091 0 0); color: oklch(1 0 0); }
+        .tool-dropdown-item.selected { color: oklch(0.8868 0.1822 95.3226); background: oklch(0.3485 0 0); }
+        body.light-mode .tool-menu-btn { border-color: oklch(0.88 0.0128 255.5297); color: oklch(0.42 0 0); background: oklch(0.6059 0.1986 256.4605 / 0.04); }
+        body.light-mode .tool-menu-btn:hover, body.light-mode .tool-menu:hover .tool-menu-btn, body.light-mode .tool-menu-btn.open { border-color: oklch(0.6059 0.1986 256.4605 / 0.55); color: oklch(0.6059 0.1986 256.4605); background: oklch(0.6059 0.1986 256.4605 / 0.1); }
+        body.light-mode .tool-dropdown { background: oklch(1 0 0); border-color: oklch(0.9266 0.0092 258.0793); box-shadow: 0 8px 20px oklch(0.2512 0.0989 259.3376 / 0.1); }
+        body.light-mode .tool-dropdown-item { color: oklch(0.4495 0 0); }
+        body.light-mode .tool-dropdown-item:hover { background: oklch(0.9808 0.0091 258.5663); color: oklch(0.6059 0.1986 256.4605); }
+        body.light-mode .tool-dropdown-item.selected { background: oklch(0.9678 0.0154 257.2288); color: oklch(0.6059 0.1986 256.4605); }
+        .tool-embed { width: 100%; }
+        .tool-frame { width: 100%; min-height: 720px; border: 0; display: block; background: transparent; }
         body.light-mode .site-header { background: oklch(1 0 0 / 0.92); border-bottom-color: oklch(0.88 0.0128 255.5297 / 0.5); }
         body.light-mode .logo-loa { color: oklch(0.15 0 0); }
         body.light-mode .logo-doss { color: oklch(0.42 0.062 278); }
@@ -425,7 +448,7 @@
         .easter-stage .ee-char { position: absolute; bottom: 0; will-change: transform; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
         .easter-stage .ee-mokoko { width: 32px; height: auto; transform-origin: bottom center; }
         .easter-stage .ee-doster { transform-origin: center center; }
-        .easter-stage .ee-doster[data-type="0"] { width: 36px; height: auto; }
+        .easter-stage .ee-doster[data-type="0"] { width: 31px; height: auto; }
         .easter-stage .ee-doster[data-type="1"] { width: 36px; height: auto; }
         .easter-stage .ee-mine { filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)); }
 
@@ -468,6 +491,8 @@
 
         /* 아이템 비 */
         #item-rain-layer { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+        /* 아이템 비는 계산기 전용 — 도구(티파고) 화면에선 숨김(도스터/모코코는 유지) */
+        body.tool-active #item-rain-layer { display: none !important; }
         .rain-item { position: fixed; pointer-events: none; will-change: transform, top; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
         @keyframes itemFall {
             0% { top: -40px; opacity: 0.9; }
@@ -599,9 +624,21 @@
     <div id="app" class="container">
         <header class="site-header">
             <div class="site-header-inner">
-                <a class="site-logo" href="" @click.prevent="() => location.reload()">
-                    <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
-                </a>
+                <div class="header-left">
+                    <a class="site-logo" href="" @click.prevent="activeTool ? closeTool() : location.reload()">
+                        <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
+                    </a>
+                    <div class="tool-menu">
+                        <button type="button" class="tool-menu-btn" :class="{ open: activeTool }">
+                            <svg class="tool-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"></rect><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"></rect><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"></rect><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"></rect></svg>
+                            <span class="tool-label">도구</span>
+                            <svg class="tool-caret" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        </button>
+                        <div class="tool-dropdown">
+                            <div v-for="t in tools" :key="t.id" class="tool-dropdown-item" :class="{ selected: activeTool === t.id }" @click="openTool(t.id)">{{ t.label }}</div>
+                        </div>
+                    </div>
+                </div>
                 <div class="header-actions">
                     <button class="header-easter-btn" @click="toggleEasterEgg" :title="isEasterEgg ? '도쓰효과 끄기' : '도쓰효과 켜기'">
                         <img src="object/easter_toggle.png" alt="" :class="{ 'easter-off': !isEasterEgg }">
@@ -630,7 +667,11 @@
             </div>
         </header>
 
-        <div class="main-wrapper">
+        <div class="tool-embed" v-if="activeTool">
+            <iframe ref="toolFrame" class="tool-frame" :src="activeToolSrc" allow="display-capture; fullscreen" title="티카투카 계산기"></iframe>
+        </div>
+
+        <div class="main-wrapper" v-show="!activeTool">
             <div class="left-panel wrap-cal">
                 <h1>아비도스 제작 계산기 ({{ currentMaterialName }})</h1>
                 
@@ -1271,7 +1312,7 @@
                 </div>
             </div>
         </div> 
-        <div class="update-box">update: 2026.06.22</div>
+        <div class="update-box" v-show="!activeTool">update: 2026.07.03</div>
     </div> 
 </div>
 
@@ -1371,6 +1412,11 @@
             return {
                 isLightMode: false,
                 isEasterEgg: true,
+                activeTool: null,
+                activeToolSrc: '',
+                tools: [
+                    { id: 'tikatuka', label: '티카투카 계산기', src: 'tools/tikatuka/index.html' },
+                ],
                 exchangeType: 'normal',
                 calcMode: 'optimize', 
                 forceConvert: false, 
@@ -1916,6 +1962,7 @@
             }
         },
         mounted() {
+            window.addEventListener('message', this.onToolMessage);
             const savedTheme = localStorage.getItem('loa_theme');
             if (savedTheme === 'light') {
                 this.isLightMode = true;
@@ -2057,7 +2104,7 @@
                         this._itemRainTimer = setTimeout(function() {
                             // 타이머 만료 시점에 다시 체크
                             var cur = Math.max(self.profitPerCraft.normal.fullCost, self.profitPerCraft.advanced.fullCost);
-                            if (cur > 55 && self.isEasterEgg) {
+                            if (cur > 55 && self.isEasterEgg && !self.activeTool) {
                                 window.LoaDossEasterEgg.itemRain(true);
                             }
                         }, 2000);
@@ -2071,8 +2118,33 @@
         },
         beforeUnmount() {
             window.removeEventListener('resize', this.handleResize);
+            window.removeEventListener('message', this.onToolMessage);
         },
         methods: {
+            openTool(id) {
+                var t = this.tools.find(x => x.id === id);
+                // 여는 시점의 테마를 src에 스냅샷(이후 테마 변경은 postMessage로만 → iframe 리로드 방지)
+                this.activeToolSrc = (t ? t.src : '') + '?theme=' + (this.isLightMode ? 'light' : 'dark');
+                this.activeTool = id;
+                document.body.classList.add('tool-active');
+                // 아이템 비는 계산기 전용 효과 → 도구(티파고) 화면에선 중단 + 남은 아이템 제거
+                // (도스터/모코코는 그대로 유지). 계산기 복귀 시 잔상 안 뜨게 레이어 비움.
+                if (window.LoaDossEasterEgg) window.LoaDossEasterEgg.itemRain(false);
+                var rainLayer = document.getElementById('item-rain-layer');
+                if (rainLayer) rainLayer.innerHTML = '';
+                window.scrollTo({ top: 0, behavior: 'auto' });
+            },
+            closeTool() {
+                this.activeTool = null;
+                document.body.classList.remove('tool-active');
+            },
+            onToolMessage(e) {
+                var d = e.data;
+                if (d && d.type === 'tipago-height' && typeof d.height === 'number') {
+                    var f = this.$refs.toolFrame;
+                    if (f) f.style.height = Math.max(720, d.height + 4) + 'px';
+                }
+            },
             // '판매 수입' 툴팁용 수식 HTML 생성 (소모된 재료 가치 툴팁과 동일 구조)
             // 툴팁 수식의 오른쪽 값 칸: [부호 고정칸][숫자 오른쪽정렬·고정폭] + tabular-nums 로 세로 줄맞춤
             tooltipCell(sign, n, w, gold) {
@@ -2323,6 +2395,10 @@
                 } else {
                     document.body.classList.remove('light-mode');
                     localStorage.setItem('loa_theme', 'dark');
+                }
+                var f = this.$refs.toolFrame;
+                if (this.activeTool && f && f.contentWindow) {
+                    f.contentWindow.postMessage({ type: 'theme', mode: this.isLightMode ? 'light' : 'dark' }, '*');
                 }
             },
             toggleEasterEgg() {
@@ -2826,8 +2902,8 @@
     // 크기: 모코코 -10%, 도스터 -30%
     var MOKOKO_WIDTH = 32;       // 36 * 0.9 ≈ 32
     var MOKOKO_MIN_GAP = 6;
-    var DOSTER_SIZE = [36, 36];  // [22*2*0.7, 26*2*0.7] ≈ [31, 36]
-    var DOSTER_PHYS_R = [18, 18]; // 물리 충돌 반지름
+    var DOSTER_SIZE = [31, 36];  // [22*2*0.7, 26*2*0.7] ≈ [31, 36]
+    var DOSTER_PHYS_R = [15, 18]; // 물리 충돌 반지름
 
     // 도스터 중력 절반
     var PHYSICS = {
