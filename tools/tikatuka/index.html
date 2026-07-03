@@ -6,7 +6,7 @@
   <title>티파고 | 티카투카 최적 수 추천</title>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Outfit:wght@800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./tools/tikatuka/styles.css" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
@@ -182,7 +182,7 @@
             <h3>화면 공유 보정 가이드</h3>
             <button class="guide-close" @click="closeGuide()" aria-label="닫기">✕</button>
           </div>
-          <img src="./guide-share.png" alt="보정 예시 — 파란 점과 노란 점을 칸과 굴림칸에 맞춘 모습" class="guide-img" />
+          <img src="./tools/tikatuka/guide-share.png" alt="보정 예시 — 파란 점과 노란 점을 칸과 굴림칸에 맞춘 모습" class="guide-img" />
           <div class="guide-caption">위 사진처럼 맞춰주세요</div>
           <ol class="guide-steps">
             <li>🖥️ 화면 공유를 누르고 '로스트아크' 게임 창을 선택하세요.</li>
@@ -194,7 +194,7 @@
       </div>
     </div>
   </div>
-  <script type="module" src="./app.js"></script>
+  <script type="module" src="./tools/tikatuka/app.js"></script>
   <script>
   // 로아도쓰 임베드 연동: 테마 수신 + iframe 높이 전송 (단독 실행 시엔 무해).
   (function () {
