@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/tikatuka", "destination": "/index.html" }
+    { "source": "/tikatuka", "destination": "/" }
   ]
 }
