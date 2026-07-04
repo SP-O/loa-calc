@@ -23,6 +23,7 @@
           <button class="tool-btn scan-go" v-if="scan.connected" :disabled="scan.busy" @click="scanNow()">📷 다시 스캔</button>
           <button class="tool-btn" v-if="scan.connected" @click="recalibrate()">재보정</button>
           <button class="tool-btn" v-if="scan.connected" @click="scanDisconnect()">⏹ 공유 중지</button>
+          <button class="tool-btn" v-if="scan.connected" @click="toggleOverlay()" title="게임 위에 항상 떠 있는 미니 창 (테두리 없는 창모드에서 사용)">{{ overlay.on ? '오버레이 닫기' : '오버레이 활성화' }}</button>
           <span class="scan-info">
             <span class="auto-dot" v-if="scan.connected && auto.on" title="자동 인식 켜짐 — 내 턴에 굴리면 자동 계산">🟢 자동</span>
             <span class="scan-status" v-if="scan.status">{{ scan.status }}</span>

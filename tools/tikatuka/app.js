@@ -6,6 +6,7 @@ import { boardStateToSt, scanGate } from './src/vision/st-writer.js';
 import { createAutoloopState, autoloopStep, boardSignature } from './src/vision/autoloop.js';
 import { handlesOf, hitTest, applyDrag, toDisplayRect } from './src/vision/calibration.js';
 import { computeLayout } from './src/vision/layout.js';
+import { openOverlay, closeOverlay, overlaySupported } from './src/overlay.js';
 
 const { createApp, ref, reactive, computed, toRefs, nextTick } = window.Vue;
 
@@ -311,6 +312,7 @@ createApp({
 
     function scanDisconnect() {
       autoStop();
+      if (overlay.on) closeOverlay(); // 오버레이는 화면공유 전용 — 공유 중지 시 함께 닫음(버튼도 사라지므로)
       if (captureHandle) captureDisconnect(captureHandle);
       captureHandle = null;
       scan.connected = false; scan.status = ''; scan.flags = null;
@@ -406,6 +408,29 @@ createApp({
       return !!((m && (m.lowConf || m.impossible)) || (o && (o.lowConf || o.impossible)));
     }
 
+    // ---- 오버레이(게임 위 항상 표시, 모니터 1개 사용자용) ----
+    const overlay = reactive({ on: false });
+    async function toggleOverlay() {
+      if (overlay.on) { closeOverlay(); return; } // pagehide → onClosed에서 상태 정리
+      if (!overlaySupported()) {
+        scan.status = '오버레이는 크롬/엣지/웨일 최신 버전에서만 지원돼요';
+        return;
+      }
+      try {
+        await openOverlay({
+          st, ui, scan, auto, die,
+          sumOf, sumClass, rowRec, scanRowWarn, targetLabel, pct,
+          canApplyAlkkagi, alkkagiLabel, applyAlkkagi, scanNow,
+          isCloseCall, closeLeadPct,
+          onClosed: () => { overlay.on = false; },
+        });
+        overlay.on = true;
+      } catch (err) {
+        console.error('overlay open failed:', err);
+        scan.status = '오버레이 열기 실패 — 버튼을 다시 눌러주세요';
+      }
+    }
+
     // ---- 포맷 ----
     function pct(p) { return `${Math.round(p * 100)}%`; }
     function targetLabel(t) {
@@ -428,6 +453,7 @@ createApp({
       canApplyAlkkagi, alkkagiLabel, applyAlkkagi,
       solve, pct, targetLabel, winColor, isCloseCall, closeLeadPct,
       scan, auto, scanConnect, scanDisconnect, scanNow, scanRowWarn, recalibrate,
+      overlay, toggleOverlay,
       cal, confirmCalibration, cancelCalibration, calPointerDown, calPointerMove, calPointerUp,
       guide, openGuide, closeGuide,
     };
