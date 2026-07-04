@@ -35,6 +35,8 @@ body.light-mode .tool-btn:hover:not(:disabled), body.light-mode .key:hover, body
 body.light-mode .vs-row.row-rec { background: oklch(0.6059 0.1986 256.4605 / 0.1); }
 body.light-mode .close-hint { background: oklch(0.6059 0.1986 256.4605 / 0.1); }
 body.light-mode .slot.shield { box-shadow: 0 0 6px oklch(0.6059 0.1986 256.4605 / 0.5); }
+/* Vue 마운트 완료 전 날 것 템플릿(오버레이·{{}}) 노출 방지 — 마운트되면 v-cloak 제거됨 */
+[v-cloak] { display: none !important; }
 * { box-sizing: border-box; }
 body {
   margin: 0; background: var(--bg); color: var(--text);
