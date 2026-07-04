@@ -1998,7 +1998,7 @@
                     const milliseconds = now.getMilliseconds();
                     
                     let delay = (5 * 60 * 1000) - ((minutes % 5) * 60 * 1000 + seconds * 1000 + milliseconds);
-                    delay += 1000; 
+                    delay += 1000 + Math.floor(Math.random() * 30000); // 유저별 0~30초 분산 — 정각 동시 폭주 방지
                     
                     this.refreshTimer = setTimeout(() => {
                         console.log("정시 시세 동기화 중...");
