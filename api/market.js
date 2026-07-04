@@ -1,6 +1,7 @@
 // Vercel 서버가 떠있는 동안 메모리에 유지될 캐시 변수들
 let cachedData = null; // { prices: {}, stats: {} } 형태로 저장
 let lastFetchTime = 0;
+let inflightRefresh = null; // 진행 중인 갱신 Promise — 동시 요청이 몰려도 로아 API 호출은 1회만
 
 // 검색할 아이템 22종
 const ITEM_NAMES = [
@@ -18,16 +19,39 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 export default async function handler(req, res) {
     const isForceRefresh = req.query.force === 'true';
     const now = Date.now();
-    const currentBlock = Math.floor(now / (5 * 60 * 1000));
-    const cachedBlock = Math.floor(lastFetchTime / (5 * 60 * 1000));
+    const BLOCK_MS = 5 * 60 * 1000;
+    const currentBlock = Math.floor(now / BLOCK_MS);
+    const cachedBlock = Math.floor(lastFetchTime / BLOCK_MS);
 
-    // 캐시 반환 로직: 강제 갱신이 아니고, 캐시가 있고, 같은 5분 블록이면 캐시 반환
-    if (!isForceRefresh && cachedData && cachedData.prices && (currentBlock === cachedBlock)) {
+    // 성공 응답 공통 처리: 일반 요청은 Vercel 엣지(CDN) 캐시에 현재 5분 블록이 끝날 때까지 저장.
+    // 캐시 만료 후에도 stale-while-revalidate로 이전 값을 즉시 주고 백그라운드에서 갱신되므로
+    // 유저가 아무리 몰려도 함수 실행(=로아 API 호출)은 5분에 사실상 1회로 고정됨.
+    const sendOk = () => {
+        const isEmpty = !cachedData || Object.keys(cachedData.prices || {}).length === 0;
+        if (isForceRefresh || isEmpty) {
+            // 강제 갱신 응답과 빈 결과는 CDN에 캐시하지 않음
+            res.setHeader('Cache-Control', 'no-store');
+        } else {
+            const remaining = Math.max(1, Math.ceil(((currentBlock + 1) * BLOCK_MS - Date.now()) / 1000));
+            res.setHeader('Cache-Control', `public, s-maxage=${remaining}, stale-while-revalidate=600`);
+        }
         return res.status(200).json({
             prices: cachedData.prices,
             stats: cachedData.stats,
-            lastUpdated: lastFetchTime 
+            lastUpdated: lastFetchTime
         });
+    };
+
+    const hasCache = cachedData && cachedData.prices;
+
+    // 캐시 반환 로직: 강제 갱신이 아니고, 캐시가 있고, 같은 5분 블록이면 캐시 반환
+    if (!isForceRefresh && hasCache && (currentBlock === cachedBlock)) {
+        return sendOk();
+    }
+
+    // 강제 갱신이라도 직전 실제 갱신 후 60초 이내면 캐시 반환 (로아 API 분당 100회 제한 보호)
+    if (isForceRefresh && hasCache && (now - lastFetchTime < 60 * 1000)) {
+        return sendOk();
     }
 
     // 강제 갱신은 MANUAL 키, 자동 갱신은 AUTO 키 사용 (Vercel 환경변수에 설정)
@@ -40,6 +64,22 @@ export default async function handler(req, res) {
     }
 
     try {
+        // 같은 인스턴스에 동시 요청이 몰려도 실제 갱신은 1회만 수행하고 나머지는 그 결과를 공유
+        if (!inflightRefresh) {
+            inflightRefresh = refreshMarketData(API_KEY).finally(() => { inflightRefresh = null; });
+        }
+        await inflightRefresh;
+        return sendOk();
+    } catch (error) {
+        console.error('API Error:', error);
+        // 갱신에 실패했어도 이전 캐시가 있으면 그걸로 응답 (빈 화면 방지)
+        if (hasCache) return sendOk();
+        return res.status(500).json({ error: "시세 데이터를 가져오는데 실패했습니다." });
+    }
+}
+
+// 로아 API에서 22종 시세+통계를 가져와 메모리 캐시를 갱신
+async function refreshMarketData(API_KEY) {
         const results = [];
         const chunkSize = 5; // 5개씩 병렬 조회하여 429 에러 및 타임아웃 방지
 
@@ -131,15 +171,4 @@ export default async function handler(req, res) {
 
         cachedData = { prices: newPrices, stats: newStats };
         lastFetchTime = Date.now();
-
-        return res.status(200).json({
-            prices: cachedData.prices,
-            stats: cachedData.stats,
-            lastUpdated: lastFetchTime
-        });
-        
-    } catch (error) {
-        console.error('API Error:', error);
-        return res.status(500).json({ error: "시세 데이터를 가져오는데 실패했습니다." });
-    }
 }
