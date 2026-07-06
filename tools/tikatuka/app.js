@@ -10,6 +10,14 @@ import { openOverlay, closeOverlay, overlaySupported } from './src/overlay.js';
 
 const { createApp, ref, reactive, computed, toRefs, nextTick } = window.Vue;
 
+// GTM dataLayer 이벤트 (부모 iframe과 무관하게 이 페이지의 GTM 컨테이너로 수집)
+function track(event, params) {
+  window.dataLayer = window.dataLayer || [];
+  const o = Object.assign({}, params || {});
+  o.event = event;
+  window.dataLayer.push(o);
+}
+
 const worker = new Worker(new URL('./src/solver/worker.js', import.meta.url), { type: 'module' });
 let msgId = 0;
 const pending = new Map();
@@ -220,8 +228,9 @@ createApp({
     }
 
     // ---- 솔브 ----
-    async function solve() {
+    async function solve(source = 'manual') {
       if (!die.value) return;
+      if (source === 'manual') track('tikatuka_solve'); // 자동 루프 계산은 이벤트 폭주 방지를 위해 제외
       ui.solving = true;
       ui.result = null;
       ui.solvedDie = die.value;
@@ -251,7 +260,7 @@ createApp({
     const REC_KEY = 'tikatuka.boardRect';
     const cal = reactive({ open: false, rect: null, frame: null, scale: 1, dispW: 0, dispH: 0, dragging: null, last: null });
     const guide = reactive({ open: false });
-    function openGuide() { guide.open = true; }
+    function openGuide() { guide.open = true; track('guide_open'); }
     function closeGuide() { guide.open = false; }
     function loadSavedRect() { try { return JSON.parse(localStorage.getItem(REC_KEY)); } catch { return null; } }
     let savedRect = loadSavedRect();
@@ -343,6 +352,7 @@ createApp({
       try {
         captureHandle = await captureConnect();
         scan.connected = true;
+        track('vision_connect');
         const frame = captureGrabFrame(captureHandle);
         if (savedRect && savedRect.capW === frame.width && savedRect.capH === frame.height) {
           scan.status = '자동 인식 켜짐 — 내 턴에 굴리면 자동 계산';
@@ -469,7 +479,7 @@ createApp({
       ui.bonusMode = mapped.bonusMode;
       ui.selected = null;
       ui.nextShield = false; // 스캔은 보드(실드 포함)를 직접 읽으므로 수동-배치 실드 힌트 해제
-      if (gate.ok) { scan.status = `인식 완료(${scan.lastMs}ms) — 계산합니다`; solve(); }
+      if (gate.ok) { scan.status = `인식 완료(${scan.lastMs}ms) — 계산합니다`; solve('auto'); }
       else { scan.status = `인식했지만 확인 필요(${gate.reasons.join(', ')}) — 노란 라인을 확인·수정 후 [추천] 하세요`; }
     }
     function scanRowWarn(li) {
@@ -482,7 +492,7 @@ createApp({
     // ---- 오버레이(게임 위 항상 표시, 모니터 1개 사용자용) ----
     const overlay = reactive({ on: false });
     async function toggleOverlay() {
-      if (overlay.on) { closeOverlay(); return; } // pagehide → onClosed에서 상태 정리
+      if (overlay.on) { track('overlay_toggle', { state: 'off' }); closeOverlay(); return; } // pagehide → onClosed에서 상태 정리
       if (!overlaySupported()) {
         scan.status = '오버레이는 크롬/엣지/웨일 최신 버전에서만 지원돼요';
         return;
@@ -496,6 +506,7 @@ createApp({
           onClosed: () => { overlay.on = false; },
         });
         overlay.on = true;
+        track('overlay_toggle', { state: 'on' });
       } catch (err) {
         console.error('overlay open failed:', err);
         scan.status = '오버레이 열기 실패 — 버튼을 다시 눌러주세요';

@@ -6,6 +6,7 @@
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
+    <script>function laTrack(e,p){window.dataLayer=window.dataLayer||[];var o=Object.assign({},p||{});o.event=e;window.dataLayer.push(o);}</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로아도쓰 - 로스트아크 아비도스 제작 계산기</title>
@@ -2048,6 +2049,7 @@
         },
         watch: {
             exchangeType() {
+                laTrack('exchange_type_change', { exchange_type: this.exchangeType });
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
                 this.forceConvert = false;
@@ -2064,13 +2066,15 @@
                 deep: true
             },
             selectedMaterial() {
+                laTrack('material_change', { material: this.selectedMaterial });
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
                 this.forceConvert = false;
                 this.showExchangeGuide = false;
             },
             calcMode(newVal) {
-                this.result = null; 
+                laTrack('mode_change', { calc_mode: newVal });
+                this.result = null;
                 this.forceConvert = false;
                 if (newVal === 'deficit' && this.exchangeType === 'farm') {
                     this.exchangeType = 'normal';
@@ -2153,6 +2157,7 @@
 
     this.activeToolSrc = t.src + '?theme=' + (this.isLightMode ? 'light' : 'dark');
     this.activeTool = id;
+    laTrack('tool_open', { tool_id: id, source: push ? 'click' : 'url' });
 
     if (push) {
         history.pushState({ tool: id }, '', t.route);
@@ -2447,6 +2452,7 @@
                 if (this.activeTool && f && f.contentWindow) {
                     f.contentWindow.postMessage({ type: 'theme', mode: this.isLightMode ? 'light' : 'dark' }, '*');
                 }
+                laTrack('theme_change', { theme: this.isLightMode ? 'light' : 'dark' });
             },
             toggleEasterEgg() {
                 this.isEasterEgg = !this.isEasterEgg;
@@ -2456,6 +2462,7 @@
                 }
             },
             applyGuideValues(type, row) {
+                laTrack('guide_apply', { guide_type: type });
                 this.calcMode = 'optimize';
                 
                 let nextRes = { 
@@ -2568,6 +2575,7 @@
             },
             async fetchMarketData(isForce = false, isSilent = false) {
                 if (isForce && this.isCooldown) return;
+                if (isForce) laTrack('market_refresh');
                 if (!isSilent) this.fetching = true;
                 if (isForce) this.isCooldown = true;
                 
@@ -2615,6 +2623,7 @@
                 }
             },
             async calculate(skipDelay = false) {
+                if (!skipDelay) laTrack('calc_execute', { calc_mode: this.calcMode, exchange_type: this.exchangeType, material: this.selectedMaterial });
                 if (!skipDelay) this.loading = true;
                 if (!skipDelay) await new Promise(resolve => setTimeout(resolve, 50)); 
                 
