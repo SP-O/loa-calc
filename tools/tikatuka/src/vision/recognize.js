@@ -200,3 +200,29 @@ export function recognizeFrame(frame, boardRect = null) {
     clipped,
   };
 }
+
+// ---- 밑장빼기(리롤) 선택 상태 --------------------------------------------
+// 리롤 직후 내 홀딩 칸에 주사위 2개가 세로로 떠서 선택을 기다린다(위=원래, 아래=새).
+// 위치 실측(2560 풀스크린·1920 창모드 픽스처): 홀딩 중심 기준 위 -1.0cs, 아래 +0.9cs.
+// 글로우가 있어도 블롭 임계(165)로 주사위 면이 잡히는 것을 픽스처 3세트로 확인.
+export function detectRerollChoice(frame, boardRect = null) {
+  const gray = toGray(frame);
+  const rect = boardRect || anchorToBoardRect(findAnchor(gray, LANDMARK));
+  const L = computeLayout(rect);
+  const cs = L.cellSize;
+  const half = Math.round(cs * 0.8);
+  const blobOpts = { minPx: Math.round(cs * cs * 0.3), min: Math.round(cs * 0.6), max: Math.round(cs * 1.375) };
+  const readAt = (fy) => {
+    const cy = Math.round(L.holdMine.cy + fy * cs);
+    if (!inFrameWindow(L.holdMine.cx, cy, half, gray.width, gray.height)) return null;
+    const b = findDieBlob(gray, L.holdMine.cx, cy, half, blobOpts);
+    if (!b) return null;
+    const v = classifyByTemplate(gray, b.cx, b.cy, srcWinForBlob(b)).value;
+    return v >= 1 && v <= 6 ? { v, cy: b.cy } : null;
+  };
+  const top = readAt(-1.05);
+  const bottom = readAt(0.72);
+  // 둘 다 있어야 선택 상태(일반 굴림은 중앙 1개). 세로 간격으로 같은 블롭 중복도 배제.
+  if (!top || !bottom || bottom.cy - top.cy < 1.2 * cs) return null;
+  return { orig: top.v, next: bottom.v };
+}
