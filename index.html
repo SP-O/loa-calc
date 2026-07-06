@@ -2072,6 +2072,12 @@
                 this.forceConvert = false;
                 this.showExchangeGuide = false;
             },
+            guideExactMode(newVal) {
+                laTrack('guide_criteria_change', { criteria: newVal ? 'min_required' : 'auction_buy' });
+            },
+            includeSurplus(newVal) {
+                laTrack('surplus_toggle', { state: newVal ? 'on' : 'off' });
+            },
             calcMode(newVal) {
                 laTrack('mode_change', { calc_mode: newVal });
                 this.result = null;
@@ -2503,6 +2509,7 @@
                 }
             },
             doForceConvert() {
+                laTrack('force_convert', { exchange_type: this.exchangeType });
                 this.forceConvert = true;
                 this.calculate();
             },
