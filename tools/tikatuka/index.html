@@ -97,7 +97,7 @@
           <details class="opt-more" v-if="!(scan.connected && result)">
             <summary>⚙️ 옵션</summary>
             <label class="chk"><input type="checkbox" v-model="myMitjang" /> 내 리롤 남음</label>
-            <label class="chk"><input type="checkbox" v-model="oppMitjang" /> 상대 리롤 사용</label>
+            <label class="chk"><input type="checkbox" v-model="oppMitjang" /> 상대 리롤 남음</label>
             <label class="chk"><input type="checkbox" v-model="precise" /> 정밀 모드(느림·더 최적)</label>
             <label class="chk"><input type="checkbox" v-model="realAI" /> 별 3등급 이하 상대(무지성 알까기)</label>
           </details>
@@ -108,13 +108,33 @@
         </button>
       </div>
 
+      <div class="panel result" v-if="rerollChoice" :style="{ order: scan.connected ? 1 : 2 }">
+        <div class="result-card best">
+          <div class="rec-line">추천: <strong>{{ rerollChoice.pick === rerollChoice.orig ? '기존 주사위' : '새 주사위' }} {{ rerollChoice.pick }}</strong></div>
+          <div class="rr-opts">
+            <div class="rr-opt" :class="{ 'rr-win': rerollChoice.pick === rerollChoice.orig }">
+              <span class="rr-name">기존 주사위</span>
+              <span class="rr-die">{{ rerollChoice.orig }}</span>
+              <span class="rr-p">{{ pct(rerollChoice.origProb) }}</span>
+              <span class="rr-tag" v-if="rerollChoice.pick === rerollChoice.orig">권장</span>
+            </div>
+            <div class="rr-opt" :class="{ 'rr-win': rerollChoice.pick === rerollChoice.next }">
+              <span class="rr-name">새 주사위</span>
+              <span class="rr-die">{{ rerollChoice.next }}</span>
+              <span class="rr-p">{{ pct(rerollChoice.nextProb) }}</span>
+              <span class="rr-tag" v-if="rerollChoice.pick === rerollChoice.next">권장</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="panel result" v-if="result" :style="{ order: scan.connected ? 1 : 2 }">
         <div class="opt-corner-row" v-if="scan.connected">
           <details class="opt-more opt-corner">
             <summary>⚙️ 옵션</summary>
             <div class="opt-grid">
               <label class="chk"><input type="checkbox" v-model="myMitjang" /> 내 리롤 남음</label>
-              <label class="chk"><input type="checkbox" v-model="oppMitjang" /> 상대 리롤 사용</label>
+              <label class="chk"><input type="checkbox" v-model="oppMitjang" /> 상대 리롤 남음</label>
               <label class="chk"><input type="checkbox" v-model="precise" /> 정밀 모드</label>
               <label class="chk"><input type="checkbox" v-model="realAI" /> 별3 이하 상대</label>
             </div>
@@ -161,6 +181,7 @@
       </div>
 
       <p class="footnote">승률 = 양쪽이 최선을 다하고 주사위가 무작위일 때 내가 이길 확률(보수적 추정).</p>
+      <div class="update-box">update: 2026.07.06</div>
 
       <div class="cal-overlay" v-if="cal.open">
         <div class="cal-modal">

@@ -125,6 +125,7 @@ h1 {
 .other-title { color: var(--muted); font-size: 0.85em; margin: 14px 0 6px; }
 .opt-row { display: flex; justify-content: space-between; padding: 6px 4px; border-bottom: 1px solid var(--line); font-size: 0.95em; }
 .footnote { color: var(--muted); font-size: 0.8em; text-align: center; margin-top: 6px; order: 3; }
+.update-box { order: 2; text-align: right; margin-top: -14px; margin-bottom: -6px; padding-right: 2px; color: oklch(0.6268 0 0); font-size: 12px; transition: color 0.3s ease; }
 @media (max-width: 560px) {
   .slot { width: 38px; height: 38px; font-size: 1.05em; }
   .ln { width: 28px; font-size: 0.72em; }
@@ -199,3 +200,20 @@ h1 {
 .guide-steps li:last-child { margin-bottom: 0; }
 .guide-steps strong { color: var(--gold); }
 .guide-ok { width: 100%; }
+
+/* 리롤 두 주사위 선택 카드: 승자는 골드 강조, 패자는 흐리게 */
+.rr-opts { display: flex; gap: 12px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+.rr-opt {
+  display: flex; align-items: center; gap: 9px; padding: 9px 16px;
+  border-radius: 12px; border: 1.5px solid var(--line); color: var(--muted); opacity: 0.7;
+}
+.rr-opt .rr-die { font-weight: 800; font-size: 1.45em; line-height: 1; color: var(--text); }
+.rr-opt .rr-p { font-weight: 700; font-size: 1.05em; }
+.rr-opt.rr-win {
+  border-color: var(--gold);
+  background: color-mix(in oklab, var(--gold) 12%, transparent);
+  color: var(--text); opacity: 1;
+}
+.rr-opt.rr-win .rr-die { color: var(--gold); }
+.rr-opt.rr-win .rr-p { color: var(--green); }
+.rr-tag { background: var(--gold); color: #000; font-size: 0.72em; font-weight: 800; border-radius: 5px; padding: 2px 7px; }

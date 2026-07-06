@@ -3,7 +3,7 @@ import { cellToDieIndex, nextFillCell } from './src/ui-layout.js';
 import { isCloseCall, topLead } from './src/solver/advice.js';
 import { connect as captureConnect, grabFrame as captureGrabFrame, disconnect as captureDisconnect, isBlackFrame } from './src/vision/capture.js';
 import { boardStateToSt, scanGate } from './src/vision/st-writer.js';
-import { createAutoloopState, autoloopStep, boardSignature } from './src/vision/autoloop.js';
+import { createAutoloopState, autoloopStep, boardSignature, createRerollFlow, rerollFlowStep } from './src/vision/autoloop.js';
 import { handlesOf, hitTest, applyDrag, toDisplayRect } from './src/vision/calibration.js';
 import { computeLayout } from './src/vision/layout.js';
 import { openOverlay, closeOverlay, overlaySupported } from './src/overlay.js';
@@ -49,6 +49,7 @@ createApp({
       precise: false,    // 정밀 모드(느림·더 최적)
       realAI: false,     // 실제 AI 상대 모드(실전 AI 성향 반영)
       nextShield: false, // 다음에 놓는 주사위를 실드로(알까기 보너스용, 1회 후 자동 해제)
+      rerollChoice: null, // 리롤 직후 두 주사위 선택 추천 { orig, next, origProb, nextProb, pick }
       // 자동 인식 사용 시 수동 입력을 누를 일이 적어 접어 화면공유 시 세로 공간 확보(선택 유지)
       inputCollapsed: localStorage.getItem(INPUT_COLLAPSED_KEY) === '1',
     });
@@ -70,6 +71,7 @@ createApp({
       history.push(snapshot());
       if (history.length > 50) history.shift();
       ui.result = null; // 보드가 바뀌면 이전 추천은 무효
+      ui.rerollChoice = null;
     }
     const canUndo = computed(() => history.length > 0);
     function undo() {
@@ -241,6 +243,7 @@ createApp({
     // 연속 자동 루프: 화면을 주기적으로 인식하고, 내 턴에 '새 상태'가 안정적으로 잡히면 자동 적용+계산.
     const auto = reactive({ on: false });
     let loopState = createAutoloopState();
+    let rerollFlow = createRerollFlow(); // 리롤 선택→픽 흐름 추적(픽은 강제 재계산)
     let loopTimer = null;
     let inflight = null;      // 진행 중 인식 요청의 출처: 'manual' | 'auto'
     const POLL_MS = 300;
@@ -258,8 +261,24 @@ createApp({
       scan.lastMs = Math.round(ms);
       scan.busy = false;
       const mode = inflight; inflight = null;
+      // 리롤 선택 흐름 추적: 두주사위 선택 직후 첫 클린 프레임('pick')은 조기 커밋에 관계없이
+      // 무조건 재계산해야 한다(오토루프의 committedSig가 flicker로 미리 맞아버리는 버그 방지).
+      const flow = rerollFlowStep(rerollFlow, board);
+      rerollFlow = flow.state;
       if (mode === 'auto') {
         const gate = scanGate(board);
+        // 리롤 직후 두 주사위 선택 대기 상태 → 같은 쌍이 2프레임 연속 확인됐을 때만 계산
+        // (도착/픽 애니메이션 중 구르는 면이 유령 쌍으로 오인되는 것 방지)
+        if (board.rerollChoice) {
+          if (flow.action === 'choice') handleRerollChoice(board);
+          else if (!ui.rerollChoice) scan.status = '리롤 주사위 확인 중...';
+          return;
+        }
+        if (flow.action === 'pick') {                        // 픽 확정 → 강제 적용+계산(idle 우회)
+          applyScan(board);
+          loopState.committedSig = boardSignature(board);
+          return;
+        }
         const res = autoloopStep(loopState, board, gate);
         loopState = res.state;
         if (res.action === 'commit') applyScan(board);       // 새 상태 안정 확인 → 적용+계산
@@ -271,9 +290,54 @@ createApp({
         return;
       }
       // 수동('다시 스캔'): 안정화 게이트 없이 강제 적용. 자동이 즉시 재커밋하지 않도록 커밋서명 동기화.
+      if (board.rerollChoice) { handleRerollChoice(board); return; }
       applyScan(board);
       loopState.committedSig = boardSignature(board);
     };
+
+    // ---- 리롤(밑장빼기) 두 주사위 선택 추천 ----
+    let lastChoiceKey = null;
+    let scanEpoch = 0; // 흐름 세대: 픽/스캔 적용마다 증가 — 뒤늦게 끝난 비동기 계산의 낡은 결과를 폐기
+    async function handleRerollChoice(board) {
+      const c = board.rerollChoice;
+      const key = `${boardSignature(board)}|${c.orig}|${c.next}`;
+      if (key === lastChoiceKey) return; // 자동 폴링(300ms) 중복 계산 방지
+      lastChoiceKey = key;
+      const epoch = ++scanEpoch;
+      // 이 순간 리롤은 이미 소비됨 — 버튼 인식 결과 반영
+      if (board.reroll) {
+        if (board.reroll.me != null) ui.myMitjang = board.reroll.me;
+        if (board.reroll.opp != null) ui.oppMitjang = board.reroll.opp;
+      }
+      const mapped = boardStateToSt(board);
+      pushHistory();
+      st.me = mapped.me;
+      st.opp = mapped.opp;
+      die.value = null;
+      ui.selected = null;
+      // 규칙상 리롤은 항상 다른 값 → 같은 값으로 읽혔다면 오인식이므로 추천하지 않음
+      if (c.orig === c.next) {
+        scan.status = '리롤 주사위 인식이 애매해요 — 화면에서 직접 확인하세요';
+        return;
+      }
+      scan.status = `리롤 선택 계산 중... (${c.orig} vs ${c.next})`;
+      try {
+        const state = buildEngineState();
+        const opts = { isBonus: false, seed: 1234567, precise: ui.precise, realAI: ui.realAI };
+        const [ra, rb] = await Promise.all([
+          solveAsync({ state, die: c.orig, opts }),
+          solveAsync({ state, die: c.next, opts }),
+        ]);
+        if (epoch !== scanEpoch) return; // 계산 중 픽/새 스캔이 지나감 → 낡은 결과 버림
+        const origProb = ra.best ? ra.best.winProb : 0;
+        const nextProb = rb.best ? rb.best.winProb : 0;
+        const pick = origProb >= nextProb ? c.orig : c.next;
+        ui.rerollChoice = { orig: c.orig, next: c.next, origProb, nextProb, pick };
+        scan.status = `리롤 선택: ${pick} 권장`;
+      } catch (err) {
+        if (epoch === scanEpoch) scan.status = '리롤 선택 계산 실패 — 직접 선택하세요';
+      }
+    }
 
     async function scanConnect() {
       try {
@@ -331,6 +395,7 @@ createApp({
     }
     function autoStart() {
       loopState = createAutoloopState();
+      rerollFlow = createRerollFlow();
       auto.on = true;
       if (loopTimer) clearInterval(loopTimer);
       loopTimer = setInterval(pollAuto, POLL_MS);
@@ -387,8 +452,14 @@ createApp({
     }
     function calPointerUp() { cal.dragging = null; }
     function applyScan(board) {
+      scanEpoch++; // 진행 중인 리롤 선택 계산이 있으면 그 결과는 폐기(흐름이 이미 지나감)
       const gate = scanGate(board);
       scan.flags = gate;
+      // 밑장빼기(리롤) 버튼 상태 → 옵션 자동 반영 (내 턴 여부와 무관하게 항상 갱신)
+      if (board.reroll) {
+        if (board.reroll.me != null) ui.myMitjang = board.reroll.me;
+        if (board.reroll.opp != null) ui.oppMitjang = board.reroll.opp;
+      }
       if (!gate.isMyTurn) { scan.status = '내 턴이 아니에요(굴린 주사위가 없습니다)'; return; }
       const mapped = boardStateToSt(board);
       pushHistory();
