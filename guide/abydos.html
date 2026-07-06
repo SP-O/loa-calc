@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아비도스 융화 재료 제작 가이드 - 로아도쓰</title>
+    <meta name="description" content="로스트아크 아비도스 융화 재료 제작 입문 가이드. 제작 수수료, 대성공 확률, 손익분기 개념을 정리하고 로아도쓰 계산기로 제작 이득을 판단하는 방법을 설명합니다.">
+    <link rel="canonical" href="https://loadoss.com/guide/abydos">
+    <link rel="icon" type="image/png" href="/object/doster_b.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/content.css">
+</head>
+<body class="content-page">
+
+<header class="content-header">
+    <div class="content-header-inner">
+        <a class="site-logo" href="/">
+            <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
+        </a>
+        <div class="header-right">
+            <a class="back-to-calc" href="/">계산기로 돌아가기</a>
+            <button id="theme-toggle" type="button" title="테마 전환" aria-label="테마 전환">
+                <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none"/><line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/><line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="17.8" y1="17.8" x2="19.6" y2="19.6"/><line x1="19.6" y1="4.4" x2="17.8" y2="6.2"/><line x1="6.2" y1="17.8" x2="4.4" y2="19.6"/></svg>
+                <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="content-main">
+    <h1>아비도스 융화 재료 제작 가이드</h1>
+    <p class="content-sub">융화 재료가 무엇인지부터 손익분기 판단까지, 아비도스 제작의 기본 개념을 정리했습니다.</p>
+
+    <nav class="content-nav-tabs">
+        <a href="/guide/abydos" class="active">아비도스 제작 가이드</a>
+        <a href="/guide/exchange">교환 · 영지 농장</a>
+        <a href="/guide/tipago">티파고 공략</a>
+        <a href="/guide/about">사이트 소개</a>
+    </nav>
+
+    <div class="content-card">
+        <h2>아비도스 융화 재료란?</h2>
+        <p>아비도스 융화 재료는 로스트아크의 군단장·에픽 레이드 등에서 장비를 성장시킬 때 대량으로 쓰이는 <strong>4티어 제작 아이템</strong>입니다. 영지(스트롱홀드)의 제작 공방에서 생활 재료를 조합해 만들며, 직접 만들어 쓰거나 거래소에 판매할 수 있습니다.</p>
+        <p>제작에는 벌목·채광·고고학·낚시·수렵·채집 여섯 가지 생활 콘텐츠에서 얻는 재료가 들어갑니다. 예를 들어 벌목 기반 제작이라면 목재, 부드러운 목재, 튼튼한 목재(3티어), 아비도스 목재(4티어) 같은 재료가 필요하고, 여기에 벌목의 가루 같은 보조 재료와 제작 수수료(골드)가 추가됩니다.</p>
+        <p>핵심은 이겁니다. <strong>재료를 직접 캐든 거래소에서 사든, 재료에는 항상 "시세"라는 가치가 있습니다.</strong> 그래서 아비도스 제작이 이득인지 손해인지는 매일의 거래소 시세에 따라 달라지고, 이걸 매번 손으로 계산하는 건 상당히 번거로운 일입니다. 로아도쓰는 이 계산을 자동화하기 위해 만들어졌습니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>제작 비용의 구조</h2>
+        <p>아비도스 융화 재료 1회 제작의 비용은 크게 세 부분으로 나뉩니다.</p>
+        <ul>
+            <li><strong>재료비</strong> — 투입되는 생활 재료의 가치. 거래소에서 구매한다면 구매가가 그대로 비용이고, 직접 채집했다면 "팔았을 때 받을 수 있었던 금액"(기회비용)이 비용입니다.</li>
+            <li><strong>제작 수수료</strong> — 제작 공방에 지불하는 골드. 영지 효과나 이벤트에 따라 할인이 적용될 수 있습니다.</li>
+            <li><strong>판매 수수료</strong> — 완성품을 거래소에 팔 경우 판매가의 일부가 수수료로 빠집니다. 직접 사용할 경우에는 해당되지 않습니다.</li>
+        </ul>
+        <p>수익 쪽에는 <strong>대성공</strong>이 있습니다. 제작 시 일정 확률로 결과물이 추가로 나오는데, 이 확률만큼 기대 산출량이 늘어나므로 개당 원가는 그만큼 내려갑니다. 로아도쓰 계산기는 이 대성공 기대값과 수수료를 모두 반영해 개당 실질 원가를 계산합니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>손익분기, 이렇게 판단합니다</h2>
+        <p>"제작이 이득인가?"라는 질문은 사실 두 가지 질문으로 나뉩니다.</p>
+        <p><strong>① 만들어서 파는 게 이득인가?</strong> — 제작 원가(재료비 + 제작 수수료)에 판매 수수료까지 뺀 실수령액이 거래소 판매가보다 높아야 이득입니다. 시세가 출렁이는 날에는 아침에 이득이던 제작이 저녁엔 손해가 되기도 합니다.</p>
+        <p><strong>② 사서 쓰는 것보다 만들어 쓰는 게 이득인가?</strong> — 융화 재료를 직접 소비할 계획이라면, 거래소에서 완성품을 사는 가격과 제작 원가를 비교하면 됩니다. 판매 수수료가 빠지지 않으므로 ①보다 제작이 유리해지는 경우가 많습니다.</p>
+        <p>로아도쓰 메인 계산기는 실시간 거래소 시세를 불러와 두 판단을 모두 자동으로 해줍니다. 보유 재료를 입력하면 부족한 재료의 구매 비용까지 반영된 최종 손익이 표시됩니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>제작 효율을 높이는 팁</h2>
+        <ul>
+            <li><strong>시세가 움직이는 시간대를 관찰하세요.</strong> 레이드 리셋 직후나 이벤트 기간에는 융화 재료 수요가 몰려 판매가가 오르는 경향이 있습니다. 같은 제작이라도 파는 타이밍에 따라 손익이 달라집니다.</li>
+            <li><strong>재료별 손익을 비교하고 제작하세요.</strong> 벌목·채광·고고학 등 어느 계열로 만들어도 결과물의 가치는 같지만, 투입 재료의 시세는 계열마다 다릅니다. 그날 가장 원가가 낮은 계열을 고르는 것만으로 마진이 달라집니다.</li>
+            <li><strong>부족분은 교환으로 채울 수 있는지 먼저 확인하세요.</strong> 거래소 구매보다 남는 재료를 교환하는 쪽이 쌀 때가 많습니다. 자세한 내용은 <a href="/guide/exchange">교환 · 영지 농장 가이드</a>를 참고하세요.</li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <h2>자주 묻는 질문</h2>
+        <h3>Q. 시세는 얼마나 자주 갱신되나요?</h3>
+        <p>로스트아크 공식 오픈 API의 거래소 데이터를 주기적으로 불러옵니다. 계산 시점의 최근 시세가 반영되며, 새로고침 버튼으로 직접 갱신할 수도 있습니다.</p>
+        <h3>Q. 직접 캔 재료는 공짜 아닌가요?</h3>
+        <p>골드를 쓰지 않았다는 점에서는 공짜지만, 그 재료를 거래소에 팔면 골드가 됩니다. 제작에 써버리면 그 판매 기회를 포기하는 것이므로, 정확한 손익 판단을 위해서는 직접 캔 재료도 시세만큼의 비용으로 계산하는 것이 합리적입니다.</p>
+        <h3>Q. 대성공 확률은 어떻게 반영되나요?</h3>
+        <p>대성공이 발생하면 결과물이 추가로 산출됩니다. 계산기는 대성공 확률에 따른 기대 산출량을 반영해 개당 원가를 계산하므로, 단순히 "재료비 ÷ 기본 산출량"으로 계산할 때보다 정확한 값을 보여줍니다.</p>
+        <h3>Q. 어떤 생활 재료 제작이 제일 이득인가요?</h3>
+        <p>날마다 다릅니다. 시세가 계속 움직이기 때문에 고정된 정답은 없고, 메인 계산기에서 재료별 손익을 비교해 그날그날 가장 유리한 제작을 고르는 것이 좋습니다.</p>
+    </div>
+</main>
+
+<footer class="content-footer">
+    <div class="content-footer-inner">
+        <span>© 2026 LoaDoss. All Rights Reserved. This site is not associated with Smilegate RPG &amp; Smilegate Stove. Data based on Lostark Open API.</span>
+        <span><a href="/">계산기</a><a href="/news">업데이트 내역</a><a href="/privacy">개인정보 처리방침</a></span>
+    </div>
+</footer>
+
+<script src="/assets/content.js"></script>
+</body>
+</html>

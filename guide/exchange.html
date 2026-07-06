@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>재료 교환 · 영지 농장 활용 가이드 - 로아도쓰</title>
+    <meta name="description" content="로스트아크 생활 재료 교환과 영지 농장(스트롱홀드) 활용 가이드. 교환 비율의 손익 판단, 영지 농장 모드와 부족 재료 계산 모드 사용법을 설명합니다.">
+    <link rel="canonical" href="https://loadoss.com/guide/exchange">
+    <link rel="icon" type="image/png" href="/object/doster_b.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/content.css">
+</head>
+<body class="content-page">
+
+<header class="content-header">
+    <div class="content-header-inner">
+        <a class="site-logo" href="/">
+            <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
+        </a>
+        <div class="header-right">
+            <a class="back-to-calc" href="/">계산기로 돌아가기</a>
+            <button id="theme-toggle" type="button" title="테마 전환" aria-label="테마 전환">
+                <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none"/><line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/><line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="17.8" y1="17.8" x2="19.6" y2="19.6"/><line x1="19.6" y1="4.4" x2="17.8" y2="6.2"/><line x1="6.2" y1="17.8" x2="4.4" y2="19.6"/></svg>
+                <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="content-main">
+    <h1>재료 교환 · 영지 농장 활용 가이드</h1>
+    <p class="content-sub">가지고 있는 생활 재료를 더 가치 있게 바꾸는 방법 — 교환 비율의 손익 판단과 영지 농장 활용법입니다.</p>
+
+    <nav class="content-nav-tabs">
+        <a href="/guide/abydos">아비도스 제작 가이드</a>
+        <a href="/guide/exchange" class="active">교환 · 영지 농장</a>
+        <a href="/guide/tipago">티파고 공략</a>
+        <a href="/guide/about">사이트 소개</a>
+    </nav>
+
+    <div class="content-card">
+        <h2>생활 재료 교환이란?</h2>
+        <p>아비도스 융화 재료를 제작하다 보면 특정 재료만 부족하고 다른 재료는 남아도는 상황이 자주 생깁니다. 이럴 때 쓸 수 있는 것이 <strong>재료 교환</strong>입니다. 남는 하위 재료를 정해진 비율로 상위 재료와 바꾸거나, 서로 다른 재료끼리 교환해 부족분을 메울 수 있습니다.</p>
+        <p>문제는 교환 비율이 "항상 이득"이 아니라는 점입니다. 교환으로 얻는 재료의 시세 가치가, 내어주는 재료의 시세 가치보다 높을 때만 이득입니다. 시세는 매일 움직이므로 어제는 이득이던 교환이 오늘은 손해일 수 있습니다. 즉, 교환도 제작과 마찬가지로 <strong>시세 기반의 손익 계산</strong>이 필요한 의사결정입니다.</p>
+        <p>로아도쓰의 "재료 교환 계산 (기본)" 모드는 현재 거래소 시세를 기준으로, 지금 하려는 교환이 골드 가치로 얼마나 이득(또는 손해)인지 바로 보여줍니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>교환 손익, 이렇게 읽으면 됩니다</h2>
+        <p>교환의 손익을 판단하는 기준은 단순합니다.</p>
+        <ul>
+            <li><strong>내어주는 것의 가치</strong> — 교환에 소모되는 재료를 거래소에 팔았을 때 받을 수 있는 골드.</li>
+            <li><strong>받는 것의 가치</strong> — 교환으로 얻는 재료를 거래소에서 사려면 지불해야 하는 골드.</li>
+        </ul>
+        <p>받는 것의 가치가 내어주는 것의 가치보다 크면 이득입니다. 다만 실제로는 판매 수수료, 최소 거래 단위, 호가 차이 같은 요소가 끼어들기 때문에 눈대중 계산은 어긋나기 쉽습니다. 계산기는 이런 요소를 반영해 "이 교환은 골드로 환산하면 얼마짜리"인지 표시해 주므로, 표시된 값이 플러스인 교환만 골라서 하면 됩니다.</p>
+        <p>특히 융화 재료 제작 직전이라면, "부족 재료를 거래소에서 사는 것"과 "남는 재료를 교환해서 채우는 것" 중 어느 쪽이 싼지 비교하는 것이 핵심입니다. 로아도쓰는 이 비교를 자동으로 해서 더 유리한 쪽을 알려줍니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>영지 농장 모드</h2>
+        <p>영지(스트롱홀드)의 <strong>농장</strong>에서는 파견·재배를 통해 생활 재료를 수급할 수 있습니다. "재료 교환 계산 (영지 농장)" 모드는 이 농장 수급까지 고려한 교환 계산을 지원합니다.</p>
+        <p>농장에서 나오는 재료는 종류가 정해져 있어서, 실제 제작에 필요한 재료와 어긋나는 경우가 많습니다. 이때 농장 산출물을 기준으로 교환 계획을 세우면 "농장에서 얻은 재료 → 교환 → 제작 투입"의 흐름을 만들 수 있는데, 각 단계에서 시세 가치가 어떻게 변하는지를 계산기가 추적해 줍니다.</p>
+        <p>영지 농장 모드에서는 시세 툴팁 대신 농장 산출 기준의 정보가 표시되도록 화면이 최적화되어 있습니다. 농장을 꾸준히 돌리는 유저라면 이 모드에서 교환 계획을 세우는 것이 기본 모드보다 정확합니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>부족 재료 계산 모드</h2>
+        <p>"이만큼 제작하려면 뭐가 얼마나 모자라지?"를 계산하는 모드입니다. 목표 제작 수량을 정하고 현재 보유 재료를 입력하면, 부족한 재료의 종류·수량과 이를 거래소에서 채울 때 드는 골드가 정리되어 나옵니다.</p>
+        <p>레이드 준비로 융화 재료를 대량으로 만들어야 할 때, 미리 부족분과 예산을 파악해 두면 시세가 낮은 타이밍에 나눠 구매하는 전략도 세울 수 있습니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>자주 묻는 질문</h2>
+        <h3>Q. 교환 이득이 표시되는데 실제로는 손해를 본 것 같아요.</h3>
+        <p>계산은 계산 시점의 시세 기준입니다. 교환 후 시세가 움직이면 결과적으로 손익이 달라질 수 있습니다. 또한 거래소에서 실제 체결되는 가격은 최저가와 다를 수 있으므로, 표시값은 "현재 시세 기준의 기대 손익"으로 이해하는 것이 정확합니다.</p>
+        <h3>Q. 영지 농장 모드와 기본 모드 중 뭘 써야 하나요?</h3>
+        <p>재료를 주로 거래소에서 사고판다면 기본 모드, 영지 농장 산출물을 중심으로 재료를 수급한다면 영지 농장 모드가 맞습니다. 두 모드는 상단 탭에서 언제든 전환할 수 있습니다.</p>
+        <h3>Q. 시세가 안 불러와져요.</h3>
+        <p>접속이 몰리는 시간대에는 시세 조회가 지연될 수 있습니다. 2026년 7월 업데이트로 캐시와 요청 공유가 적용되어 대부분 해소되었지만, 문제가 계속되면 잠시 후 새로고침해 주세요.</p>
+    </div>
+</main>
+
+<footer class="content-footer">
+    <div class="content-footer-inner">
+        <span>© 2026 LoaDoss. All Rights Reserved. This site is not associated with Smilegate RPG &amp; Smilegate Stove. Data based on Lostark Open API.</span>
+        <span><a href="/">계산기</a><a href="/news">업데이트 내역</a><a href="/privacy">개인정보 처리방침</a></span>
+    </div>
+</footer>
+
+<script src="/assets/content.js"></script>
+</body>
+</html>
