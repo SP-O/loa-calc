@@ -116,6 +116,20 @@ button:hover { background: oklch(0.33 0 0); }
 .opts .o .p { text-align: right; color: oklch(0.85 0 0); font-weight: 500; }
 .tag-alk-sm { color: oklch(0.8868 0.1822 95.3226); font-size: 12px; margin-left: 5px; }
 
+/* 리롤 두 주사위 선택: 승자 골드 강조, 패자 흐리게 */
+.rrs { display: flex; gap: 8px; justify-content: center; margin-top: 8px; }
+.rr {
+  display: flex; align-items: center; gap: 6px; padding: 6px 10px;
+  border-radius: 10px; border: 1.5px solid oklch(1 0 0 / 0.12); color: oklch(0.62 0 0);
+}
+.rr .rrl { font-size: 12px; }
+.rr .rrd { font-size: 20px; font-weight: 800; line-height: 1; color: oklch(0.85 0 0); }
+.rr .rrp { font-weight: 700; font-size: 14px; }
+.rr.rrw { border-color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.12); color: oklch(0.9067 0 0); }
+.rr.rrw .rrd { color: oklch(0.8868 0.1822 95.3226); }
+.rr.rrw .rrp { color: oklch(0.8003 0.1821 151.7035); }
+.rrt { background: oklch(0.8868 0.1822 95.3226); color: #000; font-size: 11px; font-weight: 800; border-radius: 5px; padding: 1px 6px; }
+
 .idle { color: oklch(0.62 0 0); font-size: 13.5px; padding: 6px 0 2px; }
 .abtn {
   margin-top: 8px; width: 100%; padding: 7px 0;
@@ -153,6 +167,22 @@ function renderBoard(ctx) {
 }
 
 function renderResult(ctx) {
+  const rc = ctx.ui.rerollChoice;
+  if (rc) {
+    const row = (label, dieV, prob, win) =>
+      `<div class="rr${win ? ' rrw' : ''}">`
+      + `<span class="rrl">${label}</span>`
+      + `<b class="rrd">${dieV}</b>`
+      + `<span class="rrp">${ctx.pct(prob)}</span>`
+      + `${win ? '<span class="rrt">권장</span>' : ''}`
+      + `</div>`;
+    const pickLabel = rc.pick === rc.orig ? '기존 주사위' : '새 주사위';
+    return `<div class="best-target">추천 <b>${pickLabel} ${rc.pick}</b></div>`
+      + `<div class="rrs">`
+      + row('기존 주사위', rc.orig, rc.origProb, rc.pick === rc.orig)
+      + row('새 주사위', rc.next, rc.nextProb, rc.pick === rc.next)
+      + `</div>`;
+  }
   if (ctx.ui.solving) return `<div class="idle">계산 중…</div>`;
   const r = ctx.ui.result;
   if (r && r._error) return `<div class="idle">계산 오류: ${esc(r._error)}</div>`;
