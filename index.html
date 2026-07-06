@@ -669,7 +669,7 @@
         </header>
 
         <div class="tool-embed" v-if="activeTool">
-            <iframe ref="toolFrame" class="tool-frame" :src="activeToolSrc" allow="display-capture; fullscreen" title="티카투카 계산기"></iframe>
+            <iframe ref="toolFrame" class="tool-frame" :src="activeToolSrc" allow="display-capture; fullscreen; document-picture-in-picture" title="티카투카 계산기"></iframe>
         </div>
 
         <div class="main-wrapper" v-show="!activeTool">
@@ -1313,7 +1313,7 @@
                 </div>
             </div>
         </div> 
-        <div class="update-box" v-show="!activeTool">update: 2026.07.04</div>
+        <div class="update-box" v-show="!activeTool">update: 2026.07.03</div>
     </div> 
 </div>
 
