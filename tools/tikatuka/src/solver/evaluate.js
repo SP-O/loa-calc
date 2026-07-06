@@ -18,6 +18,12 @@ export function rollDie(rng) {
   return 1 + Math.floor(rng() * 6);
 }
 
+// 밑장빼기 새 주사위: 게임 규칙상 원래 값은 절대 안 나온다 — 나머지 5개 값 균등.
+export function rerollDie(rng, exclude) {
+  const v = 1 + Math.floor(rng() * 5);
+  return v >= exclude ? v + 1 : v;
+}
+
 export function pAtLeastTwo(a, b, c) {
   return a * b * (1 - c) + a * (1 - b) * c + (1 - a) * b * c + a * b * c;
 }
@@ -42,15 +48,22 @@ function removableValue(line) {
 }
 
 export function lineWinProb(state, i) {
-  const my = lineSum(state.me.lines[i]);
-  const op = lineSum(state.opp.lines[i]);
+  const myLine = state.me.lines[i];
+  const opLine = state.opp.lines[i];
+  const my = lineSum(myLine);
+  const op = lineSum(opLine);
+  const myFull = myLine.length === 3;
+  const opFull = opLine.length === 3;
+  // 잠긴 라인: 합은 놓을수록 늘기만 하고, 알까기는 "그 라인의 자기 줄에 빈칸"이 있어야
+  // 시전 가능하다. → 상대 줄이 풀이면 상대는 그 라인에서 아무것도 못 한다(못 채우고 못 뜯음).
+  if (myFull && opFull) return my > op ? 0.98 : my < op ? 0.02 : 0.5;
+  if (opFull && my >= op) return 0.98; // 내 줄만 열림: 채우면 늘기만 하고 뜯길 수 없음 → 영구 우세
+  if (myFull && my <= op) return 0.02; // 상대 줄만 열림: 내 합은 굳고 상대는 커지기만 함 → 영구 열세
   let margin = my - op;
-  // 상대에서 알까기로 뜯어낼 수 있는 가치(높을수록 유리) — 고점 더블/트리플일수록 큼
-  margin += removableValue(state.opp.lines[i]) * 0.25;
-  // 상대가 나에게서 뜯어낼 수 있는 가치(불리). 실드는 제외(못 뜯김)
-  margin -= removableValue(state.me.lines[i]) * 0.18;
-  // 양쪽 라인 꽉 찼고 내가 뒤지면 굳어진 패배 → 추가 페널티
-  if (state.me.lines[i].length === 3 && state.opp.lines[i].length === 3 && margin < 0) margin -= 2;
+  // 상대에서 알까기로 뜯어낼 수 있는 가치(높을수록 유리) — 내 줄에 빈칸이 있어야 시전 가능
+  if (!myFull) margin += removableValue(opLine) * 0.25;
+  // 상대가 나에게서 뜯어낼 수 있는 가치(불리, 실드 제외) — 상대 줄에 빈칸이 있어야 가능
+  if (!opFull) margin -= removableValue(myLine) * 0.18;
   return clamp(1 / (1 + Math.exp(-margin / HEUR_K)), 0.02, 0.98);
 }
 
@@ -64,7 +77,9 @@ export function chooseScore(player, state) {
   return player === 'me' ? h : 1 - h;
 }
 
-export function greedyMove(state, value, rng) {
+// 후보 평가는 보드 전체 복제(cloneState) 대신 "제자리 수정 후 원복"으로 한다(핫패스).
+// 평가 함수(chooseScore)는 동기·순수라 원복이 보장되고, 호출자 상태는 밖에서 볼 때 불변.
+export function greedyMoveScored(state, value, rng) {
   const player = state.turn;
   const opp = player === 'me' ? 'opp' : 'me';
   const lines = legalLines(state, player);
@@ -80,16 +95,29 @@ export function greedyMove(state, value, rng) {
   let bestScore = -Infinity;
   for (const L of pool) {
     const alkkagi = wouldTriggerAlkkagi(state, player, L, value);
-    const next = alkkagi
-      ? resolveAlkkagi(state, player, L, value)
-      : placeDie(state, player, L, { value, shield: false });
-    const sc = chooseScore(player, next) + rng() * 1e-6; // 동점 시 미세 난수
+    let sc;
+    if (alkkagi) {
+      const oline = state[opp].lines[L];
+      state[opp].lines[L] = oline.filter((d) => !(d.value === value && !d.shield));
+      sc = chooseScore(player, state) + rng() * 1e-6; // 동점 시 미세 난수
+      state[opp].lines[L] = oline;
+    } else {
+      const mline = state[player].lines[L];
+      mline.push({ value, shield: false });
+      sc = chooseScore(player, state) + rng() * 1e-6;
+      mline.pop();
+    }
     if (sc > bestScore) {
       bestScore = sc;
       best = { lineIndex: L, alkkagi };
     }
   }
-  return best;
+  return best && { move: best, score: bestScore };
+}
+
+export function greedyMove(state, value, rng) {
+  const scored = greedyMoveScored(state, value, rng);
+  return scored && scored.move;
 }
 
 // 실제 인게임 AI를 흉내낸 상대 정책(B-lite): 알까기 가능하면 우선(제거가치 큰 것),
@@ -117,25 +145,35 @@ export function aiOpponentMove(state, value, rng) {
   let best = cand[0];
   let bestScore = -Infinity;
   for (const L of cand) {
-    const next = placeDie(state, player, L, { value, shield: false });
-    const sc = chooseScore(player, next) + rng() * 1e-6;
+    const mline = state[player].lines[L];
+    mline.push({ value, shield: false });
+    const sc = chooseScore(player, state) + rng() * 1e-6;
+    mline.pop();
     if (sc > bestScore) { bestScore = sc; best = L; }
   }
   return { lineIndex: best, alkkagi: false };
 }
 
-export function greedyBonusPlace(state, player, b, rng) {
+// 보너스 주사위 최적 배치 칸 선택(점수 평가는 제자리 수정 후 원복 — 상태 불변).
+export function greedyBonusTarget(state, player, b, rng) {
   const targets = emptyTargets(state);
-  if (targets.length === 0) return state;
-  let best = state;
+  if (targets.length === 0) return null;
+  let best = null;
   let bestScore = -Infinity;
   for (const t of targets) {
-    const next = placeDie(state, t.side, t.lineIndex, { value: b, shield: true });
-    const sc = chooseScore(player, next) + rng() * 1e-6;
+    const line = state[t.side].lines[t.lineIndex];
+    line.push({ value: b, shield: true });
+    const sc = chooseScore(player, state) + rng() * 1e-6;
+    line.pop();
     if (sc > bestScore) {
       bestScore = sc;
-      best = next;
+      best = t;
     }
   }
   return best;
+}
+
+export function greedyBonusPlace(state, player, b, rng) {
+  const t = greedyBonusTarget(state, player, b, rng);
+  return t ? placeDie(state, t.side, t.lineIndex, { value: b, shield: true }) : state;
 }

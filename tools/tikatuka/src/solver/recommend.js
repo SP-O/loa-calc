@@ -1,5 +1,5 @@
-import { remainingEmpty } from '../state.js';
-import { legalLines, emptyTargets, wouldTriggerAlkkagi, setMitjang } from '../rules.js';
+import { remainingEmpty, canonicalKey } from '../state.js';
+import { legalLines, emptyTargets, wouldTriggerAlkkagi, setMitjang, placeDie, endTurn, resolveAlkkagi } from '../rules.js';
 import { makeRng } from './evaluate.js';
 import { mcMyPlacementValue, mcBonusPlacementValue } from './montecarlo.js';
 import {
@@ -8,18 +8,19 @@ import {
 } from './exact.js';
 
 const EXACT_THRESHOLD = 4;
-const MC_ROLLOUTS = 700;
+const MC_ROLLOUTS = 1200;
 // 정밀 모드: 완전탐색 범위·롤아웃을 키워 수학적 최적에 더 근접(느림). 무한로딩은 상한+폴백으로 방지.
 const EXACT_THRESHOLD_PRECISE = 6;
-const MC_ROLLOUTS_PRECISE = 2500;
-// 밑장빼기는 게임당 1회뿐인 귀한 자원(타짜의 손놀림). 다시 굴리면 거의 항상 살짝 이득으로
-// 보이므로 낮은 임계는 남발을 부른다. "진짜 아껴 쓴 보람"이 있는 큰 이득(11%p 이상)일 때만 권장.
-// (무작위 보드 측정: 4%p면 ~46% 발생 → 11%p면 ~14%로 감소.)
-const MITJANG_MARGIN = 0.11;
+const MC_ROLLOUTS_PRECISE = 4000;
+// 밑장빼기 권장 문턱. 과거 11%p는 "롤아웃이 아껴둔 밑장의 미래가치를 못 보는" 편향의
+// 보정치였다. 이제 롤아웃이 밑장을 모델링해 유지-vs-리롤 비교가 공정하므로,
+// MC 노이즈 가드(이득 추정 sd ~2.5%p의 2σ)만 남긴다. 완전탐색 경로는 노이즈가 없어
+// 사실상 "이득이 5%p 넘으면 권장"으로 동작한다.
+const MITJANG_MARGIN = 0.05;
 // 밑장빼기 판단은 4%p 임계의 coarse yes/no라 옵션 계산만큼 정밀할 필요가 없다.
 // 롤아웃을 줄여 전체 계산의 ~87%를 차지하던 밑장 비용을 크게 절감한다(조언용).
-const MITJANG_ROLLOUTS = 300;
-const MITJANG_ROLLOUTS_PRECISE = 700;
+const MITJANG_ROLLOUTS = 400;
+const MITJANG_ROLLOUTS_PRECISE = 1000;
 
 export function recommend(state, die, opts = {}) {
   const isBonus = !!opts.isBonus;
@@ -36,7 +37,9 @@ export function recommend(state, die, opts = {}) {
 
   let built;
   try {
-    if (exact) resetExactBudget();
+    // 일반 모드는 1초만 완전탐색 시도(못 풀면 MC로 신속 폴백), 정밀 모드는 2.5초까지.
+    // opts.exactTimeMs: 테스트 등에서 벽시계 상한 재정의(병렬 부하 플레이크 방지).
+    if (exact) resetExactBudget(opts.exactTimeMs ?? (precise ? 2500 : 1000));
     built = build(state, die, isBonus, exact, budget, baseSeed, rollouts, mcOpts, mitRollouts);
   } catch (e) {
     if (exact && isExactBudgetError(e)) {
@@ -53,14 +56,33 @@ export function recommend(state, die, opts = {}) {
 }
 
 function build(state, die, isBonus, exact, budget, baseSeed, rollouts, mcOpts, mitRollouts) {
-  const evalMy = (L) =>
-    exact
-      ? exactMyPlacementValue(state, L, die, budget)
-      : mcMyPlacementValue(state, L, die, rollouts, makeRng(baseSeed + 1 + L), mcOpts);
-  const evalBonus = (t) =>
-    exact
-      ? exactBonusPlacementValue(state, t, die, budget)
-      : mcBonusPlacementValue(state, t, die, rollouts, makeRng(baseSeed + 20 + (t.side === 'opp' ? 3 : 0) + t.lineIndex), mcOpts);
+  // 대칭 수 통합: 결과 국면의 정준 키가 같은 옵션(예: 빈 보드 첫 수의 세 라인)은
+  // 게임 가치가 동일하므로 1번만 평가해 같은 값을 공유한다(표시 일관성 + 계산 절약).
+  const canonCache = new Map();
+  const dedup = (key, compute) => {
+    let v = canonCache.get(key);
+    if (v === undefined) { v = compute(); canonCache.set(key, v); }
+    return v;
+  };
+  // 옵션 간 비교는 공통 난수(같은 시드)로: 서로 다른 수가 같은 주사위 흐름을 겪게 해
+  // 근소차 국면에서 순위가 샘플링 노이즈로 뒤집히는 것을 줄인다.
+  const evalMy = (L) => {
+    const alk = wouldTriggerAlkkagi(state, 'me', L, die);
+    const key = alk
+      ? 'a|' + canonicalKey(resolveAlkkagi(state, 'me', L, die))
+      : 'p|' + canonicalKey(endTurn(placeDie(state, 'me', L, { value: die, shield: false })));
+    return dedup(key, () =>
+      exact
+        ? exactMyPlacementValue(state, L, die, budget)
+        : mcMyPlacementValue(state, L, die, rollouts, makeRng(baseSeed + 1), mcOpts));
+  };
+  const evalBonus = (t) => {
+    const key = 'p|' + canonicalKey(endTurn(placeDie(state, t.side, t.lineIndex, { value: die, shield: true })));
+    return dedup(key, () =>
+      exact
+        ? exactBonusPlacementValue(state, t, die, budget)
+        : mcBonusPlacementValue(state, t, die, rollouts, makeRng(baseSeed + 20), mcOpts));
+  };
 
   const options = [];
   if (isBonus) {
@@ -87,7 +109,7 @@ function build(state, die, isBonus, exact, budget, baseSeed, rollouts, mcOpts, m
       mitjang = { recommend: false, baseWinProb, mitjangWinProb: baseWinProb };
     } else {
       const mr = exact ? rollouts : mitRollouts; // 완전탐색은 rollouts 무의미. MC만 축소 롤아웃.
-      const mitjangWinProb = mitjangValue(state, die, exact, budget, baseSeed, mr, mcOpts, baseWinProb);
+      const mitjangWinProb = mitjangValue(state, die, exact, budget, baseSeed, mr, mcOpts);
       mitjang = { recommend: mitjangWinProb > baseWinProb + MITJANG_MARGIN, baseWinProb, mitjangWinProb };
     }
   }
@@ -105,13 +127,11 @@ function bestMyValue(state, value, exact, budget, rng, rollouts, mcOpts) {
   return best === -Infinity ? 0 : best;
 }
 
-function mitjangValue(state, die, exact, budget, baseSeed, rollouts, mcOpts, baseBest) {
+function mitjangValue(state, die, exact, budget, baseSeed, rollouts, mcOpts) {
   const consumed = setMitjang(state, 'me', false);
-  // die를 그대로 둘 때의 값. MC 롤아웃은 hasMitjang을 무시하므로 이미 구한 base 최고값과 동일
-  // → 재계산 생략. 완전탐색은 hasMitjang(소진 여부)에 값이 달라지므로 재계산.
-  const vDie = exact
-    ? bestMyValue(consumed, die, true, budget, makeRng(baseSeed + 100 + die), rollouts, mcOpts)
-    : baseBest;
+  // die를 그대로 둘 때의 값 — 밑장을 '소진한' 상태로 재계산해야 한다.
+  // (MC 롤아웃도 이제 남은 밑장의 미래 가치를 모델링하므로 base 최고값과 다르다)
+  const vDie = bestMyValue(consumed, die, exact, budget, makeRng(baseSeed + 100 + die), rollouts, mcOpts);
   let acc = 0;
   let n = 0;
   for (let r2 = 1; r2 <= 6; r2++) {
