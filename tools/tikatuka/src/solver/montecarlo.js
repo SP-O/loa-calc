@@ -1,7 +1,7 @@
 import { cloneState, boardFull } from '../state.js';
 import { gameResult, outcomeValue, decidedResult } from '../scoring.js';
 import { endTurn, placeDie, resolveAlkkagi, wouldTriggerAlkkagi, legalLines } from '../rules.js';
-import { rollDie, rerollDie, greedyMoveScored, greedyBonusTarget, aiOpponentMove, chooseScore } from './evaluate.js';
+import { makeRng, rollDie, rerollDie, greedyMoveScored, greedyBonusTarget, aiOpponentMove, chooseScore } from './evaluate.js';
 
 const ROLLOUT_CAP = 40;
 // 밑장(리롤) 발동 문턱: 이번 굴림의 최선 수가 '두기 전 형세'보다 이만큼 나쁘면
@@ -56,9 +56,15 @@ export function rollout(state, rng, opts = {}) {
   return outcomeValue(gameResult(s));
 }
 
+// opts.pairBase: 공통 난수 페어링(CRN). 설정 시 k번째 롤아웃이 makeRng(pairBase+k)를
+// 쓰므로, 같은 pairBase로 평가한 서로 다른 후보들은 k번째 롤아웃에서 동일한 주사위
+// 흐름을 겪는다 → 후보 간 '차이'의 분산이 크게 줄어 근소차 순위가 안정된다.
 export function montecarloValue(state, n, rng, opts = {}) {
   let total = 0;
-  for (let k = 0; k < n; k++) total += rollout(state, rng, opts);
+  for (let k = 0; k < n; k++) {
+    const r = opts.pairBase != null ? makeRng(opts.pairBase + k) : rng;
+    total += rollout(state, r, opts);
+  }
   return total / n;
 }
 
@@ -69,14 +75,15 @@ export function mcMyPlacementValue(state, lineIndex, value, n, rng, opts = {}) {
     const s1End = endTurn(s1); // 보너스 둘 곳이 없을 때 재사용(rollout이 입력을 복제하므로 안전)
     let total = 0;
     for (let k = 0; k < n; k++) {
-      const b = rollDie(rng);
-      const t = greedyBonusTarget(s1, 'me', b, rng);
+      const r = opts.pairBase != null ? makeRng(opts.pairBase + k) : rng;
+      const b = rollDie(r);
+      const t = greedyBonusTarget(s1, 'me', b, r);
       if (t) {
         const placed = placeDie(s1, t.side, t.lineIndex, { value: b, shield: true });
         placed.turn = 'opp'; // placeDie가 준 소유 복제본이라 직접 수정 안전
-        total += rollout(placed, rng, opts);
+        total += rollout(placed, r, opts);
       } else {
-        total += rollout(s1End, rng, opts);
+        total += rollout(s1End, r, opts);
       }
     }
     return total / n;

@@ -21,6 +21,16 @@ const MITJANG_MARGIN = 0.05;
 // 롤아웃을 줄여 전체 계산의 ~87%를 차지하던 밑장 비용을 크게 절감한다(조언용).
 const MITJANG_ROLLOUTS = 400;
 const MITJANG_ROLLOUTS_PRECISE = 1000;
+// 근소차 적응형 재평가: 기본 1200롤아웃의 노이즈(±1.2%p, 페어 비교 ~1.7%p)는 진짜
+// 차이가 1%p 미만인 국면에서 1·2위를 뒤집고 3.5%p대 '가짜 격차'로 표시할 수 있다
+// (실사례: 보너스 배치에서 진실 0.6%p 차가 3.5%p 역순으로 표시). 1·2위가 이 폭
+// 이내면 상위 후보만 고롤아웃으로 다시 계산해 순위·표시값을 확정한다.
+// 폭 5%p = 진짜 근소차(≤1%p) + 페어 노이즈 2.5σ(~4%p). 완전탐색 경로는 노이즈가 없어
+// 재평가하지 않는다.
+const REFINE_MARGIN = 0.05;
+const REFINE_ROLLOUTS = 8000;
+const REFINE_ROLLOUTS_PRECISE = 16000;
+const REFINE_MAX_CANDIDATES = 3;
 
 export function recommend(state, die, opts = {}) {
   const isBonus = !!opts.isBonus;
@@ -30,6 +40,7 @@ export function recommend(state, die, opts = {}) {
   const threshold = precise ? EXACT_THRESHOLD_PRECISE : EXACT_THRESHOLD;
   const rollouts = precise ? MC_ROLLOUTS_PRECISE : MC_ROLLOUTS;
   const mitRollouts = precise ? MITJANG_ROLLOUTS_PRECISE : MITJANG_ROLLOUTS;
+  const refineRollouts = precise ? REFINE_ROLLOUTS_PRECISE : REFINE_ROLLOUTS;
   const mcOpts = { realAI };
   const budget = defaultBudget(state);
   // 실제 AI 모드는 상대 정책을 반영해야 하므로 완전탐색(최적 상대 가정) 대신 MC 사용
@@ -40,11 +51,11 @@ export function recommend(state, die, opts = {}) {
     // 일반 모드는 1초만 완전탐색 시도(못 풀면 MC로 신속 폴백), 정밀 모드는 2.5초까지.
     // opts.exactTimeMs: 테스트 등에서 벽시계 상한 재정의(병렬 부하 플레이크 방지).
     if (exact) resetExactBudget(opts.exactTimeMs ?? (precise ? 2500 : 1000));
-    built = build(state, die, isBonus, exact, budget, baseSeed, rollouts, mcOpts, mitRollouts);
+    built = build(state, die, isBonus, exact, budget, baseSeed, rollouts, mcOpts, mitRollouts, refineRollouts);
   } catch (e) {
     if (exact && isExactBudgetError(e)) {
       exact = false;
-      built = build(state, die, isBonus, false, budget, baseSeed, rollouts, mcOpts, mitRollouts);
+      built = build(state, die, isBonus, false, budget, baseSeed, rollouts, mcOpts, mitRollouts, refineRollouts);
     } else {
       throw e;
     }
@@ -55,7 +66,7 @@ export function recommend(state, die, opts = {}) {
   return { options, best, mitjang };
 }
 
-function build(state, die, isBonus, exact, budget, baseSeed, rollouts, mcOpts, mitRollouts) {
+function build(state, die, isBonus, exact, budget, baseSeed, rollouts, mcOpts, mitRollouts, refineRollouts) {
   // 대칭 수 통합: 결과 국면의 정준 키가 같은 옵션(예: 빈 보드 첫 수의 세 라인)은
   // 게임 가치가 동일하므로 1번만 평가해 같은 값을 공유한다(표시 일관성 + 계산 절약).
   const canonCache = new Map();
@@ -64,8 +75,10 @@ function build(state, die, isBonus, exact, budget, baseSeed, rollouts, mcOpts, m
     if (v === undefined) { v = compute(); canonCache.set(key, v); }
     return v;
   };
-  // 옵션 간 비교는 공통 난수(같은 시드)로: 서로 다른 수가 같은 주사위 흐름을 겪게 해
-  // 근소차 국면에서 순위가 샘플링 노이즈로 뒤집히는 것을 줄인다.
+  // 옵션 간 비교는 공통 난수 페어링(pairBase)으로: k번째 롤아웃마다 모든 후보가
+  // 동일한 주사위 흐름을 겪게 해, 근소차 국면에서 순위가 샘플링 노이즈로
+  // 뒤집히는 것을 구조적으로 줄인다(차이의 분산 감소).
+  const pairedOpts = (stride) => ({ ...mcOpts, pairBase: baseSeed + stride });
   const evalMy = (L) => {
     const alk = wouldTriggerAlkkagi(state, 'me', L, die);
     const key = alk
@@ -74,14 +87,14 @@ function build(state, die, isBonus, exact, budget, baseSeed, rollouts, mcOpts, m
     return dedup(key, () =>
       exact
         ? exactMyPlacementValue(state, L, die, budget)
-        : mcMyPlacementValue(state, L, die, rollouts, makeRng(baseSeed + 1), mcOpts));
+        : mcMyPlacementValue(state, L, die, rollouts, makeRng(baseSeed + 1), pairedOpts(1_000_000)));
   };
   const evalBonus = (t) => {
     const key = 'p|' + canonicalKey(endTurn(placeDie(state, t.side, t.lineIndex, { value: die, shield: true })));
     return dedup(key, () =>
       exact
         ? exactBonusPlacementValue(state, t, die, budget)
-        : mcBonusPlacementValue(state, t, die, rollouts, makeRng(baseSeed + 20), mcOpts));
+        : mcBonusPlacementValue(state, t, die, rollouts, makeRng(baseSeed + 20), pairedOpts(2_000_000)));
   };
 
   const options = [];
@@ -99,6 +112,21 @@ function build(state, die, isBonus, exact, budget, baseSeed, rollouts, mcOpts, m
     }
   }
   options.sort((a, b) => b.winProb - a.winProb);
+
+  // 근소차 재평가: 1·2위 차이가 REFINE_MARGIN 이내면 그 폭 안의 상위 후보만
+  // 고롤아웃 + 공통 난수 페어링으로 다시 계산해 순위·표시값을 확정한다.
+  if (!exact && options.length >= 2 && options[0].winProb - options[1].winProb <= REFINE_MARGIN) {
+    const top = options[0].winProb;
+    const cands = options
+      .filter((o) => top - o.winProb <= REFINE_MARGIN)
+      .slice(0, REFINE_MAX_CANDIDATES);
+    for (const o of cands) {
+      o.winProb = isBonus
+        ? mcBonusPlacementValue(state, o.target, die, refineRollouts, makeRng(baseSeed + 71), pairedOpts(3_000_000))
+        : mcMyPlacementValue(state, o.target.lineIndex, die, refineRollouts, makeRng(baseSeed + 71), pairedOpts(3_000_000));
+    }
+    options.sort((a, b) => b.winProb - a.winProb);
+  }
 
   let mitjang = null;
   if (!isBonus && state.me.hasMitjang && options[0]) {
