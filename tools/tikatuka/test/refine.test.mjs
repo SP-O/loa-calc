@@ -24,8 +24,8 @@ function screenshotState({ myMit }) {
 const key = (t) => `${t.side}${t.lineIndex}`;
 
 for (const myMit of [false, true]) {
-  test(`보너스 근소차 국면(리롤 ${myMit ? '보유' : '소진'}): 상위 2개 = 상대L2·상대L3, 가짜 격차 없음`, () => {
-    const r = recommend(screenshotState({ myMit }), 2, { isBonus: true, seed: 1234567, precise: false });
+  test(`보너스 근소차 국면(리롤 ${myMit ? '보유' : '소진'}): 상위 2개 = 상대L2·상대L3, 가짜 격차 없음`, async () => {
+    const r = await recommend(screenshotState({ myMit }), 2, { isBonus: true, seed: 1234567, precise: false });
     const top2 = new Set([key(r.options[0].target), key(r.options[1].target)]);
     // 진짜 상위 2개(고정밀 실측): 상대 라인2(잠금)와 상대 라인3
     assert.deepEqual(top2, new Set(['opp1', 'opp2']));
@@ -39,23 +39,23 @@ for (const myMit of [false, true]) {
   });
 }
 
-test('결정성: 같은 입력·시드는 같은 결과(재평가 포함)', () => {
-  const a = recommend(screenshotState({ myMit: false }), 2, { isBonus: true, seed: 1234567, precise: false });
-  const b = recommend(screenshotState({ myMit: false }), 2, { isBonus: true, seed: 1234567, precise: false });
+test('결정성: 같은 입력·시드는 같은 결과(재평가 포함)', async () => {
+  const a = await recommend(screenshotState({ myMit: false }), 2, { isBonus: true, seed: 1234567, precise: false });
+  const b = await recommend(screenshotState({ myMit: false }), 2, { isBonus: true, seed: 1234567, precise: false });
   assert.deepEqual(
     a.options.map((o) => [key(o.target), o.winProb]),
     b.options.map((o) => [key(o.target), o.winProb]),
   );
 });
 
-test('완전탐색 경로는 재평가와 무관하게 동작(종반 국면)', () => {
+test('완전탐색 경로는 재평가와 무관하게 동작(종반 국면)', async () => {
   // 빈칸 4개 이하 → exact 경로
   const st = {
     me:  { lines: [[D(2), D(5), D(1)], [D(5), D(5)], [D(4), D(6), D(3)]], hasMitjang: false },
     opp: { lines: [[D(6), D(2), D(2)], [D(4), D(3)], [D(3), D(1)]], hasMitjang: false },
     turn: 'me',
   };
-  const r = recommend(st, 4, { isBonus: false, seed: 7, precise: false, exactTimeMs: 10000 });
+  const r = await recommend(st, 4, { isBonus: false, seed: 7, precise: false, exactTimeMs: 10000 });
   assert.ok(r.options.length >= 1);
   for (const o of r.options) assert.ok(o.winProb >= 0 && o.winProb <= 1);
 });

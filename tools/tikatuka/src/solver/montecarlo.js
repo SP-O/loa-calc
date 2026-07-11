@@ -56,26 +56,25 @@ export function rollout(state, rng, opts = {}) {
   return outcomeValue(gameResult(s));
 }
 
-// opts.pairBase: 공통 난수 페어링(CRN). 설정 시 k번째 롤아웃이 makeRng(pairBase+k)를
-// 쓰므로, 같은 pairBase로 평가한 서로 다른 후보들은 k번째 롤아웃에서 동일한 주사위
-// 흐름을 겪는다 → 후보 간 '차이'의 분산이 크게 줄어 근소차 순위가 안정된다.
-export function montecarloValue(state, n, rng, opts = {}) {
+// ── 범위합(청크) 계열: [k0, k1) 구간의 롤아웃 결과 '합'을 계산한다 ──
+// k번째 롤아웃은 항상 makeRng(pairBase+k)를 쓰므로(공통 난수 페어링, CRN),
+// ① 같은 pairBase로 평가한 서로 다른 후보들은 k번째 롤아웃에서 동일한 주사위
+//    흐름을 겪어 후보 간 '차이'의 분산이 크게 줄고(근소차 순위 안정),
+// ② 어떤 경계로 쪼개 병렬 계산해도 합이 순차 계산과 완전히 동일하다(멀티코어 분할용).
+export function montecarloSum(state, k0, k1, pairBase, opts = {}) {
   let total = 0;
-  for (let k = 0; k < n; k++) {
-    const r = opts.pairBase != null ? makeRng(opts.pairBase + k) : rng;
-    total += rollout(state, r, opts);
-  }
-  return total / n;
+  for (let k = k0; k < k1; k++) total += rollout(state, makeRng(pairBase + k), opts);
+  return total;
 }
 
-export function mcMyPlacementValue(state, lineIndex, value, n, rng, opts = {}) {
+export function mcMyPlacementSum(state, lineIndex, value, k0, k1, pairBase, opts = {}) {
   if (wouldTriggerAlkkagi(state, 'me', lineIndex, value)) {
     // 알까기 해석은 결정적 → 루프 밖에서 1회. 반복마다는 보너스 배치만 달라진다.
     const s1 = resolveAlkkagi(state, 'me', lineIndex, value);
     const s1End = endTurn(s1); // 보너스 둘 곳이 없을 때 재사용(rollout이 입력을 복제하므로 안전)
     let total = 0;
-    for (let k = 0; k < n; k++) {
-      const r = opts.pairBase != null ? makeRng(opts.pairBase + k) : rng;
+    for (let k = k0; k < k1; k++) {
+      const r = makeRng(pairBase + k);
       const b = rollDie(r);
       const t = greedyBonusTarget(s1, 'me', b, r);
       if (t) {
@@ -84,6 +83,43 @@ export function mcMyPlacementValue(state, lineIndex, value, n, rng, opts = {}) {
         total += rollout(placed, r, opts);
       } else {
         total += rollout(s1End, r, opts);
+      }
+    }
+    return total;
+  }
+  const s = endTurn(placeDie(state, 'me', lineIndex, { value, shield: false }));
+  return montecarloSum(s, k0, k1, pairBase, opts);
+}
+
+export function mcBonusPlacementSum(state, target, value, k0, k1, pairBase, opts = {}) {
+  const s = endTurn(placeDie(state, target.side, target.lineIndex, { value, shield: true }));
+  return montecarloSum(s, k0, k1, pairBase, opts);
+}
+
+// ── 평균값 계열(기존 API): pairBase가 있으면 범위합으로 위임(동일 결과),
+//    없으면 호출자가 준 rng 스트림을 그대로 소비(레거시 경로) ──
+export function montecarloValue(state, n, rng, opts = {}) {
+  if (opts.pairBase != null) return montecarloSum(state, 0, n, opts.pairBase, opts) / n;
+  let total = 0;
+  for (let k = 0; k < n; k++) total += rollout(state, rng, opts);
+  return total / n;
+}
+
+export function mcMyPlacementValue(state, lineIndex, value, n, rng, opts = {}) {
+  if (opts.pairBase != null) return mcMyPlacementSum(state, lineIndex, value, 0, n, opts.pairBase, opts) / n;
+  if (wouldTriggerAlkkagi(state, 'me', lineIndex, value)) {
+    const s1 = resolveAlkkagi(state, 'me', lineIndex, value);
+    const s1End = endTurn(s1);
+    let total = 0;
+    for (let k = 0; k < n; k++) {
+      const b = rollDie(rng);
+      const t = greedyBonusTarget(s1, 'me', b, rng);
+      if (t) {
+        const placed = placeDie(s1, t.side, t.lineIndex, { value: b, shield: true });
+        placed.turn = 'opp';
+        total += rollout(placed, rng, opts);
+      } else {
+        total += rollout(s1End, rng, opts);
       }
     }
     return total / n;
