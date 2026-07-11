@@ -49,10 +49,10 @@ body.light-mode #theme-toggle .ico-moon { display: block; }
 .news-entry p { font-size: 0.9em; line-height: 1.75; color: oklch(0.8 0 0); word-break: keep-all; margin: 0 0 8px; }
 .news-tag { display: inline-block; font-size: 0.72em; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 8px; vertical-align: middle; background: oklch(0.8868 0.1822 95.3226 / 0.13); color: oklch(0.8868 0.1822 95.3226); border: 1px solid oklch(0.8868 0.1822 95.3226 / 0.35); }
 
-/* 푸터 */
+/* 푸터: 본문 칼럼(900px)과 무관하게 페이지 전체 폭을 사용 — 저작권 문구+링크가
+   데스크톱에서 항상 한 줄에 들어가도록 한다(모바일은 아래 미디어쿼리에서 줄바꿈 허용) */
 .content-footer { border-top: 1px solid oklch(1 0 0 / 0.07); padding: 18px 0 26px; }
-.content-footer-inner { max-width: 900px; width: 92%; margin: 0 auto; font-size: 11px; color: oklch(0.6268 0 0); line-height: 1.5; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: nowrap; word-break: keep-all; }
-/* 링크 묶음은 한 줄 고정(공간이 모자라면 저작권 문구 쪽이 줄바꿈) — 메인 푸터와 동일한 한 줄 레이아웃 */
+.content-footer-inner { max-width: none; width: 96%; margin: 0 auto; font-size: 11px; color: oklch(0.6268 0 0); line-height: 1.5; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: nowrap; word-break: keep-all; }
 .content-footer-inner > span:first-child { min-width: 0; }
 .content-footer-inner > span:last-child { flex-shrink: 0; white-space: nowrap; }
 .content-footer a { color: oklch(0.7572 0 0); font-weight: bold; text-decoration: none; margin-left: 12px; white-space: nowrap; }
