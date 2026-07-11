@@ -51,7 +51,10 @@ body.light-mode #theme-toggle .ico-moon { display: block; }
 
 /* 푸터 */
 .content-footer { border-top: 1px solid oklch(1 0 0 / 0.07); padding: 18px 0 26px; }
-.content-footer-inner { max-width: 900px; width: 92%; margin: 0 auto; font-size: 11px; color: oklch(0.6268 0 0); line-height: 1.5; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; word-break: keep-all; }
+.content-footer-inner { max-width: 900px; width: 92%; margin: 0 auto; font-size: 11px; color: oklch(0.6268 0 0); line-height: 1.5; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: nowrap; word-break: keep-all; }
+/* 링크 묶음은 한 줄 고정(공간이 모자라면 저작권 문구 쪽이 줄바꿈) — 메인 푸터와 동일한 한 줄 레이아웃 */
+.content-footer-inner > span:first-child { min-width: 0; }
+.content-footer-inner > span:last-child { flex-shrink: 0; white-space: nowrap; }
 .content-footer a { color: oklch(0.7572 0 0); font-weight: bold; text-decoration: none; margin-left: 12px; white-space: nowrap; }
 .content-footer a:hover { text-decoration: underline; }
 
@@ -90,4 +93,6 @@ body.light-mode .content-footer a { color: oklch(0.4495 0 0); }
     .content-header-inner, .content-footer-inner { width: 94%; }
     .content-header .site-logo { font-size: 1.5em; }
     .back-to-calc { padding: 0 9px; font-size: 0.82em; }
+    /* 좁은 화면에서는 저작권 문구가 과도하게 눌리지 않게 줄내림 허용 */
+    .content-footer-inner { flex-wrap: wrap; }
 }
