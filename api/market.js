@@ -38,6 +38,7 @@ export default async function handler(req, res) {
         return res.status(200).json({
             prices: cachedData.prices,
             stats: cachedData.stats,
+            recents: cachedData.recents || {},
             lastUpdated: lastFetchTime
         });
     };
@@ -147,9 +148,9 @@ async function refreshMarketData(API_KEY) {
                         }
                     }
 
-                    return { name: itemName, price: exactItem.CurrentMinPrice, stats };
+                    return { name: itemName, price: exactItem.CurrentMinPrice, recent: exactItem.RecentPrice || null, stats };
                 } catch (e) {
-                    return { name: itemName, price: null, stats: null };
+                    return { name: itemName, price: null, recent: null, stats: null };
                 }
             });
 
@@ -163,12 +164,14 @@ async function refreshMarketData(API_KEY) {
         // 기존 캐시 복사 및 병합 (실패한 아이템은 이전 캐시값 유지)
         const newPrices = cachedData?.prices ? { ...cachedData.prices } : {};
         const newStats = cachedData?.stats ? { ...cachedData.stats } : {};
+        const newRecents = cachedData?.recents ? { ...cachedData.recents } : {};
 
         results.forEach(item => {
             if (item.price !== null && item.price > 0) newPrices[item.name] = item.price;
+            if (item.recent !== null && item.recent > 0) newRecents[item.name] = item.recent;
             if (item.stats !== null) newStats[item.name] = item.stats;
         });
 
-        cachedData = { prices: newPrices, stats: newStats };
+        cachedData = { prices: newPrices, stats: newStats, recents: newRecents };
         lastFetchTime = Date.now();
 }

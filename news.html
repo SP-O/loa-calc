@@ -10,7 +10,7 @@
     })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로아도쓰 업데이트 내역 - 아비도스 제작 계산기 소식</title>
-    <meta name="description" content="로스트아크 아비도스 제작 계산기 로아도쓰의 업데이트 내역과 공지사항입니다. 시세 연동, 티파고(티카투카 계산기), 오버레이 등 기능 변경 사항을 날짜별로 안내합니다.">
+    <meta name="description" content="로스트아크 아비도스 제작 계산기 로아도쓰의 업데이트 내역입니다. 시세 연동, 티파고(티카투카 계산기), 오버레이, 이용 가이드 등 기능 변경 사항을 날짜별로 정리해 안내합니다.">
     <link rel="canonical" href="https://loadoss.com/news">
     <link rel="icon" type="image/png" href="/object/doster_b.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -21,11 +21,30 @@
 
 <header class="content-header">
     <div class="content-header-inner">
-        <a class="site-logo" href="/">
-            <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
-        </a>
+        <div class="header-left">
+            <a class="site-logo" href="/">
+                <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
+            </a>
+            <div class="tool-menu">
+                <a class="tool-menu-btn" href="/tikatuka">
+                    <svg class="tool-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"></rect><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"></rect><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"></rect><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"></rect></svg>
+                    <span class="tool-label">도구</span>
+                    <svg class="tool-caret" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </a>
+                <div class="tool-dropdown">
+                    <a class="tool-dropdown-item" href="/tikatuka">티카투카 계산기</a>
+                </div>
+            </div>
+            <a class="tool-menu-btn news-btn" href="/news">
+                <svg class="tool-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                <span class="tool-label">공지사항</span>
+            </a>
+        </div>
         <div class="header-right">
-            <a class="back-to-calc" href="/">계산기로 돌아가기</a>
+            <a class="back-to-calc" href="/">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span class="back-label">계산기로 돌아가기</span>
+            </a>
             <button id="theme-toggle" type="button" title="테마 전환" aria-label="테마 전환">
                 <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none"/><line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/><line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="17.8" y1="17.8" x2="19.6" y2="19.6"/><line x1="19.6" y1="4.4" x2="17.8" y2="6.2"/><line x1="6.2" y1="17.8" x2="4.4" y2="19.6"/></svg>
                 <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -38,83 +57,207 @@
     <h1>로아도쓰 소식 · 업데이트 내역</h1>
     <p class="content-sub">아비도스 제작 계산기 로아도쓰의 기능 추가와 개선 사항을 날짜별로 정리한 페이지입니다.</p>
 
-    <div class="content-card">
+    <div class="news-month">2026년 7월</div>
 
-        <article class="news-entry" id="n20260711-tikatuka-parallel">
-            <span class="news-date">2026. 07. 11</span><span class="news-tag">티파고</span>
-            <h3>티카투카 계산 속도 대폭 개선 — 멀티코어 병렬 계산</h3>
-            <p>사양이 낮은 PC에서 추천 계산이 8초 가까이 걸린다는 제보를 반영했습니다. 이제 계산을 CPU 여러 코어에 나눠 동시에 처리해서, 같은 계산이 약 3배 이상 빨라졌습니다. 계산 방식 자체는 그대로라 추천 결과는 이전과 완전히 동일합니다.</p>
-            <p>여기에 더해, 기기의 처리 속도를 계산 직전에 자동으로 측정해서 느린 PC에서는 계산량을 알맞게 조절합니다. 어떤 환경에서든 몇 초 안에 추천을 받아볼 수 있고, 정확도가 필요한 만큼은 항상 유지됩니다.</p>
+    <div class="news-day">
+        <div class="news-day-date">2026. 07. 29. (수)</div>
+        <article class="news-item" id="n20260728-craft">
+            <div class="news-item-head">
+                <h3 class="news-item-title">‘목표 제작 계산’ 탭 추가</h3>
+                <span class="news-tags"><span class="ntag ntag-new">신규</span><span class="ntag ntag-area">제작 계산</span></span>
+            </div>
+            <p class="news-item-summary">만들 목표 횟수를 정하면 부족한 재료를 가장 싸게 채우는 방법과 예상 수익까지 계산해 주는 <strong>목표 제작 계산</strong> 탭을 새로 넣었습니다.</p>
+            <ul class="news-item-list">
+                <li>제품과 제작 횟수(예: 20회)를 정하고 지금 가진 재료를 넣으면, 부족한 재료를 직접 구매와 교환 중 싼 쪽으로 채워 줍니다.</li>
+                <li>목표만큼 만들어 팔았을 때의 최종 예상 수익까지 한 번에 확인할 수 있습니다.</li>
+                <li>함께 들어간 ‘부족한 재료 계산(짝 맞추기)’ 모드는 반대로, 지금 가진 4티어 재료 기준으로 몇 번 만들 수 있는지 거꾸로 계산해 줍니다.</li>
+            </ul>
         </article>
-
-        <article class="news-entry" id="n20260707-tikatuka-refine">
-            <span class="news-date">2026. 07. 07</span><span class="news-tag">티파고</span>
-            <h3>티카투카 추천 정확도 개선 — 중 · 후반 선택지 안정화</h3>
-            <p>여러 수의 승률이 비슷비슷한 상황에서, 계산 과정의 미세한 차이로 추천 순위가 흔들려 보이던 부분을 다듬었습니다. 이런 근소한 국면에서 더 정확하고 일관된 추천을 제공하도록 개선했습니다.</p>
+        <article class="news-item" id="n20260728-faq">
+            <div class="news-item-head">
+                <h3 class="news-item-title">자주 묻는 질문 페이지 신설</h3>
+                <span class="news-tags"><span class="ntag ntag-new">신규</span><span class="ntag ntag-area">사이트</span></span>
+            </div>
+            <p class="news-item-summary">아비도스 제작 · 교환 · 티파고에 대해 자주 묻는 질문을 주제별로 한곳에 모은 페이지를 열었습니다.</p>
+            <ul class="news-item-list">
+                <li>왼쪽에서 주제를 고르면 해당 질문과 답이 바로 나옵니다. 이용 가이드 상단 탭에서 들어갈 수 있습니다.</li>
+                <li>이와 함께 몇몇 이용 가이드 페이지의 내용과 구성도 새로 다듬었습니다.</li>
+            </ul>
         </article>
-
-        <article class="news-entry" id="n20260706-tikatuka-vision">
-            <span class="news-date">2026. 07. 06</span><span class="news-tag">티파고</span>
-            <h3>티카투카 계산기: 리롤 판단 모델링 · 화면 인식 강화</h3>
-            <p>티파고의 추천 엔진이 리롤(주사위 다시 굴리기) 상황을 더 정확하게 반영하도록 개선되었습니다. 이전에는 남은 주사위의 기대값을 단순화해 계산했지만, 이제는 리롤로 갈라지는 경우의 수까지 모델링해서 "지금 배치할지, 다시 굴릴지"의 판단 정확도가 올라갔습니다.</p>
-            <p>화면 인식도 함께 강화되어, 게임 화면을 공유하면 주사위 눈과 보드 상태를 더 안정적으로 자동 인식합니다. 창 크기가 바뀌거나 화면이 깜빡이는 상황에서 값이 잘못 읽히던 문제도 함께 수정했습니다.</p>
-        </article>
-
-        <article class="news-entry" id="n20260704-tipago-overlay">
-            <span class="news-date">2026. 07. 04</span><span class="news-tag">티파고</span>
-            <h3>티파고 "게임 위 항상 표시" 오버레이 추가</h3>
-            <p>티카투카를 플레이하면서 추천을 확인하려면 창을 오가야 하는 불편이 있었습니다. 이제 티파고에서 오버레이 버튼을 누르면 항상 위에 떠 있는 작은 창(Picture-in-Picture)으로 추천 결과를 볼 수 있습니다. 게임 화면을 가리지 않는 크기로 조절할 수 있고, 본 창과 실시간으로 동기화됩니다.</p>
-        </article>
-
-        <article class="news-entry" id="n20260704-market-fix">
-            <span class="news-date">2026. 07. 04</span><span class="news-tag">안정화</span>
-            <h3>시세 조회 안정화 — 접속 폭주 시 로딩 실패 수정</h3>
-            <p>이용자가 몰리는 시간대에 거래소 시세를 불러오지 못하는 경우가 있었습니다. 같은 시세 요청이 동시에 여러 번 나가지 않도록 요청을 공유하고, 캐시를 통해 불필요한 조회를 줄여서 트래픽이 몰려도 시세가 안정적으로 표시되도록 수정했습니다.</p>
-        </article>
-
-        <article class="news-entry" id="n20260703-tools-tipago">
-            <span class="news-date">2026. 07. 03</span><span class="news-tag">신규 기능</span>
-            <h3>"도구" 카테고리 신설 — 티파고(티카투카 계산기) 탑재</h3>
-            <p>상단 헤더에 "도구" 메뉴가 생겼습니다. 첫 번째 도구로 티카투카 최적 수 추천 계산기 <strong>티파고</strong>가 들어갔습니다. 현재 보드 상태와 주사위 눈을 입력하면 기대 점수가 가장 높은 배치를 추천해 줍니다. <a href="/tikatuka">loadoss.com/tikatuka</a> 주소로 바로 접속하거나 공유할 수도 있습니다.</p>
-        </article>
-
-        <article class="news-entry" id="n20260627-seo-favicon">
-            <span class="news-date">2026. 06. 27</span><span class="news-tag">개선</span>
-            <h3>검색엔진 최적화 · 파비콘 정비</h3>
-            <p>정식 도메인(loadoss.com) 기준으로 검색엔진 표준 주소(canonical)를 지정하고, 브라우저 탭에 표시되는 도스터 파비콘을 추가했습니다. 사이트 곳곳에 숨어 있는 도스터 이스터에그도 함께 다듬었습니다.</p>
-        </article>
-
-        <article class="news-entry" id="n20260622-fee-tooltip">
-            <span class="news-date">2026. 06. 22</span><span class="news-tag">개선</span>
-            <h3>제작 판매 수입에 수수료 계산 툴팁 추가</h3>
-            <p>제작한 융화 재료를 거래소에 판매할 때의 수수료가 손익에 어떻게 반영되는지 툴팁으로 확인할 수 있습니다. 계산 과정을 투명하게 보여 달라는 의견을 반영한 업데이트입니다.</p>
-        </article>
-
-        <article class="news-entry" id="n20260330-ui-oklch-chart">
-            <span class="news-date">2026. 03. 30</span><span class="news-tag">개선</span>
-            <h3>UI 전면 개선 — 색상 체계 정비 · 시세 차트 툴팁</h3>
-            <p>사이트 전체 색상을 지각 균일 색공간(oklch) 기준으로 다시 설계해 다크/라이트 모드 모두에서 더 일관된 화면을 제공합니다. 재료 이름에 마우스를 올리면 최근 거래 정보(오늘 평균가, 14일 평균·최고가)를 차트와 함께 보여주는 시세 툴팁도 추가되었습니다.</p>
-        </article>
-
-        <article class="news-entry" id="n20260325-privacy-vercel">
-            <span class="news-date">2026. 03. 25</span><span class="news-tag">운영</span>
-            <h3>개인정보 처리방침 게시 · 배포 체계 정비</h3>
-            <p><a href="/privacy">개인정보 처리방침</a>을 게시하고, 안정적인 서비스 제공을 위한 배포 체계를 정비했습니다.</p>
-        </article>
-
-        <article class="news-entry" id="n20260322-open">
-            <span class="news-date">2026. 03. 22</span><span class="news-tag">오픈</span>
-            <h3>로아도쓰 오픈 — 실시간 시세 기반 아비도스 제작 손익 계산</h3>
-            <p>로스트아크 공식 오픈 API의 실시간 거래소 시세를 연동한 아비도스 제작 계산기, 로아도쓰가 문을 열었습니다. 생활 재료 시세와 제작 수수료, 대성공 확률을 반영해 "지금 제작하는 게 이득인지"를 바로 확인할 수 있습니다.</p>
-        </article>
-
     </div>
+
+    <div class="news-day">
+        <div class="news-day-date">2026. 07. 11. (토)</div>
+        <article class="news-item" id="n20260711-parallel">
+            <div class="news-item-head">
+                <h3 class="news-item-title">티카투카 계산 속도 개선</h3>
+                <span class="news-tags"><span class="ntag ntag-improve">개선</span><span class="ntag ntag-area">티파고</span></span>
+            </div>
+            <p class="news-item-summary">사양이 낮은 PC에서 추천 계산이 오래 걸린다는 제보를 반영해, 계산을 CPU 여러 코어에 나눠 처리하도록 바꿨습니다.</p>
+            <ul class="news-item-list">
+                <li>같은 계산을 여러 코어로 나눠 돌려, 저사양 기기에서 특히 크게 빨라졌습니다(일부 환경에서 3배 이상).</li>
+                <li>계산 방식 자체는 그대로라 추천 결과는 이전과 완전히 동일합니다.</li>
+                <li>계산 직전에 기기 속도를 재서 느린 PC에서는 계산량을 알맞게 조절합니다. 어떤 환경에서든 몇 초 안에 결과가 나옵니다.</li>
+            </ul>
+        </article>
+    </div>
+
+    <div class="news-day">
+        <div class="news-day-date">2026. 07. 07. (화)</div>
+        <article class="news-item" id="n20260707-refine">
+            <div class="news-item-head">
+                <h3 class="news-item-title">티카투카 추천 정확도 개선</h3>
+                <span class="news-tags"><span class="ntag ntag-improve">개선</span><span class="ntag ntag-area">티파고</span></span>
+            </div>
+            <p class="news-item-summary">여러 수의 승률이 엇비슷해서 추천 순위가 흔들려 보이던 부분을 다듬었습니다.</p>
+            <ul class="news-item-list">
+                <li>승률이 한 끗 차이로 갈리는 상황을 더 촘촘히 다시 계산해, 추천이 일관되게 나오도록 개선했습니다.</li>
+                <li>특히 보너스 주사위를 어디에 둘지처럼 아슬아슬하게 갈리는 판에서 더 정확한 수를 짚어 줍니다.</li>
+            </ul>
+        </article>
+    </div>
+
+    <div class="news-day">
+        <div class="news-day-date">2026. 07. 06. (월)</div>
+        <article class="news-item" id="n20260706-tikatuka">
+            <div class="news-item-head">
+                <h3 class="news-item-title">티파고: 리롤 판단 정확도 · 화면 인식 강화</h3>
+                <span class="news-tags"><span class="ntag ntag-improve">개선</span><span class="ntag ntag-area">티파고</span></span>
+            </div>
+            <p class="news-item-summary">리롤(다시 굴리기)을 할지 말지 판단하는 정확도를 높이고, 화면 인식도 함께 강화했습니다.</p>
+            <ul class="news-item-list">
+                <li>이전에는 남은 주사위의 기대값을 단순하게 계산했는데, 이제 리롤로 갈라지는 경우까지 하나하나 따져서 "지금 놓을지, 다시 굴릴지" 판단이 정확해졌습니다.</li>
+                <li>화면을 공유하면 주사위 눈과 보드 상태를 더 안정적으로 읽어옵니다.</li>
+                <li>창 크기가 바뀌거나 화면이 깜빡일 때 값이 잘못 읽히던 문제를 수정했습니다.</li>
+            </ul>
+        </article>
+        <article class="news-item" id="n20260706-guides">
+            <div class="news-item-head">
+                <h3 class="news-item-title">이용 가이드 페이지 신설</h3>
+                <span class="news-tags"><span class="ntag ntag-new">신규</span><span class="ntag ntag-area">사이트</span></span>
+            </div>
+            <p class="news-item-summary">게임 정보와 계산기 사용법을 정리한 이용 가이드 페이지를 열었습니다.</p>
+            <ul class="news-item-list">
+                <li>아비도스 제작 가이드, 교환 · 영지 농장, 티파고 공략, 사이트 소개 네 페이지로 구성했습니다.</li>
+                <li>헤더 메뉴에서 바로 들어갈 수 있습니다.</li>
+            </ul>
+        </article>
+    </div>
+
+    <div class="news-day">
+        <div class="news-day-date">2026. 07. 04. (토)</div>
+        <article class="news-item" id="n20260704-overlay">
+            <div class="news-item-head">
+                <h3 class="news-item-title">티파고 ‘게임 위 항상 표시’ 오버레이 추가</h3>
+                <span class="news-tags"><span class="ntag ntag-new">신규</span><span class="ntag ntag-area">티파고</span></span>
+            </div>
+            <p class="news-item-summary">게임과 계산기 창을 오가지 않도록, 추천 결과를 게임 위에 띄우는 기능을 넣었습니다.</p>
+            <ul class="news-item-list">
+                <li>오버레이 버튼을 누르면 항상 위에 떠 있는 작은 창에 추천 수와 승률이 표시됩니다.</li>
+                <li>게임 화면을 가리지 않게 크기를 조절할 수 있고, 본 창의 인식 · 추천과 실시간으로 동기화됩니다.</li>
+                <li>테두리 없는 창모드에서, 크롬 계열 브라우저(크롬 · 엣지 · 웨일)에서 사용할 수 있습니다.</li>
+            </ul>
+        </article>
+        <article class="news-item" id="n20260704-market">
+            <div class="news-item-head">
+                <h3 class="news-item-title">시세 조회 안정화 — 접속 몰릴 때 로딩 실패 수정</h3>
+                <span class="news-tags"><span class="ntag ntag-fix">수정</span><span class="ntag ntag-area">시세</span></span>
+            </div>
+            <p class="news-item-summary">이용자가 몰리는 시간대에 거래소 시세가 뜨지 않던 문제를 수정했습니다.</p>
+            <ul class="news-item-list">
+                <li>같은 재료를 여러 명이 동시에 요청하면 실제 조회는 한 번만 나가고, 나머지는 그 결과를 함께 받도록 바꿨습니다.</li>
+                <li>한 번 불러온 시세는 잠시 저장해 재요청을 줄이고, 최소 60초 안에는 같은 조회가 반복되지 않도록 처리했습니다.</li>
+                <li>덕분에 접속이 몰리는 시간에도 로스트아크 시세 서버에 무리를 주지 않아, 시세가 끊기지 않고 뜹니다.</li>
+            </ul>
+        </article>
+    </div>
+
+    <div class="news-day">
+        <div class="news-day-date">2026. 07. 03. (금)</div>
+        <article class="news-item" id="n20260703-tools">
+            <div class="news-item-head">
+                <h3 class="news-item-title">‘도구’ 카테고리 신설 — 티파고(티카투카 계산기) 탑재</h3>
+                <span class="news-tags"><span class="ntag ntag-new">신규</span><span class="ntag ntag-area">티파고</span></span>
+            </div>
+            <p class="news-item-summary">상단 헤더에 "도구" 메뉴가 생겼습니다. 첫 도구로 티카투카 최적 수 추천 계산기 <strong>티파고</strong>를 넣었습니다.</p>
+            <ul class="news-item-list">
+                <li>현재 보드 상태와 굴린 주사위를 입력하면 이길 확률이 가장 높은 배치를 추천합니다.</li>
+                <li><a href="/tikatuka">loadoss.com/tikatuka</a> 주소로 바로 접속하거나 공유할 수 있습니다.</li>
+            </ul>
+        </article>
+    </div>
+
+    <div class="news-month">2026년 6월</div>
+
+    <div class="news-day">
+        <div class="news-day-date">2026. 06. 22. (월)</div>
+        <article class="news-item" id="n20260622-fee">
+            <div class="news-item-head">
+                <h3 class="news-item-title">제작 판매 수입에 수수료 계산 툴팁 추가</h3>
+                <span class="news-tags"><span class="ntag ntag-new">신규</span><span class="ntag ntag-area">제작 계산</span></span>
+            </div>
+            <p class="news-item-summary">제작한 융화 재료를 거래소에 팔 때의 수수료가 손익에 어떻게 반영되는지 툴팁으로 확인할 수 있습니다.</p>
+            <ul class="news-item-list">
+                <li>판매가에서 수수료를 뺀, 실제로 받는 골드를 기준으로 손익을 보여줍니다.</li>
+                <li>계산 과정을 투명하게 보여 달라는 의견을 반영했습니다.</li>
+            </ul>
+        </article>
+    </div>
+
+    <div class="news-month">2026년 3월</div>
+
+    <div class="news-day">
+        <div class="news-day-date">2026. 03. 31. (화)</div>
+        <article class="news-item" id="n20260331-ui">
+            <div class="news-item-head">
+                <h3 class="news-item-title">UI 전면 개선 — 색상 정비 · 시세 차트 툴팁</h3>
+                <span class="news-tags"><span class="ntag ntag-improve">개선</span><span class="ntag ntag-area">사이트</span></span>
+            </div>
+            <p class="news-item-summary">사이트 전체 색상을 다시 정리하고, 재료 시세를 차트로 보는 툴팁을 추가했습니다.</p>
+            <ul class="news-item-list">
+                <li>색상 체계를 처음부터 다시 정리해 다크 · 라이트 모드가 더 자연스럽고 일관되게 보입니다.</li>
+                <li>재료 이름에 마우스를 올리면 오늘 평균가와 최근 14일 평균 · 최고가를 차트로 확인할 수 있습니다.</li>
+            </ul>
+        </article>
+    </div>
+
+    <div class="news-day">
+        <div class="news-day-date">2026. 03. 26. (목)</div>
+        <article class="news-item" id="n20260326-privacy">
+            <div class="news-item-head">
+                <h3 class="news-item-title">개인정보 처리방침 게시 · 배포 체계 정비</h3>
+                <span class="news-tags"><span class="ntag ntag-notice">운영</span><span class="ntag ntag-area">사이트</span></span>
+            </div>
+            <p class="news-item-summary">서비스를 안정적으로 운영하기 위한 기반을 갖췄습니다.</p>
+            <ul class="news-item-list">
+                <li><a href="/privacy">개인정보 처리방침</a> 페이지를 게시했습니다.</li>
+                <li>안정적인 서비스 제공을 위한 배포 환경을 정비했습니다.</li>
+            </ul>
+        </article>
+    </div>
+
+    <div class="news-day">
+        <div class="news-day-date">2026. 03. 22. (일)</div>
+        <article class="news-item" id="n20260322-open">
+            <div class="news-item-head">
+                <h3 class="news-item-title">로아도쓰 새 단장 — 독립 사이트로 리뉴얼</h3>
+                <span class="news-tags"><span class="ntag ntag-new">오픈</span><span class="ntag ntag-area">사이트</span></span>
+            </div>
+            <p class="news-item-summary">로아도쓰가 새로운 모습으로 리뉴얼되었습니다. 예전에는 무료 코드 공유 사이트(코드펜)에서 운영했는데, 정식 사이트로 새로 열었습니다.</p>
+            <ul class="news-item-list">
+                <li>예전에는 시세를 보려면 각자 로스트아크 API 키를 발급받아 직접 입력해야 했는데, 이제 그 과정 없이 경매장 시세가 자동으로 연동됩니다.</li>
+                <li>재료 시세와 제작 수수료, 대성공 확률을 반영해 "지금 제작하는 게 이득인지"를 바로 확인할 수 있습니다.</li>
+                <li>앞으로의 모든 변경 사항은 이 업데이트 내역에서 확인할 수 있습니다.</li>
+            </ul>
+        </article>
+    </div>
+
 </main>
 
 <footer class="content-footer">
     <div class="content-footer-inner">
         <span>© 2026 LoaDoss. All Rights Reserved. This site is not associated with Smilegate RPG &amp; Smilegate Stove. Data based on Lostark Open API.</span>
-        <span><a href="/">계산기</a><a href="/guide/about">이용 가이드</a><a href="/privacy">개인정보 처리방침</a></span>
+        <span><a href="/guide/abydos">이용 가이드</a><a href="/news">업데이트 내역</a><a href="/guide/about">사이트 소개</a><a href="/privacy">개인정보 처리방침</a></span>
     </div>
 </footer>
 

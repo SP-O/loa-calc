@@ -36,6 +36,8 @@ body.light-mode #theme-toggle .ico-moon { display: block; }
 .content-card h3 { font-size: 1em; color: oklch(0.95 0 0); margin: 18px 0 6px; word-break: keep-all; }
 .content-card p, .content-card li { font-size: 0.93em; line-height: 1.75; color: oklch(0.83 0 0); word-break: keep-all; margin: 0 0 10px; }
 .content-card ul, .content-card ol { padding-left: 20px; margin: 0 0 10px; }
+/* 본문 보조 설명 */
+.content-card p.guide-note { font-size: 0.85em; color: oklch(0.68 0 0); border-left: 2px solid oklch(1 0 0 / 0.1); padding-left: 10px; margin-top: 14px; }
 .content-card a { color: oklch(0.8868 0.1822 95.3226); text-decoration: none; }
 .content-card a:hover { text-decoration: underline; }
 .content-card strong { color: oklch(0.93 0 0); }
@@ -76,6 +78,7 @@ body.light-mode .content-card { background-color: oklch(1 0 0); border-color: ok
 body.light-mode .content-card h2 { color: oklch(0.2 0 0); border-left-color: oklch(0.6059 0.1986 256.4605); }
 body.light-mode .content-card h3 { color: oklch(0.25 0 0); }
 body.light-mode .content-card p, body.light-mode .content-card li { color: oklch(0.4 0 0); }
+body.light-mode .content-card p.guide-note { color: oklch(0.5103 0 0); border-left-color: oklch(0 0 0 / 0.12); }
 body.light-mode .content-card a { color: oklch(0.6059 0.1986 256.4605); }
 body.light-mode .content-card strong { color: oklch(0.25 0 0); }
 body.light-mode .news-entry { border-bottom-color: oklch(0 0 0 / 0.07); }
@@ -95,4 +98,183 @@ body.light-mode .content-footer a { color: oklch(0.4495 0 0); }
     .back-to-calc { padding: 0 9px; font-size: 0.82em; }
     /* 좁은 화면에서는 저작권 문구가 과도하게 눌리지 않게 줄내림 허용 */
     .content-footer-inner { flex-wrap: wrap; }
+}
+
+/* 업데이트 노트 */
+.news-month { font-size: 0.98em; font-weight: 800; color: oklch(0.72 0 0); letter-spacing: 0.03em; margin: 26px 0 12px 2px; }
+.news-month:first-of-type { margin-top: 4px; }
+
+.news-day { background-color: oklch(0.2891 0 0); border: 1px solid oklch(1 0 0 / 0.05); border-radius: 12px; box-shadow: 0 0 10px oklch(0 0 0 / 0.5); padding: 18px 24px; margin-bottom: 16px; transition: background-color 0.3s ease, box-shadow 0.3s ease; }
+.news-day-date { font-size: 0.82em; font-weight: 700; color: oklch(0.8868 0.1822 95.3226); letter-spacing: 0.02em; margin: 0 0 12px; padding-bottom: 10px; border-bottom: 1px solid oklch(1 0 0 / 0.07); transition: color 0.3s ease, border-color 0.3s ease; }
+
+.news-item { padding: 15px 0; border-bottom: 1px solid oklch(1 0 0 / 0.05); scroll-margin-top: 80px; }
+.news-item:first-of-type { padding-top: 2px; }
+.news-item:last-of-type { border-bottom: none; padding-bottom: 2px; }
+.news-item-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 9px; margin-bottom: 7px; }
+.news-item-title { font-size: 1em; font-weight: 700; color: oklch(0.97 0 0); word-break: keep-all; margin: 0; transition: color 0.3s ease; }
+.news-tags { display: inline-flex; gap: 5px; flex-wrap: wrap; }
+.ntag { font-size: 0.7em; font-weight: 700; padding: 2px 8px; border-radius: 20px; white-space: nowrap; letter-spacing: 0.01em; }
+.ntag-new    { background: oklch(0.8868 0.1822 95.3226 / 0.14); color: oklch(0.8868 0.1822 95.3226); border: 1px solid oklch(0.8868 0.1822 95.3226 / 0.42); }
+.ntag-improve{ background: oklch(0.62 0.13 262 / 0.16);         color: oklch(0.74 0.12 262);          border: 1px solid oklch(0.62 0.13 262 / 0.42); }
+.ntag-fix    { background: oklch(0.6 0.12 158 / 0.16);          color: oklch(0.76 0.13 158);          border: 1px solid oklch(0.6 0.12 158 / 0.42); }
+.ntag-notice { background: oklch(1 0 0 / 0.06);                 color: oklch(0.75 0 0);               border: 1px solid oklch(1 0 0 / 0.18); }
+.ntag-area   { background: transparent;                         color: oklch(0.66 0 0);               border: 1px solid oklch(1 0 0 / 0.16); }
+
+.news-item-summary { font-size: 0.92em; line-height: 1.7; color: oklch(0.83 0 0); word-break: keep-all; margin: 0 0 8px; }
+.news-item-list { margin: 0; padding-left: 17px; }
+.news-item-list li { font-size: 0.86em; line-height: 1.65; color: oklch(0.7 0 0); word-break: keep-all; margin: 0 0 4px; }
+.news-item-list li::marker { color: oklch(0.8868 0.1822 95.3226 / 0.55); }
+.news-item-list li:last-child { margin-bottom: 0; }
+
+/* 라이트 모드 */
+body.light-mode .news-month { color: oklch(0.45 0 0); }
+body.light-mode .news-day { background-color: oklch(1 0 0); border-color: oklch(0.9266 0.0092 258.0793); box-shadow: 0 1px 4px oklch(0 0 0 / 0.06); }
+body.light-mode .news-day-date { color: oklch(0.6059 0.1986 256.4605); border-bottom-color: oklch(0 0 0 / 0.08); }
+body.light-mode .news-item { border-bottom-color: oklch(0 0 0 / 0.06); }
+body.light-mode .news-item-title { color: oklch(0.2 0 0); }
+body.light-mode .news-item-summary { color: oklch(0.38 0 0); }
+body.light-mode .news-item-list li { color: oklch(0.48 0 0); }
+body.light-mode .news-item-list li::marker { color: oklch(0.6059 0.1986 256.4605 / 0.6); }
+body.light-mode .ntag-new    { background: oklch(0.6059 0.1986 256.4605 / 0.1); color: oklch(0.6059 0.1986 256.4605); border-color: oklch(0.6059 0.1986 256.4605 / 0.4); }
+body.light-mode .ntag-improve{ background: oklch(0.55 0.14 262 / 0.1);  color: oklch(0.48 0.16 262); border-color: oklch(0.55 0.14 262 / 0.38); }
+body.light-mode .ntag-fix    { background: oklch(0.55 0.12 158 / 0.1);  color: oklch(0.42 0.11 158); border-color: oklch(0.5 0.12 158 / 0.38); }
+body.light-mode .ntag-notice { background: oklch(0 0 0 / 0.04);         color: oklch(0.45 0 0);      border-color: oklch(0 0 0 / 0.16); }
+body.light-mode .ntag-area   { background: transparent;                 color: oklch(0.5 0 0);       border-color: oklch(0 0 0 / 0.16); }
+
+@media (max-width: 600px) {
+    .news-day { padding: 16px 16px; }
+}
+
+/* 사이트 소개 */
+.content-main.about-center { display: flex; flex-direction: column; justify-content: center; min-height: calc(100vh - 150px); }
+.about-note { width: 100%; box-sizing: border-box; margin: 0; padding: 46px 50px; }
+.about-note-grid { display: grid; grid-template-columns: 200px 1fr; gap: 56px; align-items: start; }
+.about-note-body { position: relative; }
+.about-note-body::before { content: ""; position: absolute; top: 3px; bottom: 3px; left: -36px; width: 1px; background: linear-gradient(180deg, transparent, oklch(0.8868 0.1822 95.3226 / 0.22) 16%, oklch(0.8868 0.1822 95.3226 / 0.22) 84%, transparent); }
+.about-note-head { display: flex; align-items: center; gap: 10px; }
+.about-note .about-note-h { font-size: 1.5em; font-weight: 800; color: oklch(0.98 0 0); letter-spacing: -0.01em; margin: 0; transition: color 0.3s ease; }
+.about-note-mokoko { width: 27px; height: 27px; object-fit: contain; flex-shrink: 0; }
+.about-note-rule { position: relative; overflow: hidden; width: 64px; height: 3px; margin-top: 16px; border-radius: 3px; background: linear-gradient(90deg, oklch(0.72 0.12 92 / 0.28), oklch(0.82 0.16 95 / 0.72) 58%, oklch(0.9 0.185 96)); }
+.about-note-rule::after { content: ""; position: absolute; top: 0; left: 0; height: 100%; width: 42%; background: linear-gradient(90deg, transparent, oklch(0.99 0.1 101 / 0.95) 50%, transparent); transform: translateX(-160%); animation: aboutRuleGloss 4.2s linear infinite; }
+@keyframes aboutRuleGloss { to { transform: translateX(360%); } }
+.about-note-body .about-note-lead { font-size: 1.16em; line-height: 1.78; color: oklch(0.95 0 0); margin: 0 0 18px; word-break: keep-all; text-wrap: pretty; transition: color 0.3s ease; }
+.about-note-body > p { font-size: 1em; line-height: 1.9; color: oklch(0.82 0 0); margin: 0 0 16px; word-break: keep-all; text-wrap: pretty; transition: color 0.3s ease; }
+.about-note-body > p:last-child { margin-bottom: 0; }
+.about-note b { color: oklch(0.97 0 0); font-weight: 700; }
+
+body.light-mode .about-note .about-note-h { color: oklch(0.16 0 0); }
+body.light-mode .about-note-body::before { background: linear-gradient(180deg, transparent, oklch(0.6059 0.1986 256.4605 / 0.22) 16%, oklch(0.6059 0.1986 256.4605 / 0.22) 84%, transparent); }
+body.light-mode .about-note-rule { background: linear-gradient(90deg, oklch(0.72 0.12 256 / 0.3), oklch(0.62 0.18 257 / 0.75) 58%, oklch(0.52 0.2 257)); }
+body.light-mode .about-note-rule::after { background: linear-gradient(90deg, transparent, oklch(0.98 0.05 256 / 0.85) 50%, transparent); }
+body.light-mode .about-note-body .about-note-lead { color: oklch(0.18 0 0); }
+body.light-mode .about-note-body > p { color: oklch(0.34 0 0); }
+body.light-mode .about-note b { color: oklch(0.15 0 0); }
+
+@media (prefers-reduced-motion: reduce) {
+    .about-note-rule::after { animation: none; opacity: 0; }
+}
+@media (max-width: 860px) {
+    .about-note-grid { grid-template-columns: 1fr; gap: 18px; }
+    .about-note-body::before { display: none; }
+}
+@media (max-width: 600px) {
+    .content-main.about-center { display: block; min-height: 0; }
+    .about-note { padding: 28px 22px 30px; }
+    .about-note .about-note-h { font-size: 1.3em; }
+    .about-note-mokoko { width: 24px; height: 24px; }
+    .about-note-body .about-note-lead { font-size: 1.08em; }
+    .about-note .brk { display: none; }
+}
+
+/* 콘텐츠 헤더 */
+.content-header .header-left { display: flex; align-items: center; min-width: 0; }
+.content-header .header-left .site-logo { flex-shrink: 0; }
+.tool-menu { position: relative; margin-left: 22px; display: flex; align-items: center; }
+.tool-menu-btn { height: 34px; padding: 0 11px; display: inline-flex; align-items: center; gap: 7px; font-family: "Noto Sans KR", sans-serif; font-size: 0.9em; font-weight: 600; letter-spacing: 0.01em; text-decoration: none; color: oklch(0.82 0 0); background: oklch(1 0 0 / 0.04); border: 1px solid oklch(1 0 0 / 0.1); border-radius: 9px; cursor: pointer; white-space: nowrap; transition: color 0.18s, background 0.18s, border-color 0.18s; }
+.tool-menu-btn .tool-ico { flex-shrink: 0; opacity: 0.9; }
+.tool-menu-btn .tool-label { line-height: 1; }
+.tool-menu-btn .tool-caret { flex-shrink: 0; opacity: 0.6; margin-left: -1px; transition: transform 0.2s ease, opacity 0.18s; }
+.tool-menu:hover .tool-menu-btn .tool-caret { transform: rotate(180deg); opacity: 0.9; }
+.tool-menu-btn:hover, .tool-menu:hover .tool-menu-btn { color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.12); border-color: oklch(0.8868 0.1822 95.3226 / 0.55); }
+.content-header .news-btn { margin-left: 8px; }
+.tool-dropdown { position: absolute; top: calc(100% + 6px); left: 0; min-width: 160px; background: oklch(0.2891 0 0); border: 1px solid oklch(0.3485 0 0); border-radius: 10px; box-shadow: 0 8px 20px oklch(0 0 0 / 0.5); padding: 4px; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s; z-index: 101; }
+.tool-menu:hover .tool-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.tool-dropdown-item { display: block; padding: 9px 12px; border-radius: 7px; font-size: 0.86em; font-weight: 700; color: oklch(0.7572 0 0); text-decoration: none; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+.tool-dropdown-item:hover { background: oklch(0.4091 0 0); color: oklch(1 0 0); }
+
+body.light-mode .tool-menu-btn { border-color: oklch(0.88 0.0128 255.5297); color: oklch(0.42 0 0); background: oklch(0.6059 0.1986 256.4605 / 0.04); }
+body.light-mode .tool-menu-btn:hover, body.light-mode .tool-menu:hover .tool-menu-btn { border-color: oklch(0.6059 0.1986 256.4605 / 0.55); color: oklch(0.6059 0.1986 256.4605); background: oklch(0.6059 0.1986 256.4605 / 0.1); }
+body.light-mode .tool-dropdown { background: oklch(1 0 0); border-color: oklch(0.9266 0.0092 258.0793); box-shadow: 0 8px 20px oklch(0.2512 0.0989 259.3376 / 0.1); }
+body.light-mode .tool-dropdown-item { color: oklch(0.4495 0 0); }
+body.light-mode .tool-dropdown-item:hover { background: oklch(0.9808 0.0091 258.5663); color: oklch(0.6059 0.1986 256.4605); }
+
+/* 모바일 */
+@media (max-width: 600px) {
+    .tool-menu { margin-left: 12px; }
+    .content-header .news-btn { margin-left: 6px; }
+    .tool-menu-btn { padding: 0 9px; font-size: 0.84em; }
+    .back-to-calc .back-label { display: none; }
+    .back-to-calc { padding: 0 8px; }
+}
+@media (max-width: 380px) {
+    .tool-menu-btn .tool-caret { display: none; }
+}
+
+/* 계산 모드 카드 탭 */
+.mode-guide { margin-top: 4px; }
+.mode-guide-tabs { display: flex; gap: 4px; flex-wrap: wrap; border-bottom: 1px solid oklch(1 0 0 / 0.09); margin-bottom: 14px; }
+.mode-guide-tab { appearance: none; background: none; border: none; font-family: inherit; cursor: pointer; font-size: 0.9em; font-weight: 700; color: oklch(0.62 0 0); padding: 8px 13px; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; transition: color 0.18s, border-color 0.18s; }
+.mode-guide-tab:hover { color: oklch(0.86 0 0); }
+.mode-guide-tab.active { color: oklch(0.8868 0.1822 95.3226); border-bottom-color: oklch(0.8868 0.1822 95.3226); }
+.mode-guide-panel { display: none; }
+.mode-guide-panel.active { display: block; animation: guidePanelIn 0.22s ease; }
+.mode-guide-panel > p:first-child, .mode-guide-panel > h3:first-child { margin-top: 0; }
+@keyframes guidePanelIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+body.light-mode .mode-guide-tabs { border-bottom-color: oklch(0 0 0 / 0.1); }
+body.light-mode .mode-guide-tab { color: oklch(0.5 0 0); }
+body.light-mode .mode-guide-tab:hover { color: oklch(0.25 0 0); }
+body.light-mode .mode-guide-tab.active { color: oklch(0.6059 0.1986 256.4605); border-bottom-color: oklch(0.6059 0.1986 256.4605); }
+
+/* FAQ */
+.faq-layout { position: relative; }
+.faq-cats { position: absolute; top: 2px; right: calc(100% + 24px); width: 164px; display: flex; flex-direction: column; gap: 2px; }
+.faq-cat { appearance: none; background: none; border: none; font-family: inherit; cursor: pointer; text-align: left; font-size: 0.88em; font-weight: 600; color: oklch(0.66 0 0); padding: 8px 12px; border-radius: 8px; word-break: keep-all; line-height: 1.4; transition: color 0.16s, background 0.16s; }
+.faq-cat:hover { color: oklch(0.92 0 0); background: oklch(1 0 0 / 0.05); }
+.faq-cat.active { color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.1); font-weight: 700; }
+
+.faq-content { background-color: oklch(0.2891 0 0); border: 1px solid oklch(1 0 0 / 0.05); border-radius: 12px; box-shadow: 0 0 10px oklch(0 0 0 / 0.5); padding: 6px 26px; transition: background-color 0.3s ease, box-shadow 0.3s ease; }
+.faq-panel { display: none; }
+.faq-panel.active { display: block; animation: guidePanelIn 0.22s ease; }
+.faq-item { padding: 20px 0; border-bottom: 1px solid oklch(1 0 0 / 0.07); }
+.faq-item:last-child { border-bottom: none; }
+.faq-q { font-size: 1em; font-weight: 700; color: oklch(0.97 0 0); margin: 0 0 9px; word-break: keep-all; line-height: 1.6; }
+.faq-a { font-size: 0.93em; line-height: 1.78; color: oklch(0.82 0 0); word-break: keep-all; margin: 0 0 10px; }
+.faq-a:last-child { margin-bottom: 0; }
+.faq-a strong { color: oklch(0.93 0 0); }
+.faq-a a { color: oklch(0.8868 0.1822 95.3226); text-decoration: none; }
+.faq-a a:hover { text-decoration: underline; }
+
+body.light-mode .faq-cat { color: oklch(0.45 0 0); }
+body.light-mode .faq-cat:hover { color: oklch(0.2 0 0); background: oklch(0 0 0 / 0.04); }
+body.light-mode .faq-cat.active { color: oklch(0.6059 0.1986 256.4605); background: oklch(0.6059 0.1986 256.4605 / 0.1); }
+body.light-mode .faq-content { background-color: oklch(1 0 0); border-color: oklch(0.9266 0.0092 258.0793); box-shadow: 0 1px 4px oklch(0 0 0 / 0.06); }
+body.light-mode .faq-item { border-bottom-color: oklch(0 0 0 / 0.07); }
+body.light-mode .faq-q { color: oklch(0.2 0 0); }
+body.light-mode .faq-a { color: oklch(0.4 0 0); }
+body.light-mode .faq-a strong { color: oklch(0.25 0 0); }
+body.light-mode .faq-a a { color: oklch(0.6059 0.1986 256.4605); }
+
+/* FAQ 모바일 */
+@media (max-width: 1340px) {
+    .faq-cats { position: static; width: auto; flex-direction: row; flex-wrap: nowrap; overflow-x: auto; gap: 6px; margin-bottom: 16px; padding-bottom: 2px; scrollbar-width: none; }
+    .faq-cats::-webkit-scrollbar { display: none; }
+    .faq-cat { flex: 0 0 auto; border: 1px solid oklch(1 0 0 / 0.1); }
+    .faq-cat.active { border-color: oklch(0.8868 0.1822 95.3226 / 0.5); }
+    body.light-mode .faq-cat { border-color: oklch(0.88 0.0128 255.5297); }
+    body.light-mode .faq-cat.active { border-color: oklch(0.6059 0.1986 256.4605 / 0.5); }
+}
+@media (max-width: 600px) {
+    .faq-content { padding: 4px 16px; }
+    .mode-guide-tab { padding: 8px 10px; font-size: 0.86em; }
 }

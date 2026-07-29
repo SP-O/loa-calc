@@ -10,7 +10,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로아도쓰 - 로스트아크 아비도스 제작 계산기</title>
-    <meta name="description" content="로스트아크 아비도스 제작 손익 계산기, 로아도쓰. 실시간 거래소 시세로 융화 재료 제작·교환 손익과 영지 농장 효율을 계산하고, 티카투카 최적 수 추천 도구 티파고를 제공합니다.">
+    <meta name="description" content="로스트아크 아비도스 제작 손익 계산기 로아도쓰. 실시간 거래소 시세로 융화 재료를 제작·교환하면 이득인지 바로 계산하고, 영지 농장 효율과 티카투카 최적 수 추천 도구 티파고까지 한곳에서 제공합니다.">
     <link rel="canonical" href="https://loadoss.com/">
     <link rel="icon" type="image/png" href="object/doster_b.png">
 
@@ -86,6 +86,7 @@
         .mode-tab:last-child { border-radius: 0 5px 5px 0; }
         .mode-tab:hover { background-color: oklch(0.4091 0 0); color: oklch(1 0 0); }
         .mode-tab.active { background-color: oklch(0.3485 0 0); color: oklch(0.8868 0.1822 95.3226); border-bottom: 2px solid oklch(0.8868 0.1822 95.3226); z-index: 10; }
+        .mode-tab-new-dot { display: inline-block; width: 5px; height: 5px; margin-left: 2px; border-radius: 50%; background: oklch(0.66 0.15 27); vertical-align: top; margin-top: 1px; }
         
         .dropdown-content { display: none; position: absolute; top: 100%; left: -1px; width: calc(100% + 2px); background-color: oklch(0.2891 0 0); border: 1px solid oklch(0.3485 0 0); border-top: none; border-radius: 0 0 12px 12px; box-shadow: 0 8px 16px oklch(0 0 0 / 0.6); z-index: 100; box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .mode-tab.active:hover .dropdown-content { display: block; }
@@ -112,6 +113,16 @@
         
         .right-badges { display: flex; align-items: center; gap: 8px; margin-left: auto; }
         .mark-target { color: oklch(0.8868 0.1822 95.3226); font-size: 0.8em; font-weight: normal; border: 1px dashed oklch(0.8868 0.1822 95.3226); padding: 2px 5px; border-radius: 4px; margin-left: 6px; display: inline-block; vertical-align: middle; transition: color 0.3s ease, border-color 0.3s ease; }
+        /* 낚시 매물 감지: 구매 행 아래 왼줄 악센트 안내 박스 (시나리오 섹션의 색줄 문법) */
+        .craft-warn-sub { font-size: 0.78em; color: oklch(0.7572 0 0); line-height: 1.6; margin: -2px 10px 8px 44px; padding: 5px 10px; border-left: 2px solid oklch(0.7044 0.1872 23.1825 / 0.75); background: oklch(0.7044 0.1872 23.1825 / 0.07); border-radius: 0 6px 6px 0; word-break: keep-all; }
+        /* 박스 첫머리의 재료 아이콘(어느 재료 얘기인지 식별) — 기존 아이콘 문법의 축소판 */
+        .craft-warn-sub .resource-icon-wrap { width: 18px; height: 18px; vertical-align: -5px; margin-right: 3px; }
+        .craft-warn-sub .resource-icon { width: 15px; height: 15px; }
+        .craft-warn-sub .warn-point { color: oklch(0.7044 0.1872 23.1825); font-weight: bold; }
+        /* 절 단위 줄바꿈: inline-block이라 공백 없이도(Vue 공백 압축) 블록 사이에서만 줄이 나뉨 */
+        .craft-warn-sub .nowrap { display: inline-block; white-space: nowrap; margin-right: 4px; }
+        body.light-mode .craft-warn-sub { color: oklch(0.4495 0 0); border-left-color: oklch(0.6598 0.1899 23.9196 / 0.75); background: oklch(0.6598 0.1899 23.9196 / 0.06); }
+        body.light-mode .craft-warn-sub .warn-point { color: oklch(0.6598 0.1899 23.9196); }
         .mat-price-tag { background: oklch(0.3485 0 0); padding: 2px 6px; border: 1px solid transparent; border-radius: 4px; font-size: 0.75em; color: oklch(0.8868 0.1822 95.3226); display: flex; align-items: center; white-space: nowrap; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
         
         .deficit-info { text-align: center; font-size: 0.95em; color: oklch(0.7572 0 0); margin-top: -8px; margin-bottom: 12px; transition: color 0.3s ease; }
@@ -197,6 +208,25 @@
         .toggle-btn { width: auto !important; margin: 0 !important; padding: 4px 10px !important; background: transparent; border: 1px solid oklch(0.4676 0 0); color: oklch(0.7572 0 0); border-radius: 4px; font-size: 0.8em !important; font-weight: normal !important; cursor: pointer; transition: 0.2s; height: auto !important; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; line-height: 1.2; }
         .toggle-btn.active { background: oklch(0.8003 0.1821 151.7035); color: oklch(0.235 0 0); border-color: oklch(0.8003 0.1821 151.7035); font-weight: bold !important; }
         .toggle-btn:hover:not(.active) { border-color: oklch(0.8003 0.1821 151.7035); color: oklch(0.8003 0.1821 151.7035); transform: translateY(-1px); }
+
+        /* 목표 제작 계산: 제작 종류 세그먼트 — 모드 탭과 동일한 시각 언어(배경+금색 밑줄) */
+        .craft-product-tabs { display: flex; margin-bottom: 15px; border-radius: 6px; border: 1px solid oklch(1 0 0 / 0.05); overflow: hidden; transition: border-color 0.3s ease; }
+        .craft-product-tab { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 10px; background-color: oklch(0.2891 0 0); cursor: pointer; font-weight: bold; font-size: 0.85em; transition: 0.2s; border-bottom: 2px solid transparent; }
+        .craft-product-tab span { word-break: keep-all; line-height: 1.2; }
+        .craft-product-tab span, .craft-product-tab .resource-icon-wrap { opacity: 0.45; transition: opacity 0.2s; }
+        .craft-product-tab:hover { background-color: oklch(0.4091 0 0); }
+        .craft-product-tab:hover span, .craft-product-tab:hover .resource-icon-wrap { opacity: 1; }
+        .craft-product-tab.active { background-color: oklch(0.3485 0 0); border-bottom-color: oklch(0.8868 0.1822 95.3226); }
+        .craft-product-tab.active span, .craft-product-tab.active .resource-icon-wrap { opacity: 1; }
+        body.light-mode .craft-product-tabs { border-color: oklch(0.9266 0.0092 258.0793); background-color: oklch(0.9842 0.0035 247.8906); }
+        body.light-mode .craft-product-tab { background-color: transparent; }
+        body.light-mode .craft-product-tab:hover { background-color: oklch(0.9653 0.0069 247.8906); }
+        body.light-mode .craft-product-tab.active { background-color: oklch(1 0 0); border-bottom-color: oklch(0.6059 0.1986 256.4605); box-shadow: 0 2px 4px oklch(0 0 0 / 0.02); }
+        /* 제작 횟수 빠른 입력 칩 (전역 button 전체폭 규칙 상쇄 — .toggle-btn과 동일 접근) */
+        .craft-preset-btn { width: auto !important; margin: 0 0 0 4px !important; padding: 2px 9px !important; display: inline-flex; align-items: center; justify-content: center; background: transparent; border: 1px solid oklch(0.4676 0 0); color: oklch(0.7572 0 0); border-radius: 4px; font-size: 11px !important; font-weight: bold; cursor: pointer; transition: 0.2s; font-family: inherit; line-height: 1.4; }
+        .craft-preset-btn:hover { background: oklch(0.8868 0.1822 95.3226 / 0.12); border-color: oklch(0.8868 0.1822 95.3226 / 0.55); color: oklch(0.8868 0.1822 95.3226); transform: none; box-shadow: none; }
+        body.light-mode .craft-preset-btn { border-color: oklch(0.88 0.0128 255.5297); color: oklch(0.5103 0 0); }
+        body.light-mode .craft-preset-btn:hover { background: oklch(0.6059 0.1986 256.4605 / 0.08); border-color: oklch(0.6059 0.1986 256.4605 / 0.55); color: oklch(0.6059 0.1986 256.4605); }
         
         .ranking-board-wrap { position: relative; margin-bottom: 0px; background-color: oklch(0 0 0 / 0.15); border: 1px solid oklch(1 0 0 / 0.05); border-radius: 12px; padding: 4px; overflow: hidden; display: flex; flex-direction: column; transition: background-color 0.3s ease, border-color 0.3s ease; }
         .ranking-board { width: 100%; display: flex; flex-direction: column; gap: 0; padding-top: 0px; overflow-x: hidden; -ms-overflow-style: none; scrollbar-width: none; max-height: max-content; }
@@ -700,10 +730,19 @@
                         </div>
                     </div>
                     
-                    <div class="mode-tab" :class="{ active: calcMode === 'deficit' }" @click="calcMode = 'deficit'">
+                    <div class="mode-tab" :class="{ active: calcMode === 'craft' || calcMode === 'deficit' }" @click="calcMode = lastTab2Mode">
                         <div class="tab-content-wrap" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-                            <span>부족한 재료 계산</span>
-                            <span class="sub-text"> (짝 맞추기)</span>
+                            <!-- 신규 표시(안착 후 아래 <i>와 .mode-tab-new-dot 스타일 삭제) -->
+                            <span>{{ tab2Mode === 'deficit' ? '부족한 재료 계산' : '목표 제작 계산' }}<i class="mode-tab-new-dot" v-if="tab2Mode !== 'deficit' && !craftTabSeen"></i></span>
+                            <span class="sub-text" v-if="tab2Mode === 'deficit'"> (짝 맞추기)</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(0.6268 0 0)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); flex-shrink: 0;">
+                                <polyline points="7 13 12 18 17 13"></polyline>
+                                <polyline points="7 6 12 11 17 6"></polyline>
+                            </svg>
+                        </div>
+                        <div class="dropdown-content">
+                            <div class="dropdown-item" :class="{ selected: calcMode === 'craft' }" @click.stop="calcMode = 'craft'">목표 제작 계산</div>
+                            <div class="dropdown-item" :class="{ selected: calcMode === 'deficit' }" @click.stop="calcMode = 'deficit'">부족한 재료 계산 (짝 맞추기)</div>
                         </div>
                     </div>
                 </div>
@@ -714,9 +753,33 @@
                         {{ material.name }}
                     </label>
                 </div>
-                
+
+                <template v-if="calcMode === 'craft'">
+                    <div class="craft-product-tabs">
+                        <div class="craft-product-tab" :class="{ active: craftProduct === 'normal' }" @click="craftProduct = 'normal'">
+                            <div class="resource-icon-wrap normal-product"><img src="https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png" class="resource-icon" alt=""></div>
+                            <span class="normal-product">아비도스 융화 재료</span>
+                        </div>
+                        <div class="craft-product-tab" :class="{ active: craftProduct === 'advanced' }" @click="craftProduct = 'advanced'">
+                            <div class="resource-icon-wrap final-product"><img src="https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png" class="resource-icon" alt=""></div>
+                            <span class="final-product">상급 아비도스 융화 재료</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>
+                            <span class="resource-label">제작 횟수</span>
+                            <div class="right-badges">
+                                <span>
+                                    <button type="button" class="craft-preset-btn" v-for="n in [10, 20, 30, 40]" :key="'craft-preset-' + n" @click="craftTarget = n" tabindex="-1">{{ n }}회</button>
+                                </span>
+                            </div>
+                        </label>
+                        <input type="number" v-model.number="craftTarget" placeholder="0" min="1" max="999999" onfocus="this.select()">
+                    </div>
+                </template>
+
                 <template v-for="(resInfo, key) in selectedResources" :key="key">
-                    <div class="input-group" v-if="resInfo && (calcMode === 'optimize' ? !(exchangeType === 'farm' && key === 'S') : (key !== 'S' && key !== 'P'))">
+                    <div class="input-group" v-if="resInfo && (calcMode === 'optimize' ? !(exchangeType === 'farm' && key === 'S') : calcMode === 'craft' ? true : (key !== 'S' && key !== 'P'))">
                         <label>
                             <span :class="'resource-label resource-' + key">
                                 <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(resInfo.name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, resInfo.name)" @mouseleave="hideChartTooltip">
@@ -824,6 +887,75 @@
                         </template>
                     </template>
                     
+                    <template v-else-if="result.mode === 'craft'">
+                        <h2 class="result-title"> {{ result.product === 'advanced' ? '상급 아비도스 융화 재료' : '아비도스 융화 재료' }} </h2>
+                        <div class="deficit-info">{{ result.target.toLocaleString() }}회 제작에 필요한 재료:</div>
+
+                        <div v-for="k in ['A','B','C']" :key="'craft-need-'+k" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
+                            <div :class="'resource-label resource-' + k">
+                                <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources[k].name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources[k].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[k].imgUrl" class="resource-icon"></div>
+                                {{ selectedResources[k].name }}
+                                <span class="desc">- {{ result.plan.req[k].toLocaleString() }}개 필요</span>
+                            </div>
+                            <div class="count">
+                                <span v-if="result.plan.deficit[k] > 0" class="text-deficit">+ {{ result.plan.deficit[k].toLocaleString() }}개 부족</span>
+                                <span v-else class="text-surplus">충분함 ({{ Math.abs(result.plan.deficit[k]).toLocaleString() }}개 남음)</span>
+                            </div>
+                        </div>
+
+                        <template v-if="result.plan.purchases.length > 0">
+                            <hr class="result-divider">
+                            <div class="deficit-info">경매장에서 구매:</div>
+                            <template v-for="pu in result.plan.purchases" :key="'craft-buy-'+pu.key">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
+                                    <div :class="'resource-label resource-' + pu.key">
+                                        <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources[pu.key].name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources[pu.key].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[pu.key].imgUrl" class="resource-icon"></div>
+                                        {{ selectedResources[pu.key].name }}
+                                    </div>
+                                    <div class="count"><span class="num-point">{{ pu.buy.toLocaleString() }}</span>개 구매</div>
+                                </div>
+                                <div v-if="craftPriceWarnings[pu.key]" class="craft-warn-sub">
+                                    <span class="nowrap"><span :class="'resource-' + pu.key" style="display: inline-block;"><span class="resource-icon-wrap"><img :src="selectedResources[pu.key].imgUrl" class="resource-icon"></span></span>최저가가 최근 거래가보다</span>
+                                    <span class="nowrap"><span class="warn-point">100개당 {{ craftPriceWarnings[pu.key].goldPer100.toLocaleString() }}G({{ craftPriceWarnings[pu.key].gap }}%) 낮습니다.</span></span>
+                                    <span class="nowrap">등록된 수량을 확인해 주세요.</span>
+                                </div>
+                            </template>
+                        </template>
+
+                        <template v-if="craftExchangeLogs.length > 0">
+                            <hr class="result-divider">
+                            <div class="deficit-info">생활 재료 교환:</div>
+                            <div class="conversion-grid">
+                                <div class="conversion-row" v-for="[key, count] in craftExchangeLogs" :key="'craft-ex-'+key">
+                                    <div class="label-wrap">
+                                        <div :class="'resource-label resource-' + transformationMap[key].from">
+                                            <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources[transformationMap[key].from].name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].from].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].from].imgUrl" class="resource-icon"></div>
+                                            {{ selectedResources[transformationMap[key].from].name }}
+                                        </div>
+                                    </div>
+                                    <div class="arrow">→</div>
+                                    <div class="label-wrap">
+                                        <div :class="'resource-label resource-' + transformationMap[key].to">
+                                            <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(selectedResources[transformationMap[key].to].name) ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, selectedResources[transformationMap[key].to].name)" @mouseleave="hideChartTooltip"><img :src="selectedResources[transformationMap[key].to].imgUrl" class="resource-icon"></div>
+                                            {{ selectedResources[transformationMap[key].to].name }}
+                                        </div>
+                                    </div>
+                                    <div class="count"><span class="num-point">{{ count }}</span>회 교환</div>
+                                </div>
+                            </div>
+                        </template>
+
+                        <p v-if="result.plan.priceFallback" class="guide-desc" style="margin-top: 8px;">* 일부 재료의 시세 정보가 없어 직접 구매 기준으로 계산했습니다.</p>
+
+                        <div class="final-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 12px 10px 0;">
+                            <span class="resource-label" :class="result.product === 'advanced' ? 'final-product' : 'normal-product'">
+                                <div class="resource-icon-wrap" :style="{ cursor: hasTooltip(result.product === 'advanced' ? '상급 아비도스 융화 재료' : '아비도스 융화 재료') ? 'help' : 'default' }" @mouseenter="showChartTooltip($event, result.product === 'advanced' ? '상급 아비도스 융화 재료' : '아비도스 융화 재료')" @mouseleave="hideChartTooltip"><img :src="result.product === 'advanced' ? 'https://cdn-lostark.game.onstove.com/EFUI_IconAtlas/Use/Use_13_252.png' : 'https://cdn-lostark.game.onstove.com/efui_iconatlas/use/use_12_86.png'" class="resource-icon"></div>
+                                {{ result.product === 'advanced' ? '상급 아비도스 융화 재료' : '아비도스 융화 재료' }}
+                            </span>
+                            <div class="count"><span class="num-point">{{ result.target.toLocaleString() }}</span>회 제작</div>
+                        </div>
+                    </template>
+
                     <template v-else-if="result.mode === 'deficit'">
                         <h2 class="result-title"> 아비도스 융화 재료 </h2>
                         <template v-if="result.normal.totalO === 0">
@@ -1078,7 +1210,7 @@
                                     </span>
                                 </div>
                                 
-                                <template v-if="calcMode === 'optimize'">
+                                <template v-if="calcMode === 'optimize' || !result || (calcMode === 'craft' && craftProduct !== 'normal')">
                                     <div class="scenario-section self-craft">
                                         <div class="scenario-header">
                                             <span class="scenario-title" style="border:none; margin:0; padding:0;">자급자족 (재료값 0G)</span>
@@ -1089,7 +1221,7 @@
                                                 {{ profitPerCraft.normal.zeroCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.normal.zeroCost).toLocaleString() }} G
                                             </span>
                                         </div>
-                                        <template v-if="result && result.normal.totalO > 0">
+                                        <template v-if="result && result.normal && result.normal.totalO > 0">
                                             <div style="margin-top: 8px; border-top: 1px dashed oklch(0.4091 0 0); padding-top: 8px;">
                                                 <div class="scenario-row">
                                                     <span class="tooltip-container" style="color: oklch(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입<div class="tooltip-box" v-html="batchProfits.normal.revenueFormulaHtml"></div></span>
@@ -1126,7 +1258,7 @@
                                                 {{ profitPerCraft.normal.fullCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.normal.fullCost).toLocaleString() }} G
                                             </span>
                                         </div>
-                                        <template v-if="result && result.normal.totalO > 0">
+                                        <template v-if="result && result.normal && result.normal.totalO > 0">
                                             <div style="margin-top: 8px; border-top: 1px dashed oklch(0.4091 0 0); padding-top: 8px;">
                                                 <div class="scenario-row">
                                                     <span class="tooltip-container" style="color: oklch(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입<div class="tooltip-box" v-html="batchProfits.normal.revenueFormulaHtml"></div></span>
@@ -1153,6 +1285,36 @@
                                 </div>
                             </template>
                             
+                            <template v-else-if="calcMode === 'craft' && craftProduct === 'normal'">
+                                <div class="scenario-section deficit-craft">
+                                    <div class="scenario-header">
+                                        <span class="scenario-title" style="border:none; margin:0; padding:0;">목표 제작 기준 총수익</span>
+                                    </div>
+                                    <div class="scenario-row" v-if="result && result.mode === 'craft'">
+                                        <span class="tooltip-container" style="color: oklch(0.9067 0 0);">{{ result.target }}회 제작 판매 수입<div class="tooltip-box" v-html="craftCosts.revenueFormulaHtml"></div></span>
+                                        <span class="profit-plus">+ {{ Math.floor(craftCosts.totalRevenue).toLocaleString() }} G</span>
+                                    </div>
+                                    <div class="scenario-row" style="color: oklch(0.6268 0 0);">
+                                        <span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span>
+                                        <span class="profit-minus">- {{ Math.floor(craftCosts.opportunityCost).toLocaleString() }} G</span>
+                                    </div>
+                                    <div class="scenario-row">
+                                        <span class="tooltip-container">부족한 재료 구매 비용<div class="tooltip-box" v-html="craftCosts.costFormulaHtml"></div></span>
+                                        <span class="profit-minus">- {{ Math.floor(craftCosts.missingMatCost).toLocaleString() }} G</span>
+                                    </div>
+                                    <div class="scenario-row">
+                                        <span>영지 제작 수수료</span>
+                                        <span class="profit-minus">- {{ Math.floor(craftCosts.totalFee).toLocaleString() }} G</span>
+                                    </div>
+                                    <div v-if="result && result.mode === 'craft'" class="scenario-row total-profit-row">
+                                        <span style="color: oklch(0.8868 0.1822 95.3226);">최종 예상 수익</span>
+                                        <span :class="craftCosts.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
+                                            {{ craftCosts.totalProfit > 0 ? '+' : '' }}{{ Math.floor(craftCosts.totalProfit).toLocaleString() }} G
+                                        </span>
+                                    </div>
+                                </div>
+                            </template>
+
                             <template v-else-if="calcMode === 'deficit'">
                                 <div class="scenario-section deficit-craft">
                                     <div class="scenario-header">
@@ -1161,7 +1323,7 @@
                                             남는 재료 판매 {{ includeSurplus ? 'ON' : 'OFF' }}
                                         </button>
                                     </div>
-                                    <div class="scenario-row" v-if="result && result.normal.totalO > 0">
+                                    <div class="scenario-row" v-if="result && result.normal && result.normal.totalO > 0">
                                         <span class="tooltip-container" style="color: oklch(0.9067 0 0);">{{ result.normal.totalO }}회 제작 판매 수입<div class="tooltip-box" v-html="deficitCosts.normal.revenueFormulaHtml"></div></span>
                                         <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.totalRevenue).toLocaleString() }} G</span>
                                     </div>
@@ -1181,7 +1343,7 @@
                                         <span style="color: oklch(0.8003 0.1821 151.7035);">남는 재료 판매 <span style="font-size: 0.8em; color: oklch(0.6268 0 0);">(100개 단위)</span></span>
                                         <span class="profit-plus">+ {{ Math.floor(deficitCosts.normal.surplusProfit).toLocaleString() }} G</span>
                                     </div>
-                                    <div v-if="result && result.normal.totalO > 0" class="scenario-row total-profit-row">
+                                    <div v-if="result && result.normal && result.normal.totalO > 0" class="scenario-row total-profit-row">
                                         <span style="color: oklch(0.8868 0.1822 95.3226);">최종 예상 수익</span>
                                         <span :class="deficitCosts.normal.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                             {{ deficitCosts.normal.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.normal.totalProfit).toLocaleString() }} G
@@ -1206,7 +1368,7 @@
                                 </span>
                             </div>
                             
-                            <template v-if="calcMode === 'optimize'">
+                            <template v-if="calcMode === 'optimize' || !result || (calcMode === 'craft' && craftProduct !== 'advanced')">
                                 <div class="scenario-section self-craft">
                                     <div class="scenario-header">
                                         <span class="scenario-title" style="border:none; margin:0; padding:0;">자급자족 (재료값 0G)</span>
@@ -1217,7 +1379,7 @@
                                             {{ profitPerCraft.advanced.zeroCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.advanced.zeroCost).toLocaleString() }} G
                                         </span>
                                     </div>
-                                    <template v-if="result && result.advanced.totalO > 0">
+                                    <template v-if="result && result.advanced && result.advanced.totalO > 0">
                                         <div style="margin-top: 8px; border-top: 1px dashed oklch(0.4091 0 0); padding-top: 8px;">
                                             <div class="scenario-row">
                                                 <span class="tooltip-container" style="color: oklch(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입<div class="tooltip-box" v-html="batchProfits.advanced.revenueFormulaHtml"></div></span>
@@ -1254,7 +1416,7 @@
                                             {{ profitPerCraft.advanced.fullCost > 0 ? '+' : '' }}{{ Math.floor(profitPerCraft.advanced.fullCost).toLocaleString() }} G
                                         </span>
                                     </div>
-                                    <template v-if="result && result.advanced.totalO > 0">
+                                    <template v-if="result && result.advanced && result.advanced.totalO > 0">
                                         <div style="margin-top: 8px; border-top: 1px dashed oklch(0.4091 0 0); padding-top: 8px;">
                                             <div class="scenario-row">
                                                 <span class="tooltip-container" style="color: oklch(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입<div class="tooltip-box" v-html="batchProfits.advanced.revenueFormulaHtml"></div></span>
@@ -1281,6 +1443,36 @@
                             </div>
                         </template>
                         
+                        <template v-else-if="calcMode === 'craft' && craftProduct === 'advanced'">
+                            <div class="scenario-section deficit-craft">
+                                <div class="scenario-header">
+                                    <span class="scenario-title" style="border:none; margin:0; padding:0;">목표 제작 기준 총수익</span>
+                                </div>
+                                <div class="scenario-row" v-if="result && result.mode === 'craft'">
+                                    <span class="tooltip-container" style="color: oklch(0.9067 0 0);">{{ result.target }}회 제작 판매 수입<div class="tooltip-box" v-html="craftCosts.revenueFormulaHtml"></div></span>
+                                    <span class="profit-plus">+ {{ Math.floor(craftCosts.totalRevenue).toLocaleString() }} G</span>
+                                </div>
+                                <div class="scenario-row" style="color: oklch(0.6268 0 0);">
+                                    <span>보유한 재료 가치 <span style="font-size: 0.8em;">(판매가 기준)</span></span>
+                                    <span class="profit-minus">- {{ Math.floor(craftCosts.opportunityCost).toLocaleString() }} G</span>
+                                </div>
+                                <div class="scenario-row">
+                                    <span class="tooltip-container">부족한 재료 구매 비용<div class="tooltip-box" v-html="craftCosts.costFormulaHtml"></div></span>
+                                    <span class="profit-minus">- {{ Math.floor(craftCosts.missingMatCost).toLocaleString() }} G</span>
+                                </div>
+                                <div class="scenario-row">
+                                    <span>영지 제작 수수료</span>
+                                    <span class="profit-minus">- {{ Math.floor(craftCosts.totalFee).toLocaleString() }} G</span>
+                                </div>
+                                <div v-if="result && result.mode === 'craft'" class="scenario-row total-profit-row">
+                                    <span style="color: oklch(0.8868 0.1822 95.3226);">최종 예상 수익</span>
+                                    <span :class="craftCosts.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
+                                        {{ craftCosts.totalProfit > 0 ? '+' : '' }}{{ Math.floor(craftCosts.totalProfit).toLocaleString() }} G
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
+
                         <template v-else-if="calcMode === 'deficit'">
                             <div class="scenario-section deficit-craft">
                                 <div class="scenario-header">
@@ -1289,7 +1481,7 @@
                                         남는 재료 판매 {{ includeSurplus ? 'ON' : 'OFF' }}
                                     </button>
                                 </div>
-                                <div class="scenario-row" v-if="result && result.advanced.totalO > 0">
+                                <div class="scenario-row" v-if="result && result.advanced && result.advanced.totalO > 0">
                                     <span class="tooltip-container" style="color: oklch(0.9067 0 0);">{{ result.advanced.totalO }}회 제작 판매 수입<div class="tooltip-box" v-html="deficitCosts.advanced.revenueFormulaHtml"></div></span>
                                     <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.totalRevenue).toLocaleString() }} G</span>
                                 </div>
@@ -1309,7 +1501,7 @@
                                     <span style="color: oklch(0.8003 0.1821 151.7035);">남는 재료 판매 <span style="font-size: 0.8em; color: oklch(0.6268 0 0);">(100개 단위)</span></span>
                                     <span class="profit-plus">+ {{ Math.floor(deficitCosts.advanced.surplusProfit).toLocaleString() }} G</span>
                                 </div>
-                                <div v-if="result && result.advanced.totalO > 0" class="scenario-row total-profit-row">
+                                <div v-if="result && result.advanced && result.advanced.totalO > 0" class="scenario-row total-profit-row">
                                     <span style="color: oklch(0.8868 0.1822 95.3226);">최종 예상 수익</span>
                                     <span :class="deficitCosts.advanced.totalProfit > 0 ? 'profit-neon-gold' : 'profit-minus'">
                                         {{ deficitCosts.advanced.totalProfit > 0 ? '+' : '' }}{{ Math.floor(deficitCosts.advanced.totalProfit).toLocaleString() }} G
@@ -1321,7 +1513,7 @@
                 </div>
             </div>
         </div> 
-        <div class="update-box" v-show="!activeTool">update: 2026.07.03</div>
+        <div class="update-box" v-show="!activeTool">update: 2026.07.29</div>
     </div> 
 </div>
 
@@ -1338,8 +1530,9 @@
     <div class="footer-disclaimer">
         <span>© 2026 LoaDoss. All Rights Reserved. This site is not associated with Smilegate RPG & Smilegate Stove. Data based on Lostark Open API.</span>
         <span class="footer-links">
+            <a href="/guide/abydos" class="privacy-link">이용 가이드</a>
             <a href="/news" class="privacy-link">업데이트 내역</a>
-            <a href="/guide/about" class="privacy-link">이용 가이드</a>
+            <a href="/guide/about" class="privacy-link">사이트 소개</a>
             <a href="/privacy" class="privacy-link">개인정보 처리방침</a>
         </span>
     </div>
@@ -1419,7 +1612,323 @@
 
 <script>
     const { createApp } = Vue;
-    
+
+    // ── 목표 제작 계산(craft): 최저가 구매+교환 플랜 ──
+    // 순수 함수. T: 제작 횟수, recipe: {A,B,C} (1회 기준), held: {A,B,S,C,P} 보유량,
+    // prices: {A,B,S,C} 100개당 골드(0 = 시세 없음).
+    // 반환: { req, deficit, purchases: [{key,qty,buy,cost}], totalCost, logs, steps, heldUsed, priceFallback }
+    //  - deficit: 필요량 − 보유량 (양수=부족, 음수=남음; 짝 맞추기 표기와 동일 기준)
+    //  - purchases: qty=필요량, buy=실제 구매 수량(경매장 100개 단위 올림), cost=buy 기준 골드(시세 없으면 0)
+    //  - logs: 교환 종류별 횟수(normalRates와 동일 키) / steps: 화면 표시용 [키, 횟수] — 실행 가능 순서
+    //  - heldUsed: 보유분 중 소모량(직접 투입 + 교환 소모) — 우측 패널 기회비용용
+    //
+    // A·B·C 시세가 모두 있으면 후보 창 전수 탐색(최적), 아니면 그리디 폴백.
+    function computeCraftPlan(T, recipe, held, prices) {
+        const plan = (prices.A > 0 && prices.B > 0 && prices.C > 0)
+            ? optimizeCraftPlan(T, recipe, held, prices)
+            : greedyCraftPlan(T, recipe, held, prices);
+        plan.steps = orderExchangeSteps(plan.logs, held, plan.purchases);
+        return plan;
+    }
+
+    // 교환 단계를 "위에서부터 순서대로 실행해도 재고가 모자라지 않는" 순서로 정렬.
+    // (예: A→가루→B→A 순환 플랜은 가루→B가 B→A보다 먼저 와야 실행 가능)
+    function orderExchangeSteps(logs, held, purchases) {
+        const pool = { A: held.A || 0, B: held.B || 0, S: held.S || 0, C: held.C || 0, P: held.P || 0 };
+        for (const pu of purchases) pool[pu.key] += pu.buy;
+        const R = { StoA: ['S', 'A', 5, 50], BtoA: ['B', 'A', 25, 50], AtoP: ['A', 'P', 100, 80], BtoP: ['B', 'P', 50, 80], PtoB: ['P', 'B', 100, 50], PtoA: ['P', 'A', 100, 100], PtoC: ['P', 'C', 100, 10] };
+        const pref = ['StoA', 'BtoA', 'AtoP', 'BtoP', 'PtoB', 'PtoA', 'PtoC'];
+        const left = { ...logs };
+        const steps = [];
+        let progress = true;
+        while (progress) {
+            progress = false;
+            for (const k of pref) {
+                if (left[k] > 0) {
+                    const [from, to, cin, cout] = R[k];
+                    if (pool[from] >= cin * left[k]) {
+                        pool[from] -= cin * left[k]; pool[to] += cout * left[k];
+                        steps.push([k, left[k]]); left[k] = 0; progress = true;
+                    }
+                }
+            }
+        }
+        for (const k of pref) if (left[k] > 0) steps.push([k, left[k]]);
+        return steps;
+    }
+
+    // 후보 창 전수 탐색: 모든 교환 벡터(E)를 "묶음(100개) 경계 주변 후보"로 압축 열거하고
+    // 실제 묶음 올림 비용이 최소인 플랜을 선택. 보유 S·가루·잉여 재료의 체인 활용
+    // (예: 보유 튼튼한 재료 → 재료 → 가루 → 아비도스)이 수지식에 자연 포함된다.
+    // 후보 수는 T와 무관하게 유계 — 수십 ms 안에 끝난다.
+    function optimizeCraftPlan(T, recipe, held, prices) {
+        const req = { A: T * recipe.A, B: T * recipe.B, C: T * recipe.C };
+        const hA = held.A || 0, hB = held.B || 0, hS = held.S || 0, hC = held.C || 0, hP = held.P || 0;
+        const deficit = { A: req.A - hA, B: req.B - hB, C: req.C - hC };
+        const needA0 = Math.max(0, deficit.A), needB0 = Math.max(0, deficit.B), needC0 = Math.max(0, deficit.C);
+        const surB = Math.max(0, -deficit.B);
+        const bundle = (k, qty) => qty <= 0 ? 0 : (prices[k] > 0 ? Math.ceil(qty / 100) * prices[k] : Infinity);
+        const uniq = (arr) => [...new Set(arr.filter(v => v >= 0))];
+
+        // P→C/B/A 사용 횟수 후보: 0, 전량, 직접 구매분이 묶음 정렬되는 지점들, 보유 가루 한도
+        const mcBase = Math.ceil(needC0 / 10);
+        const mcCands = needC0 === 0 ? [0] : uniq([0, mcBase, Math.min(mcBase, Math.floor(hP / 100)),
+            ...Array.from({ length: 15 }, (_, i) => mcBase - 10 * (i + 1))]);
+        const mbBase = Math.ceil(needB0 / 50);
+        const mbCands = needB0 === 0 ? [0] : uniq([0, mbBase, Math.min(mbBase, Math.floor(hP / 100)),
+            ...Array.from({ length: 5 }, (_, i) => mbBase - 2 * (i + 1))]);
+        // P→A는 보유 가루로만 의미(구매 재료를 가루로 바꿔 A로 되돌리는 건 항상 손해)
+        const maMax = needA0 === 0 ? 0 : Math.min(Math.ceil(needA0 / 100), Math.ceil(hP / 100));
+        const maCands = Array.from({ length: maMax + 1 }, (_, i) => i);
+
+        let best = null;
+        for (const mc of mcCands) for (const mb of mbCands) for (const ma of maCands) {
+            const pNeed = Math.max(0, 100 * (mc + mb + ma) - hP);
+            const btopFull = Math.ceil(pNeed / 80);
+            const btopCands = uniq([0, 1, 2,
+                ...Array.from({ length: 9 }, (_, i) => btopFull - i), // B묶음 정렬(2회=100개) 혼합 지점 포함
+                Math.min(btopFull, Math.floor(surB / 50)), Math.min(btopFull, Math.floor(surB / 50) + 1)]);
+            for (const btop of btopCands) {
+                const atop = Math.max(0, Math.ceil((pNeed - 80 * btop) / 80));
+                const aNeed = Math.max(0, req.A + 100 * atop - hA - 100 * ma); // 교환 전 잔여 A 수요
+                const sBase = Math.ceil(aNeed / 50);
+                const sHeldEx = Math.floor(hS / 5);
+                const sCands = aNeed === 0 ? [0] : uniq([0, sHeldEx, Math.min(sHeldEx, sBase),
+                    ...Array.from({ length: 21 }, (_, i) => sBase - i)]);
+                const bCands = aNeed === 0 ? [0] : uniq([0, Math.floor(surB / 25), Math.floor(surB / 25) + 1,
+                    ...Array.from({ length: 5 }, (_, i) => sBase - i)]);
+                // (StoA, BtoA) 조합: 한쪽 창 + 반대쪽 소량(묶음 틈 메우기)
+                const pairs = [];
+                for (const s of sCands) for (const b of [0, 1, 2, 3, 4]) pairs.push([s, b]);
+                for (const b of bCands) for (const s of [0, Math.min(sHeldEx, sBase)]) pairs.push([s, b]);
+                for (const [stoa, btoa] of pairs) {
+                    const buyA = Math.max(0, req.A + 100 * atop - hA - 50 * stoa - 50 * btoa - 100 * ma);
+                    const buyB = Math.max(0, req.B + 25 * btoa + 50 * btop - hB - 50 * mb);
+                    const buyS = Math.max(0, 5 * stoa - hS);
+                    const buyC = Math.max(0, req.C - hC - 10 * mc);
+                    const cost = bundle('A', buyA) + bundle('B', buyB) + bundle('S', buyS) + bundle('C', buyC);
+                    if (!isFinite(cost)) continue;
+                    const totE = stoa + btoa + atop + btop + ma + mb + mc;
+                    if (!best || cost < best.cost || (cost === best.cost && totE < best.totE)) {
+                        best = { cost, totE, stoa, btoa, atop, btop, ma, mb, mc, buy: { A: buyA, B: buyB, S: buyS, C: buyC } };
+                    }
+                }
+            }
+        }
+
+        const logs = { StoA: best.stoa, BtoA: best.btoa, AtoP: best.atop, BtoP: best.btop, PtoB: best.mb, PtoA: best.ma, PtoC: best.mc };
+        const purchases = [];
+        let totalCost = 0;
+        for (const k of ['A', 'B', 'S', 'C']) {
+            if (best.buy[k] > 0) {
+                const bundles = Math.ceil(best.buy[k] / 100);
+                const cost = prices[k] > 0 ? bundles * prices[k] : 0;
+                // qty = 필요량, buy = 실제 구매 수량(경매장 100개 단위) — 표기·비용이 정확히 일치하도록
+                purchases.push({ key: k, qty: best.buy[k], buy: bundles * 100, cost });
+                totalCost += cost;
+            }
+        }
+        // 보유분 소모량(보유 우선 소진 기준): 총 소비량과 보유량 중 작은 쪽
+        const heldUsed = {
+            A: Math.min(hA, req.A + 100 * best.atop),
+            B: Math.min(hB, req.B + 25 * best.btoa + 50 * best.btop),
+            C: Math.min(hC, req.C),
+            S: Math.min(hS, 5 * best.stoa),
+            P: Math.min(hP, 100 * (best.ma + best.mb + best.mc))
+        };
+        return { req, deficit, purchases, totalCost, logs, heldUsed, priceFallback: false };
+    }
+
+    // 그리디 폴백(시세 일부/전부 없음): 보유분 활용 후 직접 구매 기준
+    function greedyCraftPlan(T, recipe, held, prices) {
+        const R = {
+            StoA: { in: 5, out: 50 }, BtoA: { in: 25, out: 50 },
+            AtoP: { in: 100, out: 80 }, BtoP: { in: 50, out: 80 },
+            PtoA: { in: 100, out: 100 }, PtoB: { in: 100, out: 50 }, PtoC: { in: 100, out: 10 }
+        };
+        const logs = { StoA: 0, BtoA: 0, AtoP: 0, BtoP: 0, PtoB: 0, PtoA: 0, PtoC: 0 };
+        const req = { A: T * recipe.A, B: T * recipe.B, C: T * recipe.C };
+        const deficit = { A: req.A - (held.A || 0), B: req.B - (held.B || 0), C: req.C - (held.C || 0) };
+
+        let needA = Math.max(0, deficit.A), needB = Math.max(0, deficit.B), needC = Math.max(0, deficit.C);
+        let surA = Math.max(0, -deficit.A), surB = Math.max(0, -deficit.B);
+        let s = held.S || 0, p = held.P || 0;
+        const heldUsed = {
+            A: Math.min(held.A || 0, req.A), B: Math.min(held.B || 0, req.B),
+            C: Math.min(held.C || 0, req.C), S: 0, P: 0
+        };
+
+        // 개당 구매 단가(교환 경로 포함 최저). 시세 없으면 Infinity.
+        const per = (k) => (prices[k] > 0 ? prices[k] / 100 : Infinity);
+        const costA = Math.min(per('A'), per('S') / 10, per('B') / 2); // 직접 / 5S→50A / 25B→50A
+        const costP = Math.min(costA * 1.25, per('B') * 0.625);        // 100A→80P / 50B→80P
+        const costB = Math.min(per('B'), costP * 2);                   // 직접 / 100P→50B
+        const costC = Math.min(per('C'), costP * 10);                  // 직접 / 100P→10C
+        // 배분 우선순위 값. 시세 없으면 현실 시세 비율에 가까운 고정값(A:B:C ≈ 1:1.4:3).
+        const vA = isFinite(costA) ? costA : 1, vB = isFinite(costB) ? costB : 1.4, vC = isFinite(costC) ? costC : 3;
+
+        // ① 보유 S → A (S는 제작에 직접 투입되지 않는 순수 교환 자원)
+        if (needA > 0 && s >= R.StoA.in) {
+            const n = Math.min(Math.floor(s / R.StoA.in), Math.ceil(needA / R.StoA.out));
+            logs.StoA += n; s -= n * R.StoA.in; heldUsed.S += n * R.StoA.in;
+            const got = n * R.StoA.out;
+            surA += Math.max(0, got - needA); needA = Math.max(0, needA - got);
+        }
+
+        // ② 보유 가루 배분 — 골드 절약액 큰 부족분부터, 하나 채워질 때마다 재평가
+        while (p >= 100 && (needA > 0 || needB > 0 || needC > 0)) {
+            const opts = [];
+            if (needC > 0) opts.push(['PtoC', R.PtoC.out, R.PtoC.out * vC, 'C']);
+            if (needB > 0) opts.push(['PtoB', R.PtoB.out, R.PtoB.out * vB, 'B']);
+            if (needA > 0) opts.push(['PtoA', R.PtoA.out, R.PtoA.out * vA, 'A']);
+            opts.sort((x, y) => y[2] - x[2]);
+            const [log, out, , fill] = opts[0];
+            const need = fill === 'A' ? needA : fill === 'B' ? needB : needC;
+            const n = Math.min(Math.floor(p / 100), Math.ceil(need / out));
+            logs[log] += n; p -= n * 100;
+            const got = n * out;
+            if (fill === 'A') needA = Math.max(0, needA - got);
+            else if (fill === 'B') needB = Math.max(0, needB - got);
+            else needC = Math.max(0, needC - got);
+        }
+
+        // ③ 잉여 보유 B 활용 — A 부족(25B→50A) vs C 부족(B→P→C), 개당 절약 큰 쪽부터
+        if (surB >= R.BtoA.in && (needA > 0 || needC > 0)) {
+            const saveA = needA > 0 ? 2 * vA : -1;    // B 1개 → A 2개
+            const saveC = needC > 0 ? 0.16 * vC : -1; // B 1개 → P 1.6 → C 0.16개
+            for (const t of (saveA >= saveC ? ['A', 'C'] : ['C', 'A'])) {
+                if (t === 'A' && needA > 0 && surB >= R.BtoA.in) {
+                    const n = Math.min(Math.floor(surB / R.BtoA.in), Math.ceil(needA / R.BtoA.out));
+                    logs.BtoA += n; surB -= n * R.BtoA.in; heldUsed.B += n * R.BtoA.in;
+                    const got = n * R.BtoA.out;
+                    surA += Math.max(0, got - needA); needA = Math.max(0, needA - got);
+                } else if (t === 'C' && needC > 0 && surB >= R.BtoP.in) {
+                    const mWant = Math.ceil(needC / R.PtoC.out);
+                    const k = Math.min(Math.floor(surB / R.BtoP.in),
+                        Math.max(0, Math.ceil((mWant * 100 - p) / R.BtoP.out)));
+                    const m = Math.min(mWant, Math.floor((p + k * R.BtoP.out) / 100));
+                    if (m > 0) {
+                        logs.BtoP += k; logs.PtoC += m; heldUsed.B += k * R.BtoP.in;
+                        p = p + k * R.BtoP.out - m * 100; surB -= k * R.BtoP.in;
+                        needC = Math.max(0, needC - m * R.PtoC.out);
+                    }
+                }
+            }
+        }
+
+        // ④ 잉여 보유 A 활용 — C 부족(A→P→C) vs B 부족(A→P→B)
+        if (surA >= R.AtoP.in && (needC > 0 || needB > 0)) {
+            const saveC = needC > 0 ? 0.08 * vC : -1; // A 1개 → P 0.8 → C 0.08개
+            const saveB = needB > 0 ? 0.4 * vB : -1;  // A 1개 → P 0.8 → B 0.4개
+            for (const t of (saveC >= saveB ? ['C', 'B'] : ['B', 'C'])) {
+                const needT = t === 'C' ? needC : needB;
+                if (needT <= 0 || surA < R.AtoP.in) continue;
+                const outT = t === 'C' ? R.PtoC.out : R.PtoB.out;
+                const logT = t === 'C' ? 'PtoC' : 'PtoB';
+                const mWant = Math.ceil(needT / outT);
+                const k = Math.min(Math.floor(surA / R.AtoP.in),
+                    Math.max(0, Math.ceil((mWant * 100 - p) / R.AtoP.out)));
+                const m = Math.min(mWant, Math.floor((p + k * R.AtoP.out) / 100));
+                if (m > 0) {
+                    logs.AtoP += k; logs[logT] += m; heldUsed.A += k * R.AtoP.in;
+                    p = p + k * R.AtoP.out - m * 100; surA -= k * R.AtoP.in;
+                    if (t === 'C') needC = Math.max(0, needC - m * outT);
+                    else needB = Math.max(0, needB - m * outT);
+                }
+            }
+        }
+
+        // ⑤ 남은 부족분 → 구매 플랜.
+        // 교환 경로 플랜(useRoutes)과 직접 구매 플랜을 모두 만들어
+        // 실제(묶음 올림 반영) 비용이 싼 쪽을 채택 — 소량 부족에서 묶음 지배 문제 방지.
+        const finish = (useRoutes) => {
+            let nB = needB, nC = needC, pp = p;
+            const lg = { StoA: 0, BtoA: 0, AtoP: 0, BtoP: 0, PtoB: 0, PtoA: 0, PtoC: 0 };
+            const buy = { A: 0, B: 0, S: 0, C: 0 };
+            let fallback = false, pShort = 0;
+
+            if (nC > 0) {
+                if (useRoutes && costP * 10 < per('C')) {
+                    const m = Math.ceil(nC / R.PtoC.out);
+                    lg.PtoC += m;
+                    const use = Math.min(pp, m * 100); pp -= use; pShort += m * 100 - use;
+                } else {
+                    if (!isFinite(per('C'))) fallback = true;
+                    buy.C += nC;
+                }
+            }
+            if (nB > 0) {
+                if (useRoutes && costP * 2 < per('B')) {
+                    const m = Math.ceil(nB / R.PtoB.out);
+                    lg.PtoB += m;
+                    const use = Math.min(pp, m * 100); pp -= use; pShort += m * 100 - use;
+                } else {
+                    if (!isFinite(per('B'))) fallback = true;
+                    buy.B += nB;
+                }
+            }
+            let aShort = needA;
+            if (pShort > 0) { // 가루 조달: A 경유 vs B 경유
+                if (costA * 1.25 <= per('B') * 0.625) {
+                    const k = Math.ceil(pShort / R.AtoP.out);
+                    lg.AtoP += k; aShort += k * R.AtoP.in;
+                } else {
+                    const k = Math.ceil(pShort / R.BtoP.out);
+                    lg.BtoP += k; buy.B += k * R.BtoP.in;
+                }
+            }
+            if (aShort > 0) {
+                // A 조달: 직접 vs S교환 vs B교환 — 마지막 부분 묶음 경계 주변의
+                // "교환 n회 + 잔여 직접" 혼합 후보까지 실제 묶음 비용으로 평가
+                const bcost = (k, qty) => qty <= 0 ? 0 : (prices[k] > 0 ? Math.ceil(qty / 100) * prices[k] : Infinity);
+                let best = { cost: bcost('A', aShort), kind: 'direct' };
+                if (useRoutes) {
+                    const ROUTES = [
+                        { key: 'S', log: 'StoA', rin: R.StoA.in, rout: R.StoA.out, step: 20 }, // 5개×20회 = 100개(1묶음)
+                        { key: 'B', log: 'BtoA', rin: R.BtoA.in, rout: R.BtoA.out, step: 4 },  // 25개×4회 = 100개(1묶음)
+                    ];
+                    for (const rt of ROUTES) {
+                        if (!(prices[rt.key] > 0)) continue;
+                        const nMax = Math.ceil(aShort / rt.rout);
+                        for (let n = nMax; n >= Math.max(1, nMax - rt.step); n--) {
+                            const rest = Math.max(0, aShort - n * rt.rout);
+                            const cost = bcost(rt.key, n * rt.rin) + bcost('A', rest);
+                            if (cost < best.cost) best = { cost, kind: 'route', rt, n, rest };
+                        }
+                    }
+                }
+                if (best.kind === 'route') {
+                    lg[best.rt.log] += best.n; buy[best.rt.key] += best.n * best.rt.rin;
+                    if (best.rest > 0) buy.A += best.rest;
+                } else {
+                    if (!isFinite(per('A'))) fallback = true;
+                    buy.A += aShort;
+                }
+            }
+
+            // 비용: totalCost는 표시용(시세 없으면 0), cmpCost는 플랜 비교용(시세 없으면 Infinity)
+            const purchases = [];
+            let totalCost = 0, cmpCost = 0;
+            for (const k of ['A', 'B', 'S', 'C']) {
+                if (buy[k] > 0) {
+                    const bundles = Math.ceil(buy[k] / 100);
+                    const cost = prices[k] > 0 ? bundles * prices[k] : 0;
+                    purchases.push({ key: k, qty: buy[k], buy: bundles * 100, cost });
+                    totalCost += cost;
+                    cmpCost += prices[k] > 0 ? cost : Infinity;
+                }
+            }
+            return { purchases, totalCost, cmpCost, lg, fallback };
+        };
+
+        const ex = finish(true);
+        const di = finish(false);
+        const pick = ex.cmpCost < di.cmpCost ? ex : di; // 동률·둘 다 시세 미상이면 직접(단순한 쪽)
+        for (const k of Object.keys(logs)) logs[k] += pick.lg[k];
+        heldUsed.P = Math.min(held.P || 0, (logs.PtoA + logs.PtoB + logs.PtoC) * 100);
+        return { req, deficit, purchases: pick.purchases, totalCost: pick.totalCost, logs, heldUsed, priceFallback: pick.fallback };
+    }
+
     createApp({
         data() {
             return {
@@ -1431,7 +1940,11 @@
                     { id: 'tikatuka', label: '티카투카 계산기', route: '/tikatuka', src: '/tools/tikatuka' },
                 ],
                 exchangeType: 'normal',
-                calcMode: 'optimize', 
+                calcMode: 'optimize',
+                lastTab2Mode: 'craft',
+                craftTabSeen: false,
+                craftProduct: 'normal',
+                craftTarget: 0,
                 forceConvert: false, 
                 includeSurplus: false, 
                 loading: false, 
@@ -1461,6 +1974,7 @@
                 tooltipTimer: null, // 툴팁 딜레이 타이머
                 tooltipStyle: { top: '0px', left: '0px' },
                 marketStats: {},
+                marketRecents: {},
                 materials: [
                 { 
                     code: "WL", name: "벌목", 
@@ -1792,12 +2306,50 @@
             displayedRankingList() {
                 return this.showAllRanks ? this.sortedRankingList : this.sortedRankingList.slice(0, 3);
             },
-            selectedResources() { 
+            selectedResources() {
                 const mat = this.materials.find(m => m.code === this.selectedMaterial);
-                return (this.exchangeType === 'farm' && this.calcMode === 'optimize') ? (mat?.farmResources || {}) : (mat?.resources || {}); 
+                return (this.exchangeType === 'farm' && this.calcMode === 'optimize') ? (mat?.farmResources || {}) : (mat?.resources || {});
+            },
+            tab2Mode() { return this.calcMode === 'optimize' ? this.lastTab2Mode : this.calcMode; },
+            craftExchangeLogs() {
+                if (!this.result || this.result.mode !== 'craft') return [];
+                return (this.result.plan.steps || []).filter(([k]) => this.transformationMap[k]);
+            },
+            // 낚시 매물 감지 — 두 조건을 모두 만족할 때만 발동:
+            //  ① 이례성: 최저가가 최근 거래가(없으면 오늘 평균가)보다 그 재료의
+            //     평소 변동으로 설명 안 되게 낮음 (문턱 = max(일변동폭×2, 6%))
+            //  ② 실질성: 이 플랜의 구매량 기준 잠재 추가 비용(괴리×묶음수)이 50G 이상
+            //     — 푼돈 수준 괴리에는 침묵해 과민 경고를 방지
+            // 반환: { 구매키: { goldPer100: 100개당 괴리 골드, gap: 괴리율% } }
+            craftPriceWarnings() {
+                if (!this.result || this.result.mode !== 'craft') return {};
+                const res = this.selectedResources;
+                const out = {};
+                for (const pu of this.result.plan.purchases) {
+                    const name = res[pu.key]?.name;
+                    if (!name) continue;
+                    const min = this.globalPrices[name] || 0;
+                    const st = this.marketStats[name];
+                    const base = this.marketRecents[name] || st?.todayAvg || 0;
+                    if (!(min > 0 && base > 0)) continue;
+                    const hs = (st?.history || []).map(h => h.avgPrice);
+                    let dsum = 0, dn = 0;
+                    for (let i = 0; i + 1 < hs.length; i++) { dsum += Math.abs(hs[i] - hs[i + 1]) / hs[i + 1]; dn++; }
+                    const vol = dn ? dsum / dn : 0.03;
+                    const th = Math.max(2 * vol, 0.06);
+                    const goldPer100 = base - min;
+                    const impact = goldPer100 * (pu.buy / 100);
+                    if (min < base * (1 - th) && impact >= 50) {
+                        out[pu.key] = { name, goldPer100: Math.round(goldPer100), gap: Math.round(100 * goldPer100 / base) };
+                    }
+                }
+                return out;
             },
             currentMaterialName() { return this.materials.find(m => m.code === this.selectedMaterial)?.name || ""; },
-            isDisabled() { return !Object.values(this.resources).some(v => v > 0); },
+            isDisabled() {
+                if (this.calcMode === 'craft') return !(this.craftTarget >= 1);
+                return !Object.values(this.resources).some(v => v > 0);
+            },
             
             profitPerCraft() {
                 const baseFeeN = 400; const baseFeeA = 520; 
@@ -1972,6 +2524,48 @@
                 result.normal = calcFor('normal', 400, this.market.normal.price || 0);
                 result.advanced = calcFor('advanced', 520, this.market.advanced.price || 0);
                 return result;
+            },
+
+            craftCosts() {
+                const empty = { totalRevenue: 0, opportunityCost: 0, missingMatCost: 0, totalFee: 0, totalProfit: 0, revenueFormulaHtml: "", costFormulaHtml: "계산하기를 누르면 구매 내역이 표시됩니다" };
+                if (!this.result || this.result.mode !== 'craft') return empty;
+                const plan = this.result.plan;
+                const T = this.result.target;
+                const isAdv = this.result.product === 'advanced';
+                const itemPrice = isAdv ? (this.market.advanced.price || 0) : (this.market.normal.price || 0);
+                const baseFee = isAdv ? 520 : 400;
+
+                const res = this.selectedResources;
+                const priceOf = (k) => (res[k] ? (this.globalPrices[res[k].name] || 0) : 0);
+                const getNetVal = (qty, bundlePrice) => {
+                    const netBundlePrice = bundlePrice - Math.ceil(bundlePrice * 0.05);
+                    return (qty / 100) * netBundlePrice;
+                };
+                const opportunityCost = getNetVal(plan.heldUsed.A, priceOf('A')) + getNetVal(plan.heldUsed.B, priceOf('B'))
+                    + getNetVal(plan.heldUsed.C, priceOf('C')) + getNetVal(plan.heldUsed.S, priceOf('S'));
+
+                // 부족 재료 구매 비용: 현재 단가로 실시간 재계산 + 재료별 내역 툴팁('소모된 재료 가치'와 동일 포맷)
+                let missingMatCost = 0;
+                let costFormulaHtml = "구매할 재료가 없습니다";
+                if (plan.purchases.length > 0) {
+                    const rows = plan.purchases.map(pu => {
+                        const name = res[pu.key]?.name || pu.key;
+                        const price = priceOf(pu.key);
+                        const cost = Math.ceil(pu.qty / 100) * price;
+                        missingMatCost += cost;
+                        return `<div style="display: flex; justify-content: space-between; gap: 20px;"><span>${name} ${pu.buy.toLocaleString()}개 × (${price}G / 100개)</span><span>= ${Math.floor(cost).toLocaleString()}G</span></div>`;
+                    });
+                    costFormulaHtml = rows.join("") + `<div style="border-top: 1px dashed oklch(0.6268 0 0); margin-top: 6px; padding-top: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: bold;"><span>총합:</span><span style="color: oklch(0.8868 0.1822 95.3226);">${Math.floor(missingMatCost).toLocaleString()} G</span></div>`;
+                }
+
+                const finalGsRate = 0.05 * (1 + (this.stronghold.greatSuccess / 100));
+                const totalYield = 10 * T * (1 + finalGsRate);
+                const netItemPrice = itemPrice - Math.ceil(itemPrice * 0.05);
+                const totalRevenue = totalYield * netItemPrice;
+                const actualFee = Math.floor(baseFee * (1 - this.stronghold.feeDiscount / 100));
+                const totalFee = actualFee * T;
+                const totalProfit = totalRevenue - totalFee - missingMatCost - opportunityCost;
+                return { totalRevenue, opportunityCost, missingMatCost, totalFee, totalProfit, revenueFormulaHtml: this.buildRevenueFormula(itemPrice, totalYield, totalRevenue), costFormulaHtml };
             }
         },
         mounted() {
@@ -1985,6 +2579,7 @@
             if (savedEaster === 'off') {
                 this.isEasterEgg = false;
             }
+            if (localStorage.getItem('loa_craft_tab_seen') === '1') this.craftTabSeen = true;
             
             this.materials.forEach(mat => {
                 Object.values(mat.resources).forEach(res => {
@@ -2082,9 +2677,19 @@
                 laTrack('mode_change', { calc_mode: newVal });
                 this.result = null;
                 this.forceConvert = false;
-                if (newVal === 'deficit' && this.exchangeType === 'farm') {
-                    this.exchangeType = 'normal';
+                if (newVal !== 'optimize') {
+                    this.lastTab2Mode = newVal;
+                    if (this.exchangeType === 'farm') this.exchangeType = 'normal';
+                    if (!this.craftTabSeen) { this.craftTabSeen = true; localStorage.setItem('loa_craft_tab_seen', '1'); }
                 }
+            },
+            craftProduct() {
+                // 제작 종류 변경 시 이전 결과 무효화 → 계산 전 상태(1회 순수익 시나리오)로 복귀
+                this.result = null;
+            },
+            craftTarget(v) {
+                if (v === "" || v === null || v === undefined || v < 0) this.craftTarget = 0;
+                else if (v > 999999) this.craftTarget = 999999;
             },
             resources: {
                 handler(newResources) {
@@ -2598,8 +3203,9 @@
                     const data = await response.json();
                     
                     // 2. market.js가 보내주는 키 이름(prices, stats)에 정확히 맞춤!
-                    this.globalPrices = data.prices; 
+                    this.globalPrices = data.prices;
                     this.marketStats = data.stats;
+                    this.marketRecents = data.recents || {};
                     
                     // 3. UI 업데이트용 가격 맵핑
                     if (this.globalPrices["아비도스 융화 재료"]) {
@@ -2634,6 +3240,26 @@
                 if (!skipDelay) this.loading = true;
                 if (!skipDelay) await new Promise(resolve => setTimeout(resolve, 50)); 
                 
+                if (this.calcMode === 'craft') {
+                    const T = Math.max(1, Math.floor(this.craftTarget || 0));
+                    const recipe = this.craftProduct === 'advanced' ? { A: 112, B: 59, C: 43 } : { A: 86, B: 45, C: 33 };
+                    const res = this.selectedResources;
+                    const prices = {
+                        A: this.globalPrices[res.A?.name] || 0,
+                        B: this.globalPrices[res.B?.name] || 0,
+                        S: res.S ? (this.globalPrices[res.S.name] || 0) : 0,
+                        C: this.globalPrices[res.C?.name] || 0
+                    };
+                    const held = {
+                        A: this.resources.A || 0, B: this.resources.B || 0,
+                        S: res.S ? (this.resources.S || 0) : 0,
+                        C: this.resources.C || 0, P: this.resources.P || 0
+                    };
+                    this.result = { mode: 'craft', product: this.craftProduct, target: T, plan: computeCraftPlan(T, recipe, held, prices) };
+                    if (!skipDelay) this.loading = false;
+                    return;
+                }
+
                 if (this.calcMode === 'deficit') {
                     const resC = this.resources.C || 0;
                     const resA = this.resources.A || 0;

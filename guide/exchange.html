@@ -10,7 +10,7 @@
     })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>재료 교환 · 영지 농장 활용 가이드 - 로아도쓰</title>
-    <meta name="description" content="로스트아크 생활 재료 교환과 영지 농장(스트롱홀드) 활용 가이드. 교환 비율의 손익 판단, 영지 농장 모드와 부족 재료 계산 모드 사용법을 설명합니다.">
+    <meta name="description" content="로스트아크 생활 재료 교환 가이드. 튼튼한 목재·가루·아비도스 목재로 이어지는 교환 비율, 개당 환산(×12.5 ×6.25 ×1.25)으로 교환 이득을 판단하는 법, 되돌리는 교환의 20% 손실, 영지 농장 활용법을 정리했습니다.">
     <link rel="canonical" href="https://loadoss.com/guide/exchange">
     <link rel="icon" type="image/png" href="/object/doster_b.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -21,11 +21,30 @@
 
 <header class="content-header">
     <div class="content-header-inner">
-        <a class="site-logo" href="/">
-            <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
-        </a>
+        <div class="header-left">
+            <a class="site-logo" href="/">
+                <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
+            </a>
+            <div class="tool-menu">
+                <a class="tool-menu-btn" href="/tikatuka">
+                    <svg class="tool-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"></rect><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"></rect><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"></rect><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"></rect></svg>
+                    <span class="tool-label">도구</span>
+                    <svg class="tool-caret" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </a>
+                <div class="tool-dropdown">
+                    <a class="tool-dropdown-item" href="/tikatuka">티카투카 계산기</a>
+                </div>
+            </div>
+            <a class="tool-menu-btn news-btn" href="/news">
+                <svg class="tool-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                <span class="tool-label">공지사항</span>
+            </a>
+        </div>
         <div class="header-right">
-            <a class="back-to-calc" href="/">계산기로 돌아가기</a>
+            <a class="back-to-calc" href="/">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span class="back-label">계산기로 돌아가기</span>
+            </a>
             <button id="theme-toggle" type="button" title="테마 전환" aria-label="테마 전환">
                 <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none"/><line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/><line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="17.8" y1="17.8" x2="19.6" y2="19.6"/><line x1="19.6" y1="4.4" x2="17.8" y2="6.2"/><line x1="6.2" y1="17.8" x2="4.4" y2="19.6"/></svg>
                 <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -36,61 +55,66 @@
 
 <main class="content-main">
     <h1>재료 교환 · 영지 농장 활용 가이드</h1>
-    <p class="content-sub">가지고 있는 생활 재료를 더 가치 있게 바꾸는 방법 — 교환 비율의 손익 판단과 영지 농장 활용법입니다.</p>
+    <p class="content-sub">교환이 이득인지는 계열과 그날 시세에 따라 달라집니다. 개당 환산으로 간단히 판단하는 법과 영지 농장 활용을 정리했습니다.</p>
 
     <nav class="content-nav-tabs">
         <a href="/guide/abydos">아비도스 제작 가이드</a>
         <a href="/guide/exchange" class="active">교환 · 영지 농장</a>
         <a href="/guide/tipago">티파고 공략</a>
-        <a href="/guide/about">사이트 소개</a>
+        <a href="/guide/faq">자주 묻는 질문</a>
     </nav>
 
     <div class="content-card">
-        <h2>생활 재료 교환이란?</h2>
-        <p>아비도스 융화 재료를 제작하다 보면 특정 재료만 부족하고 다른 재료는 남아도는 상황이 자주 생깁니다. 이럴 때 쓸 수 있는 것이 <strong>재료 교환</strong>입니다. 남는 하위 재료를 정해진 비율로 상위 재료와 바꾸거나, 서로 다른 재료끼리 교환해 부족분을 메울 수 있습니다.</p>
-        <p>문제는 교환 비율이 "항상 이득"이 아니라는 점입니다. 교환으로 얻는 재료의 시세 가치가, 내어주는 재료의 시세 가치보다 높을 때만 이득입니다. 시세는 매일 움직이므로 어제는 이득이던 교환이 오늘은 손해일 수 있습니다. 즉, 교환도 제작과 마찬가지로 <strong>시세 기반의 손익 계산</strong>이 필요한 의사결정입니다.</p>
-        <p>로아도쓰의 "재료 교환 계산 (기본)" 모드는 현재 거래소 시세를 기준으로, 지금 하려는 교환이 골드 가치로 얼마나 이득(또는 손해)인지 바로 보여줍니다.</p>
+        <h2>교환은 이렇게 이어집니다</h2>
+        <p>생활 재료는 영지의 재료 교환 NPC를 통해 정해진 비율로 서로 바꿀 수 있습니다. 벌목 기준으로 주요 경로는 이렇습니다.</p>
+        <ul>
+            <li>튼튼한 목재 5개 → 목재 50개</li>
+            <li>부드러운 목재 25개 → 목재 50개</li>
+            <li>목재 100개 → 벌목의 가루 80개</li>
+            <li>부드러운 목재 50개 → 벌목의 가루 80개</li>
+            <li>벌목의 가루 100개 → 아비도스 목재 10개</li>
+        </ul>
+        <p>핵심은 <strong>가루가 중간 다리라는 것</strong>입니다. 하위 재료를 가루로 모은 다음, 그 가루를 제일 비싼 아비도스 목재로 바꾸는 게 기본 루트입니다. 아비도스 융화 재료를 만들 때 늘 먼저 떨어지는 게 아비도스 목재라, 남아도는 하위 재료를 이 경로로 끌어올리면 제작 횟수가 크게 늘어납니다. 얼마나 늘어나는지는 <a href="/guide/abydos">아비도스 제작 가이드</a>에 실제 숫자로 정리해 뒀습니다.</p>
+        <p class="guide-note">* 다른 계열도 이름만 다를 뿐 비율은 같습니다. 다만 3티어 재료(벌목의 튼튼한 목재, 채광의 단단한 철광석)가 있는 계열은 벌목·채광뿐입니다.</p>
     </div>
 
     <div class="content-card">
-        <h2>교환 손익, 이렇게 읽으면 됩니다</h2>
-        <p>교환의 손익을 판단하는 기준은 단순합니다.</p>
+        <h2>어떤 교환이 이득인지 — 개당 환산으로 비교</h2>
+        <p>교환이 이득인지 따지는 방법은 간단합니다. <strong>아비도스 목재 한 개를 만드는 데 그 재료가 몇 개 드는지</strong> 배수로 환산해서, 아비도스 목재 시세와 비교하면 됩니다.</p>
         <ul>
-            <li><strong>내어주는 것의 가치</strong> — 교환에 소모되는 재료를 거래소에 팔았을 때 받을 수 있는 골드.</li>
-            <li><strong>받는 것의 가치</strong> — 교환으로 얻는 재료를 거래소에서 사려면 지불해야 하는 골드.</li>
+            <li>일반 재료(목재) <strong>× 12.5</strong></li>
+            <li>고급 재료(부드러운 목재) <strong>× 6.25</strong></li>
+            <li>3티어 재료(튼튼한 목재) <strong>× 1.25</strong></li>
         </ul>
-        <p>받는 것의 가치가 내어주는 것의 가치보다 크면 이득입니다. 다만 실제로는 판매 수수료, 최소 거래 단위, 호가 차이 같은 요소가 끼어들기 때문에 눈대중 계산은 어긋나기 쉽습니다. 계산기는 이런 요소를 반영해 "이 교환은 골드로 환산하면 얼마짜리"인지 표시해 주므로, 표시된 값이 플러스인 교환만 골라서 하면 됩니다.</p>
-        <p>특히 융화 재료 제작 직전이라면, "부족 재료를 거래소에서 사는 것"과 "남는 재료를 교환해서 채우는 것" 중 어느 쪽이 싼지 비교하는 것이 핵심입니다. 로아도쓰는 이 비교를 자동으로 해서 더 유리한 쪽을 알려줍니다.</p>
+        <p>예를 들어 목재가 개당 1골드라면, 1 × 12.5 = <strong>12.5골드</strong>. 이게 목재를 사서 교환으로 아비도스 목재 한 개를 만들 때의 원가입니다. 아비도스 목재 시세가 이보다 비싸면 교환이 이득이고, 이보다 싸면 그냥 사는 게 낫습니다. 비교 대상이 명확하니 암산으로도 대충 감이 옵니다.</p>
+        <h3>같은 날에도 계열마다 답이 다릅니다</h3>
+        <p>이 환산을 여섯 계열에 각각 해 보면 답이 갈립니다. 어떤 계열은 하위 재료를 사서 교환하는 쪽이 싸고, 어떤 계열은 아비도스 재료를 그냥 사는 쪽이 쌉니다. 그것도 같은 시각에 벌어지는 일입니다. <strong>'교환은 무조건 이득'이라는 말이 틀린 이유입니다.</strong> 하위 재료와 4티어 재료의 시세가 계열마다 따로 움직이기 때문에, 답은 그날 그 계열 시세에 달려 있습니다.</p>
+        <p>여기에 실제로는 판매 수수료 5%와 100개 단위 구매(자투리) 같은 것도 끼어듭니다. 메인 계산기의 <strong>재료 교환 계산</strong> 모드가 이런 것까지 반영해서, 지금 어떤 교환이 골드로 얼마나 이득인지 바로 보여줍니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>되돌리는 교환은 20% 손해입니다</h2>
+        <p>가루는 다시 하위 재료로 되돌릴 수도 있습니다.</p>
+        <ul>
+            <li>벌목의 가루 100개 → 목재 100개</li>
+            <li>벌목의 가루 100개 → 부드러운 목재 50개</li>
+        </ul>
+        <p>그런데 <strong>넣을 때와 뺄 때의 비율이 다릅니다.</strong> 목재는 100개를 넣어야 가루 80개가 나오는데, 되돌릴 땐 가루 100개를 넣어야 목재 100개가 나옵니다. 즉 목재 → 가루 → 목재로 왕복하면 100개가 80개로 줄어듭니다. <strong>20%가 그냥 날아가는 셈</strong>입니다. 부드러운 목재도 똑같이 20% 손실입니다.</p>
+        <p>그러니 가루로 바꾸기 전에 아비도스 목재까지 갈 건지 정하고 넣는 게 좋습니다. '일단 가루로 모아두자'는 마음으로 넣었다가 되돌리면 그만큼 손해입니다. 물론 이미 가루가 쌓여 있는데 당장 목재가 급하다면 되돌리는 게 답일 수도 있는데, 계산기는 이 손실까지 계산에 넣고 판단합니다.</p>
     </div>
 
     <div class="content-card">
         <h2>영지 농장 모드</h2>
-        <p>영지(스트롱홀드)의 <strong>농장</strong>에서는 파견·재배를 통해 생활 재료를 수급할 수 있습니다. "재료 교환 계산 (영지 농장)" 모드는 이 농장 수급까지 고려한 교환 계산을 지원합니다.</p>
-        <p>농장에서 나오는 재료는 종류가 정해져 있어서, 실제 제작에 필요한 재료와 어긋나는 경우가 많습니다. 이때 농장 산출물을 기준으로 교환 계획을 세우면 "농장에서 얻은 재료 → 교환 → 제작 투입"의 흐름을 만들 수 있는데, 각 단계에서 시세 가치가 어떻게 변하는지를 계산기가 추적해 줍니다.</p>
-        <p>영지 농장 모드에서는 시세 툴팁 대신 농장 산출 기준의 정보가 표시되도록 화면이 최적화되어 있습니다. 농장을 꾸준히 돌리는 유저라면 이 모드에서 교환 계획을 세우는 것이 기본 모드보다 정확합니다.</p>
+        <p>영지 농장에서는 작물을 재배해 생활 재료를 얻을 수 있습니다. 다만 농장에서 나오는 재료는 종류가 정해져 있어서, 실제 제작에 필요한 재료와 어긋나는 경우가 많습니다.</p>
+        <p>'재료 교환 계산 (영지 농장)' 모드는 이 농장 산출물을 기준으로, 얻은 재료를 교환으로 어떻게 제작 재료까지 끌고 갈지 계산해 줍니다. 농장을 꾸준히 돌리는 유저라면 기본 모드보다 이쪽이 정확합니다. 상단 <strong>재료 교환 계산</strong> 탭에 마우스를 올리면 기본 / 영지 농장을 고를 수 있습니다.</p>
     </div>
 
-    <div class="content-card">
-        <h2>부족 재료 계산 모드</h2>
-        <p>"이만큼 제작하려면 뭐가 얼마나 모자라지?"를 계산하는 모드입니다. 목표 제작 수량을 정하고 현재 보유 재료를 입력하면, 부족한 재료의 종류·수량과 이를 거래소에서 채울 때 드는 골드가 정리되어 나옵니다.</p>
-        <p>레이드 준비로 융화 재료를 대량으로 만들어야 할 때, 미리 부족분과 예산을 파악해 두면 시세가 낮은 타이밍에 나눠 구매하는 전략도 세울 수 있습니다.</p>
-    </div>
-
-    <div class="content-card">
-        <h2>자주 묻는 질문</h2>
-        <h3>Q. 교환 이득이 표시되는데 실제로는 손해를 본 것 같아요.</h3>
-        <p>계산은 계산 시점의 시세 기준입니다. 교환 후 시세가 움직이면 결과적으로 손익이 달라질 수 있습니다. 또한 거래소에서 실제 체결되는 가격은 최저가와 다를 수 있으므로, 표시값은 "현재 시세 기준의 기대 손익"으로 이해하는 것이 정확합니다.</p>
-        <h3>Q. 영지 농장 모드와 기본 모드 중 뭘 써야 하나요?</h3>
-        <p>재료를 주로 거래소에서 사고판다면 기본 모드, 영지 농장 산출물을 중심으로 재료를 수급한다면 영지 농장 모드가 맞습니다. 두 모드는 상단 탭에서 언제든 전환할 수 있습니다.</p>
-        <h3>Q. 시세가 안 불러와져요.</h3>
-        <p>접속이 몰리는 시간대에는 시세 조회가 지연될 수 있습니다. 2026년 7월 업데이트로 캐시와 요청 공유가 적용되어 대부분 해소되었지만, 문제가 계속되면 잠시 후 새로고침해 주세요.</p>
-    </div>
 </main>
 
 <footer class="content-footer">
     <div class="content-footer-inner">
         <span>© 2026 LoaDoss. All Rights Reserved. This site is not associated with Smilegate RPG &amp; Smilegate Stove. Data based on Lostark Open API.</span>
-        <span><a href="/">계산기</a><a href="/news">업데이트 내역</a><a href="/privacy">개인정보 처리방침</a></span>
+        <span><a href="/guide/abydos">이용 가이드</a><a href="/news">업데이트 내역</a><a href="/guide/about">사이트 소개</a><a href="/privacy">개인정보 처리방침</a></span>
     </div>
 </footer>
 
