@@ -2684,7 +2684,8 @@
                     if (!this.craftTabSeen) { this.craftTabSeen = true; localStorage.setItem('loa_craft_tab_seen', '1'); }
                 }
             },
-            craftProduct() {
+            craftProduct(newVal) {
+                laTrack('craft_product_change', { craft_product: newVal });
                 // 제작 종류 변경 시 이전 결과 무효화 → 계산 전 상태(1회 순수익 시나리오)로 복귀
                 this.result = null;
             },
@@ -3238,7 +3239,11 @@
                 }
             },
             async calculate(skipDelay = false) {
-                if (!skipDelay) laTrack('calc_execute', { calc_mode: this.calcMode, exchange_type: this.exchangeType, material: this.selectedMaterial });
+                if (!skipDelay) {
+                    const ev = { calc_mode: this.calcMode, exchange_type: this.exchangeType, material: this.selectedMaterial };
+                    if (this.calcMode === 'craft') ev.craft_product = this.craftProduct;
+                    laTrack('calc_execute', ev);
+                }
                 if (!skipDelay) this.loading = true;
                 if (!skipDelay) await new Promise(resolve => setTimeout(resolve, 50)); 
                 

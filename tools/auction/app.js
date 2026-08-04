@@ -1,6 +1,14 @@
 (function () {
     var params = new URLSearchParams(location.search);
 
+    // GTM dataLayer 이벤트 (부모 iframe과 무관하게 이 페이지의 GTM 컨테이너로 수집)
+    function track(event, p) {
+        window.dataLayer = window.dataLayer || [];
+        var o = Object.assign({}, p || {});
+        o.event = event;
+        window.dataLayer.push(o);
+    }
+
     function applyTheme(mode) {
         document.body.classList.toggle('light-mode', mode === 'light');
     }
@@ -30,6 +38,7 @@
                 statsLoading: false,
                 statsCache: {},
                 autoTimer: null,
+                sizeTimer: null,
                 autoMatched: false,
                 tip: { show: false, text: '', note: '', style: {}, dir: 'right', formula: null },
                 copiedMsg: '',
@@ -110,6 +119,7 @@
             pickParty: function (n) {
                 this.partySize = n;
                 this.customSize = null;
+                track('auction_party_change', { party_size: n });
             },
             // {G}=골드 아이콘, \n=줄바꿈, **텍스트**=굵게
             stratTip: function (row) {
@@ -204,6 +214,7 @@
             copyBid: function (row) {
                 var self = this;
                 var text = String(row.bid);
+                track('auction_copy_bid', { strategy: row.key, party_size: this.N, auction_mode: this.mode });
                 var done = function () {
                     self.copiedMsg = row.label + ' ' + self.fmt(row.bid) + ' G 복사됨';
                     clearTimeout(self.copiedTimer);
@@ -238,6 +249,7 @@
             },
             selectItem: function (item) {
                 this.autoMatched = false;   // 직접 고른 경우
+                track('auction_item_select', { source: 'click' });
                 this.selected = item;
                 if (!(this.price > 0)) this.price = item.price;
                 this.loadStats(item);
@@ -247,6 +259,7 @@
                 var n = this.nearestItem;
                 if (!n || (this.selected && this.selected.id === n.id)) return;
                 this.autoMatched = true;
+                track('auction_item_select', { source: 'auto' });
                 this.selected = n;
                 this.loadStats(n);
             },
@@ -374,11 +387,26 @@
                 var self = this;
                 this.hideTip();          // 값이 바뀌면 떠 있던 툴팁은 옛 정보라 즉시 닫음
                 clearTimeout(this.autoTimer);
-                this.autoTimer = setTimeout(function () { self.autoMatch(); }, 450);
+                this.autoTimer = setTimeout(function () {
+                    self.autoMatch();
+                    if (self.price > 0) track('auction_calc', { party_size: self.N, auction_mode: self.mode });
+                }, 450);
             },
-            mode: function () { this.hideTip(); },
+            mode: function (v) {
+                this.hideTip();
+                track('auction_mode_change', { auction_mode: v });
+            },
             partySize: function () { this.hideTip(); },
-            customSize: function () { this.hideTip(); }
+            customSize: function () {
+                var self = this;
+                this.hideTip();
+                // 직접 입력은 타이핑 중간값(1→1→16)마다 잡히므로 입력이 멎은 뒤 유효한 값만 보고
+                clearTimeout(this.sizeTimer);
+                this.sizeTimer = setTimeout(function () {
+                    var c = Number(self.customSize);
+                    if (c >= 2 && c <= 99) track('auction_party_change', { party_size: c });
+                }, 500);
+            }
         },
         mounted: function () {
             var self = this;
