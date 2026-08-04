@@ -470,6 +470,9 @@
 
         /* ================= 이스터에그 토글 버튼 ================= */
         .header-actions { display: flex; align-items: center; gap: 8px; }
+        /* 도구가 열려 있을 때만 노출 — 가이드·공지 페이지의 같은 버튼과 위치·모양을 맞춤 */
+        .back-to-calc { text-decoration: none; flex-shrink: 0; }
+        @media (max-width: 600px) { .back-to-calc .tool-label { display: none; } .back-to-calc { padding: 0 8px; } }
         .header-easter-btn { background: transparent; border: 1px solid oklch(0.4676 0 0); border-radius: 8px; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease; padding: 0; margin: 0; flex-shrink: 0; transform: scale(1); }
         .header-easter-btn:hover { border-color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.1); box-shadow: 0 0 0 3px oklch(0.8868 0.1822 95.3226 / 0.12); transform: scale(1.1); }
         .header-easter-btn img { width: 22px; height: 22px; display: block; object-fit: contain; transition: filter 0.3s ease, opacity 0.3s ease; }
@@ -679,6 +682,10 @@
                     </a>
                 </div>
                 <div class="header-actions">
+                    <a class="tool-menu-btn back-to-calc" v-if="activeTool" href="/" @click.prevent="closeTool()">
+                        <svg class="tool-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        <span class="tool-label">계산기로 돌아가기</span>
+                    </a>
                     <button class="header-easter-btn" @click="toggleEasterEgg" :title="isEasterEgg ? '도쓰효과 끄기' : '도쓰효과 켜기'">
                         <img src="object/easter_toggle.png" alt="" :class="{ 'easter-off': !isEasterEgg }">
                     </button>
