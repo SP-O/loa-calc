@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로스트아크 경매 입찰 계산기 사용법 · 계산 원리 - 로아도쓰</title>
+    <meta name="description" content="로스트아크 레이드 전리품 경매에서 얼마에 입찰해야 이득인지 계산하는 방법 — 손익 분기점, 추천 입찰가, 최대 이득가의 수식과 예시를 정리했습니다. 2025년 7월 23일 수수료 패치 반영.">
+    <link rel="canonical" href="https://loadoss.com/guide/auction">
+    <link rel="icon" type="image/png" href="/object/doster_b.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/content.css">
+</head>
+<body class="content-page">
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5S9NKGBL" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<header class="content-header">
+    <div class="content-header-inner">
+        <div class="header-left">
+            <a class="site-logo" href="/">
+                <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
+            </a>
+            <div class="tool-menu">
+                <a class="tool-menu-btn" href="/">
+                    <svg class="tool-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"></rect><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"></rect><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"></rect><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"></rect></svg>
+                    <span class="tool-label">도구</span>
+                    <svg class="tool-caret" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </a>
+                <div class="tool-dropdown">
+                    <a class="tool-dropdown-item" href="/tikatuka">티카투카 계산기</a>
+                    <a class="tool-dropdown-item" href="/auction">경매 계산기</a>
+                </div>
+            </div>
+            <a class="tool-menu-btn news-btn" href="/news">
+                <svg class="tool-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                <span class="tool-label">공지사항</span>
+            </a>
+        </div>
+        <div class="header-right">
+            <a class="back-to-calc" href="/">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span class="back-label">계산기로 돌아가기</span>
+            </a>
+            <button id="theme-toggle" type="button" title="테마 전환" aria-label="테마 전환">
+                <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none"/><line x1="12" y1="1.5" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22.5" y2="12"/><line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="17.8" y1="17.8" x2="19.6" y2="19.6"/><line x1="19.6" y1="4.4" x2="17.8" y2="6.2"/><line x1="6.2" y1="17.8" x2="4.4" y2="19.6"/></svg>
+                <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="content-main">
+    <h1>경매 입찰 계산기 — 사용법과 계산 원리</h1>
+    <p class="content-sub">레이드 전리품 경매에서 얼마에 입찰해야 이득인지, 계산기가 쓰는 수식과 예시를 그대로 정리했습니다.</p>
+
+    <nav class="content-nav-tabs">
+        <a href="/guide/abydos">아비도스 제작 가이드</a>
+        <a href="/guide/exchange">교환 · 영지 농장</a>
+        <a href="/guide/tipago">티파고 공략</a>
+        <a href="/guide/auction" class="active">경매 입찰 계산기</a>
+        <a href="/guide/faq">자주 묻는 질문</a>
+    </nav>
+
+    <div class="content-card">
+        <h2>경매 입찰 계산기란?</h2>
+        <p>레이드에서 나온 전리품을 경매에 올렸을 때, <strong>얼마에 입찰해야 이득인지</strong> 계산해 주는 도구입니다. 로아도쓰 상단의 <strong>도구</strong> 메뉴에서 열 수 있고, <a href="/auction">loadoss.com/auction</a> 주소로 바로 들어올 수도 있습니다.</p>
+        <p>쓰는 방법은 <strong>아이템 시세</strong>와 <strong>레이드 인원</strong>을 넣는 것이 전부입니다. 시세는 직접 입력하므로 경매에 올라오는 어떤 아이템이든 계산할 수 있고, 화면 오른쪽의 시세 목록(유물 각인서 전 종류 · 영웅 등급 젬)에서 아이템을 골라 넣어도 됩니다.</p>
+        <p>손익 분기점, 추천 입찰가, 최대 이득가, 싸게 노리기 금액이 한 번에 표시됩니다. 각 전략 이름에 마우스를 올리면 그 금액에서 어떤 일이 생기는지 툴팁으로 확인할 수 있습니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>전리품 경매는 이렇게 정산됩니다</h2>
+        <p>모든 계산은 아래 세 가지 규칙을 바탕으로 합니다.</p>
+        <ul>
+            <li><strong>낙찰자는 낙찰 금액 전액을 냅니다.</strong> 낸 골드는 돌려받지 않습니다.</li>
+            <li><strong>낙찰 금액에서 수수료 5%를 뗀 뒤, 나를 제외한 나머지 인원이 똑같이 나눠 받습니다.</strong> 2025년 7월 23일 패치로 바뀐 규칙입니다. 그전에는 10만 골드를 넘는 부분에만 수수료가 붙었습니다.</li>
+            <li><strong>상회 입찰은 현재 입찰가의 110% 이상이어야 합니다.</strong> ‘이상’이므로 소수점이 남으면 올린 금액이 최소 입찰가가 됩니다.</li>
+            <li><strong>수수료는 올림, 분배금은 내림입니다.</strong> 게임에 내는 수수료는 소수점을 올리고, 내가 받는 골드는 버립니다.</li>
+        </ul>
+        <p>두 번째 규칙이 <strong>분배금</strong>입니다. 내가 낙찰받지 못하고 다른 사람이 가져갔을 때, 내가 받는 골드는 이만큼입니다.</p>
+        <div class="gd-formula">
+            <p class="gd-eq"><em>수수료</em> = 낙찰 금액 × 5%, 소수점 올림</p>
+            <p class="gd-eq"><em>분배금</em> = (낙찰 금액 − 수수료) ÷ 나 제외 인원, 소수점 내림
+                <span class="gd-eq-num">8인 레이드에서 다른 사람이 112,596골드에 낙찰 → 수수료 5,629.8 → <b>5,630</b> → (112,596 − 5,630) ÷ 7 = 15,280.85 → 분배금 <b>15,280골드</b></span></p>
+        </div>
+        <p class="guide-note">위 예시는 실제 인게임 정산 화면에서 확인한 값입니다. 수수료를 내림하면 나눗셈이 15,281로 딱 떨어져 어떤 방식으로 계산해도 15,280이 나오지 않습니다. 그래서 수수료 올림 · 분배금 내림이 확정됩니다. ‘나 제외 인원’은 레이드 인원에서 1을 뺀 값으로, 8인 레이드라면 7명이 나눠 받습니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>판매 목적과 직접 사용은 계산이 다릅니다</h2>
+        <p>낙찰받은 아이템으로 내가 얻는 가치는 두 경우가 다릅니다. 계산기 상단에서 목적을 고르면 이 값이 바뀝니다.</p>
+        <div class="gd-table-wrap">
+            <table class="gd-table">
+                <tr><th>입찰 목적</th><th>내가 얻는 가치</th><th class="num">시세 100,000골드일 때</th></tr>
+                <tr><td>판매 목적 (낙찰 후 거래소에 판매)</td><td>시세 × 0.95 — 거래소 판매 수수료 5%</td><td class="num">95,000골드</td></tr>
+                <tr><td>직접 사용 (낙찰 후 내가 사용)</td><td>시세 그대로</td><td class="num">100,000골드</td></tr>
+            </table>
+        </div>
+        <p>직접 사용은 거래소를 거치지 않으니 판매 수수료가 붙지 않습니다. 그래서 같은 아이템이라도 직접 사용할 때 더 높은 금액까지 입찰해도 이득입니다. 아래 나오는 모든 수식에서 <strong>아이템 가치</strong>는 이 표의 값을 뜻합니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>손익 분기점이 상한선입니다</h2>
+        <p>경매에서 내가 할 수 있는 선택은 두 가지입니다. <strong>내가 낙찰받거나</strong>, <strong>양보하고 분배금을 받거나.</strong> 두 선택의 결과가 정확히 같아지는 금액이 손익 분기점입니다.</p>
+        <div class="gd-formula">
+            <p class="gd-eq">내가 낙찰받을 때 = 아이템 가치 − 낙찰 금액</p>
+            <p class="gd-eq">양보할 때 = 낙찰 금액 × 0.95 ÷ 나 제외 인원</p>
+            <p class="gd-eq"><em>손익 분기점</em> = 아이템 가치 × 나 제외 인원 ÷ (나 제외 인원 + 0.95)</p>
+        </div>
+        <p>괄호 안의 0.95가 바로 위에서 본 수수료입니다. 분배금이 낙찰 금액 그대로가 아니라 5%를 뗀 금액에서 나오기 때문에 들어갑니다. 이 식은 위치를 잡는 용도이고, 계산기는 여기에 수수료 올림 · 분배금 내림까지 적용해 정확한 금액을 냅니다. 그래서 식을 손으로 계산한 값과 한두 골드 다를 수 있습니다.</p>
+        <div class="gd-table-wrap">
+            <table class="gd-table">
+                <tr><th>8인 레이드 · 시세 100,000골드</th><th>아이템 가치</th><th class="num">손익 분기점</th></tr>
+                <tr><td>판매 목적</td><td>95,000골드</td><td class="num">83,648골드</td></tr>
+                <tr><td>직접 사용</td><td>100,000골드</td><td class="num">88,051골드</td></tr>
+            </table>
+        </div>
+        <p>이 금액을 <strong>초과해 입찰하면, 낙찰받더라도 분배금을 받는 것보다 손해</strong>입니다. 반대로 분기점보다 낮게 낙찰받을수록 이득이 커집니다. 그래서 분기점은 목표가 아니라 넘지 말아야 할 상한선입니다.</p>
+        <p class="guide-note">계산기에서 판매 목적일 때는 ‘손익 분기점’, 직접 사용일 때는 ‘손익 분기점(사용 목적)’으로 표시됩니다. 같은 아이템이라도 목적에 따라 금액이 다르기 때문에 이름을 구분했습니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>추천 입찰가와 최대 이득가</h2>
+        <p>분기점 아래로 낮게 입찰할수록 이득이 크지만, 너무 낮으면 다른 사람이 상회 입찰해서 아이템을 가져갑니다. 그래서 <strong>상대가 상회 입찰할 이유가 없어지는 가장 낮은 금액</strong>을 찾아야 합니다.</p>
+        <h3>상대는 이 기준으로 판단합니다</h3>
+        <p>상대가 상회 입찰할지는 <strong>‘낙찰받아서 이득이 남는가’가 아니라 ‘가만히 분배금을 받는 편이 나은가’</strong>로 결정됩니다. 상회 입찰하는 순간, 받을 수 있었던 분배금을 포기하기 때문입니다.</p>
+        <div class="gd-formula">
+            <p class="gd-eq">상회 입찰할 때 = 상대의 아이템 가치 − 내 입찰가 × 1.1</p>
+            <p class="gd-eq">상회 입찰하지 않을 때 = 내 입찰가 × 0.95 ÷ 나 제외 인원</p>
+            <p class="gd-eq">앞쪽이 뒤쪽보다 <em>작아야</em> 상대가 상회 입찰할 이유가 없어집니다.</p>
+        </div>
+        <p>계산기는 <strong>이 조건을 만족하는 가장 낮은 금액</strong>을 찾습니다. 8인 · 시세 100,000골드에서 판매 목적 상대를 기준으로 하면 <strong>76,880골드</strong>이고, 딱 1골드 아래에서 결과가 갈립니다.</p>
+        <div class="gd-formula">
+            <p class="gd-eq">76,879골드에 입찰하면
+                <span class="gd-eq-num">상대의 최소 상회 입찰가 84,567 → 상대 이득 <b>10,433</b> / 가만히 받을 분배금 <b>10,433</b> — 같아서 아이템이 필요하면 가져갑니다</span></p>
+            <p class="gd-eq">76,880골드에 입찰하면
+                <span class="gd-eq-num">상대의 최소 상회 입찰가 84,568 → 상대 이득 <b>10,432</b> / 가만히 받을 분배금 <b>10,433</b> — 손해라 포기합니다</span></p>
+        </div>
+        <p>딱 맞추지 않고 한 단계 위를 쓰는 이유가 여기 있습니다. 손익이 정확히 0이면 상대는 잃는 것이 없어서, 아이템이 필요하면 그냥 가져갑니다. <strong>손해가 되어야 비로소 포기합니다.</strong></p>
+        <h3>상대를 무엇으로 가정하느냐에 따라 갈립니다</h3>
+        <p>상대도 판매 목적일 수 있고, 아이템이 필요해서 직접 사용하려는 사람일 수도 있습니다. 직접 사용하려는 사람은 판매 수수료를 내지 않습니다. 그만큼 높은 금액까지 입찰할 수 있으니, 견제하려면 내 입찰가도 더 높아야 합니다.</p>
+        <div class="gd-table-wrap">
+            <table class="gd-table">
+                <tr><th>전략</th><th>가정한 상대</th><th class="num">8인 · 100,000골드</th></tr>
+                <tr><td>최대 이득가</td><td>판매 목적인 상대 (가치 95,000)</td><td class="num">76,880골드</td></tr>
+                <tr class="is-ours"><td>추천 입찰가</td><td>직접 사용하려는 상대까지 (가치 100,000)</td><td class="num">80,926골드</td></tr>
+            </table>
+        </div>
+        <p><strong>최대 이득가</strong>는 이득이 가장 크지만, 아이템이 실제로 필요한 사람이 있으면 상회 입찰당할 수 있습니다. <strong>추천 입찰가</strong>는 4,046골드를 더 내는 대신 그런 상대까지 견제합니다. 같이 간 사람들 분위기를 보고 고르시면 됩니다.</p>
+        <p class="guide-note">직접 사용 목적으로 계산하면 두 값이 같아지므로, 계산기는 ‘추천 입찰가’ 한 줄만 표시합니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>싸게 노리기 — 재입찰을 미리 계산한 시작가</h2>
+        <p>처음부터 견제 금액으로 입찰할 필요는 없습니다. <strong>낮은 금액으로 먼저 입찰해 두고, 상회 입찰이 들어오면 재입찰로 따라 올리는</strong> 방법이 있습니다. 아무도 상회 입찰하지 않으면 그대로 싸게 낙찰되니 손해 볼 것이 없습니다.</p>
+        <p>다만 너무 낮게 시작하면, 목표 금액에 도달하기 전에 상대가 먼저 그 금액을 초과해 버립니다. 입찰가가 오르는 방식을 따라가면 알맞은 시작가를 역산할 수 있습니다.</p>
+        <div class="gd-formula">
+            <p class="gd-eq">내가 입찰 → 상대가 1.1배로 상회 입찰 → 내가 다시 1.1배로 재입찰
+                <span class="gd-eq-num">한 바퀴 돌면 처음 금액의 1.1 × 1.1 = <b>1.21배</b></span></p>
+            <p class="gd-eq"><em>시작가</em> = 목표 금액 ÷ 1.21 <span style="font-weight:400">(한 번 되받는 경우)</span>
+                <span class="gd-eq-num">두 번 되받으려면 1.21로 한 번 더 나눕니다 → 80,926 ÷ 1.21 ÷ 1.21 = <b>55,272골드</b></span></p>
+        </div>
+        <p>상대가 최소 금액으로 상회 입찰하고 내가 다시 최소 금액으로 되받으면, 입찰가는 한 바퀴에 1.21배가 됩니다. 목표 금액을 1.21로 나눈 값에서 시작하면, 한 번 상회 입찰당해도 되받아서 정확히 목표 금액으로 재입찰할 수 있습니다.</p>
+        <div class="gd-table-wrap">
+            <table class="gd-table">
+                <tr><th>8인 · 100,000골드</th><th>목표 금액</th><th class="num">시작가</th></tr>
+                <tr><td>판매 목적 · 싸게 노리기</td><td>최대 이득가 76,880</td><td class="num">63,536골드</td></tr>
+                <tr><td>직접 사용 · 싸게 노리기</td><td>추천 입찰가 80,926</td><td class="num">66,880골드</td></tr>
+                <tr><td>직접 사용 · 더 싸게 노리기</td><td>추천 입찰가 80,926</td><td class="num">55,272골드</td></tr>
+            </table>
+        </div>
+        <p>‘더 싸게 노리기’는 두 번까지 되받을 생각으로 잡은 금액입니다. 더 싸게 낙찰될 가능성이 있는 대신, 경매를 끝까지 지켜보고 있어야 합니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>다른 계산기와 결과가 다른 이유</h2>
+        <p>같은 조건을 넣어도 로아도쓰는 다른 경매 계산기와 금액이 다르게 나옵니다. 두 가지가 다릅니다.</p>
+        <ul>
+            <li><strong>분배금에서 수수료 5%를 뗍니다.</strong> 2025년 7월 23일 패치를 반영한 계산입니다. 낙찰 금액을 그대로 나누면 실제로 받는 골드보다 5% 많게 나옵니다.</li>
+            <li><strong>상대가 상회 입찰할 이유가 있는지를 기준으로 입찰가를 계산합니다.</strong> 상대가 포기하는 분배금까지 계산에 넣기 때문에, 견제가 실제로 성립하는 금액을 알 수 있습니다.</li>
+            <li><strong>소수점을 게임과 똑같이 처리합니다.</strong> 수수료 올림 · 분배금 내림 · 최소 상회 입찰가 올림까지 맞췄습니다. 반올림으로 계산하면 견제 금액이 1골드 모자라 상회 입찰당할 수 있습니다.</li>
+        </ul>
+        <p>실제 숫자로 비교한 내용은 <a href="/news#n20260803-auction">업데이트 내역</a>에 정리해 두었습니다.</p>
+    </div>
+
+</main>
+
+<footer class="content-footer">
+    <div class="content-footer-inner">
+        <span>© 2026 LoaDoss. All Rights Reserved. This site is not associated with Smilegate RPG &amp; Smilegate Stove. Data based on Lostark Open API.</span>
+        <span><a href="/guide/abydos">이용 가이드</a><a href="/news">업데이트 내역</a><a href="/guide/about">사이트 소개</a><a href="/privacy">개인정보 처리방침</a></span>
+    </div>
+</footer>
+
+<script src="/assets/content.js"></script>
+</body>
+</html>

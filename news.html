@@ -10,7 +10,7 @@
     })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>로아도쓰 업데이트 내역 - 아비도스 제작 계산기 소식</title>
-    <meta name="description" content="로스트아크 아비도스 제작 계산기 로아도쓰의 업데이트 내역입니다. 시세 연동, 티파고(티카투카 계산기), 오버레이, 이용 가이드 등 기능 변경 사항을 날짜별로 정리해 안내합니다.">
+    <meta name="description" content="로스트아크 아비도스 제작 계산기 로아도쓰의 업데이트 내역입니다. 시세 연동, 경매 입찰 계산기, 티파고(티카투카 계산기), 오버레이, 이용 가이드 등 기능 변경 사항을 날짜별로 정리해 안내합니다.">
     <link rel="canonical" href="https://loadoss.com/news">
     <link rel="icon" type="image/png" href="/object/doster_b.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -26,13 +26,14 @@
                 <span class="logo-loa">Loa</span><span class="logo-doss">Doss</span>
             </a>
             <div class="tool-menu">
-                <a class="tool-menu-btn" href="/tikatuka">
+                <a class="tool-menu-btn" href="/">
                     <svg class="tool-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"></rect><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"></rect><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"></rect><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"></rect></svg>
                     <span class="tool-label">도구</span>
                     <svg class="tool-caret" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </a>
                 <div class="tool-dropdown">
                     <a class="tool-dropdown-item" href="/tikatuka">티카투카 계산기</a>
+                    <a class="tool-dropdown-item" href="/auction">경매 계산기</a>
                 </div>
             </div>
             <a class="tool-menu-btn news-btn" href="/news">
@@ -56,6 +57,60 @@
 <main class="content-main">
     <h1>로아도쓰 소식 · 업데이트 내역</h1>
     <p class="content-sub">아비도스 제작 계산기 로아도쓰의 기능 추가와 개선 사항을 날짜별로 정리한 페이지입니다.</p>
+
+    <div class="news-month">2026년 8월</div>
+
+    <div class="news-day">
+        <div class="news-day-date">2026. 08. 03. (월)</div>
+        <article class="news-item" id="n20260803-auction">
+            <div class="news-item-head">
+                <h3 class="news-item-title">‘경매 입찰 계산기’ 추가</h3>
+                <span class="news-tags"><span class="ntag ntag-new">신규</span><span class="ntag ntag-area">도구</span></span>
+            </div>
+            <p class="news-item-summary">레이드 전리품 경매에서 얼마에 입찰해야 이득인지 계산해 주는 <strong>경매 입찰 계산기</strong>를 새로 넣었습니다. 상단 ‘도구’ 메뉴에서 들어갈 수 있습니다.</p>
+            <ul class="news-item-list">
+                <li><strong>‘싸게 노리기’ — 낮은 금액으로 먼저 입찰해 두는 전략.</strong> 아무도 상회 입찰하지 않으면 그대로 싸게 낙찰되고, 상회 입찰이 들어오면 재입찰로 목표 금액까지 올릴 수 있습니다. 최소 금액(110%)으로 한두 번 상회 입찰당해도 목표 금액으로 재입찰할 수 있도록 시작가를 역산해 둔 값입니다.</li>
+                <li><strong>입찰가만 알려주고 끝나지 않습니다.</strong> 전략 이름에 마우스를 올리면, 그 금액에서 한 번 더 입찰했을 때 몇 골드를 손해 보는지, 반대로 다른 사람이 입찰해 주면 분배금을 몇 골드 더 받는지가 숫자로 표시됩니다.</li>
+                <li><strong>금액을 입력하면 그 값에 가장 가까운 아이템의 최근 14일 거래 차트가 자동으로 출력됩니다.</strong> 입력한 금액이 어떤 아이템의 시세와 비슷한지, 그 아이템이 최근 얼마에 거래됐는지 함께 확인할 수 있습니다. 경매 보상으로 올라오는 유물 각인서 전 종류와 영웅 등급 젬 6종을 지원하며, 인게임 거래소의 최근 거래 정보와 같은 수치를 사용합니다.</li>
+            </ul>
+            <div class="news-deep">
+                <p class="news-deep-h">추천 입찰가대로 입찰했는데 매번 뺏기는 이유, 알고 계신가요?</p>
+                <p class="news-deep-p">‘로스트아크 경매 계산기’로 검색하면 나오는 계산기 <strong>일곱 곳</strong>을 확인해 봤습니다. 같은 조건을 넣으면 일곱 곳 모두 <strong>1골드도 다르지 않은 같은 금액</strong>을 추천 입찰가로 제시합니다. 같은 계산식을 쓰고 있다는 뜻입니다.</p>
+                <p class="news-deep-p">이 식이 알려주는 추천 입찰가는, <strong>다른 사람이 최소 금액으로 한 번만 상회 입찰해도 그 사람에게 이득인</strong> 금액입니다. 상회 입찰할 이유가 그대로 남아 있으니, 뺏기는 것이 당연합니다.</p>
+                <div class="news-case">
+                    <p class="news-case-cap">8인 레이드 · 시세 100,000골드 · 판매 목적일 때</p>
+                    <p class="news-case-be">손익 분기점은 <b>83,648골드</b>입니다. 이 금액을 초과해 입찰하면, 낙찰받더라도 분배금을 받는 것보다 손해입니다.</p>
+                    <p class="news-case-what">아래 두 금액은 모두 <b>다른 사람의 상회 입찰을 견제하는 최저 입찰가</b>입니다.</p>
+                    <div class="news-split">
+                        <div class="ns-col">
+                            <div class="ns-who">기존 계산기의 추천 입찰가</div>
+                            <div class="ns-price">75,568<span>골드</span></div>
+                            <p class="ns-line"><b>누군가 상회 입찰하면 83,125골드.</b></p>
+                            <p class="ns-line">그 사람은 분배금을 받는 것보다 1,620골드 이득이라, 상회 입찰할 이유가 충분합니다.</p>
+                            <p class="ns-verdict">뺏김 · 내가 얻는 골드 <b>11,281</b></p>
+                        </div>
+                        <div class="ns-col is-ours">
+                            <div class="ns-who">로아도쓰의 최대 이득가</div>
+                            <div class="ns-price">76,880<span>골드</span></div>
+                            <p class="ns-line"><b>누군가 상회 입찰하면 84,568골드.</b></p>
+                            <p class="ns-line">그 사람은 분배금을 받는 것보다 손해라, 상회 입찰할 이유가 없습니다.</p>
+                            <p class="ns-verdict">낙찰 · 내가 얻는 골드 <b>18,120</b></p>
+                        </div>
+                    </div>
+                    <p class="news-case-sum">입찰가는 <em>1,312골드</em> 더 높을 뿐인데, 내가 얻는 골드는 <em>6,839골드</em> 더 많습니다.</p>
+                </div>
+                <p class="news-deep-p">상회 입찰은 ‘낙찰받아서 이득이 남는가’가 아니라 ‘분배금을 받는 편이 나은가’로 결정됩니다. 로아도쓰는 그 기준으로 입찰가를 계산합니다.</p>
+                <p class="news-deep-p">직접 사용하려는 사람까지 견제하고 싶다면, 한 단계 위인 <strong>추천 입찰가 80,926골드</strong>로 입찰하면 됩니다. 계산기가 두 금액을 함께 보여줍니다.</p>
+
+                <p class="news-deep-h">2025년 7월 23일 수수료 패치, 아직 반영한 계산기가 없습니다.</p>
+                <p class="news-deep-p">그날부터 10만 골드를 넘는 부분에만 붙던 수수료가 <strong>낙찰 금액 전체에 5%</strong>로 바뀌었습니다. 분배금도 이 5%를 뗀 뒤 나뉩니다.</p>
+                <p class="news-deep-p">확인해 본 계산기들은 아직 낙찰 금액을 그대로 나눈 값을 분배금으로 표시합니다. 실제로 받는 골드보다 5% 많게 표시되는 셈입니다.</p>
+                <p class="news-deep-p">손익 분기점도 마찬가지입니다. 이 일곱 곳은 83,125골드를 분기점으로 계산하지만, <strong>실제 분기점은 83,648골드</strong>입니다. 아직 이득이 남은 523골드 구간을 손해라고 보고 포기하게 됩니다.</p>
+                <p class="news-deep-punch">로아도쓰의 경매 입찰 계산기는 <em>아무도 상회 입찰하지 않을 가장 싼 금액</em>을 계산합니다. 그래서 싸게 낙찰받고, 뺏기지 않습니다.</p>
+                <p class="news-deep-foot">수식과 계산 과정은 <a href="/guide/auction">경매 입찰 가이드</a>에 정리해 두었습니다. 위 수치는 구글에 ‘로스트아크 경매 계산기’로 검색했을 때 나오는 상위 계산기들에 같은 값(8인 · 시세 100,000골드)을 입력해 확인한 결과입니다. (2026년 8월 기준)</p>
+            </div>
+        </article>
+    </div>
 
     <div class="news-month">2026년 7월</div>
 
@@ -167,7 +222,7 @@
             <ul class="news-item-list">
                 <li>같은 재료를 여러 명이 동시에 요청하면 실제 조회는 한 번만 나가고, 나머지는 그 결과를 함께 받도록 바꿨습니다.</li>
                 <li>한 번 불러온 시세는 잠시 저장해 재요청을 줄이고, 최소 60초 안에는 같은 조회가 반복되지 않도록 처리했습니다.</li>
-                <li>덕분에 접속이 몰리는 시간에도 로스트아크 시세 서버에 무리를 주지 않아, 시세가 끊기지 않고 뜹니다.</li>
+                <li>덕분에 접속이 몰리는 시간에도 로스트아크 시세 서버에 무리를 주지 않아, 시세가 끊기지 않고 표시됩니다.</li>
             </ul>
         </article>
     </div>
