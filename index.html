@@ -445,6 +445,7 @@
         .tool-menu-btn { width: auto; margin: 0; height: 34px; padding: 0 11px; display: inline-flex; align-items: center; gap: 7px; font-family: "Noto Sans KR", sans-serif; font-size: 0.9em; font-weight: 600; letter-spacing: 0.01em; color: oklch(0.82 0 0); background: oklch(1 0 0 / 0.04); border: 1px solid oklch(1 0 0 / 0.1); border-radius: 9px; cursor: pointer; transition: color 0.18s, background 0.18s, border-color 0.18s; }
         .tool-menu-btn .tool-ico { flex-shrink: 0; opacity: 0.9; }
         .tool-menu-btn .tool-label { line-height: 1; }
+        .new-dot { display: inline-block; width: 5px; height: 5px; margin-left: 3px; border-radius: 50%; background: oklch(0.66 0.15 27); vertical-align: top; }
         .tool-menu-btn .tool-caret { flex-shrink: 0; opacity: 0.6; margin-left: -1px; transition: transform 0.2s ease, opacity 0.18s; }
         .tool-menu:hover .tool-menu-btn .tool-caret, .tool-menu-btn.open .tool-caret { transform: rotate(180deg); opacity: 0.9; }
         .tool-menu-btn:hover, .tool-menu:hover .tool-menu-btn, .tool-menu-btn.open { color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.12); border-color: oklch(0.8868 0.1822 95.3226 / 0.55); }
@@ -676,9 +677,9 @@
                             <div v-for="t in tools" :key="t.id" class="tool-dropdown-item" :class="{ selected: activeTool === t.id }" @click="openTool(t.id)">{{ t.label }}</div>
                         </div>
                     </div>
-                    <a class="tool-menu-btn news-btn" href="/news">
+                    <a class="tool-menu-btn news-btn" href="/news" @click="markNewsSeen()">
                         <svg class="tool-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                        <span class="tool-label">공지사항</span>
+                        <span class="tool-label">공지사항<i class="new-dot" v-if="showNewsDot"></i></span>
                     </a>
                 </div>
                 <div class="header-actions">
@@ -1520,7 +1521,7 @@
                 </div>
             </div>
         </div> 
-        <div class="update-box" v-show="!activeTool">update: 2026.07.29</div>
+        <div class="update-box" v-show="!activeTool">update: {{ latestUpdate }}</div>
     </div> 
 </div>
 
@@ -1947,6 +1948,9 @@
                     { id: 'tikatuka', label: '티카투카 계산기', route: '/tikatuka', src: '/tools/tikatuka' },
                     { id: 'auction', label: '경매 계산기', route: '/auction', src: '/tools/auction' },
                 ],
+                // 공지를 추가하면 이 한 줄만 갱신 — update 표시와 공지사항 알림 점이 함께 따라간다
+                latestUpdate: '2026.08.04',
+                newsSeen: '',
                 exchangeType: 'normal',
                 calcMode: 'optimize',
                 lastTab2Mode: 'craft',
@@ -2096,6 +2100,13 @@
             }
         },
         computed: {
+            // 안 읽은 공지가 있으면 표시. 14일이 지나면 저절로 꺼진다 —
+            // 계속 떠 있으면 배경처럼 인식돼 알림 구실을 못 하기 때문.
+            showNewsDot() {
+                if (this.newsSeen === this.latestUpdate) return false;
+                const [y, m, d] = this.latestUpdate.split('.').map(Number);
+                return (Date.now() - new Date(y, m - 1, d).getTime()) / 86400000 < 14;
+            },
             currentHoveredStats() {
                 if (!this.hoveredMarketItem || !this.marketStats) return null;
                 return this.marketStats[this.hoveredMarketItem] || null;
@@ -2588,6 +2599,7 @@
                 this.isEasterEgg = false;
             }
             if (localStorage.getItem('loa_craft_tab_seen') === '1') this.craftTabSeen = true;
+            this.newsSeen = localStorage.getItem('loa_news_seen') || '';
             
             this.materials.forEach(mat => {
                 Object.values(mat.resources).forEach(res => {
@@ -2798,6 +2810,10 @@
         behavior: 'auto'
     });
 },
+            markNewsSeen() {
+                this.newsSeen = this.latestUpdate;
+                localStorage.setItem('loa_news_seen', this.latestUpdate);
+            },
             closeTool(push = true) {
 
     this.activeTool = null;
