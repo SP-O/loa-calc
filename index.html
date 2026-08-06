@@ -452,7 +452,7 @@
         .news-btn { text-decoration: none; margin-left: 8px; }
         .tool-dropdown { position: absolute; top: calc(100% + 6px); left: 0; min-width: 160px; background: oklch(0.2891 0 0); border: 1px solid oklch(0.3485 0 0); border-radius: 10px; box-shadow: 0 8px 20px oklch(0 0 0 / 0.5); padding: 4px; opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s; z-index: 10002; }
         .tool-menu:hover .tool-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
-        .tool-dropdown-item { padding: 9px 12px; border-radius: 7px; font-size: 0.86em; font-weight: 700; color: oklch(0.7572 0 0); cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+        .tool-dropdown-item { display: block; text-decoration: none; padding: 9px 12px; border-radius: 7px; font-size: 0.86em; font-weight: 700; color: oklch(0.7572 0 0); cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s; }
         .tool-dropdown-item:hover { background: oklch(0.4091 0 0); color: oklch(1 0 0); }
         .tool-dropdown-item.selected { color: oklch(0.8868 0.1822 95.3226); background: oklch(0.3485 0 0); }
         body.light-mode .tool-menu-btn { border-color: oklch(0.88 0.0128 255.5297); color: oklch(0.42 0 0); background: oklch(0.6059 0.1986 256.4605 / 0.04); }
@@ -674,7 +674,9 @@
                             <svg class="tool-caret" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                         </button>
                         <div class="tool-dropdown">
-                            <div v-for="t in tools" :key="t.id" class="tool-dropdown-item" :class="{ selected: activeTool === t.id }" @click="openTool(t.id)">{{ t.label }}</div>
+                            <!-- 크롤러가 도구의 존재를 인지하려면 실제 <a href> 여야 한다. Vue 바인딩(:href)은 정적 HTML에 주소가 남지 않는다 -->
+                            <a class="tool-dropdown-item" href="/tikatuka">티카투카 계산기</a>
+                            <a class="tool-dropdown-item" href="/auction">경매 계산기</a>
                         </div>
                     </div>
                     <a class="tool-menu-btn news-btn" href="/news" @click="markNewsSeen()">
@@ -720,7 +722,8 @@
 
         <div class="main-wrapper" v-show="!activeTool">
             <div class="left-panel wrap-cal">
-                <h1>아비도스 제작 계산기 ({{ currentMaterialName }})</h1>
+                <!-- 선택한 재료명은 아래 재료 탭에 이미 표시된다. h1은 크롤러가 JS 없이 읽어도 온전하도록 고정 문구로 둔다 -->
+                <h1>아비도스 융화 재료 제작 계산기</h1>
                 
                 <div class="mode-tabs">
                     <div class="mode-tab" :class="{ active: calcMode === 'optimize' }" @click="calcMode = 'optimize'">
@@ -1522,10 +1525,10 @@
             </div>
         </div> 
         <div class="update-box" v-show="!activeTool">update: {{ latestUpdate }}</div>
+
     </div> 
 </div>
-
-<div class="footer-spacer"></div>
+<div class="footer-spacer"></div>
 
 <!-- Easter Egg Stage (푸터 선 위) -->
 <div id="easter-egg-stage" class="easter-stage"></div>

@@ -1,9 +1,5 @@
 {
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/tikatuka", "destination": "/" },
-    { "source": "/auction", "destination": "/" }
-  ],
   "headers": [
     {
       "source": "/(.*)",
