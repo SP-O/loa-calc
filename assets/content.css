@@ -7,7 +7,8 @@ body.content-page *, body.content-page *::before, body.content-page *::after { b
 
 /* 고정 헤더 — 메인과 동일한 시각 언어 */
 .content-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; z-index: 100; background: oklch(0.1822 0 0 / 0.92); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid oklch(1 0 0 / 0.07); display: flex; align-items: center; transition: background-color 0.3s ease, border-color 0.3s ease; }
-.content-header-inner { max-width: 900px; width: 92%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+/* 헤더·본문·푸터가 같은 폭을 써야 로고·제목·푸터의 시작선이 맞는다 */
+.content-header-inner { max-width: 1100px; width: 94%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
 .content-header .site-logo { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.75em; letter-spacing: 0.02em; text-decoration: none; display: flex; align-items: center; gap: 0; cursor: pointer; transition: opacity 0.2s ease; }
 .content-header .site-logo:hover { opacity: 0.85; }
 .content-header .logo-loa { color: oklch(1 0 0); transition: color 0.3s ease; }
@@ -24,7 +25,7 @@ body.light-mode #theme-toggle .ico-sun { display: none; }
 body.light-mode #theme-toggle .ico-moon { display: block; }
 
 /* 본문 */
-.content-main { max-width: 900px; width: 92%; margin: 0 auto; padding: 92px 0 60px; }
+.content-main { max-width: 1100px; width: 94%; margin: 0 auto; padding: 92px 0 60px; }
 .content-main h1 { font-size: 1.45em; color: oklch(1 0 0); margin: 0 0 6px; word-break: keep-all; transition: color 0.3s ease; }
 .content-sub { font-size: 0.9em; color: oklch(0.68 0 0); margin: 0 0 22px; word-break: keep-all; }
 
@@ -34,8 +35,6 @@ body.light-mode #theme-toggle .ico-moon { display: block; }
 .content-nav-tabs a:hover, .content-nav-tabs a.active { color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.12); border-color: oklch(0.8868 0.1822 95.3226 / 0.55); }
 
 /* 카드 */
-/* 도구 페이지(/auction, /tikatuka) — 계산기 폭에 맞춰 본문보다 넓게 */
-.content-main.tool-page { max-width: 1100px; }
 .tool-embed-frame { width: 100%; min-height: 420px; border: 0; display: block; background: transparent; margin: 4px 0 0; }
 
 .content-card { background-color: oklch(0.2891 0 0); border: 1px solid oklch(1 0 0 / 0.05); border-radius: 12px; box-shadow: 0 0 10px oklch(0 0 0 / 0.5); padding: 24px 26px; margin-bottom: 18px; transition: background-color 0.3s ease, box-shadow 0.3s ease; }
@@ -62,7 +61,7 @@ body.light-mode #theme-toggle .ico-moon { display: block; }
    들어가되(모바일은 아래 미디어쿼리에서 줄바꿈 허용), 구분선은 안쪽 박스에 붙여
    계산기 푸터처럼 좌우 여백을 두고 끊기게 한다(페이지 끝까지 이어지지 않도록). */
 .content-footer { padding: 0; }
-.content-footer-inner { max-width: 1120px; width: 95%; margin: 0 auto; border-top: 1px solid oklch(1 0 0 / 0.07); padding: 18px 0 26px; font-size: 11px; color: oklch(0.6268 0 0); line-height: 1.5; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: nowrap; word-break: keep-all; }
+.content-footer-inner { max-width: 1100px; width: 94%; margin: 0 auto; border-top: 1px solid oklch(1 0 0 / 0.07); padding: 18px 0 26px; font-size: 11px; color: oklch(0.6268 0 0); line-height: 1.5; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: nowrap; word-break: keep-all; }
 .content-footer-inner > span:first-child { min-width: 0; }
 .content-footer-inner > span:last-child { flex-shrink: 0; white-space: nowrap; }
 .content-footer a { color: oklch(0.7572 0 0); font-weight: bold; text-decoration: none; margin-left: 12px; white-space: nowrap; }
@@ -109,9 +108,8 @@ body.light-mode .content-footer a { color: oklch(0.4495 0 0); }
 
 /* 모바일 */
 @media (max-width: 600px) {
-    .content-main { padding: 84px 0 40px; width: 94%; }
+    .content-main { padding: 84px 0 40px; }
     .content-card { padding: 18px 16px; }
-    .content-header-inner, .content-footer-inner { width: 94%; }
     .content-header .site-logo { font-size: 1.5em; }
     .back-to-calc { padding: 0 9px; font-size: 0.82em; }
     /* 좁은 화면에서는 저작권 문구가 과도하게 눌리지 않게 줄내림 허용 */
