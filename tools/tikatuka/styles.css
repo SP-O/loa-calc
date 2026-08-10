@@ -26,7 +26,6 @@ body.light-mode {
   color: var(--text);
 }
 body.light-mode .panel { box-shadow: 0 4px 16px oklch(0.2512 0.0989 259.3376 / 0.06); }
-body.light-mode h1 { color: oklch(0.1776 0 0); }
 /* 골드(→블루) 배경 버튼은 라이트에서 흰 글자(대비) */
 body.light-mode .alkkagi-btn, body.light-mode .key.active, body.light-mode .solve-btn, body.light-mode .tag-alk { color: oklch(1 0 0); }
 /* 다크 hover 배경 → 라이트 hover */
@@ -42,12 +41,7 @@ body {
   margin: 0; background: var(--bg); color: var(--text);
   font-family: "Noto Sans KR", sans-serif; color-scheme: dark;
 }
-.container { max-width: 760px; width: 94%; margin: 0 auto; padding: 28px 0 60px; display: flex; flex-direction: column; }
-h1 {
-  font-family: "Outfit", "Noto Sans KR", sans-serif; font-size: 1.6em;
-  text-align: center; color: #fff; margin: 0 0 4px;
-}
-.subtitle { text-align: center; color: var(--muted); margin: 0 0 22px; font-size: 0.95em; }
+.container { max-width: 760px; width: 94%; margin: 0 auto; padding: 18px 0 60px; display: flex; flex-direction: column; }
 .panel {
   background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
   box-shadow: 0 0 10px oklch(0 0 0 / 0.5); padding: 18px; margin-bottom: 18px;
