@@ -13,6 +13,9 @@
   <!-- iframe 본체 — 대표 주소는 헤더·푸터를 갖춘 /tikatuka.
        noindex를 쓰면 이 주소가 쌓아온 검색 순위 신호까지 버려지므로 canonical로 넘긴다. -->
   <link rel="canonical" href="https://loadoss.com/tikatuka">
+  <!-- 검색 등으로 이 주소에 직접 들어온 방문자는 헤더·푸터가 없는 껍데기를 보게 되므로 정식 페이지로 보낸다.
+       iframe 안에서는 self !== top 이라 그대로 둔다(무한 루프 없음). -->
+  <script>if (window.self === window.top) location.replace('/tikatuka');</script>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Outfit:wght@800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/tools/tikatuka/styles.css">
