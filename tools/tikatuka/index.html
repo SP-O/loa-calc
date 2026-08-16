@@ -10,8 +10,9 @@
   })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>티파고 | 티카투카 최적 수 추천</title>
-  <!-- iframe 본체 — 헤더·푸터가 없는 껍데기라 단독 색인되면 빈약한 페이지로 취급된다. 내용은 /tikatuka, /guide/tipago 에서 제공 -->
-  <meta name="robots" content="noindex, follow">
+  <!-- iframe 본체 — 대표 주소는 헤더·푸터를 갖춘 /tikatuka.
+       noindex를 쓰면 이 주소가 쌓아온 검색 순위 신호까지 버려지므로 canonical로 넘긴다. -->
+  <link rel="canonical" href="https://loadoss.com/tikatuka">
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Outfit:wght@800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/tools/tikatuka/styles.css">

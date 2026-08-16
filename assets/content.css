@@ -57,15 +57,19 @@ body.light-mode #theme-toggle .ico-moon { display: block; }
 .news-entry p { font-size: 0.9em; line-height: 1.75; color: oklch(0.8 0 0); word-break: keep-all; margin: 0 0 8px; }
 .news-tag { display: inline-block; font-size: 0.72em; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-left: 8px; vertical-align: middle; background: oklch(0.8868 0.1822 95.3226 / 0.13); color: oklch(0.8868 0.1822 95.3226); border: 1px solid oklch(0.8868 0.1822 95.3226 / 0.35); }
 
-/* 푸터: 본문 칼럼(900px)보다 넓게 잡아 저작권 문구+링크가 데스크톱에서 항상 한 줄에
-   들어가되(모바일은 아래 미디어쿼리에서 줄바꿈 허용), 구분선은 안쪽 박스에 붙여
-   계산기 푸터처럼 좌우 여백을 두고 끊기게 한다(페이지 끝까지 이어지지 않도록). */
+/* 푸터: 저작권 문구+링크가 데스크톱에서 한 줄에 들어가되(모바일은 아래 미디어쿼리에서
+   줄바꿈 허용), 구분선은 안쪽 박스에 붙여 계산기 푸터처럼 좌우 여백을 두고 끊기게 한다. */
 .content-footer { padding: 0; }
 .content-footer-inner { max-width: 1100px; width: 94%; margin: 0 auto; border-top: 1px solid oklch(1 0 0 / 0.07); padding: 18px 0 26px; font-size: 11px; color: oklch(0.6268 0 0); line-height: 1.5; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: nowrap; word-break: keep-all; }
 .content-footer-inner > span:first-child { min-width: 0; }
 .content-footer-inner > span:last-child { flex-shrink: 0; white-space: nowrap; }
 .content-footer a { color: oklch(0.7572 0 0); font-weight: bold; text-decoration: none; margin-left: 12px; white-space: nowrap; }
 .content-footer a:hover { text-decoration: underline; }
+/* 링크 6개와 저작권 문구가 한 줄에 못 들어가는 폭부터 링크를 아래 줄로 내린다.
+   마크업상 <a> 사이에 공백이 없어 한 덩어리로 취급되므로, 줄 자체를 flex로 바꿔야 링크 단위로 줄바꿈된다. */
+@media (max-width: 800px) {
+    .content-footer-inner > span:last-child { flex: 1 1 100%; display: flex; flex-wrap: wrap; justify-content: center; }
+}
 
 /* ===== 라이트 모드 (메인과 동일 팔레트) ===== */
 body.light-mode.content-page { background-color: oklch(0.969 0.0062 255.0686); color: oklch(0.252 0 0); color-scheme: light; }

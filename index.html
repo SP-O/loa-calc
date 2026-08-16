@@ -1539,11 +1539,13 @@
 
 <footer class="app-footer">
     <div class="footer-disclaimer">
-        <span>© 2026 LoaDoss. All Rights Reserved. This site is not associated with Smilegate RPG & Smilegate Stove. Data based on Lostark Open API.</span>
+        <span>© 2026 LoaDoss. This site is not associated with Smilegate RPG & Smilegate Stove. Data based on Lostark Open API.</span>
         <span class="footer-links">
             <a href="/guide/abydos" class="privacy-link">이용 가이드</a>
             <a href="/news" class="privacy-link">업데이트 내역</a>
             <a href="/guide/about" class="privacy-link">사이트 소개</a>
+            <a href="/contact" class="privacy-link">문의</a>
+            <a href="/terms" class="privacy-link">이용약관</a>
             <a href="/privacy" class="privacy-link">개인정보 처리방침</a>
         </span>
     </div>
@@ -1952,7 +1954,8 @@
                     { id: 'auction', label: '경매 계산기', route: '/auction', src: '/tools/auction' },
                 ],
                 // 공지를 추가하면 이 한 줄만 갱신 — update 표시와 공지사항 알림 점이 함께 따라간다
-                latestUpdate: '2026.08.04',
+                latestUpdate: '2026.08.16',   // 화면의 update 라벨 — 사이트 최종 갱신일
+                latestNews: '2026.08.04',     // 공지 최신 글 날짜 — 빨간 점 판정에만 쓴다(둘을 섞으면 글 없이 점만 켜짐)
                 newsSeen: '',
                 exchangeType: 'normal',
                 calcMode: 'optimize',
@@ -2106,8 +2109,8 @@
             // 안 읽은 공지가 있으면 표시. 14일이 지나면 저절로 꺼진다 —
             // 계속 떠 있으면 배경처럼 인식돼 알림 구실을 못 하기 때문.
             showNewsDot() {
-                if (this.newsSeen === this.latestUpdate) return false;
-                const [y, m, d] = this.latestUpdate.split('.').map(Number);
+                if (this.newsSeen === this.latestNews) return false;
+                const [y, m, d] = this.latestNews.split('.').map(Number);
                 return (Date.now() - new Date(y, m - 1, d).getTime()) / 86400000 < 14;
             },
             currentHoveredStats() {
@@ -2814,8 +2817,8 @@
     });
 },
             markNewsSeen() {
-                this.newsSeen = this.latestUpdate;
-                localStorage.setItem('loa_news_seen', this.latestUpdate);
+                this.newsSeen = this.latestNews;
+                localStorage.setItem('loa_news_seen', this.latestNews);
             },
             closeTool(push = true) {
 

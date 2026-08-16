@@ -9,9 +9,9 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-5S9NKGBL');</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로스트아크 경매 입찰 계산기 - 로아도쓰</title>
-    <meta name="description" content="로스트아크 레이드 전리품 경매에서 얼마까지 입찰해야 이득인지 계산합니다. 손익 분기점과 함께, 다른 사람이 상회 입찰하면 손해가 되는 최저 입찰가를 인원수와 아이템 시세에 맞춰 알려 드립니다.">
-    <link rel="canonical" href="https://loadoss.com/auction">
+    <title>문의 - 로아도쓰</title>
+    <meta name="description" content="로아도쓰(loadoss.com) 문의 안내. 계산 오류 제보, 기능 건의, 광고·제휴 문의를 인게임 우편 또는 이메일로 받고 있습니다.">
+    <link rel="canonical" href="https://loadoss.com/contact">
     <link rel="icon" type="image/png" href="/object/doster_b.png">
 
     <!-- Google AdSense -->
@@ -60,10 +60,48 @@
 </header>
 
 <main class="content-main">
-    <h1>로스트아크 경매 입찰 계산기</h1>
-    <p class="content-sub">레이드 전리품 경매에서 얼마까지 입찰해야 이득인지 계산합니다.</p>
+    <h1>문의</h1>
+    <p class="content-sub">계산이 이상하거나 건의하실 내용이 있으면 편하게 알려 주세요.</p>
 
-    <iframe id="toolFrame" class="tool-embed-frame" title="경매 입찰 계산기" allow="fullscreen"></iframe>
+    <div class="content-card">
+        <h2>연락 방법</h2>
+        <p>로아도쓰는 <b>카단 서버의 스커는기믹중</b>이 혼자 만들고 운영하는 개인 사이트입니다. 두 가지 경로로 문의를 받고 있습니다.</p>
+        <ul>
+            <li><strong>인게임 우편</strong> — 카단 서버 <strong>스커는기믹중</strong> 앞으로 보내 주시면 가장 빠르게 답장해 드립니다.</li>
+            <li><strong>이메일</strong> — <a href="mailto:eternalgreat1@gmail.com">eternalgreat1@gmail.com</a></li>
+        </ul>
+        <p>혼자 운영하다 보니 답변까지 며칠 걸릴 수 있습니다. 확인하는 대로 빠짐없이 답장드리겠습니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>이런 내용을 받고 있습니다</h2>
+        <ul>
+            <li><strong>계산 오류 제보</strong> — 결과가 인게임과 다르거나 이상하게 나오는 경우</li>
+            <li><strong>기능 건의</strong> — 있으면 좋겠다 싶은 계산이나 편의 기능</li>
+            <li><strong>시세·데이터 문제</strong> — 시세가 안 불러와지거나 아이템이 목록에 없는 경우</li>
+            <li><strong>화면 인식 문제</strong> — 티파고 화면 공유가 판을 잘못 읽는 경우</li>
+            <li><strong>광고 · 제휴 문의</strong></li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <h2>오류를 제보하실 때</h2>
+        <p>아래 내용을 함께 적어 주시면 원인을 훨씬 빨리 찾을 수 있습니다. 전부 아니어도 괜찮습니다.</p>
+        <ul>
+            <li>어떤 계산기에서 생긴 일인지 (제작 계산 · 경매 입찰 · 티파고)</li>
+            <li>입력하신 값 — 예를 들어 레이드 인원, 아이템 시세, 제작 횟수</li>
+            <li>실제로 나온 결과와, 기대하셨던 결과</li>
+            <li>사용하신 브라우저 (크롬 · 엣지 · 웨일 등)</li>
+            <li>가능하다면 화면 사진</li>
+        </ul>
+        <p>티파고 화면 인식 문제는 <strong>게임 화면 사진</strong>이 있으면 판을 어떻게 잘못 읽었는지 바로 확인할 수 있어 큰 도움이 됩니다.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>먼저 확인해 보시면 좋은 것</h2>
+        <p>자주 들어오는 질문은 <a href="/guide/faq">자주 묻는 질문</a>에 정리해 두었습니다. 계산 원리가 궁금하신 경우에는 <a href="/guide/abydos">아비도스 제작 가이드</a>와 <a href="/guide/auction">경매 입찰 계산기 가이드</a>에 수식과 예시를 그대로 적어 두었으니 함께 봐주시면 좋습니다.</p>
+        <p>그동안 어떤 점이 바뀌었는지는 <a href="/news">업데이트 내역</a>에서 확인하실 수 있습니다.</p>
+    </div>
 </main>
 
 <footer class="content-footer">
@@ -74,27 +112,5 @@
 </footer>
 
 <script src="/assets/content.js?v=20260816"></script>
-<script>
-(function () {
-    var f = document.getElementById('toolFrame');
-    var light = document.body.classList.contains('light-mode');
-    f.src = '/tools/auction?theme=' + (light ? 'light' : 'dark');
-
-    // 도구가 보고하는 콘텐츠 높이에 맞춰 iframe을 늘린다(내부 스크롤 방지)
-    window.addEventListener('message', function (e) {
-        if (e.source !== f.contentWindow) return;
-        var d = e.data;
-        if (d && d.type === 'tipago-height' && typeof d.height === 'number') {
-            f.style.height = Math.max(420, d.height + 4) + 'px';
-        }
-    });
-
-    var btn = document.getElementById('theme-toggle');
-    if (btn) btn.addEventListener('click', function () {
-        var mode = document.body.classList.contains('light-mode') ? 'light' : 'dark';
-        try { f.contentWindow.postMessage({ type: 'theme', mode: mode }, '*'); } catch (err) {}
-    });
-})();
-</script>
 </body>
 </html>
