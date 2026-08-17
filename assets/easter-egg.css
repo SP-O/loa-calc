@@ -1,0 +1,111 @@
+/* 이스터에그: 실시간 모코코·도스터 스테이지 — index.html과 도구 페이지가 공유.
+   선택자가 전부 이스터에그 전용이라 다른 규칙과 겹치지 않는다. */
+.header-easter-btn { background: transparent; border: 1px solid oklch(0.4676 0 0); border-radius: 8px; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; transition: border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease; padding: 0; margin: 0; flex-shrink: 0; transform: scale(1); }
+.header-easter-btn:hover { border-color: oklch(0.8868 0.1822 95.3226); background: oklch(0.8868 0.1822 95.3226 / 0.1); box-shadow: 0 0 0 3px oklch(0.8868 0.1822 95.3226 / 0.12); transform: scale(1.1); }
+.header-easter-btn img { width: 22px; height: 22px; display: block; object-fit: contain; transition: filter 0.3s ease, opacity 0.3s ease; }
+.header-easter-btn img.easter-off { filter: grayscale(1); opacity: 0.4; }
+body.light-mode .header-easter-btn { border-color: oklch(0.88 0.0128 255.5297); }
+body.light-mode .header-easter-btn:hover { border-color: oklch(0.6059 0.1986 256.4605); background: oklch(0.9678 0.0154 257.2288); box-shadow: 0 0 0 3px oklch(0.6059 0.1986 256.4605 / 0.12); }
+
+/* ================= 이스터에그 스테이지 ================= */
+.easter-stage { position: relative; width: 100%; height: 120px; overflow: visible; pointer-events: none; user-select: none; }
+.easter-stage .ee-char { position: absolute; bottom: 0; will-change: transform; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
+.easter-stage .ee-mokoko { width: 32px; height: auto; transform-origin: bottom center; }
+.easter-stage .ee-doster { transform-origin: center center; }
+.easter-stage .ee-doster[data-type="0"] { width: 36px; height: auto; }
+.easter-stage .ee-doster[data-type="1"] { width: 36px; height: auto; }
+.easter-stage .ee-mine { filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)); }
+
+/* 모코코 발아 애니메이션 */
+@keyframes mokokoSprout {
+    0% { transform: translateY(60px) scale(0.3); opacity: 0; }
+    50% { opacity: 1; }
+    75% { transform: translateY(-4px) scale(1.05); }
+    85% { transform: translateY(2px) scale(0.97); }
+    100% { transform: translateY(0) scale(1); }
+}
+.easter-stage .ee-mokoko.sprouting { animation: mokokoSprout 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+/* 도스터 낙하 (JS로 위치 제어, 착지 후 통통 바운스) */
+@keyframes dosterBounce {
+    0% { transform: translateY(0) rotate(0deg); }
+    30% { transform: translateY(-12px) rotate(-3deg); }
+    50% { transform: translateY(0) rotate(0deg); }
+    70% { transform: translateY(-5px) rotate(2deg); }
+    85% { transform: translateY(0) rotate(0deg); }
+    92% { transform: translateY(-2px) rotate(-1deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
+.easter-stage .ee-doster.landed { animation: dosterBounce 0.7s ease-out forwards; }
+
+.easter-stage .ee-doster.landed { pointer-events: auto; cursor: pointer; }
+.easter-stage .ee-doster.fleeing { pointer-events: none; }
+
+/* 도스터 낙하 오버레이 */
+#doster-fall-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 10000; overflow: visible; }
+.doster-falling { position: fixed; pointer-events: none; will-change: transform, top; }
+@keyframes dosterFallFromHeader {
+    0% { opacity: 0; transform: rotate(0deg) scale(0.7); }
+    8% { opacity: 1; transform: rotate(5deg) scale(1); }
+    100% { transform: rotate(var(--fall-rot)) scale(1); }
+}
+
+/* 잭팟 컨페티 */
+.confetti-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 10002; display: none; }
+
+/* 아이템 비 */
+#item-rain-layer { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+/* 아이템 비는 계산기 전용 — 도구(티파고) 화면에선 숨김(도스터/모코코는 유지) */
+body.tool-active #item-rain-layer { display: none !important; }
+.rain-item { position: fixed; pointer-events: none; will-change: transform, top; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
+@keyframes itemFall {
+    0% { top: -40px; opacity: 0.9; }
+    100% { top: 110vh; opacity: 0.6; }
+}
+
+/* 모코코 점프 (잭팟용) */
+@keyframes mokokoJump {
+    0% { transform: translateY(0) scaleY(1) scaleX(1); }
+    15% { transform: translateY(2px) scaleY(0.85) scaleX(1.1); }
+    40% { transform: translateY(-18px) scaleY(1.1) scaleX(0.95); }
+    70% { transform: translateY(0) scaleY(0.9) scaleX(1.05); }
+    85% { transform: translateY(-4px) scaleY(1); }
+    100% { transform: translateY(0) scaleY(1) scaleX(1); }
+}
+@keyframes mokokoJumpBig {
+    0% { transform: translateY(0) scaleY(1) scaleX(1); }
+    12% { transform: translateY(3px) scaleY(0.8) scaleX(1.15); }
+    35% { transform: translateY(-30px) scaleY(1.15) scaleX(0.9); }
+    55% { transform: translateY(0) scaleY(0.85) scaleX(1.1); }
+    70% { transform: translateY(-14px) scaleY(1.05) scaleX(0.95); }
+    85% { transform: translateY(0) scaleY(0.95) scaleX(1.03); }
+    100% { transform: translateY(0) scaleY(1) scaleX(1); }
+}
+.ee-mokoko.jumping { animation: mokokoJump 0.6s ease-out; }
+.ee-mokoko.jumping-big { animation: mokokoJumpBig 0.9s ease-out; }
+
+/* 도스터 idle: 미세한 갸우뚱 */
+@keyframes dosterIdle1 {
+    0%, 100% { transform: rotate(0deg) scaleY(1); }
+    30% { transform: rotate(-4deg) scaleY(0.97); }
+    60% { transform: rotate(3deg) scaleY(1); }
+}
+@keyframes dosterIdle2 {
+    0%, 100% { transform: rotate(0deg) translateX(0); }
+    25% { transform: rotate(2deg) translateX(1.5px); }
+    50% { transform: rotate(-1deg) translateX(-1px); }
+    75% { transform: rotate(1deg) translateX(0.5px); }
+}
+@keyframes dosterIdle3 {
+    0%, 100% { transform: scaleX(1) scaleY(1); }
+    40% { transform: scaleX(1.04) scaleY(0.96); }
+    70% { transform: scaleX(0.97) scaleY(1.03); }
+}
+.ee-doster.idle-1 { animation: dosterIdle1 0.6s ease-in-out; }
+.ee-doster.idle-2 { animation: dosterIdle2 0.8s ease-in-out; }
+.ee-doster.idle-3 { animation: dosterIdle3 0.5s ease-in-out; }
+
+/* 커서 시선 추적은 JS lerp로 처리 (syncDosterPositions) */
+
+
+@media (max-width: 925px) { .easter-stage { display: none !important; } .header-easter-btn { display: none !important; } #doster-fall-overlay { display: none !important; } #item-rain-layer { display: none !important; } .confetti-overlay { display: none !important; } }

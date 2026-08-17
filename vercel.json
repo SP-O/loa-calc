@@ -30,7 +30,7 @@
       ]
     },
     {
-      "source": "/assets/content.(css|js)",
+      "source": "/assets/(content|easter-egg).(css|js)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=300" }
       ]

@@ -20,6 +20,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/content.css?v=20260816">
+    <link rel="stylesheet" href="/assets/easter-egg.css?v=20260816">
 </head>
 <body class="content-page">
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5S9NKGBL" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -66,6 +67,10 @@
     <iframe id="toolFrame" class="tool-embed-frame" title="경매 입찰 계산기" allow="fullscreen"></iframe>
 </main>
 
+<!-- 이스터에그 스테이지 (푸터 선 위) — 메인과 같은 실시간 모코코·도스터 -->
+<div id="easter-egg-stage" class="easter-stage"></div>
+<div id="doster-fall-overlay"></div>
+
 <footer class="content-footer">
     <div class="content-footer-inner">
         <span>© 2026 LoaDoss. This site is not associated with Smilegate RPG &amp; Smilegate Stove. Data based on Lostark Open API.</span>
@@ -96,5 +101,11 @@
     });
 })();
 </script>
+
+<!-- 이스터에그 — 본문 뒤에서 불러 렌더링을 막지 않는다. 모듈이 모바일·loa_easter=off면 스스로 빠진다 -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script src="/assets/vendor/matter.min.js"></script>
+<script src="/assets/easter-egg.js?v=20260816"></script>
 </body>
 </html>
