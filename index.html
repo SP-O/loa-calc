@@ -139,10 +139,6 @@
         body.light-mode button.btn-calc:active:not(:disabled) { transform: translateY(1px) scale(0.99); box-shadow: 0 2px 5px oklch(0.5635 0.2408 260.8233 / 0.15); }
         body.light-mode .rank-cost-col { color: oklch(0.3867 0 0) !important; font-weight: 500 !important; }
         
-        .btn-force { position: absolute; right: 15px; top: 15px; width: auto; margin: 0; padding: 3px 8px; background: oklch(0.7044 0.1872 23.1825 / 0.08); border: 1px solid oklch(0.7044 0.1872 23.1825 / 0.3); color: oklch(0.7529 0.1486 21.2285); border-radius: 4px; font-size: 0.7em; font-weight: normal; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
-        .btn-force:hover { background: oklch(0.7044 0.1872 23.1825 / 0.2); border-color: oklch(0.7044 0.1872 23.1825 / 0.6); color: oklch(1 0 0); }
-        .btn-force.btn-farm { background: oklch(0.6231 0.1881 259.8314 / 0.1); border: 1px solid oklch(0.6231 0.1881 259.8314 / 0.4); color: oklch(0.7137 0.1433 254.6257); }
-        .btn-force.btn-farm:hover { background: oklch(0.6231 0.1881 259.8314 / 0.25); border-color: oklch(0.7137 0.1433 254.6257); color: oklch(1 0 0); }
         
         .resource-label { display: inline-flex; justify-content: flex-start; align-items: center; font-size: 0.85em; font-weight: bold; word-break: keep-all; gap: 5px; line-height: 1.2; transition: color 0.3s ease; }
         .resource-icon-wrap { display: inline-flex; justify-content: center; align-items: center; width: 24px; height: 24px; border-radius: 3px; cursor: default; }
@@ -377,10 +373,6 @@
         
         body.light-mode button.btn-calc { background: linear-gradient(135deg, oklch(0.6458 0.1921 255.6816), oklch(0.5635 0.2408 260.8233)); color: oklch(1 0 0); border: none; box-shadow: 0 4px 12px oklch(0.5635 0.2408 260.8233 / 0.25); border-radius: 8px; }
         body.light-mode button.btn-calc:hover { background: linear-gradient(135deg, oklch(0.6059 0.1986 256.4605), oklch(0.5227 0.2218 260.7118)); transform: translateY(-1px); box-shadow: 0 6px 15px oklch(0.5635 0.2408 260.8233 / 0.3); }
-        body.light-mode .btn-force { background: oklch(0.6059 0.1986 256.4605 / 0.1); border-color: oklch(0.6059 0.1986 256.4605); color: oklch(0.6059 0.1986 256.4605); }
-        body.light-mode .btn-force:hover { background: oklch(0.6059 0.1986 256.4605 / 0.2); color: oklch(0.5635 0.2408 260.8233); }
-        body.light-mode .btn-force.btn-farm { background: oklch(0.6847 0.1479 237.3416 / 0.1); border-color: oklch(0.6847 0.1479 237.3416); color: oklch(0.5876 0.1389 241.9591); }
-        body.light-mode .btn-force.btn-farm:hover { background: oklch(0.6847 0.1479 237.3416); color: oklch(1 0 0); }
         
         body.light-mode .mat-price-tag { background-color: oklch(0.9678 0.0154 257.2288); color: oklch(0.6059 0.1986 256.4605); border: 1px solid oklch(0.88 0.0128 255.5297); }
         body.light-mode .toggle-btn { border-color: oklch(0.88 0.0128 255.5297); color: oklch(0.5103 0 0); background-color: oklch(1 0 0); }
@@ -710,10 +702,6 @@
                 </button>
                 
                 <div v-if="result" class="result">
-                    <button v-if="result.mode === 'optimize' && exchangeType === 'farm' && !forceConvert" @click="doForceConvert" class="btn-force btn-farm">
-                        농장 재료 전량 소모
-                    </button>
-                    
                     <template v-if="result.mode === 'optimize'">
                         <h2 class="result-title"> 아비도스 융화 재료 </h2>
                         <template v-if="result.normal.totalO === 0">
@@ -1855,8 +1843,7 @@
                 craftTabSeen: false,
                 craftProduct: 'normal',
                 craftTarget: 0,
-                forceConvert: false, 
-                includeSurplus: false, 
+                includeSurplus: false,
                 loading: false, 
                 fetching: false, 
                 isCooldown: false, 
@@ -2565,7 +2552,6 @@
                 laTrack('exchange_type_change', { exchange_type: this.exchangeType });
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
-                this.forceConvert = false;
                 // 영지 농장 탭으로 변경 시 열려있는 툴팁 즉시 닫기
                 if (this.exchangeType === 'farm') {
                     this.cancelHideTooltip();
@@ -2582,7 +2568,6 @@
                 laTrack('material_change', { material: this.selectedMaterial });
                 this.resources = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 this.result = null;
-                this.forceConvert = false;
                 this.showExchangeGuide = false;
             },
             guideExactMode(newVal) {
@@ -2594,7 +2579,6 @@
             calcMode(newVal) {
                 laTrack('mode_change', { calc_mode: newVal });
                 this.result = null;
-                this.forceConvert = false;
                 if (newVal !== 'optimize') {
                     this.lastTab2Mode = newVal;
                     if (this.exchangeType === 'farm') this.exchangeType = 'normal';
@@ -2612,7 +2596,6 @@
             },
             resources: {
                 handler(newResources) {
-                    this.forceConvert = false;
                     for (const key in newResources) {
                         if (newResources[key] === "" || newResources[key] === null || newResources[key] === undefined) {
                             this.resources[key] = 0;
@@ -3037,11 +3020,6 @@
                     this.favorites.push(id);
                 }
             },
-            doForceConvert() {
-                laTrack('force_convert', { exchange_type: this.exchangeType });
-                this.forceConvert = true;
-                this.calculate();
-            },
             initDrag(e) {
                 this.isDraggingHandle = false;
                 this.startY = e.clientY;
@@ -3465,16 +3443,18 @@
                     return { totalO: maxCrafts, logs: orderedLogs, consumed: bestConsumed || {A:0,B:0,C:0,S:0}, approximated: false };
                 };
                 
-                let advResult = getOptimal(this.resources, { A: 112, B: 59, C: 43 }, this.forceConvert);
-                if (this.exchangeType === 'normal' && advResult.totalO === 0) {
-                    advResult = getOptimal(this.resources, { A: 112, B: 59, C: 43 }, true);
-                }
-                
-                let normResult = getOptimal(this.resources, { A: 86, B: 45, C: 33 }, this.forceConvert);
-                if (this.exchangeType === 'normal' && normResult.totalO === 0) {
-                    normResult = getOptimal(this.resources, { A: 86, B: 45, C: 33 }, true);
-                }
-                
+                // 역행 교환(가루→부드러운 목재, 가루→목재)은 개당 가치가 깎여 getOptimalForTarget이 기본적으로 거부한다.
+                // 거부만 하면 튼튼한 목재가 통째로 남으므로, 더 만들 수 있으면 교환을 푼 답을 쓴다.
+                // 그 교환이 시세상 이득인지는 「제작 수익 계산」의 최종 예상 수익이 소모 재료 시장가까지 넣어 보여준다.
+                const pickBest = (recipe) => {
+                    const plain = getOptimal(this.resources, recipe, false);
+                    const forced = getOptimal(this.resources, recipe, true);
+                    return forced.totalO > plain.totalO ? forced : plain;
+                };
+
+                let advResult = pickBest({ A: 112, B: 59, C: 43 });
+                let normResult = pickBest({ A: 86, B: 45, C: 33 });
+
                 this.result = { mode: 'optimize', advanced: advResult, normal: normResult };
                 if (!skipDelay) this.loading = false;
             },
