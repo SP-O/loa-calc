@@ -2983,13 +2983,9 @@
                 laTrack('guide_apply', { guide_type: type });
                 this.calcMode = 'optimize';
                 
-                let nextRes = { 
-                    A: this.resources.A, 
-                    B: 0, 
-                    S: 0, 
-                    C: this.resources.C, 
-                    P: this.resources.P 
-                };
+                // 가이드 표는 다른 재료가 하나도 없다고 보고 필요한 양을 역산한 값이다.
+                // 입력해 둔 값을 남기면 표에 적힌 제작 횟수와 결과가 어긋난다.
+                let nextRes = { A: 0, B: 0, S: 0, C: 0, P: 0 };
                 
                 if (type === 'normal') {
                     nextRes.S = row.normS;
