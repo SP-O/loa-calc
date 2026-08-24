@@ -13,16 +13,16 @@
     var MAX_USERS = 100;
     var MOBILE_BREAKPOINT = 925;
 
-    // 크기: 모코코 -10%, 도스터 -30%
-    var MOKOKO_WIDTH = 32;       // 36 * 0.9 ≈ 32
+    // 크기는 화면 픽셀 기준 고정값. 메인의 .container 는 창 폭에 따라 zoom(1.1~0.85)이 달라지므로
+    // 그 배율을 stageScale 로 상쇄해, 어느 페이지·어느 창 폭에서도 같은 크기로 보이게 한다.
+    var MOKOKO_WIDTH = 35;
     var MOKOKO_MIN_GAP = 6;
-    var DOSTER_SIZE = [36, 36];  // [22*2*0.7, 26*2*0.7] ≈ [31, 36]
-    var DOSTER_PHYS_R = [18, 18]; // 물리 충돌 반지름
+    var DOSTER_SIZE = [40, 40];
+    var DOSTER_PHYS_R = [20, 20]; // 물리 충돌 반지름
 
     // 도스터 중력 절반
     var PHYSICS = {
         gravity: { x: 0, y: 0.3 },
-        restitution: 0.65,
         friction: 0.5,
         frictionAir: 0.025,
         density: 0.002
@@ -102,20 +102,75 @@
     function initPhysics() {
         engine = Matter.Engine.create({ enableSleeping: true, gravity: PHYSICS.gravity });
         world = engine.world;
+        Matter.Events.on(engine, 'collisionStart', handleCollisions);
         updatePhysicsBounds();
     }
 
-    // 스테이지 로컬 좌표에서 화면 왼쪽/오른쪽 끝까지의 거리 계산
+    // 부딪힌 세기에 비례해 눌렸다 펴진다. 세게 떨어지면 납작, 살살 앉으면 거의 그대로.
+    function handleCollisions(e) {
+        for (var i = 0; i < e.pairs.length; i++) {
+            var p = e.pairs[i];
+            var dx = (p.bodyA.velocity.x || 0) - (p.bodyB.velocity.x || 0);
+            var dy = (p.bodyA.velocity.y || 0) - (p.bodyB.velocity.y || 0);
+            var speed = Math.sqrt(dx * dx + dy * dy);
+            if (p.bodyA.dosterKey) squash(dosters.get(p.bodyA.dosterKey), speed);
+            if (p.bodyB.dosterKey) squash(dosters.get(p.bodyB.dosterKey), speed);
+        }
+    }
+
+    function squash(d, speed) {
+        if (!d || !d.inner || d.fleeing) return;
+        var k = Math.min(speed / 12, 1);
+        if (k < 0.12) return;                       // 스치는 정도는 무시
+        var now = performance.now();
+        if (now - (d.lastSquash || 0) < 120) return; // 연속 충돌로 떨리는 것 방지
+        d.lastSquash = now;
+
+        var sy = 1 - 0.28 * k, sx = 1 / sy;          // 눌린 만큼 옆으로 퍼진다
+        // fill 을 주지 않아 끝나면 스스로 원상복귀 — 인라인 transform 을 붙들지 않는다
+        d.inner.animate([
+            { transform: 'scale(1,1)' },
+            { transform: 'scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')', offset: 0.18 },
+            { transform: 'scale(' + (2 - sx).toFixed(3) + ',' + (2 - sy).toFixed(3) + ')', offset: 0.55 },
+            { transform: 'scale(1,1)' }
+        ], { duration: 260 + 140 * k, easing: 'cubic-bezier(0.34, 1.4, 0.64, 1)' });
+    }
+
+    // 부모에 zoom 이 걸려 있으면 스테이지 안의 1px 이 화면 1px 이 아니다.
+    // 화면 픽셀 기준 크기를 스테이지 로컬 px 로 바꿔 쓰기 위한 배율.
+    var stageScale = 1;
+    function updateStageScale() {
+        if (!stage || !stage.offsetWidth) { stageScale = 1; return; }
+        var s = stage.getBoundingClientRect().width / stage.offsetWidth;
+        stageScale = (s > 0.2 && s < 5) ? s : 1;
+    }
+    function toLocal(px) { return px / stageScale; }
+    function mokokoW() { return toLocal(MOKOKO_WIDTH); }
+    function dosterW(type) { return toLocal(DOSTER_SIZE[type] || DOSTER_SIZE[0]); }
+
+    // 캐릭터가 노는 범위 = 스테이지 폭. 스테이지는 푸터와 같은 박스라 푸터 밖으로 나가지 않는다.
     function getExtendedBounds() {
         var stageW = stage ? stage.offsetWidth : window.innerWidth;
-        var rect = stage ? stage.getBoundingClientRect() : { left: 0 };
-        var stageLeft = rect.left;                       // 스테이지 왼쪽 → 화면 왼쪽 거리
-        var stageRight = window.innerWidth - stageLeft;  // 스테이지 왼쪽 기준 → 화면 오른쪽 끝
-        return { stageW: stageW, left: -stageLeft, right: stageRight };
+        return { stageW: stageW, left: 0, right: stageW };
+    }
+
+    // 도망친 도스터가 화면 밖으로 사라졌는지 볼 때만 쓰는 화면 끝 좌표(스테이지 로컬 px)
+    function getScreenBounds() {
+        if (!stage) return { left: 0, right: window.innerWidth };
+        var rect = stage.getBoundingClientRect();
+        return { left: toLocal(-rect.left), right: toLocal(window.innerWidth - rect.left) };
+    }
+
+    // 창 폭이 바뀌면 zoom 단계가 달라지므로 이미 그려진 캐릭터 크기도 다시 맞춘다
+    function restyleCharacters() {
+        var mw = mokokoW();
+        mokokos.forEach(function(m) { if (m.el) m.el.style.width = mw + 'px'; });
+        dosters.forEach(function(d) { if (d.el) d.el.style.width = dosterW(d.type) + 'px'; });
     }
 
     function updatePhysicsBounds() {
         if (!world) return;
+        updateStageScale();
         var b = getExtendedBounds();
         if (ground) Matter.Composite.remove(world, ground);
         if (wallLeft) Matter.Composite.remove(world, wallLeft);
@@ -124,22 +179,34 @@
         var totalW = b.right - b.left;
         var centerX = (b.left + b.right) / 2;
         ground = Matter.Bodies.rectangle(centerX, STAGE_HEIGHT + 5, totalW + 100, 10, { isStatic: true });
-        wallLeft = Matter.Bodies.rectangle(b.left - 5, STAGE_HEIGHT / 2, 10, STAGE_HEIGHT * 3, { isStatic: true });
-        wallRight = Matter.Bodies.rectangle(b.right + 5, STAGE_HEIGHT / 2, 10, STAGE_HEIGHT * 3, { isStatic: true });
+        // 접속자가 많으면 도스터가 여러 층으로 쌓이므로 벽을 위로 넉넉히 세운다
+        var wallH = 2000;
+        // 그려지는 스프라이트는 물리 바디보다 넓고, 기울면 더 넓어진다.
+        // 그만큼 벽을 안쪽으로 들여야 푸터 선 밖으로 삐져나오지 않는다.
+        var half = dosterW(0) / 2;
+        var bodyHalf = toLocal(DOSTER_PHYS_R[0]) * 1.7 / 2;   // 바디 반너비
+        var inset = (half - bodyHalf) + half * (Math.SQRT2 - 1);
+        wallLeft = Matter.Bodies.rectangle(b.left + inset - 5, STAGE_HEIGHT - wallH / 2, 10, wallH, { isStatic: true });
+        wallRight = Matter.Bodies.rectangle(b.right - inset + 5, STAGE_HEIGHT - wallH / 2, 10, wallH, { isStatic: true });
         Matter.Composite.add(world, [ground, wallLeft, wallRight]);
     }
 
     function createDosterBody(normalizedX, type) {
         var w = stage ? stage.offsetWidth : window.innerWidth;
         var x = normalizedX * w;
-        var radius = DOSTER_PHYS_R[type] || DOSTER_PHYS_R[0];
-
-        var body = Matter.Bodies.circle(x, -40, radius, {
-            restitution: PHYSICS.restitution,
+        // 원은 굴러 미끄러져 층이 안 쌓이고, 정사각형은 옆으로 누운 자세도 똑같이 안정적이라
+        // 스스로 일어나지 못한다. 가로로 납작한 형태라야 바로 선 자세가 유일하게 안정적이다.
+        var s = toLocal(DOSTER_PHYS_R[type] || DOSTER_PHYS_R[0]) * 1.7;
+        var bh = s * 0.72;
+        // 개체차 — 잘 튀는 애와 묵직한 애가 섞여야 지켜보는 재미가 산다
+        var body = Matter.Bodies.rectangle(x, -40, s, bh, {
+            chamfer: { radius: bh * 0.3 },
+            restitution: 0.5 + Math.random() * 0.3,
             friction: PHYSICS.friction,
             frictionAir: PHYSICS.frictionAir,
-            density: PHYSICS.density
+            density: PHYSICS.density * (0.85 + Math.random() * 0.3)
         });
+        body.halfH = bh / 2;   // 스프라이트 하단을 바닥에 맞추는 데 쓴다
         Matter.Body.setVelocity(body, { x: (Math.random() - 0.5) * 2, y: 0 });
         Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.08);
         Matter.Composite.add(world, body);
@@ -168,7 +235,7 @@
         var stageW = stage ? stage.offsetWidth : window.innerWidth;
         var b = getExtendedBounds();
         var totalW = b.right - b.left;  // 화면 전체 너비 (스테이지 로컬 좌표 기준)
-        var slotW = MOKOKO_WIDTH + MOKOKO_MIN_GAP;
+        var slotW = mokokoW() + toLocal(MOKOKO_MIN_GAP);
         var entries = [];
 
         mokokos.forEach(function(m, key) { entries.push({ key: key, nx: m.normalizedX }); });
@@ -183,12 +250,12 @@
 
         // 스테이지 안에 다 들어가면 기존 로직 유지
         var last = entries[entries.length - 1];
-        var maxNStage = 1 - (MOKOKO_WIDTH / 2) / stageW;
+        var maxNStage = 1 - (mokokoW() / 2) / stageW;
         var fitsInStage = last.nx <= maxNStage;
 
         if (fitsInStage) {
             // 스테이지 내부에서 clamp
-            var minN = (MOKOKO_WIDTH / 2) / stageW;
+            var minN = (mokokoW() / 2) / stageW;
             for (var k = 0; k < entries.length; k++) {
                 if (entries[k].nx < minN) entries[k].nx = minN;
             }
@@ -196,13 +263,12 @@
                 var m = mokokos.get(e.key);
                 if (m) {
                     m.pixelX = e.nx * stageW;
-                    if (m.el) m.el.style.left = (m.pixelX - MOKOKO_WIDTH / 2) + 'px';
+                    if (m.el) m.el.style.left = (m.pixelX - mokokoW() / 2) + 'px';
                 }
             });
         } else {
-            // 오버플로우 — 화면 전체 너비로 확장 배치
-            // normalizedX(0~1)를 화면 전체 범위(b.left ~ b.right)로 리매핑
-            var margin = MOKOKO_WIDTH / 2 + 4;
+            // 다 안 들어가면 스테이지 폭 안에서 균등 배치 (붙어서 몰려 보이는 건 의도)
+            var margin = mokokoW() / 2 + 4;
             var placeLeft = b.left + margin;
             var placeRight = b.right - margin;
             var placeW = placeRight - placeLeft;
@@ -218,7 +284,7 @@
                 var m = mokokos.get(e.key);
                 if (m) {
                     m.pixelX = e.px;
-                    if (m.el) m.el.style.left = (m.pixelX - MOKOKO_WIDTH / 2) + 'px';
+                    if (m.el) m.el.style.left = (m.pixelX - mokokoW() / 2) + 'px';
                 }
             });
         }
@@ -233,29 +299,38 @@
         img.className = 'ee-char ee-mokoko sprouting';
         img.draggable = false;
         if (isMine) img.classList.add('ee-mine');
-        img.style.left = (pixelX - MOKOKO_WIDTH / 2) + 'px';
+        img.style.width = mokokoW() + 'px';
+        img.style.left = (pixelX - mokokoW() / 2) + 'px';
         stage.appendChild(img);
         return img;
     }
 
+    // 바깥 div = 위치와 물리 회전(JS가 매 프레임), 안쪽 img = 스쿼시·idle 연출.
+    // 한 엘리먼트에 둘을 같이 쓰면 CSS 애니메이션이 인라인 transform 을 덮어써 물리 회전이 죽는다.
     function createDosterEl(type, isMine, key) {
+        var el = document.createElement('div');
+        el.className = 'ee-char ee-doster';
+        el.setAttribute('data-type', type);
+        el.setAttribute('data-key', key);
+        if (isMine) el.classList.add('ee-mine');
+        el.style.width = dosterW(type) + 'px';
+        // 처음엔 화면 위에 숨김
+        el.style.left = '-100px';
+        el.style.bottom = STAGE_HEIGHT + 'px';
+
         var img = document.createElement('img');
         img.src = type === 0 ? 'object/doster_a.png' : 'object/doster_b.png';
-        img.className = 'ee-char ee-doster';
+        img.className = 'ee-doster-body';
         img.draggable = false;
-        img.setAttribute('data-type', type);
-        img.setAttribute('data-key', key);
-        if (isMine) img.classList.add('ee-mine');
-        // 처음엔 화면 위에 숨김
-        img.style.left = '-100px';
-        img.style.bottom = STAGE_HEIGHT + 'px';
+        el.appendChild(img);
+
         // 클릭 시 도망 (착지 후에만 pointer-events: auto)
-        img.addEventListener('click', function(e) {
+        el.addEventListener('click', function(e) {
             e.stopPropagation();
             handleDosterClick(key);
         });
-        stage.appendChild(img);
-        return img;
+        stage.appendChild(el);
+        return el;
     }
 
     // 도스터 위치를 물리엔진 좌표 → DOM 위치로 동기화
@@ -264,12 +339,12 @@
             if (!d.body || !d.el) return;
             var pos = d.body.position;
             var angle = d.body.angle;
-            var size = DOSTER_SIZE[d.type] || DOSTER_SIZE[0];
-            var halfSize = size / 2;
+            var halfSize = dosterW(d.type) / 2;
 
-            // bottom 기준 좌표 → left/bottom 변환
+            // bottom 기준 좌표 → left/bottom 변환.
+            // 세로는 바디의 반높이를 써야 스프라이트 발이 바닥에 정확히 닿는다.
             var left = pos.x - halfSize;
-            var bottom = STAGE_HEIGHT - pos.y - halfSize;
+            var bottom = STAGE_HEIGHT - pos.y - (d.body.halfH || halfSize);
 
             d.el.style.left = left + 'px';
             d.el.style.bottom = bottom + 'px';
@@ -321,7 +396,7 @@
         // 현재 위치 가져오기
         var currentLeft = parseFloat(d.el.style.left) || 0;
         var currentBottom = parseFloat(d.el.style.bottom) || 0;
-        var eb = getExtendedBounds();
+        var eb = getScreenBounds();   // 도망은 화면 밖까지 달려야 자연스럽다
         var speed = 2.5 + Math.random() * 1.5; // 2.5~4 px/frame (절반으로 감소)
         var frameCount = 0;
 
@@ -374,12 +449,54 @@
         requestAnimationFrame(animateFlee);
     }
 
-    function render() {
+    // 캐릭터라 옆으로 누우면 쓰러진 것처럼 보인다. 서 있는 자세로 아주 약하게 되돌리는 토크.
+    // 스프링(각도) + 댐퍼(각속도) 조합이라 기울다가 스르르 자세를 잡는다. 살짝 기운 맛은 남는다.
+    var UPRIGHT_SPRING = 0.00018;
+    var UPRIGHT_DAMP = 0.0026;
+    var UPRIGHT_TOLERANCE = 0.5;   // 28도까지는 기울어도 그대로 둔다 (쌓였을 땐 자연스럽다)
+    var UPRIGHT_MAX_TRIES = 5;     // 눌려서 못 세우는 경우 계속 깨우지 않도록
+    function keepUpright() {
+        dosters.forEach(function (d) {
+            var b = d.body;
+            if (!b || d.fleeing) return;
+            var a = Math.atan2(Math.sin(b.angle), Math.cos(b.angle));   // -π~π 로 정규화
+            if (b.isSleeping) {
+                // 누운 채로 잠들면 토크가 닿지 않는다. 확실히 쓰러진 것만 깨워 자세를 잡게 한다.
+                if (Math.abs(a) < UPRIGHT_TOLERANCE) return;
+                if ((d.uprightTries || 0) >= UPRIGHT_MAX_TRIES) return;
+                d.uprightTries = (d.uprightTries || 0) + 1;
+                Matter.Sleeping.set(b, false);
+                // 토크만으로는 모서리를 넘지 못한다. 꿈틀하며 스스로 일어나도록 살짝 튕겨 준다.
+                Matter.Body.setAngularVelocity(b, (a > 0 ? -1 : 1) * 0.12);
+                Matter.Body.applyForce(b, b.position, { x: 0, y: -0.004 * b.mass });
+            }
+            b.torque += (-a * UPRIGHT_SPRING - b.angularVelocity * UPRIGHT_DAMP) * b.mass;
+        });
+    }
+
+    // rAF 는 모니터 주사율만큼 불린다. 매 호출마다 16.67ms 를 밀면 144Hz 에서 물리가 2.4배 빨라지므로,
+    // 실제 흐른 시간을 모아 고정 간격으로 나눠 돌린다 (Matter.Runner 와 같은 방식).
+    var FIXED_DELTA = 1000 / 60;
+    var physicsAcc = 0;
+    var lastFrameT = 0;
+
+    function render(now) {
         if (!isActive) return;
         if (hasPendingUpdates) processPendingUpdates();
 
+        var t = now || performance.now();
+        var frameDelta = lastFrameT ? Math.min(t - lastFrameT, 100) : FIXED_DELTA;
+        lastFrameT = t;
+
         if (hasAwakeBodies()) {
-            Matter.Engine.update(engine, 1000 / 60);
+            physicsAcc = Math.min(physicsAcc + frameDelta, 200);
+            for (var steps = 0; physicsAcc >= FIXED_DELTA && steps < 5; steps++) {
+                keepUpright();
+                Matter.Engine.update(engine, FIXED_DELTA);
+                physicsAcc -= FIXED_DELTA;
+            }
+        } else {
+            physicsAcc = 0;
         }
         syncDosterPositions();
 
@@ -415,13 +532,13 @@
         img.src = type === 0 ? 'object/doster_a.png' : 'object/doster_b.png';
         img.className = 'doster-falling';
         img.draggable = false;
-        var size = DOSTER_SIZE[type] || DOSTER_SIZE[0];
+        var size = dosterW(type);
         img.style.width = size + 'px';
         img.style.height = 'auto';
 
-        // X 위치 (스테이지 기준)
+        // 오버레이도 같은 배율 안에 있으므로 화면 좌표를 로컬 px 로 환산해서 쓴다
         var stageRect = stage.getBoundingClientRect();
-        var startX = stageRect.left + data.doster.x * stageRect.width - size / 2;
+        var startX = toLocal(stageRect.left + data.doster.x * stageRect.width) - size / 2;
         img.style.left = startX + 'px';
         img.style.top = '60px';
         img.style.opacity = '0';
@@ -429,7 +546,7 @@
         // 타겟 Y: 스테이지 상단 (뷰포트 기준)
         // 스테이지 하단 = 푸터선, ground는 스테이지 바닥에 있으므로
         // 도스터가 스테이지 영역 상단에 도달하면 Phase 2로 전환
-        var targetY = stageRect.top;
+        var targetY = toLocal(stageRect.top);
         var fallDist = Math.max(targetY - 60, 100); // 최소 100px은 낙하
         var fallDuration = Math.max(700, Math.min(1300, fallDist * 1.0));
 
@@ -465,7 +582,8 @@
         if (dosters.has(key)) return;
         var body = createDosterBody(data.doster.x, data.doster.type);
         var dEl = createDosterEl(data.doster.type, isMine, key);
-        dosters.set(key, { body: body, type: data.doster.type, el: dEl, landed: false });
+        body.dosterKey = key;   // 충돌 이벤트에서 도스터를 O(1) 로 찾기 위한 역참조
+        dosters.set(key, { body: body, type: data.doster.type, el: dEl, inner: dEl.firstChild, landed: false });
     }
 
     function addCharacter(key, data) {
@@ -556,6 +674,23 @@
         return true;
     }
 
+    // 페이지를 옮기면 연결이 끊겨 내 기록이 지워지고 새 좌표가 뽑힌다.
+    // 좌표를 남겨 두고 다시 쓰면 다른 페이지에서도 같은 자리에 선다.
+    // sessionStorage 라 탭을 닫으면 초기화된다 — 방문할 때마다 새로 자리를 잡는 재미는 그대로 둔다.
+    var MY_POS_KEY = 'loa_easter_pos';
+    function loadMyPos() {
+        try {
+            var v = JSON.parse(sessionStorage.getItem(MY_POS_KEY) || 'null');
+            if (!v || typeof v.x !== 'number' || !(v.x >= 0 && v.x <= 1)) return null;
+            if (v.charType === 'mokoko') return { charType: 'mokoko', x: v.x };
+            if (v.charType === 'doster' && (v.type === 0 || v.type === 1)) return v;
+            return null;
+        } catch (e) { return null; }
+    }
+    function saveMyPos(v) {
+        try { sessionStorage.setItem(MY_POS_KEY, JSON.stringify(v)); } catch (e) {}
+    }
+
     function registerPresence() {
         if (isMobile() || isSpectator || !canWrite()) return;
         myUserRef = db.ref('users/' + myFingerprint);
@@ -563,21 +698,18 @@
         myUserRef.once('value', function(snapshot) {
             if (snapshot.exists()) { isSpectator = true; return; }
 
-            var isMokokoType = Math.random() < 0.5;
-            var userData;
-            if (isMokokoType) {
-                userData = {
-                    charType: 'mokoko',
-                    mokoko: { x: 0.05 + Math.random() * 0.9 },
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                };
-            } else {
-                userData = {
-                    charType: 'doster',
-                    doster: { type: Math.random() < 0.5 ? 0 : 1, x: 0.1 + Math.random() * 0.8 },
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                };
+            var mine = loadMyPos();
+            if (!mine) {
+                mine = Math.random() < 0.5
+                    ? { charType: 'mokoko', x: 0.05 + Math.random() * 0.9 }
+                    : { charType: 'doster', type: Math.random() < 0.5 ? 0 : 1, x: 0.1 + Math.random() * 0.8 };
+                saveMyPos(mine);
             }
+
+            var userData = mine.charType === 'mokoko'
+                ? { charType: 'mokoko', mokoko: { x: mine.x }, timestamp: firebase.database.ServerValue.TIMESTAMP }
+                : { charType: 'doster', doster: { type: mine.type, x: mine.x }, timestamp: firebase.database.ServerValue.TIMESTAMP };
+
             myUserRef.onDisconnect().remove();
             myUserRef.set(userData);
         });
@@ -634,7 +766,9 @@
                 if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
                 return;
             }
+            invalidateStageRect();
             updatePhysicsBounds();
+            restyleCharacters();
             recalculateMokokoPositions();
             if (!animFrameId && isTabVisible && isActive) {
                 animFrameId = requestAnimationFrame(render);
@@ -648,6 +782,7 @@
             if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
         } else {
             isTabVisible = true;
+            lastFrameT = 0;   // 숨어 있던 시간이 물리에 한꺼번에 반영되지 않도록
             if (!animFrameId && !isMobile() && isActive)
                 animFrameId = requestAnimationFrame(render);
         }
@@ -670,18 +805,27 @@
             if (!isActive || dosters.size === 0) return;
             // 랜덤 도스터 하나 선택
             var candidates = [];
-            dosters.forEach(function(d, key) {
-                if (d.landed && !d.fleeing && d.el && Math.abs(d.gazeCurRot || 0) < 1) {
-                    candidates.push(d);
-                }
+            dosters.forEach(function(d) {
+                if (d.landed && !d.fleeing && d.inner) candidates.push(d);
             });
             if (candidates.length === 0) return;
             var pick = candidates[Math.floor(Math.random() * candidates.length)];
+
+            // 가끔은 진짜로 뒤척이게 — 한 번 잠들면 박제되는 걸 막는다
+            if (pick.body && Math.random() < 0.3) {
+                if (pick.body.isSleeping) Matter.Sleeping.set(pick.body, false);
+                Matter.Body.applyForce(pick.body, pick.body.position, {
+                    x: (Math.random() - 0.5) * 0.0006 * pick.body.mass,
+                    y: -0.0012 * pick.body.mass
+                });
+                return;
+            }
+
             var cls = IDLE_CLASSES[Math.floor(Math.random() * IDLE_CLASSES.length)];
-            pick.el.classList.add(cls);
-            pick.el.addEventListener('animationend', function handler() {
-                pick.el.classList.remove(cls);
-                pick.el.removeEventListener('animationend', handler);
+            pick.inner.classList.add(cls);
+            pick.inner.addEventListener('animationend', function handler() {
+                pick.inner.classList.remove(cls);
+                pick.inner.removeEventListener('animationend', handler);
             });
         }, 10000 + Math.random() * 5000); // 10~15초 간격
     }
@@ -690,62 +834,46 @@
         if (idleIntervalId) { clearInterval(idleIntervalId); idleIntervalId = null; }
     }
 
-        // ═══════════════════════════════════════════
-    //  커서 시선 추적 (로컬 전용)
-    //  — 도스터가 마우스 방향을 쳐다보듯 기울임
-    //  — syncDosterPositions에서 매 프레임 lerp 적용
     // ═══════════════════════════════════════════
-    var GAZE_DIST = 120;       // 시선 반응 범위 (px)
-    var GAZE_MAX_ROT = 8;      // 최대 기울기 (deg)
-    var GAZE_MAX_SHIFT = 2;    // 최대 수평 이동 (px)
-    var GAZE_LERP = 0.10;      // 추적 부드러움 (0~1, 낮을수록 느긋)
-    var GAZE_RETURN_LERP = 0.06; // 복귀 시 더 느긋하게
+    //  커서 밀어내기 (로컬 전용)
+    //  — 예전 '시선 추적'은 값을 계산만 하고 화면에 반영하는 코드가 없어 동작하지 않았다.
+    //    기울이는 대신 실제로 힘을 줘서 물리적으로 밀리게 한다.
+    // ═══════════════════════════════════════════
+    var PUSH_DIST = 90;         // 반응 범위 (화면 px)
+    var PUSH_FORCE = 0.0018;    // 밀어내는 힘
+    var pushRectCache = null;
+    var lastPushT = 0;
+
+    function invalidateStageRect() { pushRectCache = null; }
 
     function handleGlobalMouseMove(e) {
-        if (!stage || !isActive) return;
-        var stageRect = stage.getBoundingClientRect();
-        // 스테이지 근처가 아니면 무시 (성능 최적화)
-        if (e.clientY < stageRect.top - GAZE_DIST || e.clientY > stageRect.bottom + GAZE_DIST) {
-            dosters.forEach(function(d) {
-                d.gazeTargetRot = 0;
-                d.gazeTargetX = 0;
-            });
-            return;
-        }
-        var mx = e.clientX - stageRect.left;
-        var my = stageRect.bottom - e.clientY; // bottom 기준
+        if (!stage || !isActive || !world || dosters.size === 0) return;
+
+        var now = performance.now();
+        if (now - lastPushT < 40) return;   // 초당 25회로 제한
+        lastPushT = now;
+
+        // getBoundingClientRect 는 강제 레이아웃을 부르므로 캐시하고 스크롤·리사이즈에만 버린다
+        if (!pushRectCache) pushRectCache = stage.getBoundingClientRect();
+        var r = pushRectCache;
+        if (e.clientY < r.top - PUSH_DIST || e.clientY > r.bottom + PUSH_DIST) return;
+
+        var mx = toLocal(e.clientX - r.left);
+        var my = toLocal(e.clientY - r.top);    // 스테이지 로컬 = 물리 좌표계
+        var reach = toLocal(PUSH_DIST);
 
         dosters.forEach(function(d) {
-            if (!d.landed || d.fleeing || !d.el) {
-                d.gazeTargetRot = 0;
-                d.gazeTargetX = 0;
-                return;
-            }
-            var elLeft = parseFloat(d.el.style.left) || 0;
-            var elBottom = parseFloat(d.el.style.bottom) || 0;
-            var size = DOSTER_SIZE[d.type] || DOSTER_SIZE[0];
-            var cx = elLeft + size / 2;
-            var cy = elBottom + size / 2;
-            var dx = mx - cx;
-            var dy = my - cy;
+            if (!d.body || d.fleeing) return;
+            var pos = d.body.position;
+            var dx = pos.x - mx, dy = pos.y - my;
             var dist = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < GAZE_DIST && dist > 1) {
-                var intensity = 1 - (dist / GAZE_DIST);  // 0~1, 가까울수록 강함
-                intensity = intensity * intensity;         // ease-in 곡선 (먼 거리는 미세, 가까우면 확실)
-                var dirX = dx / dist;                      // 정규화된 방향 (-1 ~ 1)
-                d.gazeTargetRot = dirX * intensity * GAZE_MAX_ROT;
-                d.gazeTargetX = dirX * intensity * GAZE_MAX_SHIFT;
-            } else {
-                d.gazeTargetRot = 0;
-                d.gazeTargetX = 0;
-            }
+            if (dist > reach || dist < 0.001) return;
+            var power = (1 - dist / reach) * PUSH_FORCE * d.body.mass;
+            if (d.body.isSleeping) Matter.Sleeping.set(d.body, false);
+            Matter.Body.applyForce(d.body, pos, { x: (dx / dist) * power, y: (dy / dist) * power });
         });
     }
 
-    // ═══════════════════════════════════════════
-    //  TOGGLE API
-    // ═══════════════════════════════════════════
     async function activate() {
         if (isActive) return;
         isActive = true;
@@ -763,6 +891,7 @@
         animFrameId = requestAnimationFrame(render);
         startIdleLoop();
         window.addEventListener('mousemove', handleGlobalMouseMove);
+        window.addEventListener('scroll', invalidateStageRect, { passive: true });
     }
 
     function deactivate() {
@@ -793,6 +922,7 @@
         isConnected = false;
         stopIdleLoop();
         window.removeEventListener('mousemove', handleGlobalMouseMove);
+        window.removeEventListener('scroll', invalidateStageRect);
     }
 
     // ═══════════════════════════════════════════
@@ -1096,6 +1226,7 @@
         // idle 애니메이션 + 커서 근접 반응 시작
         startIdleLoop();
         window.addEventListener('mousemove', handleGlobalMouseMove);
+        window.addEventListener('scroll', invalidateStageRect, { passive: true });
 
         window.addEventListener('resize', handleResize);
         document.addEventListener('visibilitychange', handleVisibility);

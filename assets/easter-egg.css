@@ -8,12 +8,19 @@ body.light-mode .header-easter-btn { border-color: oklch(0.88 0.0128 255.5297); 
 body.light-mode .header-easter-btn:hover { border-color: oklch(0.6059 0.1986 256.4605); background: oklch(0.9678 0.0154 257.2288); box-shadow: 0 0 0 3px oklch(0.6059 0.1986 256.4605 / 0.12); }
 
 /* ================= 이스터에그 스테이지 ================= */
-.easter-stage { position: relative; width: 100%; height: 120px; overflow: visible; pointer-events: none; user-select: none; }
+/* 스테이지는 푸터와 같은 박스를 써야 캐릭터가 푸터 선 밖으로 나가지 않는다.
+   메인은 .container(max-width 1100) 안에 있어 width:100% 로 충분하고,
+   콘텐츠 페이지는 body 직계라 푸터 안쪽과 같은 폭을 직접 지정한다. */
+.easter-stage { position: relative; width: 100%; max-width: 1100px; margin: 0 auto; height: 120px; overflow: visible; pointer-events: none; user-select: none; }
+body.content-page .easter-stage { width: 94%; }
 .easter-stage .ee-char { position: absolute; bottom: 0; will-change: transform; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; }
-.easter-stage .ee-mokoko { width: 32px; height: auto; transform-origin: bottom center; }
-.easter-stage .ee-doster { transform-origin: center center; }
-.easter-stage .ee-doster[data-type="0"] { width: 36px; height: auto; }
-.easter-stage .ee-doster[data-type="1"] { width: 36px; height: auto; }
+.easter-stage .ee-mokoko { width: 35px; height: auto; transform-origin: bottom center; }
+/* 도스터는 바깥 div 가 위치·물리 회전을, 안쪽 img 가 스쿼시·idle 연출을 맡는다.
+   한 엘리먼트에 둘을 같이 쓰면 CSS 애니메이션이 인라인 transform 을 덮어써 물리 회전이 죽는다. */
+.easter-stage .ee-doster { transform-origin: center center; line-height: 0; }
+.easter-stage .ee-doster[data-type="0"] { width: 40px; }
+.easter-stage .ee-doster[data-type="1"] { width: 40px; }
+.easter-stage .ee-doster-body { width: 100%; height: auto; display: block; transform-origin: bottom center; }
 .easter-stage .ee-mine { filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)); }
 
 /* 모코코 발아 애니메이션 */
@@ -26,18 +33,9 @@ body.light-mode .header-easter-btn:hover { border-color: oklch(0.6059 0.1986 256
 }
 .easter-stage .ee-mokoko.sprouting { animation: mokokoSprout 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
-/* 도스터 낙하 (JS로 위치 제어, 착지 후 통통 바운스) */
-@keyframes dosterBounce {
-    0% { transform: translateY(0) rotate(0deg); }
-    30% { transform: translateY(-12px) rotate(-3deg); }
-    50% { transform: translateY(0) rotate(0deg); }
-    70% { transform: translateY(-5px) rotate(2deg); }
-    85% { transform: translateY(0) rotate(0deg); }
-    92% { transform: translateY(-2px) rotate(-1deg); }
-    100% { transform: translateY(0) rotate(0deg); }
-}
-.easter-stage .ee-doster.landed { animation: dosterBounce 0.7s ease-out forwards; }
-
+/* 착지 반응은 충돌 세기에 비례한 스쿼시(JS)가 맡는다.
+   예전 dosterBounce 는 animation-fill-mode: forwards 로 transform 을 붙들어
+   착지 후 물리 회전이 화면에 반영되지 않게 만들고 있었다. */
 .easter-stage .ee-doster.landed { pointer-events: auto; cursor: pointer; }
 .easter-stage .ee-doster.fleeing { pointer-events: none; }
 
@@ -101,11 +99,11 @@ body.tool-active #item-rain-layer { display: none !important; }
     40% { transform: scaleX(1.04) scaleY(0.96); }
     70% { transform: scaleX(0.97) scaleY(1.03); }
 }
-.ee-doster.idle-1 { animation: dosterIdle1 0.6s ease-in-out; }
-.ee-doster.idle-2 { animation: dosterIdle2 0.8s ease-in-out; }
-.ee-doster.idle-3 { animation: dosterIdle3 0.5s ease-in-out; }
+.ee-doster-body.idle-1 { animation: dosterIdle1 0.6s ease-in-out; }
+.ee-doster-body.idle-2 { animation: dosterIdle2 0.8s ease-in-out; }
+.ee-doster-body.idle-3 { animation: dosterIdle3 0.5s ease-in-out; }
 
-/* 커서 시선 추적은 JS lerp로 처리 (syncDosterPositions) */
+/* 커서가 지나가면 도스터가 밀린다 — 물리 힘으로 처리 (handleGlobalMouseMove) */
 
 
 @media (max-width: 925px) { .easter-stage { display: none !important; } .header-easter-btn { display: none !important; } #doster-fall-overlay { display: none !important; } #item-rain-layer { display: none !important; } .confetti-overlay { display: none !important; } }
