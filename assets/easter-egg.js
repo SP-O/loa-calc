@@ -24,7 +24,7 @@
     var PHYSICS = {
         gravity: { x: 0, y: 0.3 },
         friction: 0.5,
-        frictionAir: 0.025,
+        frictionAir: 0.034,
         density: 0.002
     };
 
@@ -201,11 +201,14 @@
         // 개체차 — 잘 튀는 애와 묵직한 애가 섞여야 지켜보는 재미가 산다
         var body = Matter.Bodies.rectangle(x, -40, s, bh, {
             chamfer: { radius: bh * 0.3 },
-            restitution: 0.5 + Math.random() * 0.3,
+            restitution: 0.35 + Math.random() * 0.25,
             friction: PHYSICS.friction,
             frictionAir: PHYSICS.frictionAir,
             density: PHYSICS.density * (0.85 + Math.random() * 0.3)
         });
+        // 사각형은 접촉점이 많아 기본 문턱(60프레임)으로는 잠들기까지 한참 걸린다.
+        // 늦게 잠들면 landed 가 늦게 붙어 그동안 클릭이 되지 않는다.
+        body.sleepThreshold = 30;
         body.halfH = bh / 2;   // 스프라이트 하단을 바닥에 맞추는 데 쓴다
         Matter.Body.setVelocity(body, { x: (Math.random() - 0.5) * 2, y: 0 });
         Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.08);
@@ -350,15 +353,12 @@
             d.el.style.bottom = bottom + 'px';
             d.el.style.transform = 'rotate(' + (angle * 180 / Math.PI).toFixed(1) + 'deg)';
 
-            // 착지/충돌 감지
+            // 한 번 내려앉으면 클릭은 계속 열어 둔다.
+            // 자세를 고치거나 옆 도스터에 부딪혀 잠깐 깨어났다고 클릭이 막히면
+            // 사용자 입장에선 "눌러도 안 되는" 상태로 보인다.
             if (d.body.isSleeping && !d.landed) {
-                // 안착: 통통 바운스 + 클릭 가능
                 d.landed = true;
                 d.el.classList.add('landed');
-            } else if (!d.body.isSleeping && d.landed && !d.fleeing) {
-                // 다른 도스터에 맞아서 다시 깨어남 → landed 해제
-                d.landed = false;
-                d.el.classList.remove('landed');
             }
         });
     }
@@ -454,19 +454,24 @@
     var UPRIGHT_SPRING = 0.00018;
     var UPRIGHT_DAMP = 0.0026;
     var UPRIGHT_TOLERANCE = 0.5;   // 28도까지는 기울어도 그대로 둔다 (쌓였을 땐 자연스럽다)
-    var UPRIGHT_MAX_TRIES = 5;     // 눌려서 못 세우는 경우 계속 깨우지 않도록
+    var UPRIGHT_GIVEUP_MS = 2500;  // 이만큼 애써도 못 세우면 포기 — 계속 밀면 영영 잠들지 못한다
     function keepUpright() {
+        var now = performance.now();
         dosters.forEach(function (d) {
             var b = d.body;
             if (!b || d.fleeing) return;
             var a = Math.atan2(Math.sin(b.angle), Math.cos(b.angle));   // -π~π 로 정규화
+
+            // 허용 범위 안이면 손대지 않는다. 계속 토크를 주면 미세하게 움직여 잠들지 못하고,
+            // 잠들지 못하면 landed 가 붙지 않아 클릭조차 되지 않는다.
+            if (Math.abs(a) < UPRIGHT_TOLERANCE) { d.uprightSince = 0; return; }
+
+            if (!d.uprightSince) d.uprightSince = now;
+            if (now - d.uprightSince > UPRIGHT_GIVEUP_MS) return;   // 눌려서 못 세우는 자세는 인정
+
             if (b.isSleeping) {
-                // 누운 채로 잠들면 토크가 닿지 않는다. 확실히 쓰러진 것만 깨워 자세를 잡게 한다.
-                if (Math.abs(a) < UPRIGHT_TOLERANCE) return;
-                if ((d.uprightTries || 0) >= UPRIGHT_MAX_TRIES) return;
-                d.uprightTries = (d.uprightTries || 0) + 1;
+                // 누운 채로 잠들면 토크가 닿지 않는다. 꿈틀하며 스스로 일어나도록 살짝 튕겨 준다.
                 Matter.Sleeping.set(b, false);
-                // 토크만으로는 모서리를 넘지 못한다. 꿈틀하며 스스로 일어나도록 살짝 튕겨 준다.
                 Matter.Body.setAngularVelocity(b, (a > 0 ? -1 : 1) * 0.12);
                 Matter.Body.applyForce(b, b.position, { x: 0, y: -0.004 * b.mass });
             }
