@@ -10,6 +10,7 @@
     // ═══════════════════════════════════════════
 
     var STAGE_HEIGHT = 120;
+    var FIXED_DELTA = 1000 / 60;   // 물리 한 스텝의 길이(ms)
     var MAX_USERS = 100;
     var MOBILE_BREAKPOINT = 925;
 
@@ -22,7 +23,7 @@
 
     // 도스터 중력 절반
     var PHYSICS = {
-        gravity: { x: 0, y: 0.3 },
+        gravity: { x: 0, y: 0.5 },
         friction: 0.5,
         frictionAir: 0.034,
         density: 0.002
@@ -120,7 +121,9 @@
 
     function squash(d, speed) {
         if (!d || !d.inner || d.fleeing) return;
-        var k = Math.min(speed / 12, 1);
+        // 나누는 값이 작으면 착지가 전부 최대치로 포화돼 "세기에 비례"가 사라진다.
+        // 진입 속도 상한(17)보다 넉넉히 잡아 약한 접촉부터 강한 착지까지 폭이 남게 한다.
+        var k = Math.min(speed / 20, 1);
         if (k < 0.12) return;                       // 스치는 정도는 무시
         var now = performance.now();
         if (now - (d.lastSquash || 0) < 120) return; // 연속 충돌로 떨리는 것 방지
@@ -178,7 +181,8 @@
 
         var totalW = b.right - b.left;
         var centerX = (b.left + b.right) / 2;
-        ground = Matter.Bodies.rectangle(centerX, STAGE_HEIGHT + 5, totalW + 100, 10, { isStatic: true });
+        // 연출 낙하의 속도를 이어받아 빠르게 들어오므로, 얇으면 한 스텝에 뚫고 지나간다
+        ground = Matter.Bodies.rectangle(centerX, STAGE_HEIGHT + 30, totalW + 100, 60, { isStatic: true });
         // 접속자가 많으면 도스터가 여러 층으로 쌓이므로 벽을 위로 넉넉히 세운다
         var wallH = 2000;
         // 그려지는 스프라이트는 물리 바디보다 넓고, 기울면 더 넓어진다.
@@ -191,7 +195,10 @@
         Matter.Composite.add(world, [ground, wallLeft, wallRight]);
     }
 
-    function createDosterBody(normalizedX, type) {
+    // 연출 낙하가 끝나는 순간의 속도를 물리로 그대로 넘긴다.
+    // 0 으로 시작하면 다 내려와서 갑자기 멈춘 뒤 무중력처럼 스르르 내려앉는다.
+    var ENTRY_SPEED_CAP = 17;   // px/스텝 — 바닥(60px)을 한 스텝에 뚫지 않는 선
+    function createDosterBody(normalizedX, type, entrySpeed) {
         var w = stage ? stage.offsetWidth : window.innerWidth;
         var x = normalizedX * w;
         // 원은 굴러 미끄러져 층이 안 쌓이고, 정사각형은 옆으로 누운 자세도 똑같이 안정적이라
@@ -206,12 +213,16 @@
             frictionAir: PHYSICS.frictionAir,
             density: PHYSICS.density * (0.85 + Math.random() * 0.3)
         });
+        // 회전 관성을 크게 키운다 — 충격을 받아도 잘 구르지 않아 대체로 바로 선 자세를 유지한다.
+        // 토크로 억지로 세우는 것보다 자연스럽고, 억지로 세우느라 잠들지 못하는 문제도 없다.
+        Matter.Body.setInertia(body, body.inertia * 16);
         // 사각형은 접촉점이 많아 기본 문턱(60프레임)으로는 잠들기까지 한참 걸린다.
         // 늦게 잠들면 landed 가 늦게 붙어 그동안 클릭이 되지 않는다.
         body.sleepThreshold = 30;
         body.halfH = bh / 2;   // 스프라이트 하단을 바닥에 맞추는 데 쓴다
-        Matter.Body.setVelocity(body, { x: (Math.random() - 0.5) * 2, y: 0 });
-        Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.08);
+        var vy = Math.min((entrySpeed || 0) * FIXED_DELTA, ENTRY_SPEED_CAP);
+        Matter.Body.setVelocity(body, { x: (Math.random() - 0.5) * 2, y: vy });
+        Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
         Matter.Composite.add(world, body);
         return body;
     }
@@ -449,39 +460,8 @@
         requestAnimationFrame(animateFlee);
     }
 
-    // 캐릭터라 옆으로 누우면 쓰러진 것처럼 보인다. 서 있는 자세로 아주 약하게 되돌리는 토크.
-    // 스프링(각도) + 댐퍼(각속도) 조합이라 기울다가 스르르 자세를 잡는다. 살짝 기운 맛은 남는다.
-    var UPRIGHT_SPRING = 0.00018;
-    var UPRIGHT_DAMP = 0.0026;
-    var UPRIGHT_TOLERANCE = 0.5;   // 28도까지는 기울어도 그대로 둔다 (쌓였을 땐 자연스럽다)
-    var UPRIGHT_GIVEUP_MS = 2500;  // 이만큼 애써도 못 세우면 포기 — 계속 밀면 영영 잠들지 못한다
-    function keepUpright() {
-        var now = performance.now();
-        dosters.forEach(function (d) {
-            var b = d.body;
-            if (!b || d.fleeing) return;
-            var a = Math.atan2(Math.sin(b.angle), Math.cos(b.angle));   // -π~π 로 정규화
-
-            // 허용 범위 안이면 손대지 않는다. 계속 토크를 주면 미세하게 움직여 잠들지 못하고,
-            // 잠들지 못하면 landed 가 붙지 않아 클릭조차 되지 않는다.
-            if (Math.abs(a) < UPRIGHT_TOLERANCE) { d.uprightSince = 0; return; }
-
-            if (!d.uprightSince) d.uprightSince = now;
-            if (now - d.uprightSince > UPRIGHT_GIVEUP_MS) return;   // 눌려서 못 세우는 자세는 인정
-
-            if (b.isSleeping) {
-                // 누운 채로 잠들면 토크가 닿지 않는다. 꿈틀하며 스스로 일어나도록 살짝 튕겨 준다.
-                Matter.Sleeping.set(b, false);
-                Matter.Body.setAngularVelocity(b, (a > 0 ? -1 : 1) * 0.12);
-                Matter.Body.applyForce(b, b.position, { x: 0, y: -0.004 * b.mass });
-            }
-            b.torque += (-a * UPRIGHT_SPRING - b.angularVelocity * UPRIGHT_DAMP) * b.mass;
-        });
-    }
-
     // rAF 는 모니터 주사율만큼 불린다. 매 호출마다 16.67ms 를 밀면 144Hz 에서 물리가 2.4배 빨라지므로,
     // 실제 흐른 시간을 모아 고정 간격으로 나눠 돌린다 (Matter.Runner 와 같은 방식).
-    var FIXED_DELTA = 1000 / 60;
     var physicsAcc = 0;
     var lastFrameT = 0;
 
@@ -496,7 +476,6 @@
         if (hasAwakeBodies()) {
             physicsAcc = Math.min(physicsAcc + frameDelta, 200);
             for (var steps = 0; physicsAcc >= FIXED_DELTA && steps < 5; steps++) {
-                keepUpright();
                 Matter.Engine.update(engine, FIXED_DELTA);
                 physicsAcc -= FIXED_DELTA;
             }
@@ -557,6 +536,8 @@
 
         var startTime = performance.now();
         var totalRotation = (Math.random() - 0.5) * 360;
+        // eased = t^1.8 이므로 착지 순간(t=1)의 속도는 1.8 * 거리 / 시간 (px/ms)
+        var exitSpeed = 1.8 * fallDist / fallDuration;
 
         overlay.appendChild(img);
 
@@ -576,16 +557,16 @@
             } else {
                 // 낙하 완료 → overlay 요소 제거 → Phase 2 (스테이지 Matter.js)
                 if (img.parentNode) img.parentNode.removeChild(img);
-                finishDosterFall(key, data, isMine);
+                finishDosterFall(key, data, isMine, exitSpeed);
             }
         }
         requestAnimationFrame(animateFall);
     }
 
     // 도스터 헤더 낙하 Phase 2: 스테이지 Matter.js 바운스
-    function finishDosterFall(key, data, isMine) {
+    function finishDosterFall(key, data, isMine, entrySpeed) {
         if (dosters.has(key)) return;
-        var body = createDosterBody(data.doster.x, data.doster.type);
+        var body = createDosterBody(data.doster.x, data.doster.type, entrySpeed);
         var dEl = createDosterEl(data.doster.type, isMine, key);
         body.dosterKey = key;   // 충돌 이벤트에서 도스터를 O(1) 로 찾기 위한 역참조
         dosters.set(key, { body: body, type: data.doster.type, el: dEl, inner: dEl.firstChild, landed: false });
