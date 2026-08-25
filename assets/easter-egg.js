@@ -25,7 +25,7 @@
     var PHYSICS = {
         gravity: { x: 0, y: 0.5 },
         friction: 0.5,
-        frictionAir: 0.034,
+        frictionAir: 0.022,
         density: 0.002
     };
 
@@ -108,6 +108,7 @@
     }
 
     // 부딪힌 세기에 비례해 눌렸다 펴진다. 세게 떨어지면 납작, 살살 앉으면 거의 그대로.
+    var FLUFF_PUSH = 0.0014;   // 도스터끼리 밀어내는 세기
     function handleCollisions(e) {
         for (var i = 0; i < e.pairs.length; i++) {
             var p = e.pairs[i];
@@ -116,6 +117,18 @@
             var speed = Math.sqrt(dx * dx + dy * dy);
             if (p.bodyA.dosterKey) squash(dosters.get(p.bodyA.dosterKey), speed);
             if (p.bodyB.dosterKey) squash(dosters.get(p.bodyB.dosterKey), speed);
+            // 도스터끼리 부딪히면 솜뭉치처럼 서로 튕겨 낸다.
+            // 바닥 반발을 올리면 안착이 느려지므로, 도스터 사이에만 따로 힘을 준다.
+            if (p.bodyA.dosterKey && p.bodyB.dosterKey && p.collision && p.collision.normal) {
+                var n = p.collision.normal;
+                var mag = Math.min(speed, 20) * FLUFF_PUSH;
+                if (p.bodyA.isSleeping) Matter.Sleeping.set(p.bodyA, false);
+                if (p.bodyB.isSleeping) Matter.Sleeping.set(p.bodyB, false);
+                Matter.Body.applyForce(p.bodyA, p.bodyA.position,
+                    { x: -n.x * mag * p.bodyA.mass, y: -n.y * mag * p.bodyA.mass });
+                Matter.Body.applyForce(p.bodyB, p.bodyB.position,
+                    { x:  n.x * mag * p.bodyB.mass, y:  n.y * mag * p.bodyB.mass });
+            }
         }
     }
 
@@ -208,14 +221,14 @@
         // 개체차 — 잘 튀는 애와 묵직한 애가 섞여야 지켜보는 재미가 산다
         var body = Matter.Bodies.rectangle(x, -40, s, bh, {
             chamfer: { radius: bh * 0.3 },
-            restitution: 0.35 + Math.random() * 0.25,
+            restitution: 0.55 + Math.random() * 0.3,
             friction: PHYSICS.friction,
             frictionAir: PHYSICS.frictionAir,
             density: PHYSICS.density * (0.85 + Math.random() * 0.3)
         });
-        // 회전 관성을 크게 키운다 — 충격을 받아도 잘 구르지 않아 대체로 바로 선 자세를 유지한다.
-        // 토크로 억지로 세우는 것보다 자연스럽고, 억지로 세우느라 잠들지 못하는 문제도 없다.
-        Matter.Body.setInertia(body, body.inertia * 16);
+        // 회전 관성을 키워 잘 구르지 않게 한다. 다만 너무 키우면 부딪혀도 뻣뻣해 보인다 —
+        // 자리를 잡은 뒤 자세를 스스로 고치므로(schedulePosture) 어느 정도 구르는 건 허용한다.
+        Matter.Body.setInertia(body, body.inertia * 8);
         // 사각형은 접촉점이 많아 기본 문턱(60프레임)으로는 잠들기까지 한참 걸린다.
         // 늦게 잠들면 landed 가 늦게 붙어 그동안 클릭이 되지 않는다.
         body.sleepThreshold = 30;
@@ -347,9 +360,42 @@
         return el;
     }
 
+    // 자리를 잡고 잠시 뒤, 살짝 기운 자세를 스스로 고쳐 앉는다.
+    // 토크로 밀면 바디가 잠들지 못해 landed 가 안 붙고 클릭이 막힌다(예전 버그).
+    // 그래서 이미 잠든 바디의 각도만 직접 되돌린다 — 물리를 깨우지 않는다.
+    var POSTURE_DELAY_MIN = 700;   // 착지 후 대기(ms). 개체마다 달라야 다 같이 움직이지 않는다
+    var POSTURE_DELAY_VAR = 1500;
+    var POSTURE_MS = 520;          // 고쳐 앉는 기본 시간 (많이 기울수록 길어진다)
+    var POSTURE_MIN = 0.07;        // 4도 미만은 굳이 건드리지 않는다
+    var POSTURE_MAX = 3.2;         // 뒤집혀도 스스로 일어나게 (정규화 최대가 π≈3.14)
+
+    function schedulePosture(key, d) {
+        if (d.postureTimer) return;
+        d.postureTimer = setTimeout(function () {
+            d.postureTimer = null;
+            var b = d.body;
+            if (!b || d.fleeing || !b.isSleeping || !dosters.has(key)) return;
+
+            var from = Math.atan2(Math.sin(b.angle), Math.cos(b.angle));
+            if (Math.abs(from) < POSTURE_MIN || Math.abs(from) > POSTURE_MAX) return;
+
+            var dur = POSTURE_MS * (1 + Math.abs(from) / 2);   // 많이 누웠으면 천천히
+            var t0 = performance.now();
+            (function step() {
+                var body = d.body;
+                // 도중에 깨어나거나(부딪힘·잭팟·커서) 사라지면 그대로 둔다
+                if (!body || d.fleeing || !body.isSleeping || !dosters.has(key)) return;
+                var p = Math.min((performance.now() - t0) / dur, 1);
+                var eased = 1 - Math.pow(1 - p, 3);
+                Matter.Body.setAngle(body, from * (1 - eased));
+                if (p < 1) requestAnimationFrame(step);
+            })();
+        }, POSTURE_DELAY_MIN + Math.random() * POSTURE_DELAY_VAR);
+    }
+
     // 도스터 위치를 물리엔진 좌표 → DOM 위치로 동기화
     function syncDosterPositions() {
-        dosters.forEach(function(d) {
+        dosters.forEach(function(d, key) {
             if (!d.body || !d.el) return;
             var pos = d.body.position;
             var angle = d.body.angle;
@@ -367,10 +413,14 @@
             // 한 번 내려앉으면 클릭은 계속 열어 둔다.
             // 자세를 고치거나 옆 도스터에 부딪혀 잠깐 깨어났다고 클릭이 막히면
             // 사용자 입장에선 "눌러도 안 되는" 상태로 보인다.
-            if (d.body.isSleeping && !d.landed) {
+            var sleeping = d.body.isSleeping;
+            if (sleeping && !d.landed) {
                 d.landed = true;
                 d.el.classList.add('landed');
             }
+            // 처음 내려앉을 때만이 아니라, 부딪혀 흐트러졌다 다시 자리 잡을 때도 자세를 고친다
+            if (sleeping && !d.wasSleeping) schedulePosture(key, d);
+            d.wasSleeping = sleeping;
         });
     }
 
