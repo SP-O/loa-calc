@@ -29,6 +29,35 @@
         density: 0.002
     };
 
+    // 합체 연출
+    var MERGE_RADIUS = 90;      // 화면 px — 도스터는 쌓이지 않고 한 줄로 서므로 양옆 두 칸까지 본다
+    var MERGE_MIN = 3;          // 이보다 적게 모이면 아무 일도 없다
+    var MERGE_MAX = 5;          // 한 번에 합칠 수 있는 최대 마리 수
+    // 많이 모일수록 잘 뭉친다. 값은 실측 무리 분포(3마리가 흔하고 5마리는 드물다)에서
+    // 방문당 한 번쯤 보이도록 역산했다.
+    var MERGE_PROB = { 3: 0.18, 4: 0.35, 5: 0.55 };
+    // 터지면 조각이 한 자리에 다시 앉아 곧바로 무리 조건을 만족한다(실측 1.0~2.2초 만에 재합체).
+    // 확률을 낮추면 첫 합체까지 드물어지므로, 터진 자리만 잠시 쉬게 한다.
+    var MERGE_REST_MS = 9000;   // 방금 터진 조각은 이 동안 무리 계산에서 빠진다
+    // 폭풍에 밀린 주변 도스터가 다시 앉으면서 판정을 여는 경로가 남는다.
+    // 그들이 자리를 잡을 때까지 덮어야 "터지자마자 또" 가 안 생긴다.
+    var MERGE_QUIET_MS = 2500;
+    var BLOB_LIFE_MS = 15000;
+    var NEARMISS_GAP_MS = 3000;
+    // 터질 때. 힘 대신 속도를 직접 준다 — applyForce 는 한 스텝만 작용해 결과가 간접적이다.
+    var BURST_SPEED = 7.5;      // px/스텝 — 조각이 튀어 나가는 초기 속도
+    var BURST_SPIN = 0.28;      // 터지면서 구르는 정도
+    var BLAST_RADIUS = 130;     // 화면 px — 주변 도스터가 밀려나는 범위
+    var BLAST_SPEED = 4.5;      // px/스텝 — 중심에서 가장 셀 때
+    // 합체·분해 박자. 흡입과 등장 사이의 정지(BEAT)가 없으면 두 동작이 한 프레임에 붙어
+    // "사라졌다 나타났다"가 하나로 뭉개진다.
+    var MERGE_SUCK_MS = 480;
+    var MERGE_BEAT_MS = 90;
+    var MERGE_POP_MS = 360;
+    // 부풀기와 터짐을 한 덩어리로 하면 앞 구간이 11% 밖에 안 커져 지각되지 않는다
+    var DISSOLVE_SWELL_MS = 280;
+    var DISSOLVE_POP_MS = 80;
+
     // ═══════════════════════════════════════════
     //  STATE
     // ═══════════════════════════════════════════
@@ -117,6 +146,8 @@
             var speed = Math.sqrt(dx * dx + dy * dy);
             if (p.bodyA.dosterKey) squash(dosters.get(p.bodyA.dosterKey), speed);
             if (p.bodyB.dosterKey) squash(dosters.get(p.bodyB.dosterKey), speed);
+            if (p.bodyA.blobId) squash(blobs.get(p.bodyA.blobId), speed);
+            if (p.bodyB.blobId) squash(blobs.get(p.bodyB.blobId), speed);
             // 도스터끼리 부딪히면 솜뭉치처럼 서로 튕겨 낸다.
             // 바닥 반발을 올리면 안착이 느려지므로, 도스터 사이에만 따로 힘을 준다.
             if (p.bodyA.dosterKey && p.bodyB.dosterKey && p.collision && p.collision.normal) {
@@ -133,7 +164,7 @@
     }
 
     function squash(d, speed) {
-        if (!d || !d.inner || d.fleeing) return;
+        if (!d || !d.inner || d.fleeing || d.dissolving) return;
         // 나누는 값이 작으면 착지가 전부 최대치로 포화돼 "세기에 비례"가 사라진다.
         // 진입 속도 상한(17)보다 넉넉히 잡아 약한 접촉부터 강한 착지까지 폭이 남게 한다.
         var k = Math.min(speed / 20, 1);
@@ -182,6 +213,9 @@
         var mw = mokokoW();
         mokokos.forEach(function(m) { if (m.el) m.el.style.width = mw + 'px'; });
         dosters.forEach(function(d) { if (d.el) d.el.style.width = dosterW(d.type) + 'px'; });
+        blobs.forEach(function(b) {
+            if (b.el) b.el.style.width = dosterW(b.type) * Math.sqrt(b.memberKeys.length) + 'px';
+        });
     }
 
     function updatePhysicsBounds() {
@@ -200,26 +234,24 @@
         var wallH = 2000;
         // 그려지는 스프라이트는 물리 바디보다 넓고, 기울면 더 넓어진다.
         // 그만큼 벽을 안쪽으로 들여야 푸터 선 밖으로 삐져나오지 않는다.
-        var half = dosterW(0) / 2;
-        var bodyHalf = toLocal(DOSTER_PHYS_R[0]) * 1.7 / 2;   // 바디 반너비
+        // 합체한 큰 도스터(최대 sqrt(5)배)까지 푸터 선 안에 가두려면 그 크기로 여백을 잡아야 한다
+        var grow = Math.sqrt(MERGE_MAX);
+        var half = dosterW(0) * grow / 2;
+        var bodyHalf = toLocal(DOSTER_PHYS_R[0]) * 1.7 * grow / 2;
         var inset = (half - bodyHalf) + half * (Math.SQRT2 - 1);
         wallLeft = Matter.Bodies.rectangle(b.left + inset - 5, STAGE_HEIGHT - wallH / 2, 10, wallH, { isStatic: true });
         wallRight = Matter.Bodies.rectangle(b.right - inset + 5, STAGE_HEIGHT - wallH / 2, 10, wallH, { isStatic: true });
         Matter.Composite.add(world, [ground, wallLeft, wallRight]);
     }
 
-    // 연출 낙하가 끝나는 순간의 속도를 물리로 그대로 넘긴다.
-    // 0 으로 시작하면 다 내려와서 갑자기 멈춘 뒤 무중력처럼 스르르 내려앉는다.
-    var ENTRY_SPEED_CAP = 17;   // px/스텝 — 바닥(60px)을 한 스텝에 뚫지 않는 선
-    function createDosterBody(normalizedX, type, entrySpeed) {
-        var w = stage ? stage.offsetWidth : window.innerWidth;
-        var x = normalizedX * w;
-        // 원은 굴러 미끄러져 층이 안 쌓이고, 정사각형은 옆으로 누운 자세도 똑같이 안정적이라
-        // 스스로 일어나지 못한다. 가로로 납작한 형태라야 바로 선 자세가 유일하게 안정적이다.
+    // 좌표를 직접 받아 바디를 만든다 — 낙하 진입과 합체 분해 복원이 같이 쓴다.
+    // 원은 굴러 미끄러져 층이 안 쌓이고, 정사각형은 옆으로 누운 자세도 똑같이 안정적이라
+    // 스스로 일어나지 못한다. 가로로 납작한 형태라야 바로 선 자세가 유일하게 안정적이다.
+    function makeDosterBody(x, y, type) {
         var s = toLocal(DOSTER_PHYS_R[type] || DOSTER_PHYS_R[0]) * 1.7;
         var bh = s * 0.72;
         // 개체차 — 잘 튀는 애와 묵직한 애가 섞여야 지켜보는 재미가 산다
-        var body = Matter.Bodies.rectangle(x, -40, s, bh, {
+        var body = Matter.Bodies.rectangle(x, y, s, bh, {
             chamfer: { radius: bh * 0.3 },
             restitution: 0.55 + Math.random() * 0.3,
             friction: PHYSICS.friction,
@@ -233,10 +265,19 @@
         // 늦게 잠들면 landed 가 늦게 붙어 그동안 클릭이 되지 않는다.
         body.sleepThreshold = 30;
         body.halfH = bh / 2;   // 스프라이트 하단을 바닥에 맞추는 데 쓴다
+        Matter.Composite.add(world, body);
+        return body;
+    }
+
+    // 연출 낙하가 끝나는 순간의 속도를 물리로 그대로 넘긴다.
+    // 0 으로 시작하면 다 내려와서 갑자기 멈춘 뒤 무중력처럼 스르르 내려앉는다.
+    var ENTRY_SPEED_CAP = 17;   // px/스텝 — 바닥(60px)을 한 스텝에 뚫지 않는 선
+    function createDosterBody(normalizedX, type, entrySpeed) {
+        var w = stage ? stage.offsetWidth : window.innerWidth;
+        var body = makeDosterBody(normalizedX * w, -40, type);
         var vy = Math.min((entrySpeed || 0) * FIXED_DELTA, ENTRY_SPEED_CAP);
         Matter.Body.setVelocity(body, { x: (Math.random() - 0.5) * 2, y: vy });
         Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
-        Matter.Composite.add(world, body);
         return body;
     }
 
@@ -393,6 +434,386 @@
         }, POSTURE_DELAY_MIN + Math.random() * POSTURE_DELAY_VAR);
     }
 
+    // ═══════════════════════════════════════════
+    //  합체 연출
+    // ═══════════════════════════════════════════
+    var blobs = new Map();
+    var blobSeq = 0;
+    var lastNearMiss = 0;
+    var lastDissolveAt = -1e9;
+
+    // ee-doster 클래스를 붙이지 않는다 — 도스터 폭 규칙(40px)을 상속받지 않으려는 것
+    function createBlobEl(id, type, w, hasMine) {
+        var el = document.createElement('div');
+        el.className = 'ee-char ee-blob';
+        el.setAttribute('data-blob', id);
+        if (hasMine) el.classList.add('ee-mine');
+        el.style.width = w + 'px';
+        el.style.left = '-200px';
+        el.style.bottom = STAGE_HEIGHT + 'px';
+
+        var img = document.createElement('img');
+        img.src = type === 0 ? 'object/doster_a.png' : 'object/doster_b.png';
+        img.className = 'ee-doster-body ee-blob-body';
+        img.draggable = false;
+        el.appendChild(img);
+
+        el.addEventListener('click', function (e) {
+            e.stopPropagation();
+            handleBlobClick(id);
+        });
+        stage.appendChild(el);
+        return el;
+    }
+
+    // 5배 큰 놈이 기존 idle(0.5~0.8초짜리 잔망스러운 갸우뚱)을 쓰면 가벼워 보인다.
+    // 전역 idle 루프는 10~15초 간격이라 수명 15초 안에 볼 기회가 거의 없어 따로 돌린다.
+    function scheduleBlobIdle(b) {
+        b.idleTimer = setTimeout(function () {
+            b.idleTimer = null;
+            if (b.dissolving || !b.inner || !blobs.has(b.id)) return;
+            b.inner.classList.add('blob-idle');
+            b.inner.addEventListener('animationend', function h() {
+                b.inner.classList.remove('blob-idle');
+                b.inner.removeEventListener('animationend', h);
+            });
+            scheduleBlobIdle(b);
+        }, 3500 + Math.random() * 2000);
+    }
+
+    var mergePending = false;   // 흡입이 끝날 때까지 두 번째 합체가 끼어들지 못하게
+
+    function createBlob(keys, type, cx, bottomY) {
+        var n = keys.length;
+        var id = 'b' + (++blobSeq);
+        var hasMine = keys.indexOf(myFingerprint) >= 0;
+        var grow = Math.sqrt(n);
+        mergePending = true;
+
+        // 바디를 먼저 빼야 위치 동기화가 흡입 연출과 싸우지 않는다.
+        // 요소는 남겨 두고 중심으로 빨아들인 뒤에 숨긴다.
+        var suck = [];
+        for (var i = 0; i < n; i++) {
+            var m = dosters.get(keys[i]);
+            if (!m) continue;
+            if (m.body && world) Matter.Composite.remove(world, m.body);
+            m.body = null;
+            m.blobId = id;
+            if (m.postureTimer) { clearTimeout(m.postureTimer); m.postureTimer = null; }
+            if (m.el) suck.push(m.el);
+        }
+
+        var targetBottom = STAGE_HEIGHT - bottomY;
+        for (var j = 0; j < suck.length; j++) {
+            var e = suck[j];
+            var dx = cx - (parseFloat(e.style.left) + parseFloat(e.style.width || 0) / 2);
+            var dy = targetBottom - parseFloat(e.style.bottom);
+            var rm = /rotate\(([-\d.]+)deg\)/.exec(e.style.transform || '');
+            var r0 = rm ? parseFloat(rm[1]) : 0;
+            var spin = r0 + (dx >= 0 ? 1 : -1) * (30 + Math.random() * 25);
+            // 먼저 중심 반대쪽으로 살짝 물러났다가(예비 동작) 빨려든다
+            e.animate([
+                { transform: 'translate(0px,0px) rotate(' + r0.toFixed(1) + 'deg) scale(1)',
+                  opacity: 1, offset: 0, easing: 'cubic-bezier(0.3, 0, 0.4, 1)' },
+                { transform: 'translate(' + (-dx * 0.10).toFixed(1) + 'px,' + (dy * 0.10).toFixed(1) + 'px) ' +
+                             'rotate(' + (r0 - (spin - r0) * 0.15).toFixed(1) + 'deg) scale(1.06)',
+                  opacity: 1, offset: 0.22, easing: 'cubic-bezier(0.55, 0, 0.85, 0)' },
+                { transform: 'translate(' + dx.toFixed(1) + 'px,' + (-dy).toFixed(1) + 'px) ' +
+                             'rotate(' + spin.toFixed(1) + 'deg) scale(0.4)',
+                  opacity: 0.55, offset: 1 }
+            ], { duration: MERGE_SUCK_MS, fill: 'forwards' });
+        }
+
+        setTimeout(function () {
+            mergePending = false;
+            for (var q = 0; q < suck.length; q++) {
+                suck[q].style.display = 'none';
+                // fill:forwards 를 남기면 나중에 복원해도 transform 이 붙들려 안 보인다
+                suck[q].getAnimations().forEach(function (a) { a.cancel(); });
+            }
+            if (!isActive || !world || !stage) return;
+
+            var bs = toLocal(DOSTER_PHYS_R[type] || DOSTER_PHYS_R[0]) * 1.7 * grow;
+            var bh = bs * 0.72;
+            var body = Matter.Bodies.rectangle(cx, bottomY - bh / 2, bs, bh, {
+                chamfer: { radius: bh * 0.3 },
+                restitution: 0.5,
+                friction: PHYSICS.friction,
+                frictionAir: PHYSICS.frictionAir,
+                density: PHYSICS.density
+            });
+            Matter.Body.setInertia(body, body.inertia * 8);
+            body.sleepThreshold = 30;
+            body.halfH = bh / 2;
+            body.blobId = id;
+            Matter.Composite.add(world, body);
+
+            var w = toLocal(DOSTER_SIZE[type] || DOSTER_SIZE[0]) * grow;
+            var el = createBlobEl(id, type, w, hasMine);
+            blobs.set(id, {
+                id: id, body: body, el: el, inner: el.firstChild, type: type,
+                memberKeys: keys.slice(), clicks: 0,
+                remainMs: BLOB_LIFE_MS, lastTick: 0, idleTimer: null, dissolving: false
+            });
+
+            // 멤버가 사라진 자리에 눌린 공이 곧바로 나타나 BEAT 동안 버틴다.
+            // 아무것도 없는 정지 구간을 두면 눈이 따라갈 대상이 사라져 "빈틈"으로 보인다.
+            var hold = MERGE_BEAT_MS / (MERGE_BEAT_MS + MERGE_POP_MS);
+            el.animate([
+                { transform: 'scale(0.18,0.16)', opacity: 0.9, offset: 0, easing: 'linear' },
+                { transform: 'scale(0.24,0.20)', opacity: 1, offset: hold,
+                  easing: 'cubic-bezier(0.34, 1.6, 0.5, 1)' },
+                { transform: 'scale(1,1)', opacity: 1, offset: 1 }
+            ], { duration: MERGE_BEAT_MS + MERGE_POP_MS });
+
+            // ee-mine 의 은은한 그림자만으로는 "내 것이 저기 섞였다"가 안 읽힌다
+            if (hasMine) {
+                el.classList.add('mine-flash');
+                el.addEventListener('animationend', function h() {
+                    el.classList.remove('mine-flash');
+                    el.removeEventListener('animationend', h);
+                });
+            }
+
+            scheduleBlobIdle(blobs.get(id));
+            if (!animFrameId && isTabVisible && isActive) animFrameId = requestAnimationFrame(render);
+        }, MERGE_SUCK_MS);
+    }
+
+    // 자격이 됐는데 확률을 놓치면 서로를 향해 잠깐 기운다 —
+    // 대부분이 아무 일 없이 지나가면 어쩌다 합쳐질 때 규칙을 알 수가 없다.
+    function nearMiss(keys) {
+        var now = performance.now();
+        if (now - lastNearMiss < NEARMISS_GAP_MS) return;
+        lastNearMiss = now;
+        var cx = 0, n = 0;
+        keys.forEach(function (k) {
+            var m = dosters.get(k);
+            if (m && m.body) { cx += m.body.position.x; n++; }
+        });
+        if (!n) return;
+        cx /= n;
+        keys.forEach(function (k) {
+            var m = dosters.get(k);
+            if (!m || !m.body || !m.inner) return;
+            var dir = m.body.position.x < cx ? 1 : -1;
+            m.inner.animate([
+                { transform: 'rotate(0deg)' },
+                { transform: 'rotate(' + (dir * 9) + 'deg)', offset: 0.45 },
+                { transform: 'rotate(0deg)' }
+            ], { duration: 460, easing: 'ease-in-out' });
+        });
+    }
+
+    // 도스터가 잠들어 landed 가 붙는 순간 한 번만 부른다.
+    // 매 프레임 그룹 판정을 돌리지 않으려고 트리거를 이 시점으로 고정했다.
+    //
+    // 착지한 도스터만 중심으로 세면 "빽빽한 자리에 정확히 떨어져야" 걸려 거의 안 일어난다.
+    // 실제로 일어나는 일은 새로 앉으면서 옆쪽 무리를 완성하는 쪽이라, 사정거리 안의
+    // 다른 도스터도 중심 후보로 넣고 그중 가장 큰 무리를 고른다.
+    function tryMerge(key, d) {
+        if (blobs.size > 0 || mergePending) return;   // blob 은 한 번에 하나
+        if (!d.body) return;
+        var now = performance.now();
+        if (now - lastDissolveAt < MERGE_QUIET_MS) return;
+        if (d.restUntil > now) return;
+        var reach = toLocal(MERGE_RADIUS);
+        var px = d.body.position.x, py = d.body.position.y;
+
+        var pool = [];
+        dosters.forEach(function (o, k) {
+            if (o.body && !o.blobId && !o.fleeing && o.landed && !(o.restUntil > now))
+                pool.push({ k: k, b: o.body });
+        });
+
+        function dist2(a, bx, by) {
+            var dx = a.position.x - bx, dy = a.position.y - by;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        var best = null;
+        for (var c = 0; c < pool.length; c++) {
+            var cx = pool[c].b.position.x, cy = pool[c].b.position.y;
+            // 이번 착지가 만든 변화여야 하므로, 착지한 도스터가 속한 무리만 본다
+            if (dist2(d.body, cx, cy) > reach) continue;
+            var members = [];
+            for (var i = 0; i < pool.length; i++) {
+                var dd = dist2(pool[i].b, cx, cy);
+                if (dd <= reach) members.push({ k: pool[i].k, dist: dd });
+            }
+            if (!best || members.length > best.length) best = members;
+        }
+        if (!best) return;
+
+        var k = best.length;
+        if (k < MERGE_MIN) return;
+
+        best.sort(function (a, b) { return a.dist - b.dist; });
+        var keys = [];
+        var take = Math.min(k, MERGE_MAX);
+        for (var j = 0; j < take; j++) keys.push(best[j].k);
+        // 착지한 도스터가 잘려 나가면 인과가 안 보인다 — 가장 먼 하나와 바꿔 넣는다
+        if (keys.indexOf(key) < 0) keys[keys.length - 1] = key;
+
+        var prob = MERGE_PROB[Math.min(k, MERGE_MAX)];
+        var hit = Math.random() < prob;
+        if (!hit) { nearMiss(keys); return; }
+        createBlob(keys, d.type, px, py + (d.body.halfH || 0));
+    }
+
+    // 수명은 "탭이 보이고 && 스테이지가 화면 안"일 때만 흐른다.
+    // 합체는 진입 직후 푸터에서 일어나는데 그때 사용자는 계산기 상단을 보고 있다 —
+    // 그냥 두면 아무도 안 보는 사이에 뭉쳤다 혼자 터진다.
+    var stageInView = true;
+    var stageObserver = null;
+
+    function watchStageVisibility() {
+        if (!stage || typeof IntersectionObserver === 'undefined') { stageInView = true; return; }
+        if (stageObserver) stageObserver.disconnect();
+        stageObserver = new IntersectionObserver(function (entries) {
+            stageInView = entries[0].isIntersecting;
+        }, { threshold: 0.3 });
+        stageObserver.observe(stage);
+    }
+
+    function tickBlobLife(now) {
+        if (blobs.size === 0) return;
+        if (!(isTabVisible && stageInView && isActive)) {
+            blobs.forEach(function (b) { b.lastTick = 0; });
+            return;
+        }
+        blobs.forEach(function (b) {
+            if (b.dissolving) return;
+            if (!b.lastTick) { b.lastTick = now; return; }
+            b.remainMs -= (now - b.lastTick);
+            b.lastTick = now;
+            if (b.remainMs <= 0) dissolve(b.id);
+        });
+    }
+
+    // 쿨다운 없음 — blob 은 Firebase 를 거치지 않으므로 도망의 3초 제한이 필요 없다.
+    // 안쪽 img 만 흔들어 아래 깔린 도스터 더미를 건드리지 않는다.
+    function handleBlobClick(id) {
+        var b = blobs.get(id);
+        if (!b || b.dissolving || !b.inner) return;
+        b.clicks++;
+        if (b.clicks >= 3) { dissolve(id); return; }
+        var deg = b.clicks === 1 ? 5 : 11;
+        var sq = b.clicks === 1 ? 0.04 : 0.09;
+        b.inner.animate([
+            { transform: 'rotate(0deg) scale(1,1)' },
+            { transform: 'rotate(' + deg + 'deg) scale(' + (1 + sq) + ',' + (1 - sq) + ')', offset: 0.25 },
+            { transform: 'rotate(' + (-deg) + 'deg) scale(' + (1 - sq) + ',' + (1 + sq) + ')', offset: 0.6 },
+            { transform: 'rotate(0deg) scale(1,1)' }
+        ], { duration: b.clicks === 1 ? 280 : 420, easing: 'cubic-bezier(0.34, 1.4, 0.64, 1)' });
+    }
+
+    function dissolve(id) {
+        var b = blobs.get(id);
+        if (!b || b.dissolving) return;
+        b.dissolving = true;
+        if (b.idleTimer) { clearTimeout(b.idleTimer); b.idleTimer = null; }
+
+        var pos = b.body ? { x: b.body.position.x, y: b.body.position.y } : null;
+        // 숨을 들이켠다. 터짐과 한 덩어리로 묶으면 이 구간이 11% 밖에 안 커져 눈에 안 들어온다.
+        // 끝에서 살짝 움츠린다. 부풀기와 터짐이 한 방향으로만 이어지면
+        // "부풀었다 펑"이 아니라 한 번의 긴 팽창으로 읽힌다.
+        b.inner.animate([
+            { transform: 'scale(1,1)', offset: 0, easing: 'cubic-bezier(0.2, 0.5, 0.35, 1)' },
+            { transform: 'scale(1.28,1.22)', offset: 0.82, easing: 'cubic-bezier(0.4, 0, 0.7, 1)' },
+            { transform: 'scale(1.14,1.10)', offset: 1 }
+        ], { duration: DISSOLVE_SWELL_MS, fill: 'forwards' });
+
+        setTimeout(function () { burstBlob(id, pos); }, DISSOLVE_SWELL_MS);
+    }
+
+    function burstBlob(id, pos) {
+        var b = blobs.get(id);
+        if (!b) return;
+        var el = b.el, inner = b.inner;
+        if (b.body && world) Matter.Composite.remove(world, b.body);
+        blobs.delete(id);
+        lastDissolveAt = performance.now();
+
+        inner.animate([
+            { transform: 'scale(1.14,1.10)', opacity: 1 },
+            { transform: 'scale(1.95,1.95)', opacity: 0 }
+        ], { duration: DISSOLVE_POP_MS, easing: 'cubic-bezier(0.25, 0, 0.9, 0.55)', fill: 'forwards' });
+        setTimeout(function () {
+            if (el && el.parentNode) el.parentNode.removeChild(el);
+        }, DISSOLVE_POP_MS + 30);
+
+        // 조각은 blob 이 사라지는 것과 겹쳐 나온다 — 다 사라진 뒤에 내보내면
+        // "터져 나온다"가 아니라 "사라지고 나타난다"로 보인다
+        if (pos) { blastNearby(pos, id); restoreMembers(b, id, pos); }
+        if (!animFrameId && isTabVisible && isActive) animFrameId = requestAnimationFrame(render);
+    }
+
+    // 폭발은 주변을 밀어내야 폭발로 보인다. 멤버만 튀면 옆 도스터들이
+    // 아무 일 없다는 듯 앉아 있어 "펑" 이 반쯤 죽는다.
+    // landed 는 건드리지 않는다 — 떼면 그동안 클릭이 막힌다(예전 버그).
+    function blastNearby(pos, skipId) {
+        var reach = toLocal(BLAST_RADIUS);
+        dosters.forEach(function (o) {
+            if (!o.body || o.fleeing || o.blobId === skipId) return;
+            var dx = o.body.position.x - pos.x, dy = o.body.position.y - pos.y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist > reach || dist < 0.001) return;
+            var f = (1 - dist / reach) * BLAST_SPEED;
+            if (o.body.isSleeping) Matter.Sleeping.set(o.body, false);
+            Matter.Body.setVelocity(o.body, {
+                x: o.body.velocity.x + (dx / dist) * f,
+                y: o.body.velocity.y + (dy / dist) * f - f * 0.4
+            });
+            Matter.Body.setAngularVelocity(o.body,
+                o.body.angularVelocity + (dx >= 0 ? 1 : -1) * 0.1 * (1 - dist / reach));
+        });
+    }
+
+    function restoreMembers(b, id, pos) {
+        // 그사이 나간 사람은 이미 dosters 에서 지워졌으므로 자동으로 빠진다
+        var live = b.memberKeys.filter(function (k) {
+            var m = dosters.get(k);
+            return m && m.blobId === id;
+        });
+        // 푸터는 가로로 긴 띠다. 360도로 고르게 뿌리면 절반이 위아래로만 밀려 제자리에 남는다
+        // (실측: 3 · 87 · 18 · 5 · 59px). 위쪽 부채꼴로 펼쳐 전부 옆과 위로 튀게 한다.
+        var spread = Math.PI * 0.78;
+        var a0 = -Math.PI / 2 - spread / 2;
+        for (var i = 0; i < live.length; i++) {
+            var m = dosters.get(live[i]);
+            var frac = live.length === 1 ? 0.5 : i / (live.length - 1);
+            var ang = a0 + frac * spread + (Math.random() - 0.5) * 0.25;
+            m.blobId = null;
+            if (m.el) {
+                m.el.getAnimations().forEach(function (a) { a.cancel(); });
+                m.el.style.display = '';
+                m.el.style.transform = '';
+                m.el.classList.remove('landed');
+            }
+            if (m.inner) {
+                // 작게 시작해 자라나면 "튀어나온다"가 아니라 "생겨난다"로 읽힌다.
+                // 튀어 나가는 쪽으로 한 번 늘어났다 돌아오게 한다.
+                m.inner.animate([
+                    { transform: 'scale(1.3,0.78)' },
+                    { transform: 'scale(0.88,1.12)', offset: 0.45 },
+                    { transform: 'scale(1,1)' }
+                ], { duration: 320, easing: 'cubic-bezier(0.3, 1.4, 0.6, 1)' });
+            }
+            m.body = makeDosterBody(pos.x + Math.cos(ang) * toLocal(16),
+                                    pos.y + Math.sin(ang) * toLocal(10), m.type);
+            m.body.dosterKey = live[i];
+            var sp = BURST_SPEED * (0.8 + Math.random() * 0.45);
+            Matter.Body.setVelocity(m.body, { x: Math.cos(ang) * sp, y: Math.sin(ang) * sp });
+            // 터진 조각이 안 구르면 뻣뻣해 보인다. 나가는 방향으로 굴린다.
+            Matter.Body.setAngularVelocity(m.body,
+                (Math.cos(ang) >= 0 ? 1 : -1) * BURST_SPIN * (0.6 + Math.random() * 0.8));
+            m.landed = false;
+            m.wasSleeping = false;
+            m.restUntil = performance.now() + MERGE_REST_MS;
+        }
+    }
+
     // 도스터 위치를 물리엔진 좌표 → DOM 위치로 동기화
     function syncDosterPositions() {
         dosters.forEach(function(d, key) {
@@ -417,10 +838,22 @@
             if (sleeping && !d.landed) {
                 d.landed = true;
                 d.el.classList.add('landed');
+                tryMerge(key, d);
             }
             // 처음 내려앉을 때만이 아니라, 부딪혀 흐트러졌다 다시 자리 잡을 때도 자세를 고친다
             if (sleeping && !d.wasSleeping) schedulePosture(key, d);
             d.wasSleeping = sleeping;
+        });
+    }
+
+    function syncBlobPositions() {
+        blobs.forEach(function (b) {
+            if (!b.body || !b.el) return;
+            var pos = b.body.position;
+            var halfSize = parseFloat(b.el.style.width) / 2;
+            b.el.style.left = (pos.x - halfSize) + 'px';
+            b.el.style.bottom = (STAGE_HEIGHT - pos.y - (b.body.halfH || halfSize)) + 'px';
+            b.el.style.transform = 'rotate(' + (b.body.angle * 180 / Math.PI).toFixed(1) + 'deg)';
         });
     }
 
@@ -445,6 +878,13 @@
     function triggerFleeAnimation(key, dir) {
         var d = dosters.get(key);
         if (!d || !d.el || d.fleeing) return;
+        // blob 에 흡수된 도스터다. 먼저 터뜨려 꺼낸 뒤 도망시킨다 —
+        // 그냥 두면 숨겨진 요소가 화면 밖으로 달려가고 blob 은 그대로 남는다.
+        if (d.blobId) {
+            dissolve(d.blobId);
+            setTimeout(function () { triggerFleeAnimation(key, dir); }, 260);
+            return;
+        }
         d.fleeing = true;
         d.el.classList.add('fleeing');
 
@@ -533,6 +973,8 @@
             physicsAcc = 0;
         }
         syncDosterPositions();
+        syncBlobPositions();
+        tickBlobLife(t);
 
         if (isTabVisible && isActive) {
             animFrameId = requestAnimationFrame(render);
@@ -648,6 +1090,7 @@
 
         var d = dosters.get(key);
         if (d) {
+            if (d.blobId) dissolve(d.blobId);
             if (d.body && world) Matter.Composite.remove(world, d.body);
             if (d.el && d.el.parentNode) {
                 d.el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
@@ -842,7 +1285,7 @@
             // 랜덤 도스터 하나 선택
             var candidates = [];
             dosters.forEach(function(d) {
-                if (d.landed && !d.fleeing && d.inner) candidates.push(d);
+                if (d.body && d.landed && !d.fleeing && d.inner) candidates.push(d);
             });
             if (candidates.length === 0) return;
             var pick = candidates[Math.floor(Math.random() * candidates.length)];
@@ -876,7 +1319,7 @@
     //    기울이는 대신 실제로 힘을 줘서 물리적으로 밀리게 한다.
     // ═══════════════════════════════════════════
     var PUSH_DIST = 90;         // 반응 범위 (화면 px)
-    var PUSH_FORCE = 0.0018;    // 밀어내는 힘
+    var PUSH_FORCE = 0.0028;    // 밀어내는 힘 — 기존 0.0018*질량(1.556)과 같은 크기
     var pushRectCache = null;
     var lastPushT = 0;
 
@@ -898,16 +1341,19 @@
         var my = toLocal(e.clientY - r.top);    // 스테이지 로컬 = 물리 좌표계
         var reach = toLocal(PUSH_DIST);
 
-        dosters.forEach(function(d) {
-            if (!d.body || d.fleeing) return;
-            var pos = d.body.position;
-            var dx = pos.x - mx, dy = pos.y - my;
-            var dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist > reach || dist < 0.001) return;
-            var power = (1 - dist / reach) * PUSH_FORCE * d.body.mass;
-            if (d.body.isSleeping) Matter.Sleeping.set(d.body, false);
-            Matter.Body.applyForce(d.body, pos, { x: (dx / dist) * power, y: (dy / dist) * power });
-        });
+        dosters.forEach(function(d) { if (d.body && !d.fleeing) pushAway(d.body, mx, my, reach); });
+        blobs.forEach(function(b) { if (b.body && !b.dissolving) pushAway(b.body, mx, my, reach); });
+    }
+
+    function pushAway(body, mx, my, reach) {
+        var pos = body.position;
+        var dx = pos.x - mx, dy = pos.y - my;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > reach || dist < 0.001) return;
+        // 힘에 질량을 곱하면 가속도가 질량과 무관해져, 무거운 합체 도스터도 솜털처럼 밀린다
+        var power = (1 - dist / reach) * PUSH_FORCE;
+        if (body.isSleeping) Matter.Sleeping.set(body, false);
+        Matter.Body.applyForce(body, pos, { x: (dx / dist) * power, y: (dy / dist) * power });
     }
 
     async function activate() {
@@ -924,6 +1370,7 @@
         listenForUsers();
         monitorConnection();
         checkAndRegister();
+        watchStageVisibility();
         animFrameId = requestAnimationFrame(render);
         startIdleLoop();
         window.addEventListener('mousemove', handleGlobalMouseMove);
@@ -949,6 +1396,12 @@
             ground = null; wallLeft = null; wallRight = null;
         }
 
+        blobs.forEach(function(b) {
+            if (b.idleTimer) clearTimeout(b.idleTimer);
+            if (b.el && b.el.parentNode) b.el.parentNode.removeChild(b.el);
+        });
+        blobs.clear();
+        if (stageObserver) { stageObserver.disconnect(); stageObserver = null; }
         mokokos.clear();
         dosters.clear();
         pendingAdds = [];
@@ -1111,6 +1564,13 @@
                 animFrameId = requestAnimationFrame(render);
             }
         });
+
+        blobs.forEach(function(b) {
+            if (!b.body || b.dissolving) return;
+            Matter.Sleeping.set(b.body, false);
+            Matter.Body.applyForce(b.body, b.body.position,
+                { x: (Math.random() - 0.5) * 0.005, y: isBig ? -0.025 : -0.012 });
+        });
     }
 
     function jackpot(intensity) {
@@ -1256,6 +1716,7 @@
         listenForUsers();
         monitorConnection();
         checkAndRegister();
+        watchStageVisibility();
 
         animFrameId = requestAnimationFrame(render);
 

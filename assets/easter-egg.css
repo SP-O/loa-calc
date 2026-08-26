@@ -22,6 +22,25 @@ body.content-page .easter-stage { width: 94%; }
 .easter-stage .ee-doster[data-type="1"] { width: 40px; }
 .easter-stage .ee-doster-body { width: 100%; height: auto; display: block; transform-origin: bottom center; }
 .easter-stage .ee-mine { filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)); }
+/* 합체한 큰 도스터. 이미 자리 잡은 도스터들로 만들어지므로 landed 를 기다리지 않고 바로 눌린다. */
+.easter-stage .ee-blob { transform-origin: center center; line-height: 0; pointer-events: auto; cursor: pointer; }
+.easter-stage .ee-blob-body { width: 100%; height: auto; display: block; transform-origin: bottom center; }
+
+/* 내 도스터가 섞였을 때. ee-mine 의 은은한 그림자만으로는 눈에 안 들어온다. */
+@keyframes blobMineFlash {
+    0% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)); }
+    22% { filter: drop-shadow(0 0 20px rgba(255,215,0,0.95)) brightness(1.4); }
+    100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)); }
+}
+.easter-stage .ee-blob.mine-flash { animation: blobMineFlash 1.1s ease-out; }
+
+/* 큰 놈은 느리고 크게 한 동작 — 기존 도스터 idle 은 잔망스러워 가벼워 보인다 */
+@keyframes blobIdle {
+    0%, 100% { transform: scale(1,1); }
+    35% { transform: scale(1.05,0.94); }
+    70% { transform: scale(0.98,1.03); }
+}
+.easter-stage .ee-blob-body.blob-idle { animation: blobIdle 1.6s ease-in-out; }
 
 /* 모코코 발아 애니메이션 */
 @keyframes mokokoSprout {
