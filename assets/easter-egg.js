@@ -265,6 +265,8 @@
         // 늦게 잠들면 landed 가 늦게 붙어 그동안 클릭이 되지 않는다.
         body.sleepThreshold = 30;
         body.halfH = bh / 2;   // 스프라이트 하단을 바닥에 맞추는 데 쓴다
+        body.halfW = s / 2;
+        body.chamR = bh * 0.3;
         Matter.Composite.add(world, body);
         return body;
     }
@@ -410,6 +412,26 @@
     var POSTURE_MIN = 0.07;        // 4도 미만은 굳이 건드리지 않는다
     var POSTURE_MAX = 3.2;         // 뒤집혀도 스스로 일어나게 (정규화 최대가 π≈3.14)
 
+    // 기울어진 바디는 모서리로 서 있어 중심이 높다. 각도만 펴면 그 높이에 박제돼
+    // 푸터 선 위로 떠 보인다(잠든 바디라 중력이 당기지 않는다).
+    // 중심에서 최저점까지의 거리를 알면, 편 만큼 그대로 내려 앉힐 수 있다.
+    function lowestSpan(body, angle) {
+        var r = body.chamR || 0;
+        var hw = Math.max((body.halfW || 0) - r, 0);
+        var hh = Math.max((body.halfH || 0) - r, 0);
+        return Math.abs(hw * Math.sin(angle)) + Math.abs(hh * Math.cos(angle)) + r;
+    }
+
+    function setAngleGrounded(body, angle) {
+        var before = lowestSpan(body, body.angle);
+        Matter.Body.setAngle(body, angle);
+        var after = lowestSpan(body, angle);
+        var drop = before - after;
+        // 최저점을 제자리에 두고 중심만 내린다 — 바닥이든 다른 도스터 위든 그대로 얹혀 있게
+        if (drop > 0.01 || drop < -0.01)
+            Matter.Body.setPosition(body, { x: body.position.x, y: body.position.y + drop });
+    }
+
     function schedulePosture(key, d) {
         if (d.postureTimer) return;
         d.postureTimer = setTimeout(function () {
@@ -428,7 +450,7 @@
                 if (!body || d.fleeing || !body.isSleeping || !dosters.has(key)) return;
                 var p = Math.min((performance.now() - t0) / dur, 1);
                 var eased = 1 - Math.pow(1 - p, 3);
-                Matter.Body.setAngle(body, from * (1 - eased));
+                setAngleGrounded(body, from * (1 - eased));
                 if (p < 1) requestAnimationFrame(step);
             })();
         }, POSTURE_DELAY_MIN + Math.random() * POSTURE_DELAY_VAR);
