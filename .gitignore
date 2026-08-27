@@ -5,6 +5,8 @@ dev_server.py
 .env
 .env.local
 .env*.local
+.dev.vars
+.dev.vars.*
 
 # 에디터 / OS
 .vscode/
