@@ -3,6 +3,7 @@ import { json, SECURITY_HEADERS } from '../../lib/response.js';
 // 1겹 — 모듈 캐시. Vercel 웜 람다보다 짧게 산다. 있으면 이득, 없으면 엣지 캐시로 간다.
 let cachedData = null;      // { prices, stats, recents }
 let lastFetchTime = 0;
+let lastStatsFetchTime = 0;
 let inflightRefresh = null;
 
 // ★ Workers 무료 플랜은 요청당 서브리퀘스트 50개다.
@@ -19,6 +20,9 @@ const ITEM_NAMES = [
 ];
 
 const BLOCK_MS = 5 * 60 * 1000;
+// 14일 통계는 일별 집계라 자주 받아올 이유가 없다. 지금은 시세와 같은 주기를 쓰되,
+// 갱신 1회가 CPU·서브리퀘스트 한도에 부담이 되면 이 값만 늘린다(10분 → 30분 …).
+const STATS_INTERVAL_MS = BLOCK_MS;
 const delay = ms => new Promise(res => setTimeout(res, ms));
 const sameBlock = (a, b) => Math.floor(a / BLOCK_MS) === Math.floor(b / BLOCK_MS);
 
@@ -35,6 +39,15 @@ function isEmpty() {
     return !cachedData || Object.keys(cachedData.prices || {}).length === 0;
 }
 
+function hasStats() {
+    return !!cachedData && Object.keys(cachedData.stats || {}).length > 0;
+}
+
+// 통계를 이번 갱신에 포함할지. 없으면 무조건 받아온다(콜드 스타트에 그래프가 비지 않게).
+function needStats(now) {
+    return !hasStats() || now - lastStatsFetchTime >= STATS_INTERVAL_MS;
+}
+
 // 엣지 캐시에 넣을 응답. Cache API 에는 SWR 이 없어 x-cached-at 으로 블록을 직접 판정한다.
 function cacheableResponse(now) {
     const remaining = Math.max(1, Math.ceil(((Math.floor(now / BLOCK_MS) + 1) * BLOCK_MS - now) / 1000));
@@ -49,9 +62,9 @@ function cacheableResponse(now) {
 }
 
 // 2겹 — 동시 요청이 몰려도 실제 갱신은 1회만
-function shared(API_KEY) {
+function shared(API_KEY, withStats) {
     if (!inflightRefresh) {
-        inflightRefresh = refreshMarketData(API_KEY).finally(() => { inflightRefresh = null; });
+        inflightRefresh = refreshMarketData(API_KEY, withStats).finally(() => { inflightRefresh = null; });
     }
     return inflightRefresh;
 }
@@ -85,7 +98,9 @@ export async function onRequest({ request, env, waitUntil }) {
     if (!API_KEY) return json({ error: '서버에 API 키가 설정되지 않았습니다.' }, { status: 500 });
 
     try {
-        await shared(API_KEY);
+        // 새로고침 버튼은 '시세'를 보려고 누르는 것이다. 14일 통계는 일별 집계라
+        // 1분 전과 값이 같으므로 강제 갱신에서 제외한다 — 서브리퀘스트 44 → 22.
+        await shared(API_KEY, isForce ? !hasStats() : needStats(now));
     } catch (error) {
         console.error('API Error:', error);
         // 갱신에 실패해도 이전 캐시가 있으면 그걸로 응답 (빈 화면 방지)
@@ -105,15 +120,15 @@ async function refreshThenPut(env, cache, cacheKey) {
     const API_KEY = env.LOSTARK_API_KEY_AUTO;
     if (!API_KEY) return;
     try {
-        await shared(API_KEY);
+        await shared(API_KEY, needStats(Date.now()));
         if (!isEmpty()) await cache.put(cacheKey, cacheableResponse(Date.now()).clone());
     } catch (error) {
         console.error('백그라운드 갱신 실패:', error);
     }
 }
 
-// 로아 API 에서 22종 시세+통계를 가져와 모듈 캐시를 갱신
-async function refreshMarketData(API_KEY) {
+// 로아 API 에서 22종 시세(와 선택적으로 통계)를 가져와 모듈 캐시를 갱신
+async function refreshMarketData(API_KEY, withStats) {
     const results = [];
     const chunkSize = 5; // 동시 발신 연결은 요청당 6개가 한도다
 
@@ -148,11 +163,11 @@ async function refreshMarketData(API_KEY) {
                 if (!exactItem) return { name: itemName, price: null, recent: null, stats: null };
 
                 let stats = null;
-                const statsRes = await fetch(`https://developer-lostark.game.onstove.com/markets/items/${exactItem.Id}`, {
+                const statsRes = withStats && await fetch(`https://developer-lostark.game.onstove.com/markets/items/${exactItem.Id}`, {
                     headers: { 'accept': 'application/json', 'authorization': `bearer ${API_KEY}` }
                 });
 
-                if (statsRes.ok) {
+                if (statsRes && statsRes.ok) {
                     const rawData = await statsRes.json();
                     const statsData = rawData[0]?.Stats || [];
                     if (Array.isArray(statsData) && statsData.length > 0) {
@@ -203,4 +218,6 @@ async function refreshMarketData(API_KEY) {
 
     cachedData = { prices: newPrices, stats: newStats, recents: newRecents };
     lastFetchTime = Date.now();
+    // 실제로 받아온 경우에만 시계를 돌린다. 건너뛴 갱신이 주기를 앞당기면 안 된다.
+    if (withStats) lastStatsFetchTime = lastFetchTime;
 }
