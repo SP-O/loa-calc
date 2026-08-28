@@ -1,3 +1,9 @@
+# pages.dev 는 loadoss.com 과 바이트까지 같은 복제본이라 색인되면 안 된다.
+# canonical 만으로는 부족하다 — 구글이 무시한 전례가 있다(/tools/auction).
+# 컷오버 후에도 남겨 둔다. loadoss.com 요청은 이 규칙에 걸리지 않는다.
+https://loa-calc-6ny.pages.dev/*
+  X-Robots-Tag: noindex
+
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
