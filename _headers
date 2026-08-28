@@ -1,0 +1,39 @@
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+/assets/vendor/*
+  Cache-Control: public, max-age=2592000
+
+/object/*
+  Cache-Control: public, max-age=2592000
+
+/tools/tikatuka/guide-share.png
+  Cache-Control: public, max-age=2592000
+
+/assets/content.css
+  Cache-Control: public, max-age=300
+
+/assets/content.js
+  Cache-Control: public, max-age=300
+
+/assets/easter-egg.css
+  Cache-Control: public, max-age=300
+
+/assets/easter-egg.js
+  Cache-Control: public, max-age=300
+
+/tools/auction/*
+  Cache-Control: public, max-age=300
+
+/tools/tikatuka/app.js
+  Cache-Control: public, max-age=300
+
+/tools/tikatuka/styles.css
+  Cache-Control: public, max-age=300
+
+/tools/tikatuka/src/*
+  Cache-Control: public, max-age=300
