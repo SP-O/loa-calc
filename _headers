@@ -20,17 +20,20 @@ https://loa-calc-6ny.pages.dev/*
 /tools/tikatuka/guide-share.png
   Cache-Control: public, max-age=2592000
 
+# 아래 넷은 HTML에서 ?v=날짜 를 달고 부른다. 파일이 바뀌면 그 값을 올려 URL이 달라지므로
+# 길게 잡아도 낡은 파일이 남지 않는다. ★버전을 올리지 않으면 이 기간만큼 낡은 채로 나간다.
+# tools/* 스크립트에는 ?v= 가 없다(모듈이 상대경로로 서로를 부른다) — 그래서 5분을 유지한다.
 /assets/content.css
-  Cache-Control: public, max-age=300
+  Cache-Control: public, max-age=604800
 
 /assets/content.js
-  Cache-Control: public, max-age=300
+  Cache-Control: public, max-age=604800
 
 /assets/easter-egg.css
-  Cache-Control: public, max-age=300
+  Cache-Control: public, max-age=604800
 
 /assets/easter-egg.js
-  Cache-Control: public, max-age=300
+  Cache-Control: public, max-age=604800
 
 /tools/auction/*
   Cache-Control: public, max-age=300

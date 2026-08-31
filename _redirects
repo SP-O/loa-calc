@@ -1,0 +1,9 @@
+# 경매 계산기는 /auction 문서 안으로 들어왔다. 이 주소는 검색결과에 노출돼 온 이력이 있어
+# 404 로 버리지 않고 301 로 넘긴다(경매 계산기가 두 번 잡히던 원인이기도 하다).
+# /tools/auction/calc.js·app.js 는 여전히 이 경로에 있으므로 정확한 경로만 지정한다.
+/tools/auction      /auction  301
+/tools/auction/     /auction  301
+/tools/auction/index.html  /auction  301
+/tools/tikatuka     /tikatuka  301
+/tools/tikatuka/    /tikatuka  301
+/tools/tikatuka/index.html /tikatuka  301

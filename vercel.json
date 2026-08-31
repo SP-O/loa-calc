@@ -1,5 +1,13 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/tools/auction", "destination": "/auction", "permanent": true },
+    { "source": "/tools/auction/", "destination": "/auction", "permanent": true },
+    { "source": "/tools/auction/index.html", "destination": "/auction", "permanent": true },
+    { "source": "/tools/tikatuka", "destination": "/tikatuka", "permanent": true },
+    { "source": "/tools/tikatuka/", "destination": "/tikatuka", "permanent": true },
+    { "source": "/tools/tikatuka/index.html", "destination": "/tikatuka", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -32,7 +40,7 @@
     {
       "source": "/assets/(content|easter-egg).(css|js)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=300" }
+        { "key": "Cache-Control", "value": "public, max-age=604800" }
       ]
     },
     {

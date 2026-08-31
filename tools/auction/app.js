@@ -1,6 +1,4 @@
 (function () {
-    var params = new URLSearchParams(location.search);
-
     // GTM dataLayer 이벤트 (부모 iframe과 무관하게 이 페이지의 GTM 컨테이너로 수집)
     function track(event, p) {
         window.dataLayer = window.dataLayer || [];
@@ -9,10 +7,8 @@
         window.dataLayer.push(o);
     }
 
-    function applyTheme(mode) {
-        document.body.classList.toggle('light-mode', mode === 'light');
-    }
-    applyTheme(params.get('theme'));
+    // 테마는 content.js 가 localStorage(loa_theme)를 읽어 body 에 이미 적용해 뒀다.
+    // 여기서 다시 toggle 하면 ?theme= 이 없는 정식 주소에서 라이트 모드가 꺼진다.
 
     // 시세 표기: 천 단위 이상은 소수점이 의미 없어 정수로, 그 아래(십·백원대)만 소수 1자리 유지
     function formatPrice(n) {
@@ -43,7 +39,7 @@
                 tip: { show: false, text: '', note: '', style: {}, dir: 'right', formula: null },
                 copiedMsg: '',
                 copiedTimer: null,
-                isLight: params.get('theme') === 'light'
+                isLight: document.body.classList.contains('light-mode')
             };
         },
         computed: {
@@ -412,33 +408,14 @@
             var self = this;
             this.fetchList();
 
-            // 부모(로아도쓰)로부터 테마 변경 수신
-            window.addEventListener('message', function (e) {
-                var d = e.data;
-                if (d && d.type === 'theme') {
-                    applyTheme(d.mode);
-                    self.isLight = d.mode === 'light';
-                    if (self.stats) self.$nextTick(function () { self.renderChart(); });
-                }
-            });
-
-            // 부모 iframe 높이 동기화 — 부모의 기존 tipago-height 핸들러를 재사용
-            var lastH = 0;
-            var report = function () {
-                // documentElement.scrollHeight는 부모가 지정한 iframe 높이를 그대로 따라가므로
-                // 한 번 커지면 줄지 않음(창을 줄였다 늘리면 빈 공간이 남음). 콘텐츠 높이인 body 기준으로 보고.
-                var h = document.body.scrollHeight;
-                if (h !== lastH) {
-                    lastH = h;
-                    try { parent.postMessage({ type: 'tipago-height', height: h }, '*'); } catch (e) {}
-                }
-            };
-            report();
-            if (window.ResizeObserver) {
-                new ResizeObserver(report).observe(document.body);
-            } else {
-                setInterval(report, 800);
-            }
+            // 테마는 헤더의 토글(content.js)이 body 클래스로 바꾼다. CSS 는 body.light-mode 규칙으로
+            // 저절로 따라오지만 차트는 캔버스라 다시 그려야 한다. 그래서 클래스만 지켜본다.
+            new MutationObserver(function () {
+                var light = document.body.classList.contains('light-mode');
+                if (light === self.isLight) return;
+                self.isLight = light;
+                if (self.stats) self.$nextTick(function () { self.renderChart(); });
+            }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
         }
     });
     app.mount('#app');
