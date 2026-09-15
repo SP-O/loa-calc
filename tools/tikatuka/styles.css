@@ -119,10 +119,17 @@ body.light-mode .slot.shield { box-shadow: 0 0 6px oklch(0.6059 0.1986 256.4605 
 .footnote { color: var(--muted); font-size: 0.8em; text-align: center; margin-top: 6px; order: 3; }
 .update-box { order: 2; text-align: right; margin-top: -14px; margin-bottom: -6px; padding-right: 2px; color: oklch(0.6268 0 0); font-size: 12px; transition: color 0.3s ease; }
 @media (max-width: 560px) {
-  .slot { width: 38px; height: 38px; font-size: 1.05em; }
-  .ln { width: 28px; font-size: 0.72em; }
-  .vs-row { gap: 5px; }
-  .cells { gap: 4px; }
+  /* 칸은 38px 이 상한이고, 화면이 좁아지면 flex 축소로 함께 줄어든다.
+     min-width 기본값(auto)이 글자 폭에서 멈춰 375px 에서 보드가 53px 넘치고
+     내 필드 왼쪽 끝·상대 필드 오른쪽 끝 칸이 잘렸다.
+     하한을 풀고 aspect-ratio 로 정사각을 지킨다. */
+  .slot { width: 38px; height: auto; aspect-ratio: 1; min-width: 0; padding: 0; font-size: 0.95em; }
+  .cells { gap: 3px; min-width: 0; }
+  .ln { width: 20px; font-size: 0.66em; }
+  .sum { min-width: 24px; font-size: 0.95em; }
+  .vs-row { gap: 4px; }
+  /* 보드만 패널 여백을 빌려 가로 20px 을 더 쓴다 */
+  .board-scroll { margin-inline: -10px; padding-inline: 2px; }
 }
 /* 화면공유 중 결과 패널 좌측 상단에 뜨는 옵션(가로 2열).
    position:absolute로 흐름에서 빼서, 펼쳐도 패널 높이가 늘어나지 않고
