@@ -1,5 +1,6 @@
 {
   "cleanUrls": true,
+  "trailingSlash": false,
   "redirects": [
     { "source": "/tools/auction", "destination": "/auction", "permanent": true },
     { "source": "/tools/auction/", "destination": "/auction", "permanent": true },
