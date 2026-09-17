@@ -21,6 +21,12 @@
       ]
     },
     {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex" }
+      ]
+    },
+    {
       "source": "/assets/vendor/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=2592000" }

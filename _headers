@@ -4,6 +4,9 @@
 https://loa-calc-6ny.pages.dev/*
   X-Robots-Tag: noindex
 
+# ★/api/* 는 여기에 두지 않는다 — Pages 는 Functions 응답에 _headers 를 적용하지 않는다.
+#   API 의 X-Robots-Tag: noindex 는 lib/response.js 의 SECURITY_HEADERS 에 있다.
+
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
